@@ -11,6 +11,10 @@ Validates USD assets for common issues:
 Usage:
     python scripts/validate_asset.py path/to/asset.usd
     python scripts/validate_asset.py 010_ASS_USD/asset.usd
+
+Note: This script validates USD files but does not modify them. USD files should use
+relative paths (e.g., @../010_ASS_USD/asset.usd@) for portability. The script uses
+absolute paths internally for validation but USD files themselves should contain relative paths.
 """
 
 # Standard library imports
@@ -94,6 +98,15 @@ def validate_asset(asset_path):
             # Get the path (location) of the invalid prim for error reporting
             # Example path: "/World/Characters/Hero/Mesh"
             errors.append(f"Invalid prim: {prim.GetPath()}")
+        
+        # Check prim path type (absolute vs relative)
+        # USD prim paths can be absolute (starting with "/") or relative
+        # Absolute paths are more explicit and recommended for clarity
+        prim_path = prim.GetPath()
+        if prim_path and not Sdf.Path(prim_path).IsAbsolutePath():
+            # Relative prim paths are valid but absolute paths are clearer
+            # This is informational, not an error
+            pass  # Could add a check here if needed
             continue  # Skip to next prim - can't check references on invalid prim
         
         # STEP 6: Check for broken references
@@ -110,6 +123,18 @@ def validate_asset(asset_path):
                 if ref_path:
                     # Use USD's built-in asset resolver to find the file
                     # This handles relative paths, search paths, and USD's "@" asset paths
+                    # Note: USD files should contain relative paths (e.g., @../010_ASS_USD/asset.usd@)
+                    # for portability. The script resolves these internally for validation.
+                    
+                    # Check if reference path is an absolute file system path (not recommended)
+                    # Absolute paths break when projects are moved or shared
+                    if ref_path and not ref_path.startswith("@") and not ref_path.startswith("./") and not ref_path.startswith("../"):
+                        # Check if it looks like an absolute path (Windows: C:\, D:\ or Unix: /)
+                        # os is already imported at the top of the file
+                        if os.path.isabs(ref_path) or (len(ref_path) > 1 and ref_path[1] == ":"):
+                            warnings.append(f"Absolute file path detected in reference: '{ref_path}' at prim '{prim.GetPath()}'. "
+                                           "Consider using relative paths (e.g., @../010_ASS_USD/asset.usd@) for portability.")
+                    
                     resolved_layer = Sdf.Layer.FindOrOpen(ref_path)
                     
                     if not resolved_layer:

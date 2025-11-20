@@ -50,9 +50,15 @@ Before starting with USD GoodStart, ensure you have the following installed and 
   - Additional packages may be required for CAD conversion (see CAD tools section)
 
 - **USD Tools**:
-  - USD Python API (`usd-core` from PyPI)
-  - `usdview` for USD file inspection
-  - Optional: USD C++ SDK for advanced development
+  - **USD Python API** (`usd-core` from PyPI) - Python bindings for USD
+  - **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - **The classic USD validation and inspection tool** from Pixar:
+    - Original tool from Pixar Animation Studios
+    - Essential for validating USD files and checking structure
+    - Inspect prims, attributes, relationships, and composition
+    - Visualize USD scenes and debug composition issues
+    - Always helpful for USD file validation and troubleshooting
+    - Part of the official OpenUSD repository
+  - **USD C++ SDK** (optional) - For advanced development and custom plugins
 
 ### CAD Tools (Optional, for CAD-to-USD workflows)
 
@@ -85,11 +91,76 @@ Before starting with USD GoodStart, ensure you have the following installed and 
 ### DCC Tools (Optional, for content creation)
 
 - **3D Software** (one or more):
-  - Houdini (`.hiplc` files)
-  - Maya (`.ma`/`.mb` files)
-  - Blender (USD export support)
-  - Cinema 4D
-  - 3ds Max
+  - Houdini (`.hiplc` files) - **Full USD support** with layering and referencing
+  - Maya (`.ma`/`.mb` files) - **Full USD support** with layering and referencing
+  - 3ds Max - **Full USD support** with layering and referencing
+  - Blender (USD export support) - **Limited: Read/write only, no layering/referencing** (see limitations below)
+  - Cinema 4D - **Limited: Read/write only, no layering/referencing** (see limitations below)
+
+**Important: DCC Tool Limitations for USD Workflows**
+
+Some DCC tools have **significant limitations** when working with USD:
+
+**Blender, Cinema 4D, and Similar Tools:**
+- ✅ Can **read and write** USD files (`.usd`, `.usda`, `.usdc`, `.usdz` formats)
+- ❌ **Do NOT support** USD's core composition features:
+  - No layering support (cannot work with sublayers)
+  - No referencing support (cannot create or maintain references)
+  - No composition arcs (LIVRPS) support
+  - No non-destructive workflows
+- ⚠️ **Work destructively** - These tools modify USD files directly without preserving composition structure
+- 📍 **Use case**: Can only be used to create **"endpoint" assets** (the lowest sublayer - the asset itself)
+- ❌ **Cannot be used** for modifying layers on top of assets or working with USD's composition system
+
+**Why This Matters:**
+- The difference between exporting USD from Blender/C4D vs. exporting FBX/Alembic/OBJ is **minimal** - they're essentially export endpoints
+- For USD workflows requiring **layering, referencing, or non-destructive editing**, use **Maya, Houdini, or 3ds Max** instead
+- Blender/C4D are suitable for creating base assets but **cannot participate in USD's composition workflows**
+
+**Recommendation:**
+- Use **Maya, Houdini, or 3ds Max** for USD workflows that require:
+  - Layer-based modifications
+  - Asset referencing
+  - Non-destructive editing
+  - Composition arcs (variants, payloads, inherits, etc.)
+- Use **Blender/C4D** only for creating final export assets that will be referenced by other USD files
+
+### Houdini: The Powerhouse for USD Pipeline Automation
+
+**Houdini stands out as the premier tool for USD pipeline development and automation**, offering capabilities that complement and extend beyond what Omniverse provides.
+
+**Why Houdini is Essential for USD Workflows:**
+
+- 🎯 **Best USD Integration**: Houdini has the **deepest and most comprehensive USD integration** apart from Omniverse itself. It provides native, first-class support for all USD composition arcs and features.
+
+- 🎨 **Visual Variant Creation**: Building variants in Houdini is **visually cleaner and more intuitive** than creating them directly in Omniverse. Houdini's node-based workflow makes variant management more accessible and maintainable.
+
+- 🔄 **Reusable Workflows**: Once you build a workflow in Houdini, you can **reuse it across projects**. Houdini's procedural nature means you can create templates, tools, and pipelines that scale with your needs.
+
+- 🤖 **Pipeline Automation**: Houdini's procedural nature makes it an **excellent automation tool** for building pipelines. You can run USD files through Houdini workflows to automate repetitive tasks, batch processing, and complex transformations.
+
+- ✏️ **Geometry Modeling**: Unlike Omniverse, which cannot alter geometry, **Houdini provides full modeling capabilities**. You can model, sculpt, and modify geometry directly within USD workflows, making it essential for asset creation and refinement.
+
+- ⚡ **Procedural Power**: Houdini's procedural nature is a **killer feature** for USD pipelines. You can:
+  - Generate complex USD structures procedurally
+  - Automate asset processing and transformation
+  - Build reusable pipeline tools
+  - Create dynamic, data-driven workflows
+  - Process large batches of USD files efficiently
+
+**Use Cases:**
+- Creating and managing variants visually
+- Building automated USD processing pipelines
+- Geometry modeling and refinement within USD workflows
+- Batch processing and transformation of USD assets
+- Developing reusable pipeline tools and templates
+- Complex procedural USD scene generation
+
+**Integration with USD_GoodStart:**
+- Store Houdini files (`.hiplc`) in the project root
+- Use Houdini to create variants, process assets, and automate workflows
+- Export processed USD files to `010_ASS_USD/` for use in the scene
+- Leverage Houdini's USD nodes for layer management and composition
 
 ### Version Control (Recommended)
 
@@ -102,6 +173,25 @@ Before starting with USD GoodStart, ensure you have the following installed and 
 - **Nucleus Server** (optional, for collaborative workflows):
   - Omniverse Nucleus Server for centralized asset management
   - Alternative: NAS, cloud storage, or local file systems
+
+- **[ShapeFX Loki](https://shapefx.app/)** - **Promising USD-native tool** based on OpenDCC:
+  - Built on **[OpenDCC](https://forum.aousd.org/t/opendcc-is-now-open-source/2448)** - Open-source application framework from the AOUSD community
+  - **Native USD reading** - Can read USD files natively with full composition support
+  - **USD-native editing** - Edit OpenUSD files directly without export/import workflows
+  - **Material Editor** - Create and refine materials using USDShade graphs with MaterialX support
+  - **Multi-stage editing** - Open and manage multiple USD stages simultaneously
+  - **Hydra rendering** - Production-grade rendering powered by Hydra
+  - **Python scripting** - Access USDStage directly via built-in Python Script Editor
+  - **Layer management** - Inspect and manage stage compositions with intuitive tools
+  - **Render View** - Standalone tool for AOV and image inspection
+  - **Comprehensive USD inspection** - Explore and edit every aspect of USD scenes
+  - **Apache 2.0 license** - Open-source framework (OpenDCC) with commercial application (ShapeFX Loki)
+  - **Active development** - Actively developed by Alex Kalyuzhnyy and the ShapeFX team
+  - **Community support** - Part of the AOUSD community ecosystem
+  - **Good to have in the toolbox** - Useful for USD workflows and scene management
+  - **Support the development** - Consider supporting Alex Kalyuzhnyy's development efforts
+  - GitHub: [shapefx/OpenDCC](https://github.com/shapefx/OpenDCC)
+  - Forum: [OpenDCC is now open source](https://forum.aousd.org/t/opendcc-is-now-open-source/2448)
 
 ## Quick Start
 
@@ -126,6 +216,70 @@ Each folder contains its own README with detailed information:
 - Serves as the entry point for the entire project
 - Contains the base scene structure and environment
 
+## Path Best Practices: Use Relative Paths
+
+**Critical**: Always use **relative paths** in USD files for portability and collaboration.
+
+### Why Relative Paths Matter
+
+- ✅ **Portability**: Projects can be moved or shared without breaking references
+- ✅ **Collaboration**: Works across different machines and operating systems
+- ✅ **Version Control**: Relative paths work correctly in Git repositories
+- ❌ **Absolute paths break** when projects are moved, shared, or accessed from different locations
+
+### Path Format Examples
+
+**Layer References** (in root file):
+```usda
+subLayers = [
+    @./020_LYR_USD/Opinion_xyz_LYR.usda@,
+    @./020_LYR_USD/Variant_LYR.usda@,
+    @./020_LYR_USD/Mtl_work_LYR.usda@,
+    @./020_LYR_USD/AssetImport_LYR.usda@
+]
+```
+
+**Asset References** (in layer files):
+```usda
+def Xform "PartAssembly" (
+    prepend references = @../010_ASS_USD/part_assembly.usd@
+)
+{
+    # Asset referenced using relative path
+}
+```
+
+**Texture References** (in material definitions):
+```usda
+asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
+    colorSpace = "sRGB"
+)
+```
+
+### Path Resolution Notes
+
+- **USD's `@` syntax**: The `@` symbols indicate USD asset paths
+- **Relative path resolution**: USD resolves paths relative to the file containing the reference
+- **Scripts use `.resolve()` internally**: Validation scripts convert paths to absolute for checking, but USD files should contain relative paths
+- **Path examples**:
+  - `@./020_LYR_USD/file.usda@` - Same directory level
+  - `@../010_ASS_USD/asset.usd@` - One directory up
+  - `@../../textures/texture.png@` - Two directories up
+
+### Common Mistakes to Avoid
+
+❌ **Don't use absolute paths**:
+```usda
+# BAD - Breaks when project is moved
+prepend references = @C:/Projects/USD_GoodStart/010_ASS_USD/asset.usd@
+```
+
+✅ **Use relative paths**:
+```usda
+# GOOD - Works anywhere
+prepend references = @../010_ASS_USD/asset.usd@
+```
+
 ## DCC Files
 
 DCC (Digital Content Creation) files that work on the USD files are stored in the root directory:
@@ -138,6 +292,8 @@ DCC (Digital Content Creation) files that work on the USD files are stored in th
 These files allow different team members to work on the USD project using their preferred DCC tool. Each DCC file references and modifies the USD files (`GoodStart_ROOT.usda` and assets in `010_ASS_USD/`), but the actual USD files remain the source of truth. Changes are layered on top as opinions within the USD structure.
 
 **Note**: Different team members may use different DCC tools, so you may see multiple DCC file types in the root directory. Each person works with their preferred tool while maintaining the same USD structure. Changes are layered on top as opinions within the USD structure.
+
+**Important**: Not all DCC tools support USD's composition features. Tools like **Maya, Houdini, and 3ds Max** support full USD workflows with layering and referencing. Tools like **Blender and Cinema 4D** can only read/write USD files but cannot work with layers or references - they are limited to creating endpoint assets. See "DCC Tool Limitations" section above for details.
 
 ## Example Asset Lifecycle
 
@@ -231,9 +387,15 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 
 ### DCC Workflow (Optional)
 
-1. **Import Assets**: Export USD files from DCC tools (Maya, Houdini, Blender, etc.) to `010_ASS_USD/`
+**Important**: Not all DCC tools support USD's composition features. See "DCC Tool Limitations" section above.
+
+1. **Import Assets**: Export USD files from DCC tools to `010_ASS_USD/`
+   - **Full USD support** (Maya, Houdini, 3ds Max): Can export with full composition support
+   - **Limited support** (Blender, Cinema 4D): Can only create endpoint assets (destructive export)
 2. **Reference Assets**: Use layers in `020_LYR_USD/` to reference and modify assets
+   - ⚠️ **Note**: Blender/C4D cannot work with layers - they can only create the base asset
 3. **Apply Modifications**: Add opinions, variants, and material changes through layers
+   - Use Maya, Houdini, or 3ds Max for layer-based modifications
 4. **Link to Root**: Ensure all modifications are properly linked in `GoodStart_ROOT.usda`
 
 ## Project Planning and Implementation Strategy
@@ -474,6 +636,9 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 - **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - CAD conversion examples
 - **[AOUSD Specifications](https://aousd.org/)** - Official OpenUSD standards
 - **[USDWG Collective Project 001](https://github.com/usd-wg/collectiveproject001)** - VFX workflow examples
+- **[OpenDCC](https://github.com/shapefx/OpenDCC)** - Open-source USD-native application framework from AOUSD community
+- **[ShapeFX Loki](https://shapefx.app/)** - USD-native editing tool built on OpenDCC
+- **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - Classic USD validation and inspection tool from Pixar
 
 ## Learning from VFX Industry Best Practices
 
@@ -821,6 +986,24 @@ Validation scripts are provided in the `scripts/` directory:
   python scripts/validate_scene.py GoodStart_ROOT.usda
   ```
 
+**Manual Validation Tools:**
+
+- **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - Classic USD inspection tool from Pixar:
+  - Visual inspection of USD files
+  - Check prims, attributes, and relationships
+  - Debug composition issues
+  - Validate file structure
+  - Always helpful for USD file validation
+  ```bash
+  usdview your_file.usda
+  ```
+
+- **[ShapeFX Loki](https://shapefx.app/)** - USD-native editing and inspection tool:
+  - Native USD reading and editing
+  - Comprehensive USD inspection tools
+  - Layer management and composition tools
+  - Material editor and rendering
+
 **CI/CD Pipeline:**
 
 A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for automated validation:
@@ -886,14 +1069,28 @@ node = hou.node("/obj").createNode("usdimport")
 node.parm("filepath1").set("path/to/010_ASS_USD/asset.usd")
 ```
 
+**Houdini Advantages for USD Workflows:**
+- **Visual variant creation** - Build variants more cleanly than in Omniverse
+- **Reusable workflows** - Create templates and tools that scale
+- **Pipeline automation** - Use procedural nature for automation
+- **Geometry modeling** - Full modeling capabilities (unlike Omniverse)
+- **Best USD integration** - Deepest USD support apart from Omniverse
+- **Procedural power** - Killer feature for USD pipeline development
+
+See "Houdini: The Powerhouse for USD Pipeline Automation" section above for details.
+
 **Maya:**
 - Use USD for Maya plugin
 - Import USD via File → Import → Select USD file
 - USD files remain referenced, not imported
 
 **Blender:**
+- ⚠️ **Limitation**: Blender can read/write USD files but **does NOT support layering, referencing, or composition arcs**
+- Blender works **destructively** - it modifies USD files directly without preserving composition
+- Use Blender only to create **endpoint assets** (base assets that will be referenced by other USD files)
 - Enable USD import addon
 - File → Import → Universal Scene Description (.usd, .usda, .usdc)
+- **For USD workflows requiring layering/referencing, use Maya, Houdini, or 3ds Max instead**
 
 ### Troubleshooting Common Issues
 

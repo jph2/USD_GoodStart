@@ -41,6 +41,13 @@ asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
 )
 ```
 
+**Important: Use Relative Paths**
+
+- ✅ Always use **relative paths** (like `@../030_TEX/texture_name.png@`) in USD files
+- ✅ Relative paths allow projects to be moved or shared without breaking references
+- ❌ **Never use absolute paths** (like `@C:/Projects/USD_GoodStart/030_TEX/texture_name.png@`) - they break when projects are moved
+- See main README "Path Best Practices" section for detailed guidance
+
 ## Working with Nucleus Server
 
 **Nucleus Server** (Omniverse Nucleus) provides many advantages for collaborative USD workflows, including:

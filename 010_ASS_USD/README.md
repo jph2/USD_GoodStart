@@ -19,16 +19,48 @@ The `0_` prefix is used for sorting purposes and to distinguish default assets f
 ### Adding New Assets
 
 - **All other assets** should be placed in this folder
-- **Existing USD exports** from other programs (Maya, Houdini, Cinema 4D, Blender, etc.) should be placed here
-- Even if DCC programs are not fully USD-capable, they can still be used as export endpoints
+- **Existing USD exports** from other programs should be placed here
+  - **Full USD support** (Maya, Houdini, 3ds Max): Can export with full composition support
+  - **Limited support** (Blender, Cinema 4D): Can only create endpoint assets (see DCC Tool Limitations below)
+- Even if DCC programs are not fully USD-capable, they can still be used as export endpoints, but with limitations
 
 ### Asset Sources
 
 Assets in this folder typically come from:
 
-1. **DCC Tool Exports**: Direct USD exports from Maya, Houdini, Blender, Cinema 4D, etc.
+1. **DCC Tool Exports**: Direct USD exports from DCC tools
+   - **Full USD support** (Maya, Houdini, 3ds Max): Can export with full composition support
+   - **Limited support** (Blender, Cinema 4D): Can only create endpoint assets (see DCC Tool Limitations below)
 2. **CAD Conversion**: Converted CAD files (JT, CATIA, Rhino, STEP, etc.) from `000_SOURCE/` or external systems
 3. **USD Creation**: Assets created directly in USD format
+
+### DCC Tool Limitations
+
+**Important**: Not all DCC tools support USD's composition features:
+
+**Blender, Cinema 4D, and Similar Tools:**
+- ✅ Can **read and write** USD files (`.usd`, `.usda`, `.usdc` formats)
+- ❌ **Do NOT support** USD's core composition features:
+  - No layering support (cannot work with sublayers)
+  - No referencing support (cannot create or maintain references)
+  - No composition arcs (LIVRPS) support
+  - No non-destructive workflows
+- ⚠️ **Work destructively** - These tools modify USD files directly without preserving composition structure
+- 📍 **Use case**: Can only be used to create **"endpoint" assets** (the lowest sublayer - the asset itself)
+- ❌ **Cannot be used** for modifying layers on top of assets or working with USD's composition system  + **they may break the references for the layers on top of them!!!!**
+
+**Why This Matters:**
+- The difference between exporting USD from Blender/C4D vs. exporting FBX/Alembic/OBJ is **minimal** - they're essentially export endpoints
+- For USD workflows requiring **layering, referencing, or non-destructive editing**, use **Maya, Houdini, or 3ds Max** instead
+- Blender/C4D are suitable for creating base assets but **cannot participate in USD's composition workflows**
+
+**Recommendation:**
+- Use **Maya, Houdini, or 3ds Max** for USD workflows that require:
+  - Layer-based modifications
+  - Asset referencing
+  - Non-destructive editing
+  - Composition arcs (variants, payloads, inherits, etc.)
+- Use **Blender/C4D** only for creating final export assets that will be referenced by other USD files
 
 ### CAD to USD Conversion Pipeline
 
@@ -170,6 +202,13 @@ The typical workflow for assets:
 5. **Layer Management**: Use `020_LYR_USD/` layers to add modifications and opinions
 6. **Root Integration**: Reference assets in `GoodStart_ROOT.usda` or through layer files
 7. **AAS Integration**: Connect assets to Asset Administration Shell for digital twin management
+
+**Important: Use Relative Paths**
+
+When referencing assets from layer files, always use **relative paths**:
+- ✅ `@../010_ASS_USD/asset.usd@` - Correct relative path from layer file
+- ❌ `@C:/Projects/USD_GoodStart/010_ASS_USD/asset.usd@` - Wrong absolute path (breaks when project is moved)
+- See main README "Path Best Practices" section for detailed guidance
 
 ## Learning from VFX Industry
 

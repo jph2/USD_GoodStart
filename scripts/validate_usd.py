@@ -15,6 +15,11 @@ Usage:
     python scripts/validate_usd.py path/to/file.usd
     python scripts/validate_usd.py path/to/asset.usda
     python scripts/validate_usd.py GoodStart_ROOT.usda
+
+Note: This script validates USD files but does not modify them. USD files should use
+relative paths (e.g., @../010_ASS_USD/asset.usd@, @./020_LYR_USD/file.usda@) for portability.
+The script uses absolute paths internally for validation but USD files themselves should
+contain relative paths. See README.md "Path Best Practices" section for guidance.
 """
 
 # Standard library imports

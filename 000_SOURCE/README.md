@@ -29,6 +29,13 @@ When working with CAD files from various sources, source files may include:
 - Original DCC files before USD export (Maya, Houdini, Blender, etc.)
 - Working files that will be exported to USD format
 
+**Important: DCC Tool Limitations**
+
+Not all DCC tools support USD's composition features:
+
+- **Maya, Houdini, 3ds Max**: Full USD support with layering and referencing
+- **Blender, Cinema 4D**: Limited support - can only read/write USD files but do NOT support layering, referencing, or composition arcs. These tools work destructively and can only create endpoint assets. See main README for detailed limitations.
+
 ## CAD Conversion Pipeline
 
 When working with CAD files, the typical workflow is:

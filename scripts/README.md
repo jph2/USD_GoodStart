@@ -69,6 +69,53 @@ You can extend these scripts to add:
 
 ## Example: Adding Custom Validation
 
+### Checking USD Prim Paths
+
+```python
+from pxr import Sdf
+
+def check_prim_path_type(path_str):
+    """Check if a USD prim path is absolute or relative."""
+    path = Sdf.Path(path_str)
+    if path.IsAbsolutePath():
+        return "Absolute Path"
+    else:
+        return "Relative Path"
+
+# Example usage
+prim_path = "/World/Child"
+print(f"Path '{prim_path}' is a {check_prim_path_type(prim_path)}")
+# Output: Path '/World/Child' is a Absolute Path
+```
+
+**Use Cases:**
+- Validating prim path naming conventions
+- Checking scene graph structure
+- Ensuring consistent path usage
+
+### Checking File Paths in References/Sublayers
+
+The validation scripts automatically check for absolute file paths in references and sublayers and warn about them. You can extend this:
+
+```python
+import os
+
+def check_file_path_type(file_path):
+    """Check if a file path is absolute or relative."""
+    if os.path.isabs(file_path) or (len(file_path) > 1 and file_path[1] == ":"):
+        return "Absolute Path"
+    else:
+        return "Relative Path"
+
+# Example usage
+file_path1 = "C:/Projects/USD_GoodStart/010_ASS_USD/asset.usd"
+file_path2 = "../010_ASS_USD/asset.usd"
+print(f"Path '{file_path1}' is a {check_file_path_type(file_path1)}")
+print(f"Path '{file_path2}' is a {check_file_path_type(file_path2)}")
+```
+
+### Digital Twin Metadata Validation
+
 ```python
 # Add to validate_asset.py
 def validate_digital_twin_metadata(prim):

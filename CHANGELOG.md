@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prerequisites section with software requirements
 - Example Asset Lifecycle documentation with scripts
 - Usage Examples and Troubleshooting section
-- Validation scripts (`validate_asset.py`, `validate_scene.py`)
+- Validation scripts (`validate_asset.py`, `validate_scene.py`, `validate_usd.py`)
 - CI/CD integration (GitHub Actions workflow)
 - Expanded Metadata and Interoperability section with mapping strategies
 - Synthetic Data & Physical AI Readiness section
@@ -19,11 +19,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Learning Path Alignment cross-references
 - Git LFS configuration guidance
 - CHANGELOG.md for tracking changes
+- DCC Tool Limitations section (Blender/C4D limitations)
+- Path Best Practices section (relative paths guidance)
 
 ### Changed
 - Enhanced documentation with more detailed workflows
 - Expanded metadata mapping examples
 - Improved project planning section
+- Updated all USD file examples to use relative paths
+- Added detailed beginner-friendly comments to validation scripts
+
+## [1.0.1] - 2025-01-20
+
+### Added
+- DCC Tool Limitations section explaining Blender/C4D can only read/write USD but don't support layering/referencing
+- Path Best Practices section emphasizing use of relative paths in USD files
+- Relative paths guidance in all folder READMEs
+
+### Changed
+- Updated DCC Tools section to clarify limitations of Blender/C4D
+- Updated all USD file examples to demonstrate relative paths
+- Enhanced validation scripts with detailed comments for beginners
 
 ## [1.0.0] - Initial Release
 

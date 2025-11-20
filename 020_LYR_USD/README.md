@@ -75,6 +75,13 @@ subLayers = [
 ]
 ```
 
+**Important: Use Relative Paths**
+
+- ✅ Always use **relative paths** (like `@./020_LYR_USD/file.usda@`) in USD files
+- ✅ Relative paths allow projects to be moved or shared without breaking references
+- ❌ **Never use absolute paths** (like `@C:/Projects/USD_GoodStart/020_LYR_USD/file.usda@`) - they break when projects are moved
+- See main README "Path Best Practices" section for detailed guidance
+
 **Important Layer Ordering Rules:**
 
 - **Asset import layers go at the bottom** - Layers like `AssetImport_LYR.usda` should be placed at the bottom of the `subLayers` array (last in the list)

@@ -10,6 +10,10 @@ Validates the entire scene (root file and all layers) for:
 
 Usage:
     python scripts/validate_scene.py GoodStart_ROOT.usda
+
+Note: This script validates USD files but does not modify them. USD files should use
+relative paths (e.g., @./020_LYR_USD/file.usda@) for portability. The script uses
+absolute paths internally for validation but USD files themselves should contain relative paths.
 """
 
 # Standard library imports
@@ -76,6 +80,7 @@ def validate_scene(root_file):
     # Sublayers are additional USD files that are "stacked" on top of the root layer
     # They are listed in the root file's subLayers metadata
     # Example: subLayers = [@./020_LYR_USD/AssetImport_LYR.usda@, ...]
+    # Note: USD files should use relative paths (like @./020_LYR_USD/file.usda@) for portability
     sublayers = root_layer.subLayerPaths  # Get list of sublayer file paths
     print(f"\nFound {len(sublayers)} sublayers:")
     
@@ -85,7 +90,18 @@ def validate_scene(root_file):
         
         # Resolve the sublayer path
         # This handles relative paths (like ./020_LYR_USD/file.usda)
-        # and converts them to absolute paths
+        # and converts them to absolute paths for validation
+        # Note: USD files should contain relative paths for portability
+        
+        # Check if sublayer path is an absolute file system path (not recommended)
+        # Absolute paths break when projects are moved or shared
+        if sublayer_path and not sublayer_path.startswith("@") and not sublayer_path.startswith("./") and not sublayer_path.startswith("../"):
+            # Check if it looks like an absolute path (Windows: C:\, D:\ or Unix: /)
+            # os is already imported at the top of the file
+            if os.path.isabs(sublayer_path) or (len(sublayer_path) > 1 and sublayer_path[1] == ":"):
+                warnings.append(f"Absolute file path detected in sublayer: '{sublayer_path}'. "
+                               "Consider using relative paths (e.g., @./020_LYR_USD/file.usda@) for portability.")
+        
         resolved_path = root_layer.ResolvePath(sublayer_path)
         
         if not resolved_path:
