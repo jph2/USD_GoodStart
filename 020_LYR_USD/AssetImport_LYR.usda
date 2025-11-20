@@ -1,0 +1,132 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (0, 0, 50000)
+                double radius = 500
+            }
+            dictionary Perspective = {
+                double3 position = (-132.84486709157065, 64.72601515590918, 61.84430069210461)
+                double3 target = (7.557591403498407, 21.238332245478666, -15.092766710634123)
+            }
+            dictionary Right = {
+                double3 position = (-50000, 0, 0)
+                double radius = 500
+            }
+            dictionary Top = {
+                double3 position = (0, 50000, 0)
+                double radius = 500
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./LIN_MAS_815_8.5oz_ROOT.usda"
+        }
+        int refinementOverrideImplVersion = 0
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Scope "Geo"
+    {
+        def Xform "CUBE" (
+            references = @../010_ASS_USD/0_CUBE.usda@
+        )
+        {
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (447.30697944709954, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+            over "Geo"
+            {
+                over "Cube"
+                {
+                    token visibility = "inherited"
+                }
+            }
+        }
+
+        over "Xform" (
+            active = false
+        )
+        {
+            over "Geo"
+            {
+                over "Cube"
+                {
+                    token visibility = "inherited"
+                }
+            }
+        }
+
+        def Xform "nvidia_shader_ball" (
+            references = @../010_ASS_USD/0_Geo_Shader_Ball.usd@
+        )
+        {
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+
+        def Sphere "Sphere"
+        {
+            float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+            bool primvars:doNotCastShadows = 0
+            bool primvars:enableShadowTerminatorFix = 1
+            double radius = 50
+            custom bool refinementEnableOverride = 1
+            custom int refinementLevel = 2
+            token visibility = "inherited"
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (446.7769932414899, 54.35252847650712, 149.00721033574652)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+    }
+
+    def Scope "Looks"
+    {
+        def Material "OmniPBR_ClearCoat"
+        {
+            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
+            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
+            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
+
+            def Shader "Shader"
+            {
+                uniform token info:implementationSource = "sourceAsset"
+                uniform asset info:mdl:sourceAsset = @OmniPBR_ClearCoat.mdl@
+                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR_ClearCoat"
+                color3f inputs:diffuse_color_constant = (0.2635185, 0.48184487, 0.54755044)
+                token outputs:out (
+                    renderType = "material"
+                )
+            }
+        }
+    }
+}
+
+over "Environment"
+{
+    over "ground"
+    {
+        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        bool primvars:isMatteObject = 0
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
+        token visibility = "inherited"
+    }
+}
+
