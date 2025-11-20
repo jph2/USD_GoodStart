@@ -1,0 +1,38 @@
+name: USD Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install usd-core
+      run: |
+        pip install usd-core
+    
+    - name: Validate USD Assets
+      run: |
+        python scripts/validate_asset.py 010_ASS_USD/0_CUBE.usda || true
+        python scripts/validate_asset.py 010_ASS_USD/0_Geo_Shader_Ball.usd || true
+    
+    - name: Validate Scene
+      run: |
+        python scripts/validate_scene.py GoodStart_ROOT.usda || true
+    
+    - name: Check for USD files
+      run: |
+        find . -name "*.usd" -o -name "*.usda" -o -name "*.usdc" | head -20
+
