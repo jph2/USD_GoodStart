@@ -67,6 +67,8 @@ def Xform "Environment"
         float inputs:shaping:focus
         color3f inputs:shaping:focusTint
         asset inputs:shaping:ies:file
+        # This is a texture that is used to color the grid. you will need to change this to the texture path pointing at your Kit app...
+        # Please use the same naming convention as the one used in the Kit app...
         asset inputs:texture:file = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/CarLight_512x256.hdr@
         token inputs:texture:format = "latlong"
         token visibility = "inherited"
@@ -113,6 +115,8 @@ def Xform "Environment"
                 float inputs:albedo_add = 0
                 float inputs:albedo_brightness = 0.52
                 float inputs:albedo_desaturation = 1
+                # This is a texture that is used to color the grid. you will need to change this to the texture path pointing at your Kit app...
+                # Please use the same naming convention as the one used in the Kit app...
                 asset inputs:diffuse_texture = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/ov_uv_grids_basecolor_1024.png@ (
                     colorSpace = "sRGB"
                     customData = {
