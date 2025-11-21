@@ -8,7 +8,7 @@
             }
             dictionary Perspective = {
                 double3 position = (-329.6208111320767, 180.64813556725068, 141.38134400702054)
-                double3 target = (37.224635293334075, 24.473831889567464, 16.72110137216734)
+                double3 target = (37.22463529333413, 24.473831889567663, 16.721101372167325)
             }
             dictionary Right = {
                 double3 position = (-50000, 0, 0)
@@ -21,7 +21,7 @@
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/020_LYR_USD/AssetImport_LYR.usda"
+            string authoring_layer = "./GoodStart_ROOT.usda"
             dictionary locked = {
             }
             dictionary muteness = {
@@ -36,8 +36,8 @@
     startTimeCode = 0
     subLayers = [
         @./020_LYR_USD/Opinion_xyz_LYR.usda@,
-        @E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/020_LYR_USD/Variant_LYR.usda@,
-        @E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/020_LYR_USD/Mtl_work_LYR.usda@,
+        @./020_LYR_USD/Variant_LYR.usda@,
+        @./020_LYR_USD/Mtl_work_LYR.usda@,
         @./020_LYR_USD/AssetImport_LYR.usda@
     ]
     timeCodesPerSecond = 60
