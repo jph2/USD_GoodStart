@@ -5,7 +5,8 @@
 
 A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**.
 
-> **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk!
+> **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
+There are bits and pieces about the workflows sugested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge Workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin Workflows. You are sort of watching me learning ;) 
 
 
 ## About OpenUSD and Digital Twins
