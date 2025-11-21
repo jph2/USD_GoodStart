@@ -1,8 +1,11 @@
 # USD GoodStart
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**.
 
-Please note, this is a WIP project and has not been 'hardend' yet. Therfore use with caution! and on your own risk!!
+> **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk!
 
 
 ## About OpenUSD and Digital Twins

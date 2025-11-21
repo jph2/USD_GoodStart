@@ -1,5 +1,8 @@
 # Scripts
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 This directory contains utility scripts for USD GoodStart project management and validation.
 
 ## Validation Scripts

@@ -1,5 +1,8 @@
 # 020_LYR_USD
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 ## Purpose
 
 This folder contains **USD layer files** that are used to modify and override content in the root file (`GoodStart_ROOT.usda`). 

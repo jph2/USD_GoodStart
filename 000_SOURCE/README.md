@@ -1,5 +1,8 @@
 # 000_SOURCE
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 ## Purpose
 
 This folder contains **source files** used in the USD project. These are the original files that will be converted or referenced to create USD assets for digital twin applications.

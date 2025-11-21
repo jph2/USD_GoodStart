@@ -1,5 +1,8 @@
 # 010_ASS_USD
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 ## Purpose
 
 This folder contains **all USD assets** for the project. These are the converted, render-ready USD files that serve as the building blocks for your scene.

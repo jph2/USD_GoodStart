@@ -1,5 +1,8 @@
 # 030_TEX
 
+**Version:** 0.9.0-beta  
+**Last Updated:** 11.21.2025
+
 ## Purpose
 
 This folder contains **global texture files** used across the project.
