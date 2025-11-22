@@ -76,6 +76,17 @@ graph TD
 
 ---
 
+## Quick Reference
+
+**Folder-Specific Guides:**
+- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets folder (geometry, CAD conversions, asset workflows)
+- **[020_LYR_USD/](020_LYR_USD/README.md)** - Layer files folder (non-destructive modifications, variants, materials)
+- **[030_TEX/](030_TEX/README.md)** - Global textures folder (shared textures, Nucleus workflow)
+
+Each folder README provides quick reference for that specific folder. For comprehensive documentation, see sections below.
+
+---
+
 ## About OpenUSD and Digital Twins
 
 **OpenUSD** (Universal Scene Description) was originally developed by [Pixar Animation Studios](https://openusd.org/) as a universal scene description format to be sent to renderers for visual effects and CGI production. However, its powerful composition system, non-destructive workflows, and ability to handle complex 3D data make it an ideal foundation for **digital twin applications**.

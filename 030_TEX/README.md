@@ -1,7 +1,7 @@
 # 030_TEX
 
-**Version:** 0.9.0-beta  
-**Last Updated:** 11.21.2025
+**Version:** 0.9.2-beta  
+**Last Updated:** 11.22.2025
 
 ## Purpose
 
@@ -11,32 +11,21 @@ This folder contains **global texture files** used across the project.
 
 - Place texture files here that are used **globally** across multiple assets
 - These textures are accessible from anywhere in the project
-- Use relative paths or absolute paths to reference these textures in USD files
+- Use relative paths to reference textures in USD files
 
-## Asset-Specific Textures
+## Asset-Specific vs Global Textures
 
-- Individual assets in `010_ASS_USD/` may have their own `textures` folder
-- Use asset-specific texture folders when textures are only used by that specific asset
-- Use this global folder when textures are shared across multiple assets
+- **Asset-specific**: Individual assets in `010_ASS_USD/` may have their own `textures` folder
+- **Global**: Use `030_TEX/` when textures are shared across multiple assets
 
 ## Organization
 
-Consider organizing textures by:
+Consider organizing by:
 - **Type**: Diffuse, Normal, Roughness, etc.
 - **Category**: Materials, Environments, etc.
 - **Project**: If working on multiple projects
 
-## Best Practices
-
-- **Keep texture names descriptive** - Use clear naming conventions
-- **Document texture sources** - Note where textures come from
-- **Maintain texture versions** - Consider versioning if textures change frequently
-- **Use appropriate formats** - USD supports various texture formats (PNG, EXR, etc.)
-- **Consider color space** - Document color space requirements (sRGB, linear, etc.)
-
 ## Texture References in USD
-
-Textures are typically referenced in USD material definitions:
 
 ```usda
 asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
@@ -44,47 +33,20 @@ asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
 )
 ```
 
-**Important: Use Relative Paths**
+**Always use relative paths** (e.g., `@../030_TEX/texture_name.png@`).
 
-- ✅ Always use **relative paths** (like `@../030_TEX/texture_name.png@`) in USD files
-- ✅ Relative paths allow projects to be moved or shared without breaking references
-- ❌ **Never use absolute paths** (like `@C:/Projects/USD_GoodStart/030_TEX/texture_name.png@`) - they break when projects are moved
-- See main README "Path Best Practices" section for detailed guidance
+## Best Practices
 
-## Working with Nucleus Server
+- Keep texture names descriptive
+- Document texture sources
+- Use appropriate formats (PNG, EXR, etc.)
+- Consider color space (sRGB, linear, etc.)
 
-**Nucleus Server** (Omniverse Nucleus) provides many advantages for collaborative USD workflows, including:
-- Centralized asset management
-- Real-time collaboration
-- Version control and synchronization
-- Multi-user access
+## Nucleus Server Workflow
 
-### Texture Source Files Limitation
+**Limitation**: Nucleus Server has difficulty storing texture source files (`.psd`, `.sbsar`, `.spp`).
 
-However, **Nucleus Server has limitations when working with texture source files**:
-
-- **Difficult to store source files** - Files like Photoshop (`.psd`), Substance Designer (`.sbsar`), Substance Painter (`.spp`), and other DCC source formats can be challenging to work with on Nucleus Server
-- **Workflow considerations** - These source files may not integrate well with Nucleus Server's file management system
-
-### Recommended Workflow
-
-When working with Nucleus Server and texture sources:
-
-1. **Store final textures on Nucleus** - Place final exported texture files (PNG, EXR, etc.) in Nucleus Server for use in USD files
-2. **Keep source files locally or on alternative storage** - Store Photoshop, Substance, and other source files in:
-   - Local file systems
-   - Network drives (NAS)
-   - Version control systems (like Anchorpoint) that handle binary files well
-   - Cloud storage solutions (Google Drive, Dropbox) for non-versioned source files
-3. **Export workflow** - Export final textures from source files to formats compatible with Nucleus Server
-4. **Documentation** - Document where source files are stored and how to access them for updates
-
-### Hybrid Approach
-
-Consider a **hybrid approach**:
-- **Nucleus Server**: Final USD files and exported textures (PNG, EXR, etc.)
-- **Alternative Storage**: Source files (`.psd`, `.sbsar`, `.spp`, etc.) stored separately
-- **Version Control**: Use tools like Anchorpoint or Git LFS for source file versioning if needed
-
-This approach leverages Nucleus Server's strengths while avoiding its limitations with source file formats.
-
+**Recommended approach**:
+- Store final textures (PNG, EXR) on Nucleus Server
+- Keep source files locally or on alternative storage (NAS, Anchorpoint, Git LFS)
+- Export final textures from source files to Nucleus-compatible formats
