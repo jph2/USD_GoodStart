@@ -1,26 +1,248 @@
 # USD GoodStart
 
-**Version:** 0.9.0-beta  
-**Last Updated:** 11.21.2025
+**Version:** 0.9.2-beta  
+**Last Updated:** 11.22.2025
 
 A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**.
 
 > **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
-There are bits and pieces about the workflows sugested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge Workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin Workflows. You are sort of watching me learning ;) 
+There are bits and pieces about the workflows suggested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin workflows. You are sort of watching me learning ;) 
 
+## TLDR (Too Long; Didn't Read)
+
+**What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts.
+
+**Quick Structure:**
+
+```mermaid
+graph TD
+    Root[GoodStart_ROOT.usda<br/>Main Container] --> Opinion[Opinion_xyz_LYR.usda<br/>Overrides & Opinions]
+    Root --> Variant[Variant_LYR.usda<br/>Variants & Configurations]
+    Root --> Material[Mtl_work_LYR.usda<br/>Materials & Shading]
+    Root --> Asset[AssetImport_LYR.usda<br/>References & Payloads<br/>Geometry Layer]
+    
+    Asset --> Assets[010_ASS_USD/<br/>USD Assets]
+    Asset --> Payloads[Payloads<br/>Heavy Geometry]
+    
+    Root -.LIV(E)RPS.-> Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>rElocates<br/>References Payloads<br/>Specializes]
+    
+    Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets
+    Textures[030_TEX/<br/>Global Textures] --> Material
+    
+    style Root fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000
+    style Asset fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
+    style Opinion fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
+    style Variant fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
+    style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
+    style Composition fill:#78909c,stroke:#263238,stroke-width:3px,color:#000
+```
+
+**Folder Organization:**
+- `000_SOURCE/` - Original CAD/DCC source files
+- `010_ASS_USD/` - USD assets (converted from CAD or created in DCC)
+- `020_LYR_USD/` - Layer files for non-destructive modifications (variants, materials, overrides)
+- `030_TEX/` - Global textures
+- `GoodStart_ROOT.usda` - Master root file (entry point)
+
+**Layer Stack Order** (array ordering: first = strongest, last = weakest):
+1. **Opinion_xyz_LYR.usda** (first/strongest) - Overrides and opinions
+2. **Variant_LYR.usda** - Variants and configurations
+3. **Mtl_work_LYR.usda** - Materials and shading work
+4. **AssetImport_LYR.usda** (last/weakest) - References payloads, holds geometry, imports assets
+
+**Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). First in array = strongest (applied last, overrides others). Last in array = weakest (applied first, can be overridden).
+
+**Quick Workflow:**
+1. Convert CAD → USD assets → place in `010_ASS_USD/`
+2. Create layer files in `020_LYR_USD/` for modifications (variants, materials, overrides)
+3. Reference layers in `GoodStart_ROOT.usda` (array order: Opinion → Variant → Material → AssetImport, where first = strongest)
+4. Use **relative paths** (`@./folder/file.usd@`) for portability
+5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
+
+**Key Best Practices:**
+- ✅ Use **relative paths** (never absolute paths)
+- ✅ Keep layer structure simple
+- ✅ Don't import assets in root layer - use `AssetImport_LYR` at bottom
+- ✅ Use **custom attributes** for queryable metadata (PLM IDs, status)
+- ✅ Use **customData dictionary** for static documentation metadata
+- ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
+- ✅ Maya/Houdini/3ds Max = full USD composition support
+
+**Note on LIV(E)RPS:** **LIV(E)RPS** (with rElocates) is the official OpenUSD specification from [Pixar](https://openusd.org/). rElocates (E) are officially part of LIV(E)RPS (position 4, between Variants and References) but are **unconfirmed in Omniverse Kit App 108.1**. When working with Omniverse, verify support or use LIVRPS order without rElocates. See `AssetStructureBestPractices.md` for details.
+
+**For Digital Twins:** Integrates CAD metadata, PLM/PDM/ERP systems, [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) (IDTA/[OPC Foundation](https://reference.opcfoundation.org) standards), and supports synthetic data generation for Physical AI workflows.
+
+**Start Small:** Begin with a POC/MVP project before scaling. This is an agile, iterative process, not waterfall.
+
+---
 
 ## About OpenUSD and Digital Twins
 
-**OpenUSD** (Universal Scene Description) was originally developed by Pixar Animation Studios as a universal scene description format to be sent to renderers for visual effects and CGI production. However, its powerful composition system, non-destructive workflows, and ability to handle complex 3D data make it an ideal foundation for **digital twin applications**.
+**OpenUSD** (Universal Scene Description) was originally developed by [Pixar Animation Studios](https://openusd.org/) as a universal scene description format to be sent to renderers for visual effects and CGI production. However, its powerful composition system, non-destructive workflows, and ability to handle complex 3D data make it an ideal foundation for **digital twin applications**.
 
 This project template adapts OpenUSD's proven VFX industry practices for digital twin use cases, including:
 - Building digital twins from existing CAD products
 - Integrating with PLM/PDM/ERP systems
-- Connecting to Asset Administration Shell (AAS) standards
+- Connecting to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) standards (IDTA/[OPC Foundation](https://reference.opcfoundation.org))
 - Managing industrial and manufacturing digital twins
 - Architecture, Engineering, and Construction (AEC) applications
 
 While OpenUSD was designed for rendering, its universal scene description capabilities make it perfect for representing real-world assets, systems, and environments in digital twin contexts.
+
+---
+
+## OpenUSD Asset Structure Principles
+
+Understanding these core principles will help you use this template effectively and make informed decisions when structuring your own USD assets.
+
+### Core Principles
+
+A scalable USD asset structure relies on four key principles:
+
+**1. Legibility**
+- Use clear, intent-driven names (`LargeCardboardBox` not `Box01`)
+- Differentiate public vs. internal elements (capitalized `Geometry` for public, `_internalRig` for private)
+- Use ASCII/UTF-8 identifiers; avoid dynamic tokens like timestamps
+
+**2. Modularity**
+- Assets should be self-contained with relative paths
+- Define stable entry points (root prims) that don't change even if internals do
+- Structure assets to be referenced and instanced easily
+
+**3. Performance**
+- Use **References** to keep assets reusable (never copy geometry directly)
+- Use **Payloads** for heavy assets (lazy-loading - only loads when needed)
+- Use **Instancing** for repeated geometry (1 million screws = 1 copy + transforms, not 1 million copies)
+- Prefer `.usdc` (binary) for production, `.usda` (text) for debugging
+
+**4. Navigability**
+- Use Relationships and Collections to group logical items
+- Keep model hierarchies shallow and consistent
+
+### The Reference/Payload Pattern
+
+**Critical Pattern:** Separate the lightweight "interface" from the heavy "implementation".
+
+```
+Asset_File.usd (Interface - Lightweight)
+├── Root Prim
+│   ├── Lofted Variant Sets (accessible without loading payload)
+│   ├── Lofted Primvars (material controls)
+│   └── Payload Arc ───> Payload_File.usdc (Heavy Geometry)
+```
+
+**Why this matters:**
+- Users can see variant options **without loading heavy geometry** (instant)
+- Viewport gets bounding boxes **without loading geometry** (fast)
+- Materials can be changed **without loading geometry** (responsive)
+
+**"Lofting"** = Moving important controls (variants, primvars, metadata) **above** the payload arc so they're accessible without loading the heavy content.
+
+**Critical Distinction: Payload vs Sublayer**
+
+Understanding when to use **Payloads** vs **Sublayers** is fundamental to USD architecture:
+
+- **Sublayer**: Merges content at the *layer* level
+  - Used for: Pipeline steps, workstream edits, overrides, scene-level assembly
+  - Example: `subLayers = [@./Materials.usda@, @./Layout.usda@]`
+
+- **Payload**: Composes content at the *prim* level
+  - Used for: Geometry, internal hierarchies, CAD data
+  - Example: `payload = @./Pump_geometry.usdc@`
+
+**Key Point:** Sublayers merge entire layers together. Payloads attach heavy content to specific prims. This distinction is core to USD architecture.
+
+### Composition Strength: LIV(E)RPS
+
+**LIV(E)RPS** is the rulebook that decides which data "wins" when multiple sources conflict. The acronym stands for: **L**ocal, **I**nherits, **V**ariants, **(E)** rElocates, **R**eferences, **P**ayloads, **S**pecializes.
+
+| Strength | Arc | What It Is |
+|----------|-----|------------|
+| **Strongest** | **L**ocal | Direct edits in current layer |
+| | **I**nherits | Properties from classes/templates |
+| | **V**ariants | Switchable options (red/blue, high/low) |
+| | **(E)** rElocates | Remap prim paths (official spec, unconfirmed in Omniverse 108.1) |
+| | **R**eferences | Pulling in other USD files |
+| | **P**ayloads | Heavy data loaded on demand |
+| **Weakest** | **S**pecializes | Weak template/base class |
+
+**Simple Rule:** Higher in LIV(E)RPS wins. If a referenced asset sets `color=blue` but your local layer sets `color=red`, local (red) wins because **Local > Reference** in the LIV(E)RPS composition strength order.
+
+### Root File and Layer Stacking
+
+**Critical Concept:** The root file defines structure. Asset loading happens in the **lowest (weakest) layer**, with all modifications stacked on top.
+
+**Root File Must Be "Thin":**
+- ✅ Base scene structure (`def Xform "World"`)
+- ✅ `subLayers` array
+- ✅ Metadata (defaultPrim, upAxis)
+- ❌ **NO** geometry, references, payloads, or attribute values
+
+**Why?** Anything in the root layer (Local) cannot be overridden by sublayers because **Local > SubLayers** in LIV(E)RPS. Keep it thin so layers can override.
+
+**The Root Layer Trap - Concrete Example:**
+
+This is a common mistake that breaks USD workflows:
+
+❌ **Wrong:** Setting a transform directly in the root file:
+```usda
+# In GoodStart_ROOT.usda
+def Xform "RobotA" {
+    double3 xformOp:translate = (10, 0, 0)  # ❌ This locks the position!
+}
+```
+
+Then trying to override it in a sublayer:
+```usda
+# In Opinion_LYR.usda
+over "RobotA" {
+    double3 xformOp:translate = (0, 0, 0)  # ❌ This won't work!
+}
+```
+
+**Result:** The override does **not** apply. Local > Sublayer, so the root layer wins.
+
+✅ **Correct:** Author transforms in department layers, not the root:
+```usda
+# In GoodStart_ROOT.usda - Only sublayers, no transforms!
+(
+    subLayers = [@./020_LYR_USD/Opinion_LYR.usda@]
+)
+
+# In Opinion_LYR.usda - This is where transforms belong
+over "RobotA" {
+    double3 xformOp:translate = (0, 0, 0)  # ✅ This works!
+}
+```
+
+**Layer Stack Order** (array ordering: first = strongest, last = weakest):
+1. **Opinion_xyz_LYR.usda** (first/strongest) - Final overrides
+2. **Variant_LYR.usda** - Variants and configurations  
+3. **Mtl_work_LYR.usda** - Materials and shading
+4. **AssetImport_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
+
+**Why AssetImport Must Be Last in Array:**
+- It loads assets into the scene
+- Earlier layers (materials, variants, opinions) need to override what's loaded
+- The `subLayers` array is ordered strongest-first: first = strongest (applied last), last = weakest (applied first)
+- If AssetImport were first in the array, nothing could override the loaded assets
+
+### Anti-Patterns to Avoid
+
+**⛔ Inline Geometry in Root:**
+- **Never** put heavy mesh data directly in the root file
+- Root layer is always parsed first and cannot be unloaded
+- Causes slow open times, memory lock, and merge conflicts
+- **Exception:** Simple helpers (4-vertex ground plane) are OK
+
+**⚠️ Direct References (Bypassing Payloads):**
+- Using `references = @./geo.usd@` instead of `payload = @./geo.usd@`
+- Forces immediate loading of heavy assets (kills viewport performance)
+- **Best Practice:** Use **Payloads** for heavy assets to enable lazy loading
+
+**📚 For Complete Details:** See [`AssetStructureBestPractices.md`](AssetStructureBestPractices.md) for comprehensive explanations, examples, and advanced patterns.
+
+---
 
 ## Project Structure
 
@@ -56,7 +278,7 @@ Before starting with USD GoodStart, ensure you have the following installed and 
 - **USD Tools**:
   - **USD Python API** (`usd-core` from PyPI) - Python bindings for USD
   - **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - **The classic USD validation and inspection tool** from Pixar:
-    - Original tool from Pixar Animation Studios
+    - Original tool from [Pixar Animation Studios](https://openusd.org/)
     - Essential for validating USD files and checking structure
     - Inspect prims, attributes, relationships, and composition
     - Visualize USD scenes and debug composition issues
@@ -110,7 +332,7 @@ Some DCC tools have **significant limitations** when working with USD:
 - ❌ **Do NOT support** USD's core composition features:
   - No layering support (cannot work with sublayers)
   - No referencing support (cannot create or maintain references)
-  - No composition arcs (LIVRPS) support
+  - No composition arcs (LIV(E)RPS) support
   - No non-destructive workflows
 - ⚠️ **Work destructively** - These tools modify USD files directly without preserving composition structure
 - 📍 **Use case**: Can only be used to create **"endpoint" assets** (the lowest sublayer - the asset itself)
@@ -166,17 +388,118 @@ Some DCC tools have **significant limitations** when working with USD:
 - Export processed USD files to `010_ASS_USD/` for use in the scene
 - Leverage Houdini's USD nodes for layer management and composition
 
-### Version Control (Recommended)
+**📚 Recommended Houdini USD Resources:**
+- **[USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/)** by Luca Scheller - A practical onboarding guide to USD for software developers and pipeline TDs, with extensive Houdini examples and production workflows. Originally presented at Siggraph 2023.
+- **[Houdini USD Tutorial Collection](https://raindrop.io/Jph_2/houdini-usd-62738064)** - Curated collection of Houdini USD tutorials and resources covering Solaris, LOPs, USD asset building, MaterialX, variants, and production workflows. Includes official SideFX documentation, YouTube tutorials, and practical guides.
 
-- **Git** (for version control)
-- **Git LFS** (for large binary files)
-- **Anchorpoint** (optional, for artist-friendly version control)
+### Version Control: Why It Matters
+
+**Version control is essential for USD projects** because it enables:
+- **Collaboration**: Multiple team members can work on the same assets without conflicts
+- **History tracking**: See what changed, when, and why
+- **Rollback capability**: Safely revert to previous versions if something breaks
+- **Clean reference paths**: No need for version numbers in file paths (e.g., `asset_v1.usd`, `asset_v2.usd`) - version control handles versioning automatically
+- **Stable asset references**: USD references can point to stable paths like `@./010_ASS_USD/pump.usd@` without worrying about version numbers cluttering your scene structure
+
+**Why Clean Reference Paths Matter:**
+When using version control, your USD references should use **stable, version-agnostic paths**. Instead of:
+```usda
+# ❌ Bad: Version numbers in paths
+def Xform "Pump" (
+    references = @./010_ASS_USD/pump_v2.3.usd@
+)
+```
+
+Use:
+```usda
+# ✅ Good: Clean, stable paths
+def Xform "Pump" (
+    references = @./010_ASS_USD/pump.usd@
+)
+```
+
+Version control handles the versioning - you can always check out the specific version you need, and your USD files remain clean and maintainable.
+
+**Version Control Options:**
+
+| Solution | Best For | Integration | Key Features | Limitations |
+|----------|----------|-------------|--------------|-------------|
+| **[Omniverse Nucleus](https://docs.omniverse.nvidia.com/nucleus/latest/index.html)** | **Omniverse-native workflows** | **Tightest integration** with Omniverse Kit/Apps | • **Live collaboration** - Real-time multi-user editing<br/>• **Checkpoints** - Immutable version snapshots<br/>• **USD-native** - Built specifically for USD workflows<br/>• **Branching support** - Parallel development (evolving)<br/>• **Direct DCC mounting** - Assets accessible in Omniverse/Unreal<br/>• **Centralized asset management** - Single source of truth | • Requires Nucleus Server setup<br/>• Omniverse ecosystem dependency<br/>• Less suitable for non-USD workflows |
+| **Git + Git LFS** | **Open-source, flexible workflows** | Works with any tool | • **Industry standard** - Widely adopted<br/>• **Open source** - No vendor lock-in<br/>• **Branching & merging** - Full version control features<br/>• **Git LFS** - Handles large binary files<br/>• **CI/CD integration** - Automated workflows<br/>• **Standard VCS** - Can migrate between hosts | • Steeper learning curve<br/>• Requires technical knowledge<br/>• Binary file handling can be complex<br/>• No real-time collaboration |
+| **[Anchorpoint](https://www.anchorpoint.app/)** | **Teams without version control** | Works with existing folder structure | • **Artist-friendly** - Simple two-button interface<br/>• **Git-based** - Built on Git/Git LFS<br/>• **No reorganization needed** - Works with existing folders<br/>• **File locking** - Prevents conflicts<br/>• **TB-scale support** - Handles large projects<br/>• **DCC integration** - Blender, Photoshop, Unity, Unreal | • Commercial tool<br/>• Not tested in this project<br/>• Requires Git server setup |
+| **[Diversion.dev](https://www.diversion.dev/)** | **Game/3D pipelines, Unreal Engine** | Direct Unreal Engine plugin | • **Cloud-native** - Modern Git-like workflow<br/>• **Unreal integration** - Direct plugin for UE<br/>• **Easy setup** - Simple for small teams<br/>• **Fast uploads** - Optimized for large binaries<br/>• **Private workspaces** - Cloud syncs before commit | • Closed ecosystem - Vendor lock-in<br/>• Limited third-party integrations<br/>• Less mature than Git/Perforce |
+| **[Assembla](https://get.assembla.com/)** | **Enterprise compliance, hosted Perforce** | Git/SVN/Perforce repos | • **Enterprise compliance** - SOC 2, GDPR<br/>• **Hosted Perforce** - Only cloud Perforce service<br/>• **Mature ecosystem** - CI/CD, IDE integrations<br/>• **Multiple VCS** - Git, SVN, or Perforce<br/>• **Strong security** - Access controls, audit logs | • Traditional pull/push model<br/>• No real-time collaboration<br/>• Enterprise pricing<br/>• Manual import/export workflow |
+| **PLM/PDM/ERP Systems** | **Established organizations** | Enterprise integration | • **Already in place** - No new system needed<br/>• **Product lifecycle management** - Full traceability<br/>• **Engineering data** - CAD/engineering integration<br/>• **Enterprise-grade** - Scalable and secure | • May not be USD-native<br/>• Integration complexity<br/>• May require custom connectors |
+
+**Omniverse Nucleus - Deep Integration:**
+
+**[Omniverse Nucleus](https://docs.omniverse.nvidia.com/nucleus/latest/index.html)** is NVIDIA's version control and collaboration system specifically designed for USD workflows. It provides the **tightest integration** when working with Omniverse Kit applications:
+
+- **Live Collaboration**: Multiple users can work simultaneously on the same USD stage with real-time updates
+- **Checkpoints**: Create immutable snapshots of your work at any point, allowing safe rollback and version reference
+- **USD-Native**: Built from the ground up for USD, understanding composition arcs, layers, and references
+- **Centralized Asset Management**: Single source of truth for all USD assets, ensuring consistency across projects
+- **Seamless Integration**: Works directly with Omniverse Kit apps, Connectors, and extensions without additional setup
+
+**Anchorpoint - Artist-Friendly Git Solution:**
+
+**[Anchorpoint](https://www.anchorpoint.app/)** is a Git-based version control solution designed specifically for artists and creative teams. It's an **excellent alternative to Nucleus** for teams that want version control without committing to the Omniverse ecosystem:
+
+- **Works with Your Existing Folder Structure**: Unlike Nucleus, Anchorpoint adds version control **on top of your existing folder structure** without requiring reorganization or special server access. This means you can version control assets in standard folders that any tool can access.
+
+- **Universal Tool Access**: **Major advantage over Nucleus** - Tools like Photoshop, Blender, Substance Painter, and other DCC applications can directly access files in Anchorpoint-managed folders without special connectors or server mounting. This eliminates the complexity of storing assets in multiple locations.
+
+- **Git-Based Foundation**: Built on Git and Git LFS, providing industry-standard version control with full branching, merging, and history tracking capabilities.
+
+- **Artist-Friendly Interface**: Simple two-button interface designed for non-technical users, making Git accessible to artists who don't want to learn command-line tools.
+
+- **File Locking**: Prevents conflicts when multiple team members work on the same files, essential for binary assets.
+
+- **TB-Scale Support**: Handles large projects without slowdowns, with selective checkout to download only what you need.
+
+- **DCC Integration**: Native support for Blender, ZBrush, Photoshop, Substance, Unity, Unreal Engine, and Godot.
+
+- **Python API**: Automate workflows with Python-based actions for custom pipeline integration.
+
+**When Anchorpoint Makes Sense:**
+
+- **Mixed tool workflows**: When you need to work with tools that can't directly access Nucleus Server (Photoshop, Substance Designer, etc.)
+- **Teams without version control**: If your team doesn't have version control yet and needs an easy-to-adopt solution
+- **Standard folder structure**: When you want to keep your existing folder organization without restructuring for Nucleus
+- **Git compatibility**: When you need Git-based version control but want an artist-friendly interface
+- **Multi-platform workflows**: When working across different platforms and tools that need direct file system access
+
+**Note**: This tool hasn't been tested in this project, but represents one of the most promising approaches for establishing version control in teams that don't have it yet, especially when Nucleus's tool limitations become a concern.
+
+**Practical Workflow: Combining Systems**
+
+Modern USD pipelines often benefit from **combining multiple version control systems**:
+
+- **Use Nucleus for live collaboration**: Real-time, collaborative 3D scene development between Omniverse and Unreal Engine
+- **Use traditional VCS for long-term versioning**: Git/Perforce/Assembla for source control, backup, compliance, and long-term asset management
+- **Workflow example**:
+  1. Pull latest assets from your traditional VCS (Git/Assembla)
+  2. Work in Omniverse/Unreal, saving USD files to Nucleus for live collaboration
+  3. Periodically commit changes back to traditional VCS for long-term versioning, backup, or compliance
+
+**When to Use Each Solution:**
+
+- **Use Nucleus** if you're working primarily in the Omniverse ecosystem and need tight integration with Kit apps and real-time collaboration
+- **Use Git/Git LFS** if you need open-source, flexible version control that works across different tools and platforms
+- **Use Anchorpoint** if your team doesn't have version control yet and needs an artist-friendly Git solution, or if you work with tools that can't directly access Nucleus Server (Photoshop, Substance Designer, etc.) - Anchorpoint works with standard folder structures that any tool can access
+- **Use Diversion.dev** if you're working primarily with Unreal Engine and want a modern, cloud-native VCS with direct UE integration
+- **Use Assembla** if you need enterprise compliance (SOC 2, GDPR) and want hosted Perforce or multiple VCS options (Git/SVN/Perforce)
+- **Integrate with existing PLM/PDM** if you're working with established organizations that already have enterprise systems
+
+**For Established Organizations:**
+When implementing larger digital twins for established organizations, they **very likely already have version control systems** in place:
+- **PLM systems** (Product Lifecycle Management) - Handle product data and revisions
+- **PDM systems** (Product Data Management) - Manage engineering data and versions
+- **Enterprise version control** - May use Perforce, SVN, or other enterprise solutions
+
+In these cases, integrate your USD workflow with their existing systems rather than introducing new version control tools.
 
 ### Additional Tools
-
-- **Nucleus Server** (optional, for collaborative workflows):
-  - Omniverse Nucleus Server for centralized asset management
-  - Alternative: NAS, cloud storage, or local file systems
 
 - **[ShapeFX Loki](https://shapefx.app/)** - **Promising USD-native tool** based on OpenDCC:
   - Built on **[OpenDCC](https://forum.aousd.org/t/opendcc-is-now-open-source/2448)** - Open-source application framework from the AOUSD community
@@ -197,7 +520,7 @@ Some DCC tools have **significant limitations** when working with USD:
   - GitHub: [shapefx/OpenDCC](https://github.com/shapefx/OpenDCC)
   - Forum: [OpenDCC is now open source](https://forum.aousd.org/t/opendcc-is-now-open-source/2448)
 
-## Quick Start
+## Quick Start - Using the Folders in this Repo
 
 1. **Assets**: Place your USD assets in `010_ASS_USD/`
 2. **Modifications**: Create or edit layers in `020_LYR_USD/` to modify assets
@@ -361,12 +684,14 @@ The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `sub
 
 ```usda
 subLayers = [
-    @./020_LYR_USD/Opinion_xyz_LYR.usda@,
-    @./020_LYR_USD/Variant_LYR.usda@,
-    @./020_LYR_USD/Mtl_work_LYR.usda@,
-    @./020_LYR_USD/AssetImport_LYR.usda@  # Asset imports at bottom
+    @./020_LYR_USD/Opinion_xyz_LYR.usda@,    # First = strongest (applied last, overrides others)
+    @./020_LYR_USD/Variant_LYR.usda@,        # Second
+    @./020_LYR_USD/Mtl_work_LYR.usda@,       # Third
+    @./020_LYR_USD/AssetImport_LYR.usda@     # Last = weakest (applied first, can be overridden)
 ]
 ```
+
+**Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). This is separate from LIV(E)RPS composition strength ordering, which applies to composition arcs (Local, Inherits, Variants, rElocates, References, Payloads, Specializes).
 
 ### Step 7: Production Deployment
 
@@ -387,7 +712,7 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 3. **Add Metadata**: Map CAD metadata to USD metadata and connect to external data sources
 4. **Apply Modifications**: Use layers in `020_LYR_USD/` to add digital twin-specific modifications, opinions, and connections
 5. **Link to Root**: Ensure all assets and modifications are properly linked in `GoodStart_ROOT.usda`
-6. **AAS Integration**: Connect USD assets to Asset Administration Shell (AAS) for digital twin management
+6. **AAS Integration**: Connect USD assets to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management. See [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) (European) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) (OPC UA, American/USA context)
 
 ### DCC Workflow (Optional)
 
@@ -533,7 +858,6 @@ over "RobotArm" (
     # Geometry and hierarchy
 }
 ```
-
 ### Physical AI Integration
 
 **Simulation Ready:**
@@ -616,12 +940,16 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 
 ### NVIDIA Digital Twin Learning Path Modules
 
-- **Module 1: Digital Twin Fundamentals** → Project structure and organization
-- **Module 2: OpenUSD for Digital Twins** → USD composition and layer workflows
-- **Module 3: Asset Organization** → Folder structure and asset management
-- **Module 4: CAD Integration** → CAD conversion pipeline and workflows
-- **Module 5: Metadata and AAS** → Metadata mapping and AAS integration
-- **Module 6: Industrial Systems** → PLM/PDM/ERP integration
+- **[Module 1: Digital Twin Fundamentals](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Project structure and organization
+- **[Module 2: OpenUSD for Digital Twins](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → USD composition and layer workflows
+- **[Module 3: Asset Organization](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Folder structure and asset management
+- **[Module 4: CAD Integration](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → CAD conversion pipeline and workflows
+- **[Module 5: Metadata and AAS](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Metadata mapping and AAS integration
+- **[Module 6: Industrial Systems](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → PLM/PDM/ERP integration
+
+**📚 Main Learning Path:** **[NVIDIA Digital Twins Learning Path](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** - Complete structured learning path covering all modules above.
+
+**📖 Technical Documentation:** **[Assembling Digital Twins Documentation](https://docs.nvidia.com/learning/physical-ai/assembling-digital-twins/latest/index.html)** - Detailed technical documentation on building digital twins with OpenUSD.
 
 ### Cross-Reference with Learning Content
 
@@ -637,6 +965,7 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 
 - **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** - Curated list of OpenUSD resources
 - **[Haluszka OpenUSD Tutorials](https://haluszka.com/#tutorials)** - Hands on 'learn with me...' 
+- **[USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/)** - Practical USD onboarding guide for developers and pipeline TDs (Houdini-focused, VFX industry)
 - **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - CAD conversion examples
 - **[AOUSD Specifications](https://aousd.org/)** - Official OpenUSD standards
 - **[USDWG Collective Project 001](https://github.com/usd-wg/collectiveproject001)** - VFX workflow examples
@@ -646,7 +975,7 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 
 ## Learning from VFX Industry Best Practices
 
-OpenUSD was originally developed by Pixar Animation Studios for visual effects and CGI production. The VFX industry has a decade of experience working with USD in production pipelines, and their best practices can serve as a **blueprint** for starting your own USD project.
+OpenUSD was originally developed by [Pixar Animation Studios](https://openusd.org/) for visual effects and CGI production. The VFX industry has a decade of experience working with USD in production pipelines, and their best practices can serve as a **blueprint** for starting your own USD project.
 
 ### Key Resources
 
@@ -669,9 +998,16 @@ OpenUSD was originally developed by Pixar Animation Studios for visual effects a
 3. **[Industrial Digital Twin Association (IDTA)](https://industrialdigitaltwin.org/)** - Industry-specific digital twin standards:
    - Focuses on Industry 4.0 and digital twin applications
    - Provides guidance for industrial use cases
-   - Connects to Asset Administration Shell (AAS) standards
+   - Connects to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) standards (European context)
 
-4. **[First Steps to Becoming an OpenUSD Developer](https://docs.omniverse.nvidia.com/usd/latest/learn-openusd/first_steps.html)** - NVIDIA's comprehensive getting started guide:
+4. **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification for Asset Administration Shell:
+   - American/USA context for AAS implementation
+   - Maps AAS structure into OPC UA information model
+   - Provides comprehensive AAS specification for OPC UA integration
+   - Official documentation: [I4AAS v100 Reference](https://reference.opcfoundation.org/I4AAS/v100/docs/)
+   - Main reference: [OPC Foundation Reference](https://reference.opcfoundation.org)
+
+5. **[First Steps to Becoming an OpenUSD Developer](https://docs.omniverse.nvidia.com/usd/latest/learn-openusd/first_steps.html)** - NVIDIA's comprehensive getting started guide:
    - Navigate OpenUSD learning resources
    - Free Learn OpenUSD learning path
    - Get OpenUSD (source code, pre-built binaries, or usd-core from PyPI)
@@ -680,7 +1016,7 @@ OpenUSD was originally developed by Pixar Animation Studios for visual effects a
    - OpenUSD Development Certification information
    - Links to forums and community resources
 
-5. **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** - Curated list of awesome OpenUSD resources and projects:
+6. **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** - Curated list of awesome OpenUSD resources and projects:
    - Libraries and tools
    - Sample assets from Pixar, NVIDIA, Disney, and others
    - Learning resources (non-technical and technical)
@@ -688,12 +1024,20 @@ OpenUSD was originally developed by Pixar Animation Studios for visual effects a
    - Integrations and plugins
    - Hand-picked resources for developers and artists
 
-6. **[Haluszka OpenUSD Tutorials](https://haluszka.com/#tutorials)** - Practical OpenUSD tutorials and learning content:
+7. **[Haluszka OpenUSD Tutorials](https://haluszka.com/#tutorials)** - Practical OpenUSD tutorials and learning content:
    - Step-by-step tutorials for OpenUSD development
    - Practical examples and use cases
    - Learning resources for tech artist becoming pipelinedevelopers
 
-7. **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - CAD to OpenUSD conversion scripts from the USD study group:
+8. **[USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/)** by Luca Scheller - Practical USD onboarding guide for software developers and pipeline TDs:
+   - Comprehensive guide to USD essentials, composition, and production workflows
+   - Extensive Houdini examples and LOPs (Lighting Operators) workflows
+   - VFX industry best practices and production checklists
+   - Performance optimization techniques and debugging strategies
+   - Originally presented at Siggraph 2023 - Houdini Hive
+   - Focuses on practical, production-ready USD workflows
+
+9. **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - CAD to OpenUSD conversion scripts from the USD study group:
    - Python scripts for converting CAD files (STEP, JT, CATIA, etc.) to USD format
    - Example STEP file conversion workflows
    - Uses uv for dependency management
@@ -747,6 +1091,24 @@ NVIDIA provides comprehensive resources for building digital twins with OpenUSD:
 
 These resources provide practical guidance for implementing digital twin workflows with OpenUSD assets.
 
+### Asset Administration Shell (AAS) Standards
+
+The Asset Administration Shell (AAS) is an Industry 4.0 standard for digital twin administration. Two main standards bodies provide AAS specifications:
+
+- **[IDTA (Industrial Digital Twin Association) AAS](https://industrialdigitaltwin.org/en/aas/)** - European context:
+  - Official AAS specification from the German-led IDTA
+  - Comprehensive AAS metamodel and implementation guidelines
+  - Focus on European Industry 4.0 standards
+
+- **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification (American/USA context):
+  - OPC UA Companion Specification for Asset Administration Shell
+  - Maps AAS structure into OPC UA information model
+  - Comprehensive specification: [I4AAS v100 Reference](https://reference.opcfoundation.org/I4AAS/v100/docs/)
+  - Main reference: [OPC Foundation Reference](https://reference.opcfoundation.org)
+  - Focus on OPC UA integration for American industrial systems
+
+Both standards provide complementary approaches to implementing AAS in digital twin workflows. Choose based on your regional context and system integration requirements (OPC UA vs. REST/HTTP APIs).
+
 ## Best Practices for Digital Twins and CAD Integration
 
 When implementing this workflow with existing CAD systems and building digital twins from existing products, follow these best practices:
@@ -784,7 +1146,9 @@ When converting CAD files to USD, consider:
 1. **Metadata Extraction**: Extract relevant metadata from the source CAD file
 2. **Data Source Connections**: Define how to connect USD files to other data sources (databases, APIs, etc.)
 3. **USD Metadata**: Write appropriate metadata into the USD file structure
-4. **Asset Administration Shell (AAS)**: Connect to **Asset Administration Shell (AAS)**, also known as Verwaltungsschale, for digital twin administration and lifecycle management
+4. **Asset Administration Shell (AAS)**: Connect to **[Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/)**, also known as Verwaltungsschale, for digital twin administration and lifecycle management. AAS standards are available from:
+   - **[IDTA (Industrial Digital Twin Association)](https://industrialdigitaltwin.org/en/aas/)** - European context
+   - **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification (American/USA context)
 
 #### Metadata Mapping Strategies
 
@@ -925,7 +1289,7 @@ Based on NVIDIA guidance and OpenUSD best practices:
 
 4. **Document your schema** usage clearly in project documentation
 
-5. **Coordinate with AOUSD standards** for wider interoperability
+5. **Coordinate with [AOUSD standards](https://aousd.org/)** for wider interoperability
 
 6. **Regularly test** metadata accessibility in your toolchain and scripts
 
@@ -937,7 +1301,7 @@ Based on NVIDIA guidance and OpenUSD best practices:
 **Non-Geometry Data Handling:**
 
 - **PLM Links**: Store PLM system identifiers and revision information
-- **AAS Metadata**: Connect to Asset Administration Shell for digital twin management
+- **AAS Metadata**: Connect to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management ([IDTA](https://industrialdigitaltwin.org/en/aas/) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/))
 - **ERP Integration**: Link to ERP systems for production and logistics data
 - **IoT Data**: Connect to sensor data and real-time monitoring systems
 - **Documentation**: Link to technical documentation, manuals, and specifications
@@ -946,9 +1310,9 @@ Based on NVIDIA guidance and OpenUSD best practices:
 
 **Before creating custom schemas:**
 
-1. **Review Existing Schemas**: Familiarize yourself with schemas defined by the **Alliance for OpenUSD (AOUSD)**
+1. **Review Existing Schemas**: Familiarize yourself with schemas defined by the **[Alliance for OpenUSD (AOUSD)](https://aousd.org/)**
 2. **Research Industry Schemas**: Look at what other organizations and projects are using
-3. **Coordinate with AOUSD**: If introducing new schemas, **coordinate with the AOUSD group** to ensure they fit into the bigger picture and align with industry standards
+3. **Coordinate with AOUSD**: If introducing new schemas, **coordinate with the [AOUSD group](https://aousd.org/)** to ensure they fit into the bigger picture and align with industry standards
 4. **Documentation**: Document any custom schemas and their relationship to standard schemas
 
 ### Version Control and File Naming
@@ -1041,7 +1405,7 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 4. **Metadata Mapping**: Map CAD metadata to USD metadata and connect to external data sources
 5. **Layer Management**: Use `020_LYR_USD/` layers to add modifications and opinions
 6. **Scene Validation**: Validate entire scene before deployment
-7. **AAS Integration**: Connect USD assets to Asset Administration Shell for digital twin management
+7. **AAS Integration**: Connect USD assets to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management ([IDTA](https://industrialdigitaltwin.org/en/aas/) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/))
 
 ## Usage Examples and Troubleshooting
 
@@ -1124,4 +1488,5 @@ See "Houdini: The Powerhouse for USD Pipeline Automation" section above for deta
 - The `0_` prefix in asset names is used for sorting default assets
 - Layers are loaded in order - later layers override earlier ones
 - Asset-specific textures can be stored within asset folders, while global textures go in `030_TEX/`
+
 
