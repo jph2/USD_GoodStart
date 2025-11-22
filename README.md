@@ -79,6 +79,7 @@ graph TD
 ## Quick Reference
 
 **Folder-Specific Guides:**
+- **[000_SOURCE/](000_SOURCE/README.md)** - Source files folder (CAD files, DCC source files, conversion pipeline)
 - **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets folder (geometry, CAD conversions, asset workflows)
 - **[020_LYR_USD/](020_LYR_USD/README.md)** - Layer files folder (non-destructive modifications, variants, materials)
 - **[030_TEX/](030_TEX/README.md)** - Global textures folder (shared textures, Nucleus workflow)
