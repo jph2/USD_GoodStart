@@ -3,7 +3,13 @@
 **Version:** 0.9.2-beta  
 **Last Updated:** 11.22.2025
 
-A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**.
+**Pretex (why the hell..)**
+Dear fellow lerner: Here is a clean, organized USD project template for starting. It has a focus on **digital twin applications**, but the 'GoodStart' I provide here is aslo applicable for other purposes. 
+In the 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD. 
+
+My Entrypoint is Omniverse, but truly learning the beauty of Composition Arcs in OpenUSD has been hard, since the online Learning paths provided by NVIDIA, PIXAR, come from the Pipelining heritage of OpenUSD and tend to Focus on the Programmatic side of things. Even though I learned heaps - Cursor (with strong Context engineering + MCPs) has become a good friend and has changed my approach on 3D entirely - I would like to provide a path into OpenUSD that suits the 3D artist | TechArtist | CAD moddeler | non programmer |.... better by providing a straight forward minimal Project Setup. ...and some more insights in thei Readme
+
+So here is a 'GoodStart' if you disagree or want to make it better, drop me a line JH@haluszka.com subject 'GoodStart' THX in a dvance for the Feedback!
 
 > **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
 There are bits and pieces about the workflows suggested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin workflows. You are sort of watching me learning ;) 
