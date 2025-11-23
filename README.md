@@ -13,7 +13,7 @@ My Entrypoint is Omniverse, but truly learning the beauty of Composition Arcs in
 Never the less, I would like to provide a path into OpenUSD that suits the 3D artist | TechArtist | CAD moddeler | non programmer better, by providing a straight forward minimal Project Setup, and some more insights in this Readme.
 
 So here is a **'GoodStart'** if you disagree or want to make it better, drop me a line JH@haluszka.com, subject: 'USD GoodStart'.
-THX in a dvance for the Feedback!>
+THX in advance for the Feedback!>
 
 P.s. I strongly suggest to get going with an IDE! I use Cursor, I would not consider myself a programmer (vibecoding only...), but I made this MCP for NVIDIA's USDCodeNIM: https://github.com/jph2/USDcodeNIM_MCP 
 
