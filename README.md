@@ -6,7 +6,7 @@
 **Pretex (why the hell..)**
 Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
 
-In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD. I also have some Tutorials here: www.haluszka.com#tutorials
+In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD. I also have some Tutorials here: www.haluszka.com#tutorials , More great resources: Matias Codesal: https://github.com/matiascodesal/awesome-openusd , Linfan ZhangAndy GreenYizhou Zhao: https://learn-usd.github.io/
 
 My Entrypoint is Omniverse, but truly learning the beauty of Composition Arcs in OpenUSD has been hard, since the online Learning paths provided by NVIDIA, PIXAR, come from the Pipelining heritage of OpenUSD and tend to Focus on the Programmatic side of things. To me, Cursor, with strong Context engineering + MCPs, has become a good friend and has changed my approach on 3D entirely. 
 
