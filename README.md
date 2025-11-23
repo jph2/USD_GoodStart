@@ -11,7 +11,9 @@ In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling 
 My Entrypoint is Omniverse, but truly learning the beauty of Composition Arcs in OpenUSD has been hard, since the online Learning paths provided by NVIDIA, PIXAR, come from the Pipelining heritage of OpenUSD and tend to Focus on the Programmatic side of things. To me, Cursor, with strong Context engineering + MCPs, has become a good friend and has changed my approach on 3D entirely. Never the less I would like to provide a path into OpenUSD that suits the 3D artist | TechArtist | CAD moddeler | non programmer |.... better by providing a straight forward minimal Project Setup. ...and some more insights in this Readme.
 
 So here is a 'GoodStart' if you disagree or want to make it better, drop me a line JH@haluszka.com, subject: 'GoodStart'.
-THX in a dvance for the Feedback!
+THX in a dvance for the Feedback!>
+
+P.s. I strongly suggest to get going with an IDE! I use Cursor, I would not consider myself a programmer (vibecoding only...), but I made this MCP for NVIDIA's USDCodeNIM: https://github.com/jph2/USDcodeNIM_MCP 
 
 > **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
 There are bits and pieces about the workflows suggested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin workflows. You are sort of watching me learning ;) 
