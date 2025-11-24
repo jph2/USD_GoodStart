@@ -8,7 +8,7 @@ Dear fellow lerner: Here is a clean, organized USD project template for getting 
 
 If you are in a hurry, just read the TLDR section..., it will get you up and running  ;)
 
-In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD. 
+In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD.
 I also have some Tutorials here: www.haluszka.com#tutorials , 
 More great resources: Matias Codesal: https://github.com/matiascodesal/awesome-openusd , Linfan ZhangAndy GreenYizhou Zhao: https://learn-usd.github.io/
 
