@@ -3,7 +3,23 @@
 **Version:** 0.9.2-beta  
 **Last Updated:** 11.22.2025
 
-A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**.
+**Pretex (why the hell..)**
+Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
+
+If you are in a hurry, just read the TLDR section..., it will get you up and running  ;)
+
+In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD. 
+I also have some Tutorials here: www.haluszka.com#tutorials , 
+More great resources: Matias Codesal: https://github.com/matiascodesal/awesome-openusd , Linfan ZhangAndy GreenYizhou Zhao: https://learn-usd.github.io/
+
+My Entrypoint is Omniverse, but truly learning the beauty of Composition Arcs in OpenUSD has been hard, since the online Learning paths provided by NVIDIA, PIXAR, come from the Pipelining heritage of OpenUSD and tend to Focus on the Programmatic side of things. To me, Cursor, with strong Context engineering + MCPs, has become a good friend and has changed my approach on 3D entirely. 
+
+Never the less, I would like to provide a path into OpenUSD that suits the 3D artist | TechArtist | CAD moddeler | non programmer better, by providing a straight forward minimal Project Setup, and some more insights in this Readme.
+
+So here is a **'GoodStart'** if you disagree or want to make it better, drop me a line JH@haluszka.com, subject: 'USD GoodStart'.
+THX in advance for the Feedback!>
+
+P.s. I strongly suggest to get going with an IDE! I use Cursor, I would not consider myself a programmer (vibecoding only...), but I made this MCP for NVIDIA's USDCodeNIM: https://github.com/jph2/USDcodeNIM_MCP 
 
 > **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
 There are bits and pieces about the workflows suggested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin workflows. You are sort of watching me learning ;) 
@@ -21,20 +37,24 @@ graph TD
     Root --> Material[Mtl_work_LYR.usda<br/>Materials & Shading]
     Root --> Asset[AssetImport_LYR.usda<br/>References & Payloads<br/>Geometry Layer]
     
-    Asset --> Assets[010_ASS_USD/<br/>USD Assets]
-    Asset --> Payloads[Payloads<br/>Heavy Geometry]
+    Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
+    Assets --> Payloads[Payloads<br/>Heavy Geometry]
+    Payloads --> Asset
     
-    Root -.LIV(E)RPS.-> Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>rElocates<br/>References Payloads<br/>Specializes]
-    
-    Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets
     Textures[030_TEX/<br/>Global Textures] --> Material
+    
+    Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>rElocates<br/>References Payloads<br/>Specializes]
     
     style Root fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000
     style Asset fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
     style Opinion fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
     style Variant fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
     style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
-    style Composition fill:#78909c,stroke:#263238,stroke-width:3px,color:#000
+    style Composition fill:#78909c,stroke:#263238,stroke-width:4px,color:#000
+    style Source fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
+    style Textures fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
+    style Assets fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
+    style Payloads fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
 ```
 
 **Folder Organization:**
@@ -62,7 +82,7 @@ graph TD
 **Key Best Practices:**
 - ✅ Use **relative paths** (never absolute paths)
 - ✅ Keep layer structure simple
-- ✅ Don't import assets in root layer - use `AssetImport_LYR` at bottom
+- ✅ Don't import assets in root layer - use `AssetImport_LYR` at bottom and Reference / Payload the assets there. (ignoring this caused me heavy headaches and has been v)
 - ✅ Use **custom attributes** for queryable metadata (PLM IDs, status)
 - ✅ Use **customData dictionary** for static documentation metadata
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
