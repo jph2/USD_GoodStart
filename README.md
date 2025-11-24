@@ -28,6 +28,8 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 **What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/FpI3K3YxUeg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 **Quick Structure:**
 
 ```mermaid
