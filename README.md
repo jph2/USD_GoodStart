@@ -28,7 +28,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 **What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts.
 
-[![Watch the video](https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg)](https://www.youtube.com/watch?v=FpI3K3YxUeg)
+<a href="https://www.youtube.com/watch?v=FpI3K3YxUeg" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg" alt="Watch the video"></a>
 
 **Quick Structure:**
 
