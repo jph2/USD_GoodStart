@@ -66,6 +66,16 @@ graph TD
 - `030_TEX/` - Global textures
 - `GoodStart_ROOT.usda` - Master root file (entry point)
 
+**Individual Asset Structure** (Reference/Payload Pattern):
+```
+Asset_Root_File.usda (Interface - Lightweight)
+├── Lofted Variant Sets (accessible without loading payload)
+├── Lofted Primvars (material controls)
+└── Payload Arc ───> Payload_File.usdc (Heavy Geometry)
+```
+
+**Why this pattern?** Separates lightweight "interface" from heavy "implementation". Users can see variant options, change materials, and get bounding boxes **without loading heavy geometry** (instant, fast, responsive).
+
 **Layer Stack Order** (array ordering: first = strongest, last = weakest):
 1. **Opinion_xyz_LYR.usda** (first/strongest) - Overrides and opinions
 2. **Variant_LYR.usda** - Variants and configurations
