@@ -28,7 +28,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 **What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/FpI3K3YxUeg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<a href="https://www.youtube.com/watch?v=FpI3K3YxUeg" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg" alt="Watch the video"></a>
 
 **Quick Structure:**
 
@@ -85,6 +85,7 @@ graph TD
 - ✅ Use **relative paths** (never absolute paths)
 - ✅ Keep layer structure simple
 - ✅ Don't import assets in root layer - use `AssetImport_LYR` at bottom and Reference / Payload the assets there. (ignoring this caused me heavy headaches and has been v)
+- ✅ **Lock layers you're not working on** to prevent accidental edits on the wrong layer
 - ✅ Use **custom attributes** for queryable metadata (PLM IDs, status)
 - ✅ Use **customData dictionary** for static documentation metadata
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
@@ -158,11 +159,10 @@ A scalable USD asset structure relies on four key principles:
 **Critical Pattern:** Separate the lightweight "interface" from the heavy "implementation".
 
 ```
-Asset_File.usd (Interface - Lightweight)
-├── Root Prim
-│   ├── Lofted Variant Sets (accessible without loading payload)
-│   ├── Lofted Primvars (material controls)
-│   └── Payload Arc ───> Payload_File.usdc (Heavy Geometry)
+Asset_Root_File.usda (Interface - Lightweight)
+├── Lofted Variant Sets (accessible without loading payload)
+├── Lofted Primvars (material controls)
+└── Payload Arc ───> Payload_File.usdc (Heavy Geometry)
 ```
 
 **Why this matters:**

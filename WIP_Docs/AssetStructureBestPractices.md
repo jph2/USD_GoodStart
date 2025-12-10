@@ -8,8 +8,55 @@ A scalable asset structure relies on four key principles:
 
 ### **Legibility**
 *   **Naming:** Use clear, intent-driven names (e.g., `LargeCardboardBox` vs `Box01`).
-*   **Conventions:** Differentiate public vs. internal elements (e.g., capitalized `Geometry` for public, underscored `_internal_calculations` for private).
+*   **Conventions:** Differentiate public vs. internal elements (e.g., capitalized `Geometry` for public, use descriptive prefixes like `internal_calculations` rather than leading underscores for private elements).
 *   **Standards:** Use ASCII/UTF-8 identifiers; avoid dynamic tokens like timestamps in persistent names.
+*   ⚠️ **Avoid leading underscores**: While sometimes used to mark "private" elements, leading underscores can break MaterialX and other tools. Use descriptive prefixes instead.
+
+#### **USD Path Naming Rules (Critical)**
+
+USD has strict rules for valid path component names. **Invalid paths will cause errors** and may be automatically corrected by USD systems, potentially breaking references.
+
+**Illegal vs legal Characters:**
+USD path components can only contain:
+*   **Letters** (a-z, A-Z)
+*   **Numbers** (0-9)
+*   **Underscores** (_)
+
+**Common Illegal Characters:**
+*   **Hyphens (-)** - Not allowed in path components
+*   **Spaces ( )** - Not allowed in path components
+*   **Periods (.)** - Not allowed in path components (except for file extensions)
+*   **Special characters** - No slashes, colons, brackets, etc.
+
+**Leading Numbers Rule:**
+*   A path component **cannot start with a number**
+*   ⚠️ **Avoid leading underscores**: While technically valid in USD, names starting with underscores (e.g., `_123_asset`) can cause problems with **MaterialX** and other tools that may treat leading underscores as private/internal identifiers or fail to process them correctly
+*   **Better alternative**: Use a descriptive prefix instead (e.g., `asset_123` or `item_123`)
+
+**Leading Underscore Warning:**
+*   ⚠️ **MaterialX Compatibility Issue**: Names starting with underscores can break MaterialX-generated content
+*   MaterialX and some other USD tools may not properly handle prims or attributes that start with underscores
+*   **Best Practice**: Avoid leading underscores entirely. Use descriptive prefixes or rearrange names to avoid starting with numbers or underscores
+
+**Examples of Invalid Paths and Valid Fixes:**
+
+| Invalid Path | Valid Fix | Reason |
+|--------------|-----------|--------|
+| `my-asset-name` | `my_asset_name` | Replaced hyphens with underscores |
+| `my asset name` | `my_asset_name` | Replaced spaces with underscores |
+| `asset.001` | `asset_001` | Replaced period with underscore |
+| `123_asset` | `asset_123` or `item_123` | ⚠️ Avoid `_123_asset` (leading underscore breaks MaterialX) - Rearrange instead |
+| `asset-v2` | `asset_v2` | Replaced hyphen with underscore |
+| `test.01.final` | `test_01_final` | Replaced periods with underscores |
+| `_internal_name` | `internal_name` | ⚠️ Avoid leading underscore (MaterialX compatibility) |
+
+**File Names vs Path Components:**
+*   **File names** (e.g., `my-asset.usd`) can contain hyphens and periods (for extensions)
+*   **Path components** (prim names, folder names in paths) must follow the rules above
+*   Example: File `my-asset.usd` is valid, but prim path `/World/my-asset` is invalid → use `/World/my_asset`
+
+**Best Practice:**
+Always validate USD paths before committing. Many USD tools will flag invalid paths, but it's better to catch these issues early in your naming conventions rather than having USD systems auto-correct them (which can break references).
 
 ### **Modularity**
 *   **Encapsulation:** Assets should be self-contained with anchored paths for local dependencies.
@@ -33,15 +80,13 @@ This is the standard for non-trivial assets. It separates the lightweight "inter
 
 ### **Structure**
 ```text
-Asset_File.usd (Interface)
-├── Root Prim (Xform/Scope)
-│   ├── Public Interface (Properties, Attributes)
-│   ├── Lofted Variant Sets (Control logical variations)
-│   ├── Lofted Primvars (Control material/shader inputs)
-│   └── Payload Arc ───> Payload_File.usd (Content)
-                            ├── Detailed Geometry
-                            ├── High-Res Materials
-                            └── Internal Hierarchies
+Asset_Root_File.usda (Interface - Lightweight)
+├── Lofted Variant Sets (Control logical variations, accessible without loading payload)
+├── Lofted Primvars (Control material/shader inputs, accessible without loading payload)
+└── Payload Arc ───> Payload_File.usdc (Heavy Content)
+                        ├── Detailed Geometry
+                        ├── High-Res Materials
+                        └── Internal Hierarchies
 ```
 
 ### **Why use it?**
@@ -61,7 +106,7 @@ When you use a payload, the heavy geometry is **lazy-loaded** (only loaded when 
 **Visual Example:**
 
 ```usda
-# Asset_File.usd (Interface - Lightweight)
+# Asset_Root_File.usda (Interface - Lightweight)
 def Xform "Pump" (
     prepend payload = @./Payloads/Pump_payload.usdc@  # Heavy geometry here
 )
