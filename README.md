@@ -1,7 +1,7 @@
 # USD GoodStart
 
-**Version:** 0.9.2-beta  
-**Last Updated:** 11.22.2025
+**Version:** 0.9.3-beta  
+**Last Updated:** 10.12.2025
 
 **Pretex (why the hell..)**
 Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
@@ -66,6 +66,12 @@ graph TD
 - `030_TEX/` - Global textures
 - `GoodStart_ROOT.usda` - Master root file (entry point)
 
+**📖 Folder Documentation:** Each folder contains its own `README.md` with detailed information on **how to use it** and **why to use it this way**. Check the folder-specific READMEs for:
+- Purpose and workflow details
+- Best practices and conventions
+- Examples and use cases
+- Integration with other folders
+
 **Individual Asset Structure** (Reference/Payload Pattern):
 ```
 Asset_Root_File.usda (Interface - Lightweight)
@@ -118,6 +124,19 @@ Asset_Root_File.usda (Interface - Lightweight)
 - **[030_TEX/](030_TEX/README.md)** - Global textures folder (shared textures, Nucleus workflow)
 
 Each folder README provides quick reference for that specific folder. For comprehensive documentation, see sections below.
+
+**📚 Work-in-Progress Documentation (`WIP_Docs/`):**
+The `WIP_Docs/` folder contains work-in-progress documentation that will hold more detailed guides in the future. Currently, most content is in this main README. **Future plans:**
+- This README will be reduced to the **TLDR section** only
+- All other detailed sections will move to an upcoming **OpenUSD Best Practices Guide** (currently being developed in `WIP_Docs/`)
+- The guide will provide comprehensive documentation on how to use OpenUSD in general and with this template
+
+**Current WIP_Docs contents:**
+- `AssetStructureBestPractices.md` - Asset structure patterns and best practices
+- `OpenUSD_Best_Practices_Guide (17).md` - Comprehensive OpenUSD guide (in development)
+- Various analysis and planning documents
+
+**Note:** All documents are evolving and may contain draft content, this is especially true for the WIP_Docs . The main README remains the primary source of information until the guide is finalized.
 
 ---
 

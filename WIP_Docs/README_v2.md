@@ -1,7 +1,7 @@
 - USD GoodStart
 
-**Version:** 0.9.2-beta  
-**Last Updated:** 11.21.2025
+**Version:** 0.9.3-beta  
+**Last Updated:** 10.12.2025
 
 A clean, organized USD project template for starting new projects, with a focus on **digital twin applications**, adapted from VFX industry best practices.
 

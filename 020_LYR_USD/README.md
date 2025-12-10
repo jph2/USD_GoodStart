@@ -1,7 +1,7 @@
 # 020_LYR_USD
 
-**Version:** 0.9.2-beta  
-**Last Updated:** 11.22.2025
+**Version:** 0.9.3-beta  
+**Last Updated:** 10.12.2025
 
 ## Purpose
 
@@ -9,18 +9,39 @@ This folder contains **USD layer files** that modify and override content in the
 
 ## Current Layers
 
-- `AssetImport_LYR.usda` - Asset import and reference layer (must be at bottom)
-- `Mtl_work_LYR.usda` - Material work and modifications
-- `Variant_LYR.usda` - Variant set definitions and selections
-- `Opinion_xyz_LYR.usda` - General opinion/override layer (top/strongest)
+- **`your very Personal opinion_LYR.usda`** - **Default authoring layer** (unlocked, for user modifications)
+- `Opinion_xyz_LYR.usda` - General opinion/override layer (locked)
+- `Opinion_abc_LYR.usda` - Additional opinion layer (locked)
+- `Variant_LYR.usda` - Variant set definitions and selections (locked)
+- `Mtl_work_LYR.usda` - Material work and modifications (locked)
+- `AssetImport_LYR.usda` - Asset import and reference layer (locked, must be at bottom)
 
 ## Usage
+
+### Default Authoring Layer
+
+**`your very Personal opinion_LYR.usda`** is the **default authoring layer** set in `GoodStart_ROOT.usda`. This is where you should make your modifications and changes.
+
+**All other layers are locked** to prevent accidental modifications. This ensures:
+- Base assets remain unchanged
+- Layer structure stays intact
+- Non-destructive workflow is maintained
+
+### ⚠️ Critical: Do NOT Edit the Root Layer
+
+**Strongly recommended:** Do not put anything in `GoodStart_ROOT.usda` itself. Anything in the root layer becomes **Local** (strongest composition strength in LIV(E)RPS), which means:
+- It cannot be overridden by any sublayer
+- It breaks the non-destructive workflow
+- It makes changes difficult to track and manage
+
+**Always edit in `your very Personal opinion_LYR.usda`** or create new layers instead.
 
 ### Adding New Layers
 
 1. Create a new `.usda` file with descriptive name ending in `_LYR`
 2. Add to `subLayers` array in `GoodStart_ROOT.usda`
 3. **Critical**: `AssetImport_LYR.usda` must be last (bottom/weakest) in the array
+4. Consider locking new layers if they should remain stable
 
 ### Layer Order
 
@@ -31,28 +52,45 @@ The `subLayers` array is ordered from **strongest (first)** to **weakest (last)*
 **Example:**
 ```usda
 subLayers = [
-    @./020_LYR_USD/Opinion_xyz_LYR.usda@,    # First = strongest
-    @./020_LYR_USD/Variant_LYR.usda@,
-    @./020_LYR_USD/Mtl_work_LYR.usda@,
-    @./020_LYR_USD/AssetImport_LYR.usda@     # Last = weakest (CRITICAL)
+    @./020_LYR_USD/your very Personal opinion_LYR.usda@,  # First = strongest (DEFAULT AUTHORING LAYER)
+    @./020_LYR_USD/Opinion_xyz_LYR.usda@,                 # Locked
+    @./020_LYR_USD/Opinion_abc_LYR.usda@,                 # Locked
+    @./020_LYR_USD/Variant_LYR.usda@,                     # Locked
+    @./020_LYR_USD/Mtl_work_LYR.usda@,                    # Locked
+    @./020_LYR_USD/AssetImport_LYR.usda@                  # Last = weakest (CRITICAL, Locked)
 ]
 ```
 
 ## Best Practices
 
+- **Use the default authoring layer** - Make changes in `your very Personal opinion_LYR.usda`
+- **Do NOT edit the root layer** - Anything in `GoodStart_ROOT.usda` becomes Local (strongest) and cannot be overridden
+- **Respect locked layers** - Do not unlock or modify locked layers unless necessary
 - **Keep layers focused** - Each layer should have a specific purpose
 - **Use descriptive names** - Make it clear what each layer modifies
 - **Keep structure simple** - Avoid unnecessary complexity
-- **Do NOT import assets in root layer** - Keep `GoodStart_ROOT.usda` clean
+- **Do NOT import assets in root layer** - Keep `GoodStart_ROOT.usda` clean (only subLayers and metadata)
 - **AssetImport_LYR at bottom** - Must be last in `subLayers` array
 
 ## Modifying Assets
 
 When modifying assets from `010_ASS_USD/`:
-1. Create or modify a layer in this folder
-2. Reference the base asset in the layer
+1. **Edit `your very Personal opinion_LYR.usda`** (the default authoring layer)
+2. Reference the base asset using `over` statements
 3. Add modifications/opinions
 4. Layer will override base asset when loaded
+
+**Example:**
+```usda
+# In your very Personal opinion_LYR.usda
+over "AssetName" {
+    # Your modifications here
+    double3 xformOp:translate = (10, 0, 0)
+    string customAttribute = "myValue"
+}
+```
+
+**Remember:** Do not edit the root layer (`GoodStart_ROOT.usda`) - use the authoring layer instead.
 
 ## Digital Twin Use Cases
 

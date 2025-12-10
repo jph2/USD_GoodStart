@@ -1,7 +1,7 @@
 # 000_SOURCE
 
-**Version:** 0.9.2-beta  
-**Last Updated:** 11.22.2025
+**Version:** 0.9.3-beta  
+**Last Updated:** 10.12.2025
 
 ## Purpose
 
