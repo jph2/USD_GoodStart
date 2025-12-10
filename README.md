@@ -103,7 +103,7 @@ Asset_Root_File.usda (Interface - Lightweight)
 
 **Note on LIV(E)RPS:** **LIV(E)RPS** (with rElocates) is the official OpenUSD specification from [Pixar](https://openusd.org/). rElocates (E) are officially part of LIV(E)RPS (position 4, between Variants and References) but are **unconfirmed in Omniverse Kit App 108.1**. When working with Omniverse, verify support or use LIVRPS order without rElocates. See `AssetStructureBestPractices.md` for details.
 
-**For Digital Twins:** Integrates CAD metadata, PLM/PDM/ERP systems, [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) (IDTA/[OPC Foundation](https://reference.opcfoundation.org) standards), and supports synthetic data generation for Physical AI workflows.
+**For Digital Twins:** Integrates CAD metadata, PLM/PDM/ERP systems, and supports integration with digital twin standards (such as Asset Administration Shell/AAS and OPC UA frameworks) for connecting additional data. **Important:** Every company and project needs its own approach to build pipelines and connect data. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 **Start Small:** Begin with a POC/MVP project before scaling. This is an agile, iterative process, not waterfall.
 
@@ -128,7 +128,7 @@ Each folder README provides quick reference for that specific folder. For compre
 This project template adapts OpenUSD's proven VFX industry practices for digital twin use cases, including:
 - Building digital twins from existing CAD products
 - Integrating with PLM/PDM/ERP systems
-- Connecting to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) standards (IDTA/[OPC Foundation](https://reference.opcfoundation.org))
+- Connecting to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data
 - Managing industrial and manufacturing digital twins
 - Architecture, Engineering, and Construction (AEC) applications
 
@@ -756,7 +756,7 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 3. **Add Metadata**: Map CAD metadata to USD metadata and connect to external data sources
 4. **Apply Modifications**: Use layers in `020_LYR_USD/` to add digital twin-specific modifications, opinions, and connections
 5. **Link to Root**: Ensure all assets and modifications are properly linked in `GoodStart_ROOT.usda`
-6. **AAS Integration**: Connect USD assets to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management. See [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) (European) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) (OPC UA, American/USA context)
+6. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 ### DCC Workflow (Optional)
 
@@ -988,7 +988,7 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 - **[Module 2: OpenUSD for Digital Twins](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → USD composition and layer workflows
 - **[Module 3: Asset Organization](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Folder structure and asset management
 - **[Module 4: CAD Integration](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → CAD conversion pipeline and workflows
-- **[Module 5: Metadata and AAS](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Metadata mapping and AAS integration
+- **[Module 5: Metadata and AAS](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → Metadata mapping and digital twin standards integration
 - **[Module 6: Industrial Systems](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** → PLM/PDM/ERP integration
 
 **📚 Main Learning Path:** **[NVIDIA Digital Twins Learning Path](https://www.nvidia.com/en-us/learn/learning-path/digital-twins/)** - Complete structured learning path covering all modules above.
@@ -1002,7 +1002,7 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 | Project Structure | Module 1, 3 | Folder organization, asset hierarchy |
 | Layer Workflows | Module 2 | USD composition arcs, non-destructive editing |
 | CAD Conversion | Module 4 | CAD-to-USD pipeline, STEP conversion |
-| Metadata Mapping | Module 5 | Custom schemas, AAS integration |
+| Metadata Mapping | Module 5 | Custom schemas, digital twin standards integration |
 | Validation & CI/CD | Module 6 | Quality assurance, automated testing |
 
 ### Additional Learning Resources
@@ -1016,6 +1016,7 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 - **[OpenDCC](https://github.com/shapefx/OpenDCC)** - Open-source USD-native application framework from AOUSD community
 - **[ShapeFX Loki](https://shapefx.app/)** - USD-native editing tool built on OpenDCC
 - **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - Classic USD validation and inspection tool from Pixar
+- **[Composable Bindings](https://aka.ms/ComposableBindings)** - Modern integration pattern for connecting heterogeneous systems in digital engineering workflows (Microsoft & NVIDIA collaboration)
 
 ## Learning from VFX Industry Best Practices
 
@@ -1039,17 +1040,10 @@ OpenUSD was originally developed by [Pixar Animation Studios](https://openusd.or
    - Hosts working groups and interest groups for collaboration
    - Maintains standards and schemas for the OpenUSD ecosystem
 
-3. **[Industrial Digital Twin Association (IDTA)](https://industrialdigitaltwin.org/)** - Industry-specific digital twin standards:
-   - Focuses on Industry 4.0 and digital twin applications
-   - Provides guidance for industrial use cases
-   - Connects to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) standards (European context)
-
-4. **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification for Asset Administration Shell:
-   - American/USA context for AAS implementation
-   - Maps AAS structure into OPC UA information model
-   - Provides comprehensive AAS specification for OPC UA integration
-   - Official documentation: [I4AAS v100 Reference](https://reference.opcfoundation.org/I4AAS/v100/docs/)
-   - Main reference: [OPC Foundation Reference](https://reference.opcfoundation.org)
+3. **Digital Twin Standards Organizations** - Resources for digital twin standards and frameworks:
+   - **[Industrial Digital Twin Association (IDTA)](https://industrialdigitaltwin.org/)** - Industry-specific digital twin standards (European context)
+   - **[OPC Foundation I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification (American/USA context)
+   - These provide methods to define digital twins and integrate additional data. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 5. **[First Steps to Becoming an OpenUSD Developer](https://docs.omniverse.nvidia.com/usd/latest/learn-openusd/first_steps.html)** - NVIDIA's comprehensive getting started guide:
    - Navigate OpenUSD learning resources
@@ -1102,7 +1096,7 @@ While OpenUSD was developed for rendering, the VFX industry's refined USD workfl
 **Digital Twin Adaptations:**
 - **CAD integration** - Converting CAD files to USD for digital twin representation
 - **Metadata enrichment** - Adding real-world asset information and connections
-- **System integration** - Connecting to PLM/PDM/ERP systems and Asset Administration Shell (AAS)
+- **System integration** - Connecting to PLM/PDM/ERP systems and digital twin standards/frameworks (such as AAS and OPC UA) for integrating additional data
 - **Lifecycle management** - Tracking asset changes over time
 - **Multi-disciplinary collaboration** - Different teams (engineering, operations, maintenance) working on the same digital twin
 
@@ -1135,23 +1129,21 @@ NVIDIA provides comprehensive resources for building digital twins with OpenUSD:
 
 These resources provide practical guidance for implementing digital twin workflows with OpenUSD assets.
 
-### Asset Administration Shell (AAS) Standards
+### Digital Twin Standards and Data Integration
 
-The Asset Administration Shell (AAS) is an Industry 4.0 standard for digital twin administration. Two main standards bodies provide AAS specifications:
+**Asset Administration Shell (AAS)** and **OPC UA frameworks** are methods to define digital twins and integrate additional data. Standards like [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) (European) and [OPC Foundation I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) (OPC UA, American/USA context) provide frameworks for connecting USD assets to external data sources.
 
-- **[IDTA (Industrial Digital Twin Association) AAS](https://industrialdigitaltwin.org/en/aas/)** - European context:
-  - Official AAS specification from the German-led IDTA
-  - Comprehensive AAS metamodel and implementation guidelines
-  - Focus on European Industry 4.0 standards
+**Composable Bindings** represent a modern integration pattern for connecting heterogeneous systems in digital engineering workflows. Developed through collaboration between Microsoft and NVIDIA, Composable Bindings provide a flexible, context-aware approach to integrating data lakes, visualization engines, and operational systems. This pattern leverages common data models (such as OpenTelemetry/OTEL for telemetry and CloudEvents for event-driven communication) and open standards to create resilient, future-proof connections that can evolve independently without requiring rigid point-to-point integrations. For more details, see the [Composable Bindings whitepaper](https://aka.ms/ComposableBindings).
 
-- **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification (American/USA context):
-  - OPC UA Companion Specification for Asset Administration Shell
-  - Maps AAS structure into OPC UA information model
-  - Comprehensive specification: [I4AAS v100 Reference](https://reference.opcfoundation.org/I4AAS/v100/docs/)
-  - Main reference: [OPC Foundation Reference](https://reference.opcfoundation.org)
-  - Focus on OPC UA integration for American industrial systems
+**Important Principles:**
+- **Every company and project needs its own approach** to build pipelines and connect data
+- **Start clean and small** - Begin with a POC/MVP before scaling
+- **Build up with open source** - Leverage open standards and tools (OpenUSD, OTEL, CloudEvents, etc.)
+- **Stay agile** - This is an iterative process, not waterfall
+- **Expect to adjust and change** - Everything is evolving, including standards and tools
+- **Prefer flexible integration patterns** - Use composable, standards-based approaches over brittle point-to-point integrations
 
-Both standards provide complementary approaches to implementing AAS in digital twin workflows. Choose based on your regional context and system integration requirements (OPC UA vs. REST/HTTP APIs).
+Choose integration approaches based on your specific requirements, existing systems, and regional context. The goal is to connect USD assets to your data sources in a way that works for your organization.
 
 ## Best Practices for Digital Twins and CAD Integration
 
@@ -1190,9 +1182,7 @@ When converting CAD files to USD, consider:
 1. **Metadata Extraction**: Extract relevant metadata from the source CAD file
 2. **Data Source Connections**: Define how to connect USD files to other data sources (databases, APIs, etc.)
 3. **USD Metadata**: Write appropriate metadata into the USD file structure
-4. **Asset Administration Shell (AAS)**: Connect to **[Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/)**, also known as Verwaltungsschale, for digital twin administration and lifecycle management. AAS standards are available from:
-   - **[IDTA (Industrial Digital Twin Association)](https://industrialdigitaltwin.org/en/aas/)** - European context
-   - **[OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/)** - OPC UA Companion Specification (American/USA context)
+4. **Digital Twin Standards**: Connect to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. Standards like [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) (European) and [OPC Foundation I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) (OPC UA, American/USA context) provide methods to define digital twins and integrate data. Consider modern integration patterns like [Composable Bindings](https://aka.ms/ComposableBindings) for flexible, standards-based connections between data lakes, visualization engines, and operational systems. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 #### Metadata Mapping Strategies
 
@@ -1211,7 +1201,7 @@ over "PartAssembly"
     string digitalTwin:partNumber = "PART-001"
     string digitalTwin:revision = "Rev-A"
     
-    # AAS Integration
+    # Digital Twin Integration (example: AAS/OPC UA)
     string digitalTwin:aasId = "AAS-001"
     string digitalTwin:aasEndpoint = "https://aas-server.example.com/aas/001"
     
@@ -1345,7 +1335,7 @@ Based on NVIDIA guidance and OpenUSD best practices:
 **Non-Geometry Data Handling:**
 
 - **PLM Links**: Store PLM system identifiers and revision information
-- **AAS Metadata**: Connect to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management ([IDTA](https://industrialdigitaltwin.org/en/aas/) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/))
+- **Digital Twin Integration**: Connect to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. Standards like [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) and [OPC Foundation I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) provide methods to define digital twins and connect data.
 - **ERP Integration**: Link to ERP systems for production and logistics data
 - **IoT Data**: Connect to sensor data and real-time monitoring systems
 - **Documentation**: Link to technical documentation, manuals, and specifications
@@ -1449,7 +1439,7 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 4. **Metadata Mapping**: Map CAD metadata to USD metadata and connect to external data sources
 5. **Layer Management**: Use `020_LYR_USD/` layers to add modifications and opinions
 6. **Scene Validation**: Validate entire scene before deployment
-7. **AAS Integration**: Connect USD assets to [Asset Administration Shell (AAS)](https://industrialdigitaltwin.org/en/aas/) for digital twin management ([IDTA](https://industrialdigitaltwin.org/en/aas/) or [OPC Foundation](https://reference.opcfoundation.org) [I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/))
+7. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 ## Usage Examples and Troubleshooting
 
