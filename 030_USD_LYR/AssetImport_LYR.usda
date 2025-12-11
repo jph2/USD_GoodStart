@@ -40,7 +40,7 @@ def Xform "World"
     def Scope "Geo"
     {
         def Xform "CUBE" (
-            references = @../010_ASS_USD/0_CUBE.usda@
+            references = @../010_ASS_USD/geo/0_CUBE.usda@
         )
         {
             double3 xformOp:rotateXYZ = (0, 0, 0)
@@ -71,7 +71,13 @@ def Xform "World"
         }
 
         def Xform "nvidia_shader_ball" (
-            references = @../010_ASS_USD/0_Geo_Shader_Ball.usd@
+            references = @../010_ASS_USD/geo/0_Geo_Shader_Ball.usd@
+            variant_sets_ui_hints = {
+                string[] "omni:variants_locked" = []
+            }
+            variants = {
+                string Mtl_Variant = "material_2"
+            }
         )
         {
             double3 xformOp:rotateXYZ = (0, 0, 0)
@@ -80,9 +86,14 @@ def Xform "World"
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
         }
 
-        def Sphere "Sphere"
+        def Sphere "Sphere" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
         {
             float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+            rel material:binding = None (
+                bindMaterialAs = "weakerThanDescendants"
+            )
             bool primvars:doNotCastShadows = 0
             bool primvars:enableShadowTerminatorFix = 1
             double radius = 50
@@ -98,23 +109,6 @@ def Xform "World"
 
     def Scope "Looks"
     {
-        def Material "OmniPBR_ClearCoat"
-        {
-            token outputs:mdl:displacement.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </World/Looks/OmniPBR_ClearCoat/Shader.outputs:out>
-
-            def Shader "Shader"
-            {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR_ClearCoat.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR_ClearCoat"
-                color3f inputs:diffuse_color_constant = (0.2635185, 0.48184487, 0.54755044)
-                token outputs:out (
-                    renderType = "material"
-                )
-            }
-        }
     }
 }
 

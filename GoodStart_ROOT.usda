@@ -7,8 +7,8 @@
                 double radius = 500
             }
             dictionary Perspective = {
-                double3 position = (-329.6208111320767, 180.64813556725068, 141.38134400702054)
-                double3 target = (37.22463529333413, 24.473831889567663, 16.721101372167325)
+                double3 position = (-249.35748043036375, 285.37168784251014, 265.76362964768674)
+                double3 target = (-33.1396323972466, 189.44548907927197, 177.32341069125852)
             }
             dictionary Right = {
                 double3 position = (-50000, 0, 0)
@@ -21,8 +21,16 @@
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "./GoodStart_ROOT.usda"
+            string authoring_layer = "./030_USD_LYR/your very Personal opinion_LYR.usda"
             dictionary locked = {
+                bool "./030_USD_LYR/AssetImport_LYR.usda" = 1
+                bool "./030_USD_LYR/Mtl_work_LYR.usda" = 1
+                bool "./030_USD_LYR/Opinion_abc_LYR.usda" = 1
+                bool "./030_USD_LYR/Opinion_xyz_LYR.usda" = 1
+                bool "./030_USD_LYR/sample_USD_LYR.usda" = 1
+                bool "./040_SIM_LYR/sample_Sim_LYR.usda" = 1
+                bool "./050_VARIANTS_LYR/Variant_LYR.usda" = 1
+                bool "./060_METADATA_LYR/sample_Metadata_LYR.usda" = 1
             }
             dictionary muteness = {
             }
@@ -35,10 +43,16 @@
     metersPerUnit = 0.01
     startTimeCode = 0
     subLayers = [
-        @./020_LYR_USD/Opinion_xyz_LYR.usda@,
-        @./020_LYR_USD/Variant_LYR.usda@,
-        @./020_LYR_USD/Mtl_work_LYR.usda@,
-        @./020_LYR_USD/AssetImport_LYR.usda@
+        @./030_USD_LYR/your very Personal opinion_LYR.usda@,
+        @./050_VARIANTS_LYR/Variant_LYR.usda@,
+        @./030_USD_LYR/Opinion_abc_LYR.usda@,
+        @./030_USD_LYR/Opinion_xyz_LYR.usda@,
+        @./030_USD_LYR/Mtl_work_LYR.usda@,
+        @./040_SIM_LYR/sample_Sim_LYR.usda@,
+        @./060_METADATA_LYR/sample_Metadata_LYR.usda@,
+        @./030_USD_LYR/sample_USD_LYR.usda@,
+        @./050_VARIANTS_LYR/sample_Variants_LYR.usda@,
+        @./030_USD_LYR/AssetImport_LYR.usda@
     ]
     timeCodesPerSecond = 60
     upAxis = "Y"
@@ -67,8 +81,6 @@ def Xform "Environment"
         float inputs:shaping:focus
         color3f inputs:shaping:focusTint
         asset inputs:shaping:ies:file
-        # This is a texture that is used to color the grid. you will need to change this to the texture path pointing at your Kit app...
-        # Please use the same naming convention as the one used in the Kit app...
         asset inputs:texture:file = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/CarLight_512x256.hdr@
         token inputs:texture:format = "latlong"
         token visibility = "inherited"
@@ -115,8 +127,6 @@ def Xform "Environment"
                 float inputs:albedo_add = 0
                 float inputs:albedo_brightness = 0.52
                 float inputs:albedo_desaturation = 1
-                # This is a texture that is used to color the grid. you will need to change this to the texture path pointing at your Kit app...
-                # Please use the same naming convention as the one used in the Kit app...
                 asset inputs:diffuse_texture = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/ov_uv_grids_basecolor_1024.png@ (
                     colorSpace = "sRGB"
                     customData = {
@@ -186,5 +196,173 @@ def Xform "Environment"
         uniform token purpose = "guide"
         token visibility = "invisible"
     }
+}
+
+def "Render" (
+    hide_in_stage_window = true
+    no_delete = true
+)
+{
+    def "OmniverseKit"
+    {
+        def "HydraTextures" (
+            hide_in_stage_window = true
+            no_delete = true
+        )
+        {
+            def RenderProduct "omni_kit_widget_viewport_ViewportTexture_0" (
+                prepend apiSchemas = ["OmniRtxSettingsCommonAdvancedAPI_1", "OmniRtxSettingsRtAdvancedAPI_1", "OmniRtxSettingsPtAdvancedAPI_1", "OmniRtxPostColorGradingAPI_1", "OmniRtxPostChromaticAberrationAPI_1", "OmniRtxPostBloomPhysicalAPI_1", "OmniRtxPostMatteObjectAPI_1", "OmniRtxPostCompositingAPI_1", "OmniRtxPostDofAPI_1", "OmniRtxPostMotionBlurAPI_1", "OmniRtxPostTvNoiseAPI_1", "OmniRtxPostTonemapIrayReinhardAPI_1", "OmniRtxPostDebugSettingsAPI_1", "OmniRtxDebugSettingsAPI_1"]
+                hide_in_stage_window = true
+                no_delete = true
+            )
+            {
+                rel camera = </OmniverseKit_Persp>
+                token omni:rtx:ambientOcclusion:denoiserMode = "none"
+                token omni:rtx:background:source:texture:textureMode = "repeatMirrored"
+                token omni:rtx:background:source:type = "domeLight"
+                bool omni:rtx:debug:view:pixelDebug:enableFixedTextPos = 1
+                token omni:rtx:directLighting:sampledLighting:denoisingTechnique = "None"
+                bool omni:rtx:dlss:frameGeneration = 1
+                bool omni:rtx:indirectDiffuse:denoiser:enabled = 0
+                bool omni:rtx:post:registeredCompositing:invertColorCorrection = 1
+                bool omni:rtx:post:registeredCompositing:invertToneMap = 1
+                int omni:rtx:pt:maxSamplesPerLaunch = 2073600
+                int omni:rtx:pt:mgpu:maxPixelsPerRegionExponent = 12
+                bool omni:rtx:reflections:denoiser:enabled = 0
+                token omni:rtx:rendermode = "RealTimePathTracing"
+                color3f omni:rtx:rt:ambientLight:color = (0.1, 0.1, 0.1)
+                bool omni:rtx:rt:demoire = 0
+                bool omni:rtx:rt:lightcache:spatialCache:dontResolveConflicts = 1
+                int omni:rtx:rt:sss:samples = 1
+                int omni:rtx:rtpt:maxVolumeBounces = 15
+                float omni:rtx:rtpt:modulatingRoughnessThreshold = 0.08
+                uint omni:rtx:viewTile:limit = 4294967295
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1482, 1135)
+            }
+        }
+    }
+
+    def RenderSettings "OmniverseGlobalRenderSettings" (
+        prepend apiSchemas = ["OmniRtxSettingsGlobalRtAdvancedAPI_1", "OmniRtxSettingsGlobalPtAdvancedAPI_1"]
+        no_delete = true
+    )
+    {
+        rel products = </Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0>
+    }
+
+    def "Vars"
+    {
+        def RenderVar "LdrColor" (
+            hide_in_stage_window = true
+            no_delete = true
+        )
+        {
+            uniform string sourceName = "LdrColor"
+        }
+    }
+}
+
+over "OmniverseKit_Persp" (
+    prepend apiSchemas = ["OmniRtxCameraAutoExposureAPI_1", "OmniRtxCameraExposureAPI_1"]
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float exposure:responsivity = 1.1026709
+    float exposure:time = 0.02
+    float focalLength = 18.147562
+    float focusDistance = 400
+    custom uniform vector3d omni:kit:centerOfInterest = (8.013550460457489e-15, 1.0684733947276651e-14, -252.53448427154933)
+    float3 xformOp:rotateXYZ = (157.67537, -112.24618, 180)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (-249.35748043036375, 285.37168784251014, 265.76362964768674)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Front" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
+    token projection = "orthographic"
+    float verticalAperture = 5000
+    float3 xformOp:rotateXYZ = (-0, 0, -0)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 50000)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Right" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
+    token projection = "orthographic"
+    float verticalAperture = 5000
+    float3 xformOp:rotateXYZ = (0, -90, -0)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (-50000, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Top" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
+    token projection = "orthographic"
+    float verticalAperture = 5000
+    float3 xformOp:rotateXYZ = (90, -4.961563e-15, 180)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 50000, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 

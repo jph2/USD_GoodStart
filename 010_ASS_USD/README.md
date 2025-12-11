@@ -103,7 +103,7 @@ Before creating custom schemas:
 ## Texture Organization
 
 - Individual assets may have their own `textures` folder
-- Global textures are stored in `030_TEX/` at project root
+- Global textures are stored in `020_TEX/` at project root
 - Use asset-specific textures when only used by that asset
 - Use global textures when shared across multiple assets
 

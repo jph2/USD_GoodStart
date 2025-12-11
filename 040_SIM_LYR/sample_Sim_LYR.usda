@@ -1,0 +1,12 @@
+#usda 1.0
+(
+    doc = "Sample simulation layer. Duplicate and rename for project-specific physics/robotics layers."
+)
+
+def "World"
+{
+    # Example: add collision or physics to existing prims from imported assets.
+    # This file is intentionally minimal and should be customized per project.
+}
+
+

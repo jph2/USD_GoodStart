@@ -1,0 +1,13 @@
+#usda 1.0
+(
+    doc = "Sample metadata layer. Duplicate and rename for PLM/ERP/AAS/OPC UA metadata integration."
+)
+
+over "World"
+{
+    # Attach example metadata to existing prims from imported assets.
+    # Replace with real project metadata.
+    # string plm:id = "PLM-EXAMPLE-001"
+}
+
+

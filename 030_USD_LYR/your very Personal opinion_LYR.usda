@@ -1,0 +1,71 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (0, 0, 50000)
+                double radius = 500
+            }
+            dictionary Perspective = {
+                double3 position = (-458.8493869465097, 389.51640915134004, 197.54166354979694)
+                double3 target = (71.78671572694162, 2.976868781625342, 71.26435173728909)
+            }
+            dictionary Right = {
+                double3 position = (-50000, 0, 0)
+                double radius = 500
+            }
+            dictionary Top = {
+                double3 position = (0, 50000, 0)
+                double radius = 500
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./020_LYR_USD/Variant_LYR.usda"
+            dictionary locked = {
+                bool "./020_LYR_USD/Opinion_abc_LYR.usda" = 1
+                bool "./020_LYR_USD/Variant_LYR.usda" = 1
+                bool "E:/SynologyDrive/9999_LocalRepo/USD_GoodStart/020_LYR_USD/AssetImport_LYR.usda" = 1
+                bool "E:/SynologyDrive/9999_LocalRepo/USD_GoodStart/020_LYR_USD/Mtl_work_LYR.usda" = 1
+                bool "E:/SynologyDrive/9999_LocalRepo/USD_GoodStart/020_LYR_USD/Opinion_xyz_LYR.usda" = 1
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+over "World"
+{
+    over "Geo"
+    {
+        over "nvidia_shader_ball" (
+            variants = {
+                string Mtl_Variant = "material_1"
+            }
+        )
+        {
+        }
+    }
+}
+
+over "Environment"
+{
+    over "ground"
+    {
+        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        bool primvars:isMatteObject = 0
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
+        token visibility = "inherited"
+    }
+}
+

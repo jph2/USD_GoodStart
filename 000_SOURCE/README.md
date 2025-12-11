@@ -68,10 +68,10 @@ Source files can be stored in:
 ## Workflow
 
 1. Source files stored here or in external systems
-2. Convert to USD via pipeline
+2. Convert to USD via pipeline (scripts and configs documented here)
 3. Place converted files in `010_ASS_USD/`
 4. Map metadata and connect to external data sources
-5. Use `020_LYR_USD/` layers for modifications
+5. Use `030_LYR_USD/`, `040_LYR_SIM/`, `050_LYR_VARIANTS/`, and `060_LYR_METADATA/` layers for non-destructive modifications
 
 ## Notes
 

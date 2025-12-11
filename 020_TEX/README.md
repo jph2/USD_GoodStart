@@ -1,4 +1,4 @@
-# 030_TEX
+# 020_TEX
 
 **Version:** 0.9.3-beta  
 **Last Updated:** 10.12.2025
@@ -16,7 +16,7 @@ This folder contains **global texture files** used across the project.
 ## Asset-Specific vs Global Textures
 
 - **Asset-specific**: Individual assets in `010_ASS_USD/` may have their own `textures` folder
-- **Global**: Use `030_TEX/` when textures are shared across multiple assets
+- **Global**: Use `020_TEX/` when textures are shared across multiple assets
 
 ## Organization
 
@@ -28,12 +28,12 @@ Consider organizing by:
 ## Texture References in USD
 
 ```usda
-asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
+asset inputs:diffuse_texture = @../020_TEX/texture_name.png@ (
     colorSpace = "sRGB"
 )
 ```
 
-**Always use relative paths** (e.g., `@../030_TEX/texture_name.png@`).
+**Always use relative paths** (e.g., `@../020_TEX/texture_name.png@`).
 
 ## Best Practices
 

@@ -1,0 +1,2444 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (0, 0, 50000)
+                double radius = 500
+            }
+            dictionary Perspective = {
+                double3 position = (-348.83605749606886, 141.48606894085162, -19.66282834030719)
+                double3 target = (49.85788709729928, 31.622538068783484, 39.32288107265957)
+            }
+            dictionary Right = {
+                double3 position = (-50000, 0, 0)
+                double radius = 500
+            }
+            dictionary Top = {
+                double3 position = (0, 50000, 0)
+                double radius = 500
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/Lay_USD/AssetImport_LYR.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+over "World"
+{
+    over "Geo"
+    {
+        over "nvidia_shader_ball"
+        {
+            over "nvidia_shader_ball_09"
+            {
+                over "shader_ball"
+                {
+                    over "geo_shaderball_mat_01" (
+                        prepend apiSchemas = ["MaterialBindingAPI"]
+                    )
+                    {
+                        rel material:binding = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01> (
+                            bindMaterialAs = "weakerThanDescendants"
+                        )
+                    }
+
+                    over "Plane_mat_01" (
+                        prepend apiSchemas = ["MaterialBindingAPI"]
+                    )
+                    {
+                        rel material:binding = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01> (
+                            bindMaterialAs = "weakerThanDescendants"
+                        )
+                    }
+
+                    over "Cube_mat_01" (
+                        prepend apiSchemas = ["MaterialBindingAPI"]
+                    )
+                    {
+                        rel material:binding = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01> (
+                            bindMaterialAs = "weakerThanDescendants"
+                        )
+                    }
+
+                    over "Sphere_mat_01" (
+                        prepend apiSchemas = ["MaterialBindingAPI"]
+                    )
+                    {
+                        rel material:binding = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01> (
+                            bindMaterialAs = "weakerThanDescendants"
+                        )
+                    }
+                }
+            }
+        }
+
+        over "Sphere" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = None (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (16.58906525698012, 125.98051637433883, 127.99357787981953)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+
+        over "CUBE"
+        {
+            over "Geo"
+            {
+                over "Cube"
+                {
+                    double3 xformOp:rotateXYZ = (0, 0, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (-430.18792798451364, 50, 156.8457843185873)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+                }
+            }
+        }
+    }
+
+    over "Looks"
+    {
+        def Scope "Plastic"
+        {
+            def Material "Pristine_Plastic_Hex_Pattern_01"
+            {
+                token outputs:mdl:displacement.connect = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/Looks/Plastic/Pristine_Plastic_Hex_Pattern_01/Shader.outputs:out>
+                custom uniform bool paused = 0 (
+                    customData = {
+                        bool nonpersistant = 1
+                    }
+                    hidden = true
+                )
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_2_1/Automotive/Pristine/Plastic/Pristine_Plastic_Hex_Pattern.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "Pristine_Plastic_Hex_Pattern"
+                    asset inputs:anisotropic_direction_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Direction Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:anisotropic_roughness_u = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Roughness U"
+                        hidden = false
+                    )
+                    float inputs:anisotropic_roughness_v = 0.25 (
+                        customData = {
+                            float default = 0.25
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Roughness V"
+                        hidden = false
+                    )
+                    float inputs:base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Add"
+                        hidden = false
+                    )
+                    float inputs:base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Multiply"
+                        hidden = false
+                    )
+                    asset inputs:cavity_image (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    asset inputs:detail_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:detail_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:detail_normal_weight_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal:Detail Normal Mask"
+                        displayName = "Detail Normal Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:diffuse_reflection_color = (0.025247283, 0.11527377, 0.038219303) (
+                        customData = {
+                            float3 default = (0.463, 0.725, 0)
+                        }
+                        displayGroup = "Base Layer:Base Color"
+                        displayName = "Base Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    color3f inputs:emission_color = (1, 0.99999, 0.99999) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Advanced:Emission"
+                        displayName = "Emission Color Tint"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:emission_intensity = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1000
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Emission"
+                        displayName = "Emission Intensity"
+                        hidden = false
+                    )
+                    bool inputs:enable_anisotropy = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Enable Anisotropy"
+                        hidden = false
+                    )
+                    bool inputs:enable_coat = 0 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Clear Coat"
+                        displayName = "Enable Clear Coat"
+                        hidden = false
+                    )
+                    bool inputs:enable_detail_normal = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Enable Detail Normal"
+                        hidden = false
+                    )
+                    bool inputs:enable_flakes = 0 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Enable Flakes"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_1 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1"
+                        displayName = "Enable Layer 1"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_2 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Enable Layer 2"
+                        hidden = false
+                    )
+                    color3f inputs:flake_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:flake_roughness = 0.05 (
+                        customData = {
+                            float default = 0.05
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Roughness"
+                        hidden = false
+                    )
+                    float inputs:flake_size = 0.125 (
+                        customData = {
+                            float default = 0.125
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Size"
+                        hidden = false
+                    )
+                    float inputs:flakes_density = 0.25 (
+                        customData = {
+                            float default = 0.25
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Density"
+                        hidden = false
+                    )
+                    float inputs:flakes_spread = 0.15 (
+                        customData = {
+                            float default = 0.15
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Spread"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_axis = 2 (
+                        customData = {
+                            int default = 2
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis"
+                        hidden = false
+                        renderType = "axis_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "y"
+                            string options = "x:0|x_invert:1|y:2|y_invert:3|z:4|z_invert:5"
+                        }
+                    )
+                    asset inputs:layer_1_blend_detail_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Detail Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float3 inputs:layer_1_blend_direction = (0, 1, 0) (
+                        customData = {
+                            float3 default = (0, 1, 0)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Direction"
+                        hidden = false
+                    )
+                    bool inputs:layer_1_blend_object_space = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Object Space"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_source = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Source"
+                        hidden = false
+                        renderType = "blend_source"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "texture"
+                            string options = "texture:0|direction:1|axis:2|primvar:3"
+                        }
+                    )
+                    asset inputs:layer_1_blend_splatmap = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_blend_threshold = 0.33 (
+                        customData = {
+                            float default = 0.33
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Threshold"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_cavity_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Specular"
+                        displayName = "Layer 1 Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:layer_1_diffuse_reflection_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Tint"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    asset inputs:layer_1_metalness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Metalness"
+                        displayName = "Layer 1 Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    bool inputs:layer_1_normal_flip_green = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Flip Green"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_order = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Clear Coat (Advanced)"
+                        displayName = "Layer 1 Composite Order"
+                        hidden = false
+                        renderType = "layer_order"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "above"
+                            string options = "below:0|above:1"
+                        }
+                    )
+                    asset inputs:layer_1_roughness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:layer_1_roughness_range_position = (0.95, 0.5) (
+                        customData = {
+                            float2 default = (1, 0.5)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Range Position"
+                        hidden = false
+                    )
+                    int inputs:layer_1_uv_set_blend_factor = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:layer_2_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Base Color"
+                        displayName = "Layer 2 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_2_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Normal"
+                        displayName = "Layer 2 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    int inputs:layer_2_uv_set_blend_factor = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:layer_2_uv_set_detail = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Detail UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:metalness = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Base Layer:Metalness"
+                        displayName = "Metalness"
+                        hidden = false
+                    )
+                    asset inputs:metalness_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Metalness"
+                        displayName = "Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    bool inputs:normal_flip_green = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Flip Green"
+                        hidden = false
+                    )
+                    asset inputs:normal_image (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:normal_scale = 0.5 (
+                        customData = {
+                            float default = 1
+                            dictionary omni = {
+                                dictionary kit = {
+                                    dictionary property = {
+                                        dictionary usd = {
+                                            float2 soft_range_ui = (0, 3)
+                                        }
+                                    }
+                                }
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:roughness_image (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:roughness_range_position = (0.3, 0.25) (
+                        customData = {
+                            float2 default = (1, 0.5)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Range Position"
+                        hidden = false
+                    )
+                    float inputs:specular_reflection_weight = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Weight"
+                        hidden = false
+                    )
+                    float inputs:triplanar_blend_range_01 = 0 (
+                        customData = {
+                            float default = 0.5
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "Triplanar Blend Range 1"
+                        hidden = false
+                    )
+                    float inputs:triplanar_blend_range_02 = 0.5 (
+                        customData = {
+                            float default = 0.5
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "Triplanar Blend Range 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_offset_02 = (0, 0) (
+                        customData = {
+                            float2 default = (0, 0)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Offset 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_01 = (2, 2) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Scale 1"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_02 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Scale 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_03 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Scale 3"
+                        hidden = false
+                    )
+                    int inputs:uv_set_detail_normal = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uv_set_layer_2 = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Layer 2 UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uvs_mode_01 = 0 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Mode 1"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_02 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Mode 2"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_03 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Mode 3"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_04 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 4"
+                        displayName = "UV Mode 4"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+
+            def Material "Pristine_Plastic_Pattern_Perforated_Line"
+            {
+                token outputs:mdl:displacement.connect = </World/Looks/Plastic/Pristine_Plastic_Pattern_Perforated_Line/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/Looks/Plastic/Pristine_Plastic_Pattern_Perforated_Line/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/Looks/Plastic/Pristine_Plastic_Pattern_Perforated_Line/Shader.outputs:out>
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_2_1/Automotive/Pristine/Plastic/Pristine_Plastic_Pattern_Perforated_Line.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "Pristine_Plastic_Pattern_Perforated_Line"
+                    float inputs:base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Add"
+                        hidden = false
+                    )
+                    float inputs:base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Multiply"
+                        hidden = false
+                    )
+                    asset inputs:cavity_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    asset inputs:detail_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:detail_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:detail_normal_weight_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal:Detail Normal Mask"
+                        displayName = "Detail Normal Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:diffuse_reflection_color = (0.011764706, 0.011764706, 0.011764706) (
+                        customData = {
+                            float3 default = (0.011764706, 0.011764706, 0.011764706)
+                        }
+                        displayGroup = "Base Layer:Base Color"
+                        displayName = "Base Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:emission_intensity = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1000
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Emission"
+                        displayName = "Emission Intensity"
+                        hidden = false
+                    )
+                    bool inputs:enable_anisotropy = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Enable Anisotropy"
+                        hidden = false
+                    )
+                    bool inputs:enable_coat = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Clear Coat"
+                        displayName = "Enable Clear Coat"
+                        hidden = false
+                    )
+                    bool inputs:enable_detail_normal = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Enable Detail Normal"
+                        hidden = false
+                    )
+                    bool inputs:enable_flakes = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Enable Flakes"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_1 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1"
+                        displayName = "Enable Layer 1"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_2 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Enable Layer 2"
+                        hidden = false
+                    )
+                    color3f inputs:flake_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:flake_roughness = 0.05 (
+                        customData = {
+                            float default = 0.05
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Roughness"
+                        hidden = false
+                    )
+                    float inputs:flake_size = 0.125 (
+                        customData = {
+                            float default = 0.125
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Size"
+                        hidden = false
+                    )
+                    float inputs:flakes_density = 0.25 (
+                        customData = {
+                            float default = 0.25
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Density"
+                        hidden = false
+                    )
+                    float inputs:flakes_spread = 0.15 (
+                        customData = {
+                            float default = 0.15
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Spread"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_axis = 2 (
+                        customData = {
+                            int default = 2
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis"
+                        hidden = false
+                        renderType = "axis_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "y"
+                            string options = "x:0|x_invert:1|y:2|y_invert:3|z:4|z_invert:5"
+                        }
+                    )
+                    asset inputs:layer_1_blend_detail_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Detail Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float3 inputs:layer_1_blend_direction = (0, 1, 0) (
+                        customData = {
+                            float3 default = (0, 1, 0)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Direction"
+                        hidden = false
+                    )
+                    bool inputs:layer_1_blend_object_space = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Object Space"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_source = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Source"
+                        hidden = false
+                        renderType = "blend_source"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "texture"
+                            string options = "texture:0|direction:1|axis:2|primvar:3"
+                        }
+                    )
+                    asset inputs:layer_1_blend_splatmap = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_blend_threshold = 0.33 (
+                        customData = {
+                            float default = 0.33
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Threshold"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_cavity_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Specular"
+                        displayName = "Layer 1 Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:layer_1_diffuse_reflection_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Tint"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    asset inputs:layer_1_metalness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Metalness"
+                        displayName = "Layer 1 Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    asset inputs:layer_1_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_order = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Clear Coat (Advanced)"
+                        displayName = "Layer 1 Composite Order"
+                        hidden = false
+                        renderType = "layer_order"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "above"
+                            string options = "below:0|above:1"
+                        }
+                    )
+                    asset inputs:layer_1_roughness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:layer_1_roughness_range_position = (0.85, 0.5) (
+                        customData = {
+                            float2 default = (0.85, 0.5)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Range Position"
+                        hidden = false
+                    )
+                    int inputs:layer_1_uv_set_blend_factor = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:layer_2_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Base Color"
+                        displayName = "Layer 2 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_2_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Normal"
+                        displayName = "Layer 2 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    int inputs:layer_2_uv_set_blend_factor = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:layer_2_uv_set_detail = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Detail UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:metalness = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Base Layer:Metalness"
+                        displayName = "Metalness"
+                        hidden = false
+                    )
+                    asset inputs:metalness_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Metalness"
+                        displayName = "Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    asset inputs:normal_image (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Materials/2023_1/Automotive/Surfacing/ov_plastic_pattern_02/ov_plastic_pattern_02_normal.jpg@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary omni = {
+                                dictionary kit = {
+                                    dictionary property = {
+                                        dictionary usd = {
+                                            float2 soft_range_ui = (0, 3)
+                                        }
+                                    }
+                                }
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:roughness_image (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Materials/2023_1/Automotive/Surfacing/ov_plastic_pattern_02/ov_plastic_pattern_02_orm.jpg@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:roughness_range_position = (1, 0.78) (
+                        customData = {
+                            float2 default = (1, 0.78)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Range Position"
+                        hidden = false
+                    )
+                    float inputs:specular_reflection_weight = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Weight"
+                        hidden = false
+                    )
+                    float inputs:triplanar_blend_range_01 = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "Triplanar Blend Range 1"
+                        hidden = false
+                    )
+                    float2 inputs:uv_offset_02 = (0, 0) (
+                        customData = {
+                            float2 default = (0, 0)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Offset 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_01 = (2, 2) (
+                        customData = {
+                            float2 default = (2, 2)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Scale 1"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_02 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Scale 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_03 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Scale 3"
+                        hidden = false
+                    )
+                    int inputs:uv_set_detail_normal = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uv_set_layer_2 = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Layer 2 UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uvs_mode_01 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Mode 1"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_02 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Mode 2"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_03 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Mode 3"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_04 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 4"
+                        displayName = "UV Mode 4"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+
+            def Material "Pristine_Plastic_Grain_HairLine"
+            {
+                token outputs:mdl:displacement.connect = </World/Looks/Plastic/Pristine_Plastic_Grain_HairLine/Shader.outputs:out>
+                token outputs:mdl:surface.connect = </World/Looks/Plastic/Pristine_Plastic_Grain_HairLine/Shader.outputs:out>
+                token outputs:mdl:volume.connect = </World/Looks/Plastic/Pristine_Plastic_Grain_HairLine/Shader.outputs:out>
+
+                def Shader "Shader"
+                {
+                    uniform token info:implementationSource = "sourceAsset"
+                    uniform asset info:mdl:sourceAsset = @https://omniverse-content-production.s3.us-west-2.amazonaws.com/Materials/2023_2_1/Automotive/Pristine/Plastic/Pristine_Plastic_Grain_HairLine.mdl@
+                    uniform token info:mdl:sourceAsset:subIdentifier = "Pristine_Plastic_Grain_HairLine"
+                    asset inputs:anisotropic_direction_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Direction Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:anisotropic_roughness_u = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Roughness U"
+                        hidden = false
+                    )
+                    float inputs:anisotropic_roughness_v = 0.25 (
+                        customData = {
+                            float default = 0.25
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Anisotropy Roughness V"
+                        hidden = false
+                    )
+                    float inputs:base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Add"
+                        hidden = false
+                    )
+                    float inputs:base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Color"
+                        displayName = "Base Color Multiply"
+                        hidden = false
+                    )
+                    asset inputs:cavity_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    asset inputs:detail_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:detail_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:detail_normal_weight_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Detail Normal:Detail Normal Mask"
+                        displayName = "Detail Normal Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:diffuse_reflection_color = (0.019801974, 0.019801777, 0.019801777) (
+                        customData = {
+                            float3 default = (0.019801974, 0.019801777, 0.019801777)
+                        }
+                        displayGroup = "Base Layer:Base Color"
+                        displayName = "Base Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:emission_intensity = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1000
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Emission"
+                        displayName = "Emission Intensity"
+                        hidden = false
+                    )
+                    bool inputs:enable_anisotropy = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Anisotropy (Path Tracing Only)"
+                        displayName = "Enable Anisotropy"
+                        hidden = false
+                    )
+                    bool inputs:enable_coat = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Clear Coat"
+                        displayName = "Enable Clear Coat"
+                        hidden = false
+                    )
+                    bool inputs:enable_detail_normal = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Enable Detail Normal"
+                        hidden = false
+                    )
+                    bool inputs:enable_flakes = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Enable Flakes"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_1 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1"
+                        displayName = "Enable Layer 1"
+                        hidden = false
+                    )
+                    bool inputs:enable_layer_2 = 0 (
+                        customData = {
+                            bool default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Enable Layer 2"
+                        hidden = false
+                    )
+                    color3f inputs:flake_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Color"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    float inputs:flake_roughness = 0.05 (
+                        customData = {
+                            float default = 0.05
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Roughness"
+                        hidden = false
+                    )
+                    float inputs:flake_size = 0.125 (
+                        customData = {
+                            float default = 0.125
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Size"
+                        hidden = false
+                    )
+                    float inputs:flakes_density = 0.25 (
+                        customData = {
+                            float default = 0.25
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Density"
+                        hidden = false
+                    )
+                    float inputs:flakes_spread = 0.15 (
+                        customData = {
+                            float default = 0.15
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Flakes"
+                        displayName = "Flake Spread"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_base_color_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_base_color_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_base_color_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 2
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_axis = 2 (
+                        customData = {
+                            int default = 2
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis"
+                        hidden = false
+                        renderType = "axis_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "y"
+                            string options = "x:0|x_invert:1|y:2|y_invert:3|z:4|z_invert:5"
+                        }
+                    )
+                    asset inputs:layer_1_blend_detail_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Detail Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float3 inputs:layer_1_blend_direction = (0, 1, 0) (
+                        customData = {
+                            float3 default = (0, 1, 0)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Direction"
+                        hidden = false
+                    )
+                    bool inputs:layer_1_blend_object_space = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Object Space"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_offset = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = -1
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Offset"
+                        hidden = false
+                    )
+                    float inputs:layer_1_blend_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Axis Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_blend_source = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Source"
+                        hidden = false
+                        renderType = "blend_source"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "texture"
+                            string options = "texture:0|direction:1|axis:2|primvar:3"
+                        }
+                    )
+                    asset inputs:layer_1_blend_splatmap = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_blend_threshold = 0.33 (
+                        customData = {
+                            float default = 0.33
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Threshold"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_cavity_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Specular"
+                        displayName = "Layer 1 Specular Cavity Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    color3f inputs:layer_1_diffuse_reflection_color = (1, 1, 1) (
+                        customData = {
+                            float3 default = (1, 1, 1)
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Base Color"
+                        displayName = "Layer 1 Base Color Tint"
+                        hidden = false
+                        renderType = "color"
+                    )
+                    asset inputs:layer_1_metalness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Metalness"
+                        displayName = "Layer 1 Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    bool inputs:layer_1_normal_flip_green = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Flip Green"
+                        hidden = false
+                    )
+                    asset inputs:layer_1_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:layer_1_normal_scale = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Normal"
+                        displayName = "Layer 1 Normal Scale"
+                        hidden = false
+                    )
+                    int inputs:layer_1_order = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Clear Coat (Advanced)"
+                        displayName = "Layer 1 Composite Order"
+                        hidden = false
+                        renderType = "layer_order"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "above"
+                            string options = "below:0|above:1"
+                        }
+                    )
+                    asset inputs:layer_1_roughness_image = @@ (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:layer_1_roughness_range_position = (0.95, 0.5) (
+                        customData = {
+                            float2 default = (0.95, 0.5)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Roughness"
+                        displayName = "Layer 1 Roughness Range Position"
+                        hidden = false
+                    )
+                    int inputs:layer_1_uv_set_blend_factor = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 1:Layer 1 Mask"
+                        displayName = "Layer 1 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:layer_2_base_color_desaturation = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Base Color"
+                        displayName = "Layer 2 Base Color Desaturation"
+                        hidden = false
+                    )
+                    asset inputs:layer_2_normal_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Normal"
+                        displayName = "Layer 2 Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    int inputs:layer_2_uv_set_blend_factor = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Mask Image UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:layer_2_uv_set_detail = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:Layer 2:Layer 2 Mask"
+                        displayName = "Layer 2 Detail UV Stream"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_2"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    float inputs:metalness = 0 (
+                        customData = {
+                            float default = 0
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Base Layer:Metalness"
+                        displayName = "Metalness"
+                        hidden = false
+                    )
+                    asset inputs:metalness_image = @@ (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Metalness"
+                        displayName = "Metalness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    bool inputs:normal_flip_green = 1 (
+                        customData = {
+                            bool default = 1
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Flip Green"
+                        hidden = false
+                    )
+                    asset inputs:normal_image (
+                        colorSpace = "raw"
+                        customData = {
+                            asset default = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Materials/2023_1/Automotive/Surfacing/ov_plastic_grain_d_01/ov_plastic_grain_d_01_normal.jpg@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float inputs:normal_scale = 0.5 (
+                        customData = {
+                            float default = 0.5
+                            dictionary omni = {
+                                dictionary kit = {
+                                    dictionary property = {
+                                        dictionary usd = {
+                                            float2 soft_range_ui = (0, 3)
+                                        }
+                                    }
+                                }
+                            }
+                            dictionary soft_range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Normal"
+                        displayName = "Normal Scale"
+                        hidden = false
+                    )
+                    asset inputs:roughness_image (
+                        colorSpace = "auto"
+                        customData = {
+                            asset default = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Materials/2023_1/Automotive/Surfacing/ov_plastic_grain_d_01/ov_plastic_grain_d_01_orm.jpg@
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Image"
+                        hidden = false
+                        renderType = "texture_2d"
+                    )
+                    float2 inputs:roughness_range_position = (0.3, 0.25) (
+                        customData = {
+                            float2 default = (0.3, 0.25)
+                            dictionary range = {
+                                float2 max = (1, 1)
+                                float2 min = (0, 0)
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Roughness"
+                        displayName = "Roughness Range Position"
+                        hidden = false
+                    )
+                    float inputs:specular_reflection_weight = 1 (
+                        customData = {
+                            float default = 1
+                            dictionary range = {
+                                float max = 1
+                                float min = 0
+                            }
+                        }
+                        displayGroup = "Advanced:Base Layer:Base Layer Specular"
+                        displayName = "Specular Weight"
+                        hidden = false
+                    )
+                    float2 inputs:uv_offset_02 = (0, 0) (
+                        customData = {
+                            float2 default = (0, 0)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Offset 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_01 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Scale 1"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_02 = (0.05, 0.05) (
+                        customData = {
+                            float2 default = (0.05, 0.05)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Scale 2"
+                        hidden = false
+                    )
+                    float2 inputs:uv_scale_03 = (1, 1) (
+                        customData = {
+                            float2 default = (1, 1)
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Scale 3"
+                        hidden = false
+                    )
+                    int inputs:uv_set_detail_normal = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Detail Normal"
+                        displayName = "Detail Normal UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uv_set_layer_2 = 0 (
+                        customData = {
+                            int default = 0
+                        }
+                        displayGroup = "Advanced:Layer 2"
+                        displayName = "Layer 2 UV Set"
+                        hidden = false
+                        renderType = "uv_set_selection"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "uv_set_1"
+                            string options = "uv_set_1:0|uv_set_2:1|uv_set_3:2|uv_set_4:3"
+                        }
+                    )
+                    int inputs:uvs_mode_01 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 1"
+                        displayName = "UV Mode 1"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_02 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 2"
+                        displayName = "UV Mode 2"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_03 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 3"
+                        displayName = "UV Mode 3"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    int inputs:uvs_mode_04 = 1 (
+                        customData = {
+                            int default = 1
+                        }
+                        displayGroup = "Advanced:UV Sets:UV Set 4"
+                        displayName = "UV Mode 4"
+                        hidden = false
+                        renderType = "uvs_mode"
+                        sdrMetadata = {
+                            string __SDR__enum_value = "triplanar"
+                            string options = "texture_coord_0:0|triplanar:1"
+                        }
+                    )
+                    token outputs:out (
+                        renderType = "material"
+                    )
+                }
+            }
+        }
+    }
+}
+
+over "Environment"
+{
+    over "ground"
+    {
+        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        bool primvars:isMatteObject = 0
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
+        token visibility = "inherited"
+    }
+}
+

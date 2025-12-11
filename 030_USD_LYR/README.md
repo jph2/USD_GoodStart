@@ -1,13 +1,13 @@
-# 020_LYR_USD
+# 030_LYR_USD
 
 **Version:** 0.9.3-beta  
 **Last Updated:** 10.12.2025
 
 ## Purpose
 
-This folder contains **USD layer files** that modify and override content in the root file (`GoodStart_ROOT.usda`). Layers enable non-destructive modifications to assets without altering base CAD-converted assets.
+This folder contains **general USD layer files** that modify and override content in the root file (`GoodStart_ROOT.usda`). Layers enable non-destructive modifications to assets without altering base CAD-converted assets.
 
-## Current Layers
+## Current Layers (General / Visual)
 
 - **`your very Personal opinion_LYR.usda`** - **Default authoring layer** (unlocked, for user modifications)
 - `Opinion_xyz_LYR.usda` - General opinion/override layer (locked)
@@ -20,7 +20,7 @@ This folder contains **USD layer files** that modify and override content in the
 
 ### Default Authoring Layer
 
-**`your very Personal opinion_LYR.usda`** is the **default authoring layer** set in `GoodStart_ROOT.usda`. This is where you should make your modifications and changes.
+**`your very Personal opinion_LYR.usda`** is the **default authoring layer** set in `GoodStart_ROOT.usda`. This is where you should make your general visual/layout/material modifications and changes.
 
 **All other layers are locked** to prevent accidental modifications. This ensures:
 - Base assets remain unchanged
@@ -36,7 +36,7 @@ This folder contains **USD layer files** that modify and override content in the
 
 **Always edit in `your very Personal opinion_LYR.usda`** or create new layers instead.
 
-### Adding New Layers
+### Adding New General Layers
 
 1. Create a new `.usda` file with descriptive name ending in `_LYR`
 2. Add to `subLayers` array in `GoodStart_ROOT.usda`
@@ -49,15 +49,15 @@ The `subLayers` array is ordered from **strongest (first)** to **weakest (last)*
 - First in array = strongest (applied last, overrides others)
 - Last in array = weakest (applied first, can be overridden)
 
-**Example:**
+**Example (updated layout using `030_LYR_USD/`):**
 ```usda
 subLayers = [
-    @./020_LYR_USD/your very Personal opinion_LYR.usda@,  # First = strongest (DEFAULT AUTHORING LAYER)
-    @./020_LYR_USD/Opinion_xyz_LYR.usda@,                 # Locked
-    @./020_LYR_USD/Opinion_abc_LYR.usda@,                 # Locked
-    @./020_LYR_USD/Variant_LYR.usda@,                     # Locked
-    @./020_LYR_USD/Mtl_work_LYR.usda@,                    # Locked
-    @./020_LYR_USD/AssetImport_LYR.usda@                  # Last = weakest (CRITICAL, Locked)
+    @./030_LYR_USD/your very Personal opinion_LYR.usda@,  # First = strongest (DEFAULT AUTHORING LAYER)
+    @./030_LYR_USD/Opinion_xyz_LYR.usda@,                 # Locked
+    @./030_LYR_USD/Opinion_abc_LYR.usda@,                 # Locked
+    @./030_LYR_USD/Variant_LYR.usda@,                     # Locked
+    @./030_LYR_USD/Mtl_work_LYR.usda@,                    # Locked
+    @./030_LYR_USD/AssetImport_LYR.usda@                  # Last = weakest (CRITICAL, Locked)
 ]
 ```
 

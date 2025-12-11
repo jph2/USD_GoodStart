@@ -7,8 +7,8 @@
                 double radius = 500
             }
             dictionary Perspective = {
-                double3 position = (-348.83605749606886, 141.48606894085162, -19.66282834030719)
-                double3 target = (49.85788709729928, 31.622538068783484, 39.32288107265957)
+                double3 position = (-771.4769936769062, 237.9538576719264, -88.48395694041844)
+                double3 target = (49.219026292949934, 36.06830748781974, 65.32658547834637)
             }
             dictionary Right = {
                 double3 position = (-50000, 0, 0)
@@ -21,7 +21,7 @@
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/Lay_USD/AssetImport.usda"
+            string authoring_layer = "E:/SynologyDrive/9999_LocalRepo/USD_GoodStart/020_LYR_USD/Opinion_xyz_LYR.usda"
             dictionary locked = {
             }
             dictionary muteness = {
@@ -37,4 +37,18 @@
     timeCodesPerSecond = 60
     upAxis = "Y"
 )
+
+over "World"
+{
+    over "Geo"
+    {
+        over "nvidia_shader_ball"
+        {
+            double3 xformOp:rotateXYZ = (0, 0, 0)
+            double3 xformOp:scale = (1, 1, 1)
+            double3 xformOp:translate = (17.46904850038133, 176.23009685101712, 126.57352712500494)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        }
+    }
+}
 

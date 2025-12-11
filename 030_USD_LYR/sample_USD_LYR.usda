@@ -1,0 +1,16 @@
+#usda 1.0
+(
+    doc = "Sample general USD layer. Duplicate and rename for project-specific visual/layout/material/opinion layers."
+)
+
+def "World"
+{
+    # Example: add opinions, materials, or layout modifications to existing prims from imported assets.
+    # This file is intentionally minimal and should be customized per project.
+    # Common uses:
+    # - Material overrides (Mtl_work_LYR.usda)
+    # - Layout/positioning (Layout_LYR.usda)
+    # - Personal opinions/overrides (Opinion_LYR.usda)
+    # - Asset imports (AssetImport_LYR.usda)
+}
+

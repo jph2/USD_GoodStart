@@ -1,0 +1,16 @@
+#usda 1.0
+(
+    doc = "Sample variants layer. Duplicate and rename for project-level configuration/variant logic."
+)
+
+def "World"
+{
+    # Example variantSet; replace with real configuration/LOD variants.
+    # This is a non-destructive layer that can sit above AssetImport_LYR.usda.
+    over "Machine_X"
+    {
+        # variantSet "Configuration" = "Config_A" { ... }
+    }
+}
+
+

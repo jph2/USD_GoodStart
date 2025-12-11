@@ -11,7 +11,7 @@ The schemas and architecture of OpenUSD are designed to accommodate extensive cu
 
 The core principles below suggest how assets, scenes, and pipelines should be structured for maximum performance, collaboration, and clarity. These principles apply across industries including VFX, robotics, industrial digital twins, simulation, and gaming, but each case needs solutions tailored to its specific needs.
 
-**OpenUSD in the Enterprise Context:** Digital twins and industrial assets rarely exist in isolation. They are part of larger organizational ecosystems governed by backend systems. **PLM (Product Lifecycle Management)** and **PDM (Product Data Management)** systems organize product data, revisions, and engineering metadata. **ERP (Enterprise Resource Planning)** systems manage business processes, supply chains, and operational data. The **Asset Administration Shell (AAS)**—an Industry 4.0 standard—provides standardized interfaces for digital twin administration and lifecycle management. Additionally, **sensor data, databases, and APIs** continuously feed real-time information into digital twins. OpenUSD assets must integrate with these governance systems, storing metadata (PLM IDs, AAS identifiers, ERP links) and connecting to backend services for live data updates. The diagram below illustrates how these governance layers connect to and organize the OpenUSD pipeline.
+**OpenUSD in the Enterprise Context:** Digital twins and industrial assets rarely exist in isolation. They are part of larger organizational ecosystems governed by backend systems. **PLM (Product Lifecycle Management)** and **PDM (Product Data Management)** systems organize product data, revisions, and engineering metadata. **ERP (Enterprise Resource Planning)** systems manage business processes, supply chains, and operational data. Various standards and frameworks may be used for digital twin administration—for example, the **Asset Administration Shell (AAS)** is one Industry 4.0 standard that provides standardized interfaces, but organizations may choose different approaches (Catena-X, OPC UA, custom solutions, etc.) based on their specific needs and existing infrastructure. Additionally, **sensor data, databases, and APIs** continuously feed real-time information into digital twins. OpenUSD assets must integrate with these governance systems, storing metadata (PLM IDs, system identifiers, ERP links) and connecting to backend services for live data updates. The diagram below illustrates how these governance layers connect to and organize the OpenUSD pipeline.
 
 ```mermaid
 flowchart TD
@@ -24,7 +24,7 @@ flowchart TD
     subgraph Governance["1. Governance & Backend"]
         direction TB
         PLM[PLM / PDM / ERP]
-        AAS[Asset Admin Shell]
+        AAS[Asset Admin Shell\n(e.g. AAS, Catena-X, OPC UA)]
         DB[Databases & Sensors]
     end
 
@@ -32,8 +32,8 @@ flowchart TD
         direction TB
         A_Source[000_SOURCE]
         A_Geom[010_ASS_USD\nPayloads]
-        A_Layers[020_LYR_USD\nLogic Layers]
-        A_Tex[030_TEX]
+        A_Layers[030_USD_LYR\nLogic Layers]
+        A_Tex[020_TEX]
     end
 
     subgraph Pipeline["3. Pipeline & Publishing"]
@@ -921,9 +921,9 @@ Author opinions in department layers, not the root.
 ```usda
 (
     subLayers = [
-        "./020_LYR_USD/Layout.usda",
-        "./020_LYR_USD/Animation.usda",
-        "./020_LYR_USD/Lighting.usda"
+        "./030_USD_LYR/Layout_LYR.usda",
+        "./030_USD_LYR/Animation_LYR.usda",
+        "./030_USD_LYR/Lighting_LYR.usda"
     ]
 )
 ```
@@ -1370,10 +1370,10 @@ The `subLayers` array is ordered from **top (strongest)** to **bottom (weakest)*
 (
     defaultPrim = "World"
     subLayers = [
-        @./020_LYR_USD/Opinion_xyz_LYR.usda@,      # Top (strongest) - overrides everything
-        @./020_LYR_USD/Variant_LYR.usda@,          # Variants and configurations
-        @./020_LYR_USD/Mtl_work_LYR.usda@,         # Materials and shading
-        @./020_LYR_USD/AssetImport_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
+        @./030_USD_LYR/Opinion_xyz_LYR.usda@,      # Top (strongest) - overrides everything
+        @./030_USD_LYR/Variant_LYR.usda@,          # Variants and configurations
+        @./030_USD_LYR/Mtl_work_LYR.usda@,         # Materials and shading
+        @./030_USD_LYR/AssetImport_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
     ]
 )
 
@@ -2054,6 +2054,221 @@ def Xform "Branch" (
 
 ---
 
+# 5.7.1 Case Study — 3DEXPERIENCE / CATIA Configurator → USD Variants
+
+This case study shows how a 3DEXPERIENCE (PLM) + CATIA configuration workflow can produce a **single USD asset** with a **stable base payload** and a **variantSet that mirrors configurator options**. It applies all best practices from this chapter:
+
+- **Payload‑based architecture** (heavy geometry in `.usdc` payloads, not in the interface layer)
+- **Lofted variants** (variants authored above payloads, not inside them)
+- **Property declaration technique** (declare properties without values so variants can safely drive them)
+- **GoodStart folder structure** (`000_SOURCE`, `010_ASS_USD`, `020_TEX`, `030_USD_LYR`, `040_SIM_LYR`, `050_VARIANTS_LYR`, `060_METADATA_LYR`, `Asset_ROOT.usda`)
+
+### Context & Goals
+
+- **Source systems**:
+  - 3DEXPERIENCE (ENOVIA) manages **machines, assemblies, and configurations**.
+  - CATIA defines **assemblies and parts** (mechanical structure).
+- **Goal in USD**:
+  - One **base asset** representing the common machine geometry.
+  - A `variantSet "Configuration"` that maps PLM/3DEXPERIENCE configurations to **USD variants**, each composing the appropriate variant payloads and metadata.
+
+This follows the governance pattern from Chapter 1:
+- 3DEXPERIENCE **governs** product structure, revisions, and options.
+- USD **represents** configured results and exposes them as **variants and metadata**, but does not re‑implement configurator logic.
+
+### Folder & Asset Structure (GoodStart Pattern)
+
+Per machine family (e.g. `Machine_X`), use a local asset folder (or equivalent Nucleus project subtree):
+
+```text
+Machine_X/
+  000_SOURCE/
+    # CATIA / PLM exports (STEP, JT, etc.) - never referenced directly
+
+  010_ASS_USD/
+    Machine_X_base_payload.usdc        # Common geometry for all configurations
+
+  050_VARIANTS/
+    Machine_X/
+      Motor_A_payload.usdc
+      Motor_B_payload.usdc
+      Guard_On_payload.usdc
+      Guard_Off_payload.usdc
+
+  030_USD_LYR/
+    Metadata_LYR.usda                  # Optional: PLM/CAD metadata
+
+  Machine_X_ROOT.usda                  # Interface asset with variantSet "Configuration"
+```
+
+This layout is a direct application of Chapter 6 (Project Structure) and Chapter 9 (CAD → USD payload pattern).
+
+### Step‑by‑Step Workflow
+
+1. **Define configurations in PLM / CATIA**
+   - In 3DEXPERIENCE, define options/rules and generate **named configurations**, e.g.:
+     - `Config_A` = `Motor_A` + `Guard_On`
+     - `Config_B` = `Motor_B` + `Guard_Off`
+   - PLM remains the **source of truth** for:
+     - Which components belong to each configuration,
+     - Valid combinations, and
+     - Lifecycle / revision information.
+
+2. **Export base and variant CAD geometry**
+   - From CATIA / 3DEXPERIENCE, export:
+     - **Base assembly** geometry (common to all configurations) → converted to `Machine_X_base_payload.usdc`.
+     - **Variant sub‑assemblies** that change per configuration (motors, guards, tool options, etc.) → each converted to a **separate payload** in `050_VARIANTS/Machine_X/`.
+
+3. **Convert CAD to USD payloads**
+   - Use a CAD → USD converter (e.g. Omniverse CAD Converter, custom pipeline, or connectors) to:
+     - Tessellate geometry (Chapter 9.4).
+     - Optimize (decimate, unify normals, detect instancing) (Chapter 9.6).
+     - Write heavy geometry into `.usdc` payloads in `010_ASS_USD` and `050_VARIANTS`.
+
+4. **Author the interface asset with variants (Machine_X_ROOT.usda)**
+   - Create `Machine_X_ROOT.usda` as a **thin interface layer**:
+     - Payloads in `010_ASS_USD` and `050_VARIANTS`.
+     - A `variantSet "Configuration"` that composes variant payloads and sets configuration metadata.
+     - Properties declared without initial values so variants can safely set them (Thomas’s approach).
+
+```usda
+# Machine_X_ROOT.usda  (interface + variants, no heavy geometry)
+
+def Xform "Machine_X" (
+    prepend payload = @./010_ASS_USD/Machine_X_base_payload.usdc@
+)
+{
+    # Configuration‑level metadata (declared, but not assigned here)
+    custom token config:identifier      # e.g. "Config_A", "Config_B"
+    custom string plm:configId         # mapping back to 3DEXPERIENCE
+
+    variantSet "Configuration" = "Config_A" {
+
+        "Config_A" {
+            custom token config:identifier = "Config_A"
+            custom string plm:configId    = "3DX_CFG_001"
+
+            # Compose configuration‑specific payloads
+            prepend payload = @./050_VARIANTS/Machine_X/Motor_A_payload.usdc@
+            prepend payload = @./050_VARIANTS/Machine_X/Guard_On_payload.usdc@
+        }
+
+        "Config_B" {
+            custom token config:identifier = "Config_B"
+            custom string plm:configId    = "3DX_CFG_002"
+
+            prepend payload = @./050_VARIANTS/Machine_X/Motor_B_payload.usdc@
+            prepend payload = @./050_VARIANTS/Machine_X/Guard_Off_payload.usdc@
+        }
+    }
+}
+```
+
+This pattern:
+- Keeps **all heavy geometry** in payloads (`.usdc` files).
+- Authors variants **above** payloads (interface layer, not inside payloads).
+- Declares configuration properties without values at the prim level, then **lets variants set values** (5.7 pattern).
+
+5. **Use configurations in scenes (AssetImport_LYR / factory scenes)**
+   - In `030_USD_LYR/AssetImport_LYR.usda` (or scene‑specific import layer), reference the interface asset and choose variants per instance:
+
+```usda
+# 030_USD_LYR/AssetImport_LYR.usda
+
+def Xform "Factory" {
+
+    def Xform "Machine_X_Instance_01" (
+        prepend references = @../Machine_X/Machine_X_ROOT.usda@
+    )
+    {
+        variantSet "Configuration" = "Config_A"
+    }
+
+    def Xform "Machine_X_Instance_02" (
+        prepend references = @../Machine_X/Machine_X_ROOT.usda@
+    )
+    {
+        variantSet "Configuration" = "Config_B"
+    }
+}
+```
+
+This keeps:
+- **Asset‑level configuration logic** encapsulated in the asset (`Machine_X_ROOT.usda`).
+- **Scene‑level choices** (which machine gets which configuration) in the **layer stack** (Chapter 4).
+
+### Case Study Diagrams (Mermaid)
+
+#### PLM → CAD → USD Config Pipeline
+
+```mermaid
+flowchart TD
+    PLM[3DEXPERIENCE / ENOVIA\nConfigurations & Governance]:::gov
+    CATIA[CATIA Assemblies\n(Parts & Sub-Assemblies)]:::cad
+    Conf[3DEXPERIENCE Configurator\n(Options & Rules)]:::gov
+
+    PLM --> CATIA
+    PLM --> Conf
+    CATIA --> Export[Configured CAD Exports\n(Per-Config or Delta Geometry)]:::step
+    Conf --> Export
+
+    Export --> BaseTess[Base Geometry Tessellation\nCommon Assembly]:::step
+    Export --> VarTess[Variant Tessellation\nConfig-Dependent Parts]:::step
+
+    BaseTess --> BaseUSD[010_ASS_USD/\nMachine_X_base_payload.usdc]:::usd
+    VarTess --> VarUSD[050_VARIANTS/\nMotor_A/B, Guard_On/Off payloads]:::usd
+
+    BaseUSD --> Interface[Machine_X_ROOT.usda\nInterface + variantSet \"Configuration\"]:::root
+    VarUSD --> Interface
+
+    Interface --> Scene[030_USD_LYR/AssetImport_LYR.usda\nFactory / Line Scenes]:::scene
+
+    classDef gov fill:#b39ddb,stroke:#4a148c,stroke-width:3px,color:#000;
+    classDef cad fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
+    classDef step fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000;
+    classDef usd fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
+    classDef root fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000;
+    classDef scene fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000;
+```
+
+#### Asset Folder & Variant Structure (GoodStart Style)
+
+```mermaid
+flowchart TD
+    Root[Machine_X/]:::root
+    Root --> S000[000_SOURCE/\nCATIA/3DX Exports]
+    Root --> S010[010_ASS_USD/\nMachine_X_base_payload.usdc]
+    Root --> S020[030_USD_LYR/\nLayers]
+    Root --> S050[050_VARIANTS/\nVariant payloads]
+    Root --> AR[Machine_X_ROOT.usda\nInterface + variantSet \"Configuration\"]
+
+    S020 --> L_Meta[Metadata_LYR.usda]
+    S050 --> V1[Motor_A_payload.usdc]
+    S050 --> V2[Motor_B_payload.usdc]
+    S050 --> V3[Guard_On_payload.usdc]
+    S050 --> V4[Guard_Off_payload.usdc]
+
+    classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
+    classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
+
+    class Root,AR root;
+    class S000,S010,S020,S050,L_Meta,V1,V2,V3,V4 folder;
+```
+
+### Related Best Practices & References
+
+- **Variants & composition arcs**:
+  - [Learn OpenUSD — Sublayers & Composition Arcs](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/what-are-sublayers.html)
+  - [Learn OpenUSD — Value Resolution](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html)
+- **Connectors & CAD pipelines**:
+  - [NVIDIA Omniverse CAD Converter Extension](https://docs.omniverse.nvidia.com/extensions/latest/ext_cad-converter.html)
+  - [Omniverse Third‑Party Connectors](https://docs.omniverse.nvidia.com/connect/latest/3rd-party-connectors.html)
+  - [OpenUSD Exchange SDK](https://github.com/NVIDIA-Omniverse/usd-exchange)
+- **Governance vs representation**:
+  - See **Chapter 1.2 (PLM/PDM Integration)** and **Chapter 9 (CAD → USD Workflow)** in this guide for foundational patterns.
+
+---
+
 # 5.8 Primvars — The Power Tool of USD
 
 Primvars (primitive variables) allow assets to carry **continuous values**.
@@ -2287,10 +2502,11 @@ flowchart TD
     Root[USD_GoodStart/]:::root
     Source[000_SOURCE/<br/>CAD, vendor files, raw data]:::folder
     Assets[010_ASS_USD/<br/>Converted USD assets (geometry)]:::folder
-    Layers[020_LYR_USD/<br/>Layer-based USD files]:::folder
-    Textures[030_TEX/<br/>Textures]:::folder
-    Sim[040_SIM/<br/>Physics, collision, sim metadata]:::folder
-    Variants[050_VARIANTS/<br/>Variant assets, LODs]:::folder
+    Tex[020_TEX/<br/>Global textures]:::folder
+    Lyr[030_USD_LYR/<br/>General USD layers]:::folder
+    Sim[040_SIM_LYR/<br/>Physics, collision, sim metadata]:::folder
+    Vars[050_VARIANTS_LYR/<br/>Variant & config layers]:::folder
+    Meta[060_METADATA_LYR/<br/>Metadata & standards layers]:::folder
     RootFile[GoodStart_ROOT.usda<br/>Entry point file]:::usd
     
     ImportLayer[AssetImport_LYR.usda]:::layer
@@ -2300,16 +2516,17 @@ flowchart TD
     
     Root --> Source
     Root --> Assets
-    Root --> Layers
-    Root --> Textures
+    Root --> Tex
+    Root --> Lyr
     Root --> Sim
-    Root --> Variants
+    Root --> Vars
+    Root --> Meta
     Root --> RootFile
     
-    Layers --> ImportLayer
-    Layers --> MtlLayer
-    Layers --> VariantLayer
-    Layers --> OpinionLayer
+    Lyr --> ImportLayer
+    Lyr --> MtlLayer
+    Lyr --> VariantLayer
+    Lyr --> OpinionLayer
     
     classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
     classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000;
@@ -2324,28 +2541,52 @@ flowchart TD
     root[USD_GoodStart/]:::root
     root --> S000[000_SOURCE/\nRaw CAD & DCC]
     root --> S010[010_ASS_USD/\nUSD geometry & payloads]
-    root --> S020[020_LYR_USD/\nLayered logic]
-    root --> S030[030_TEX/\nTextures]
-    root --> S040[040_SIM/\nSimulation data]
-    root --> S050[050_VARIANTS/\nVariant payloads]
+    root --> S020[020_TEX/\nGlobal textures]
+    root --> S030[030_USD_LYR/\nGeneral layers]
+    root --> S040[040_SIM_LYR/\nSimulation layers]
+    root --> S050[050_VARIANTS_LYR/\nVariant layers]
+    root --> S060[060_METADATA_LYR/\nMetadata & standards]
     root --> RootUsd[GoodStart_ROOT.usda\nEntry point]
-
-    S020 --> L_Import[AssetImport_LYR.usda]
-    S020 --> L_Mtl[Mtl_Work_LYR.usda]
-    S020 --> L_Var[Variant_LYR.usda]
-    S020 --> L_Opinion[Opinion_LYR.usda]
-
+    
+    S030 --> L_Import[AssetImport_LYR.usda]
+    S030 --> L_Mtl[Mtl_Work_LYR.usda]
+    S030 --> L_Var[Variant_LYR.usda]
+    S030 --> L_Opinion[Opinion_LYR.usda]
+    
     classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
     classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
-
+    
     class root,RootUsd root;
-    class S000,S010,S020,S030,S040,S050,L_Import,L_Mtl,L_Var,L_Opinion folder;
+    class S000,S010,S020,S030,S040,S050,S060,L_Import,L_Mtl,L_Var,L_Opinion folder;
 ```
 
+**Important Note:** Folder numbers (030, 040, 050, 060) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file (`GoodStart_ROOT.usda`), not by folder names. The folder numbers are simply organizational prefixes for clarity and categorization.
+
+---
+
+## ⚠️ Critical Philosophy: Use Only What You Need
+
+**OpenUSD is powerful, but complexity can become overwhelming.**
+
+When you use OpenUSD, you're navigating between peaks on a mountain using a narrow ridge. You can achieve things that are impossible with any other 3D format, but **the abyss is a mile deep**.
+
+This folder structure provides a **complete, ready-to-use foundation** with all possibilities defined. However, **only use what you actually need** for your project.
+
+### Why This Matters
+
+- **Overcomplication Risk**: If you start using all possibilities from the beginning—like adding multiple layers at the asset level when a single layer would suffice, or nesting layers within layers unnecessarily—you can easily create structures that are overcomplicated and hard to maintain.
+
+- **Example Anti-Pattern**: Using an asset in several scenes where the asset is always the same, but then adding layers at the root level of that asset, or within the asset with other layers, when simpler approaches would work.
+
+- **The Threshold**: You need to decide where the complexity threshold is for your project. Start simple, add complexity only when you have a clear need for it.
+
+**Best Practice**: Begin with the minimal structure needed for your use case. Add layers, variants, and metadata layers only when you have a specific requirement that justifies the added complexity.
 
 ---
 
 # 6.3 Folder-by-Folder Deep Explanation
+
+**Note:** Folder numbers (030, 040, 050, 060) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file, not by folder names. These numbers are organizational prefixes for clarity.
 
 ## **000_SOURCE/**  
 Raw input data:
@@ -2373,7 +2614,7 @@ The entire source file management may be handled **entirely differently** in the
 - **Development flexibility**: Easy access during initial project setup
 - **Migration path**: As projects mature, source management can migrate to PLM/PDM/ERP systems while maintaining the USD asset structure
 
-The USD asset structure (`010_ASS_USD/`, `020_LYR_USD/`) remains independent of source file management, allowing flexibility in how source files are organized and versioned.
+The USD asset structure (`010_ASS_USD/`, `030_USD_LYR/`) remains independent of source file management, allowing flexibility in how source files are organized and versioned.
 
 ---
 
@@ -2392,10 +2633,10 @@ Each geometric asset has one payload `.usdc` file in this folder.
 
 ---
 
-## **020_LYR_USD/**  
-Layer-driven composition files.
+## **030_USD_LYR/**  
+Layer-driven composition files for **general USD logic** (visual/layout/material).
 
-These files control *behavior*, not geometry.
+These files control *behavior*, not heavy geometry.
 
 ### Recommended files:
 - **AssetImport_LYR.usda**  
@@ -2414,11 +2655,12 @@ Pipelines may add:
 - `Sim_LYR.usda`
 - `Metadata_LYR.usda`
 - `IoT_LYR.usda`
-- `AAS_LYR.usda` (for Asset Administration Shell mapping)
+- `AAS_LYR.usda` (for Asset Administration Shell mapping, if using AAS)
+- `Standards_LYR.usda` (for other standards integration like Catena-X, OPC UA, etc.)
 
 ---
 
-## **030_TEX/**  
+## **020_TEX/**  
 Texture maps, normal maps, roughness maps, baked light textures, etc.
 
 **Rules:**  
@@ -2428,7 +2670,7 @@ Texture maps, normal maps, roughness maps, baked light textures, etc.
 
 ---
 
-## **040_SIM/**  
+## **040_SIM_LYR/**  
 Simulation and physics data.
 
 Contents:
@@ -2446,17 +2688,15 @@ Contents:
 
 ---
 
-## **050_VARIANTS/**  
-Variant payload files.
+## **050_VARIANTS_LYR/**  
+Variant and configuration layers and/or payload references.
 
-These are lightweight payloads or references used in variant sets:
+Used for LODs, tool options, product variants, and other discrete states.
 
-Examples:
-- `robot_tool_gripper.usdc`
-- `robot_tool_sander.usdc`
-- `pump_motor_A.usdc`
-- `pump_motor_B.usdc`
-- `conveyor_cover.usdc`
+---
+
+## **060_METADATA_LYR/**  
+Metadata and standards integration layers (PLM/ERP/CAD metadata, AAS, OPC UA, Catena-X, etc.).
 
 ---
 
@@ -2467,10 +2707,10 @@ The root file assembles everything:
 ```usda
 (
     subLayers = [
-        "./020_LYR_USD/Opinion_LYR.usda",
-        "./020_LYR_USD/Variant_LYR.usda",
-        "./020_LYR_USD/Mtl_Work_LYR.usda",
-        "./020_LYR_USD/AssetImport_LYR.usda"
+        "./030_USD_LYR/Opinion_LYR.usda",
+        "./050_VARIANTS_LYR/Variant_LYR.usda",
+        "./030_USD_LYR/Mtl_Work_LYR.usda",
+        "./030_USD_LYR/AssetImport_LYR.usda"
     ]
 )
 ```
@@ -2480,6 +2720,8 @@ The root file assembles everything:
 - No transforms
 - No strong opinions
 - Only subLayers
+
+**Important:** The order of layers in the `subLayers` array determines composition strength (first = strongest, last = weakest). Folder numbers (030, 040, 050, 060) do not indicate layer order—you can reference layers from any folder in any order in the `subLayers` array.
 
 This ensures:
 - Easy overrides
@@ -2515,8 +2757,11 @@ Each asset folder contains:
 /AssetName/
     000_SOURCE/
     010_ASS_USD/
-    020_LYR_USD/
-    030_TEX/
+    020_TEX/
+    030_USD_LYR/
+    040_SIM_LYR/
+    050_VARIANTS_LYR/
+    060_METADATA_LYR/
     AssetName_ROOT.usda
 ```
 
@@ -2565,13 +2810,14 @@ Variants map to:
 
 ### Team Responsibilities
 
-| Team | Folder |
-|------|--------|
+| Team | Folder / Layers |
+|------|-----------------|
 | Modelers | 000_SOURCE, 010_ASS_USD |
-| Shaders | 030_TEX, Mtl_Work_LYR |
-| Variant Authors | 050_VARIANTS, Variant_LYR |
-| Simulation | 040_SIM |
-| Layout | Opinion_LYR |
+| Shaders | 020_TEX, 030_USD_LYR/Mtl_Work_LYR |
+| Variant Authors | 050_VARIANTS_LYR, 030_USD_LYR/Variant_LYR |
+| Simulation | 040_SIM_LYR |
+| Metadata / Standards | 060_METADATA_LYR |
+| Layout | 030_USD_LYR/Opinion_LYR |
 | Pipeline | Root, validation |
 
 Each team edits *only their layer*.
@@ -2658,10 +2904,11 @@ Reduced reuse.
 |--------|---------|
 | 000_SOURCE | Raw CAD/DCC input |
 | 010_ASS_USD | Geometry/payloads |
-| 020_LYR_USD | Layers: materials, variants, overrides |
-| 030_TEX | Textures |
-| 040_SIM | Simulation metadata |
-| 050_VARIANTS | Variant payload assets |
+| 020_TEX | Global textures |
+| 030_USD_LYR | Layers: materials, variants, overrides |
+| 040_SIM_LYR | Simulation metadata & sim layers |
+| 050_VARIANTS_LYR | Variant/configuration layers |
+| 060_METADATA_LYR | Metadata & standards layers |
 | Root | Scene/asset entry point |
 
 A clear folder structure is essential for maintainable USD pipelines.
@@ -2686,10 +2933,10 @@ A clear folder structure is essential for maintainable USD pipelines.
 ### Layer References (in root file)
 ```usda
 subLayers = [
-    @./020_LYR_USD/Opinion_xyz_LYR.usda@,
-    @./020_LYR_USD/Variant_LYR.usda@,
-    @./020_LYR_USD/Mtl_work_LYR.usda@,
-    @./020_LYR_USD/AssetImport_LYR.usda@
+    @./030_USD_LYR/Opinion_xyz_LYR.usda@,
+    @./050_VARIANTS_LYR/Variant_LYR.usda@,
+    @./030_USD_LYR/Mtl_work_LYR.usda@,
+    @./030_USD_LYR/AssetImport_LYR.usda@
 ]
 ```
 
@@ -2705,7 +2952,7 @@ def Xform "PartAssembly" (
 
 ### Texture References (in material definitions)
 ```usda
-asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
+asset inputs:diffuse_texture = @../020_TEX/texture_name.png@ (
     colorSpace = "sRGB"
 )
 ```
@@ -2716,7 +2963,7 @@ asset inputs:diffuse_texture = @../030_TEX/texture_name.png@ (
 - **Relative path resolution**: USD resolves paths relative to the file containing the reference
 - **Scripts use `.resolve()` internally**: Validation scripts convert paths to absolute for checking, but USD files should contain relative paths
 - **Path examples**:
-  - `@./020_LYR_USD/file.usda@` - Same directory level
+  - `@./030_USD_LYR/file.usda@` - Same directory level
   - `@../010_ASS_USD/asset.usd@` - One directory up
   - `@../../textures/texture.png@` - Two directories up
 
@@ -2768,7 +3015,7 @@ prepend references = @../010_ASS_USD/asset.usd@
 ### CAD Conversion Tools
 - **[NVIDIA Omniverse CAD Converter Extension](https://docs.omniverse.nvidia.com/extensions/latest/ext_cad-converter.html)** - **Recommended Production Solution**
 - **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - Open-source conversion scripts
-- **[NVIDIA Omniverse Connectors](https://www.nvidia.com/en-us/omniverse/connectors/)** - Production-ready connectors for 3ds Max, Maya, Revit, etc.
+- **[NVIDIA Omniverse Connectors](https://docs.omniverse.nvidia.com/connect/latest/3rd-party-connectors.html)** - Production-ready connectors for 3ds Max, Maya, Revit, etc.
 - **[OpenUSD Exchange SDK](https://github.com/NVIDIA-Omniverse/usd-exchange)** - SDK for building custom USD I/O plugins
 
 # 8.3 DCC Tools (For Content Creation)
@@ -2878,7 +3125,7 @@ flowchart TD
     Pre --> Tess[Tessellation\n(surface → mesh)]
     Tess --> Geo[Geometry Cleanup\nLOD, instancing, flatten hierarchy]
     Geo --> USDGeom[USD Payload\n010_ASS_USD/*.usdc]
-    USDGeom --> Layers[Layer Stacking\n020_LYR_USD/*.usda]
+    USDGeom --> Layers[Layer Stacking\n030_USD_LYR/*.usda]
     Layers --> Mtl[Material Mapping\nMtl_Work_LYR]
     Mtl --> Var[Variant Authoring\nLOD, options]
     Var --> Sim[Simulation Data\n040_SIM: collisions, joints]
@@ -3396,7 +3643,9 @@ Recommended namespaces:
 - `sim:` — Simulation metadata  
 - `dt:` — Digital twin runtime metadata  
 - `maintenance:` — OEE / maintenance data  
-- `aas:` — Asset Administration Shell mapping  
+- `aas:` — Asset Administration Shell mapping (if using AAS standard)  
+- `catena:` — Catena-X integration (if using Catena-X)  
+- `opcua:` — OPC UA information models (if using OPC UA)  
 - `semantic:` — ML/AI labels  
 
 Example:
@@ -3436,7 +3685,7 @@ token cad:tolerance = "Fine"
 float cad:weight = 14.2
 ```
 
-CAD → USD converters should write this metadata in **020_LYR_USD/Metadata_LYR.usda**.
+CAD → USD converters should write this metadata in **030_USD_LYR/Metadata_LYR.usda**.
 
 ---
 
@@ -3504,11 +3753,19 @@ Advantages:
 
 ---
 
-# 10.11 Asset Administration Shell (AAS) Mapping
+# 10.11 Enterprise Standards Integration (Example: Asset Administration Shell)
 
-The AAS is an Industry 4.0 standard for representing industrial assets.
+Various Industry 4.0 standards and frameworks can be integrated with USD assets. The **Asset Administration Shell (AAS)** is one example standard that some organizations use for digital twin administration, but different approaches may be appropriate depending on your environment, existing systems, and requirements (e.g., Catena-X, OPC UA, custom solutions).
 
-Mapping AAS → USD:
+**Note:** Standards integration is an evolving area with different opinions and approaches. Choose solutions that fit your specific context rather than adopting standards rigidly.
+
+**Combining Standards:** Research institutions have demonstrated that standards can be **combined** rather than requiring a choice between them. For example, AAS and OPC UA can be integrated together, allowing organizations to use the best aspects of each standard. This hybrid approach enables:
+- Leveraging AAS for asset administration and lifecycle management
+- Using OPC UA for real-time data communication and information models
+- Combining both in a modular architecture where components are exchangeable
+- Adapting to existing infrastructure without forcing a single-standard solution
+
+**Example: AAS Mapping to USD** (if using AAS):
 
 | AAS Concept | USD Mapping |
 |-------------|-------------|
@@ -3517,12 +3774,268 @@ Mapping AAS → USD:
 | Relationship | USD relationship |
 | Operations | USD custom schema |
 
-Example:
+Example USD metadata using AAS namespace:
 
 ```usda
 string aas:submodel:identification = "PumpType42"
 float aas:operating:temperature = 55.0
 ```
+
+**Combined AAS + OPC UA Example:**
+
+```usda
+# AAS metadata for asset administration
+string aas:submodel:identification = "PumpType42"
+
+# OPC UA data for real-time operational values
+float opcua:runtime:temperature = 55.0
+float opcua:runtime:pressure = 2.3
+token opcua:status = "running"
+```
+
+**Alternative approaches** might use different namespaces:
+- `catena:` for Catena-X integration
+- `opcua:` for OPC UA information models
+- `custom:` for organization-specific standards
+- Or no namespace if using simple custom attributes
+- **Combined namespaces** when using multiple standards together
+
+### How Standards Data Integration Works Through Layers
+
+**Yes, exactly!** Standards data (AAS, OPC UA, Catena-X, etc.) is integrated into USD assets **layer by layer** using the same non-destructive layer stacking system. Here's how it works:
+
+**1. Create a Standards Layer**
+
+Create a dedicated layer file (e.g., `AAS_LYR.usda` or `Standards_LYR.usda`) in your `030_USD_LYR/` folder:
+
+```usda
+# AAS_LYR.usda - Standards data integration layer
+over "Pump" {
+  # Connect AAS data to existing prims using 'over' (non-destructive override)
+  string aas:submodel:identification = "PumpType42"
+  string aas:manufacturer = "Bosch Rexroth"
+  float aas:operating:temperature = 55.0
+}
+
+over "Conveyor" {
+  string aas:submodel:identification = "ConveyorBelt_A"
+  float aas:operating:speed = 2.5
+}
+```
+
+**2. Add the Layer to Your Root File**
+
+Include the standards layer in your root file's `subLayers` array. The position in the stack determines when standards data is applied:
+
+```usda
+# GoodStart_ROOT.usda
+(
+  subLayers = [
+  @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
+  @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Variants 
+  @./030_USD_LYR/Mtl_work_LYR.usda@,      # Material adjustments
+  @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
+  @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
+  @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
+  @./030_USD_LYR/AssetImport_LYR.usda@        # Geometry/assets
+  ]
+)
+```
+
+**3. How Data Flows Through Layers**
+
+The layer stack processes from **bottom to top** (weakest to strongest):
+
+```
+1. AssetImport_LYR.usda (bottom)
+   ↓ Loads geometry/assets
+   
+2. AAS_LYR.usda
+   ↓ Adds standards metadata to loaded prims
+   
+3. Mtl_work_LYR.usda
+   ↓ Adds materials (can reference standards data)
+   
+4. Variant_LYR.usda
+   ↓ Adds variants (can use standards data for configuration)
+   
+5. Opinion_xyz_LYR.usda (top)
+   ↓ Final overrides (can override standards data if needed)
+```
+
+**4. Connecting Standards Data to Existing Prims**
+
+Use `over` to add standards data to prims that were loaded in lower layers:
+
+```usda
+# AAS_LYR.usda
+# This layer connects AAS data to prims loaded in AssetImport_LYR.usda
+
+over "Pump" {
+  # These attributes are added to the Pump prim
+  string aas:submodel:identification = "PumpType42"
+  float aas:operating:temperature = 55.0
+  
+  # You can also add data to nested prims
+  over "Motor" {
+    string aas:submodel:identification = "Motor_TypeA"
+    float aas:power:rating = 5.5  # kW
+  }
+}
+```
+
+**5. Multiple Standards Layers**
+
+You can have **separate layers for different standards**, allowing modular integration:
+
+```usda
+# Root.usda
+subLayers = [
+  @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
+  @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Variants 
+  @./030_USD_LYR/Mtl_work_LYR.usda@,          # Material adjustments
+  @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
+  @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
+  @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
+  @./030_USD_LYR/AssetImport_LYR.usda@        # Geometry/assets
+]
+```
+
+Each standards layer adds its own metadata to the same prims:
+
+```usda
+# AAS_LYR.usda
+over "Pump" {
+  string aas:submodel:identification = "PumpType42"
+}
+
+# OPCUA_LYR.usda (loaded after AAS_LYR, so it's stronger)
+over "Pump" {
+  float opcua:runtime:temperature = 55.0  # Real-time value
+  float opcua:runtime:pressure = 2.3
+}
+```
+
+**Result:** The `Pump` prim now has both AAS identification AND OPC UA runtime data.
+
+**6. Dynamic Data Updates**
+
+For **live data** (sensor feeds, IoT, real-time systems), you can update the layer dynamically:
+
+```usda
+# OPCUA_LYR.usda - Can be updated by external systems
+over "Pump" {
+  # These values can be updated by OPC UA clients
+  float opcua:runtime:temperature = 55.0  # Updated from sensors
+  float opcua:runtime:pressure = 2.3     # Updated from sensors
+  token opcua:status = "running"          # Updated from control system
+}
+```
+
+**7. Complete Example: Layer-by-Layer Integration**
+
+```usda
+# AssetImport_LYR.usda (bottom layer - loads geometry)
+def Xform "Pump" (
+  prepend payload = @../010_ASS_USD/Pump_payload.usdc@
+)
+{
+  # Geometry loaded, but no standards data yet
+}
+
+# AAS_LYR.usda (adds AAS metadata)
+over "Pump" {
+  string aas:submodel:identification = "PumpType42"
+  string aas:manufacturer = "Bosch Rexroth"
+}
+
+# OPCUA_LYR.usda (adds real-time OPC UA data)
+over "Pump" {
+  float opcua:runtime:temperature = 55.0
+  float opcua:runtime:pressure = 2.3
+}
+
+# Variant_LYR.usda (can use standards data for configuration)
+over "Pump" {
+  variantSet "Configuration" = "Standard" {
+    "Standard" {
+      # Variant can reference AAS data
+      string model:variant = "Standard"
+    }
+    "HighPerformance" {
+      string model:variant = "HighPerformance"
+    }
+  }
+}
+
+# Opinion_xyz_LYR.usda (top layer - final overrides)
+over "Pump" {
+  # Can override standards data if needed for this specific scene
+  float opcua:runtime:temperature = 60.0  # Override for testing
+}
+```
+
+**Key Benefits of Layer-Based Standards Integration:**
+
+✅ **Non-destructive:** Standards data doesn't modify source geometry files  
+✅ **Modular:** Each standard gets its own layer, can be enabled/disabled  
+✅ **Composable:** Multiple standards can work together on the same prims  
+✅ **Overrideable:** Higher layers can override standards data when needed  
+✅ **Maintainable:** Standards data is separate from geometry and materials  
+✅ **Dynamic:** Real-time data layers can be updated without touching geometry  
+
+**Summary:** Yes, you add a layer (e.g., `AAS_LYR.usda`) where standards data comes in and connects to existing prims. The data flows through the entire system layer by layer, with each layer adding its contribution to the final composed result.
+
+**Official Documentation References:**
+
+**Important Note:** USD does not have named concepts like "AAS layers" or "OPC UA layers." However, the pattern described above is a **valid application of core USD mechanisms** documented in Pixar's official USD documentation. The following links point to the exact USD concepts that enable this pattern.
+
+**URL Note:** The `graphics.pixar.com` and `openusd.org` URLs are the official USD/OpenUSD documentation sites. The `graphics.pixar.com` URLs may redirect to `openusd.org` in some cases. All links below have been verified as of the last guide update.
+
+**1. Using Layers to Integrate Different Data Sources:**
+- **[USD Glossary → Layer](https://graphics.pixar.com/usd/release/glossary.html#usdglossary-layer)** - Definition of USD layers
+- **[USD Composition → Sublayers](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/what-are-sublayers.html)** - Official documentation on sublayers and layer stacking
+  - *Quote:* "A layer may sublayer other layers. Stronger layers override weaker layers. Sublayers allow combining multiple data sources into a single composed scene."
+  - This is the formal basis for using separate layers for AAS, OPC UA, Catena-X, etc.
+
+**2. Applying Metadata from Different Standards Using Namespace Prefixes:**
+- **[USD Custom Data & Namespaces](https://graphics.pixar.com/usd/release/api/usd_page_front.html#Usd_Page_CustomData)** - Official documentation on custom attributes and namespaced metadata
+  - *Quote:* "Custom attributes and metadata can be added freely as long as they use namespaced identifiers."
+  - This covers using `aas:`, `opcua:`, `catena:` prefixes for domain-specific semantics
+
+**3. Multiple Layers Contributing Opinions to the Same Prim:**
+- **[USD Composition → Value Resolution](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html)** - Official documentation on how USD resolves opinions from multiple layers
+  - Explains how both AAS and OPC UA layers can modify the same prim
+  - Documents how later (stronger) layers override earlier (weaker) ones
+  - All attributes are merged through USD's composition engine
+
+**4. Dynamic / Live Updates:**
+- **[USD Stage Lifetimes and Mutability](https://graphics.pixar.com/usd/release/api/class_usd_stage.html)** - Official documentation on editing layers while stages are open
+  - A stage updates when its underlying layers change
+  - You can write to a layer while a stage is open
+- **[USD File Format Plugins](https://openusd.org/dev/api/_sdf__page__file_format_plugin.html)** - Official mechanism for live data integration
+  - *Quote:* "A file format plugin can generate layer data dynamically at open time."
+  - This is how companies integrate OPC UA, ROS, PLC values, IoT telemetry, etc.
+  - Instead of updating `.usda` on disk, the plugin pulls live data from external systems
+  - Documentation covers creating plugins that adapt other file formats to USD, with support for reading, writing, and editing capabilities
+
+**5. Modular Integration Using Separate Layers:**
+- **[USD Glossary → Layer Stack](https://graphics.pixar.com/usd/release/glossary.html#usdglossary-layerstack)** - Official documentation on layer stacks
+  - *Quote:* "Layer stacks allow constructing a composed result from multiple independent sources of opinions."
+  - USD encourages this pattern for material overrides, variant definitions, departmental data, and production pipelines
+
+**Mapping Table: Standards Integration Patterns to Official USD Concepts**
+
+| Your Concept | Where It Exists in Official USD Docs |
+|-------------|--------------------------------------|
+| Layers for standards (AAS, OPC UA, Catena-X) | **Sublayers & Layer Stacking** |
+| Different layers modifying same prim | **Value Resolution / Composition** |
+| Custom metadata like `aas:*` or `opcua:*` | **Custom Data & Namespaces** |
+| Stronger layers overriding weaker | **Layer Strength Ordering** |
+| Dynamic sensor updates | **Editable layers** or **Dynamic File Format Plugins** |
+| Modular integration architecture | **USD Composition Model** |
+
+**Summary:** While USD doesn't describe "OPC UA layers" or "AAS layers" as named concepts, it **explicitly documents the general mechanisms** (sublayers, value resolution, custom namespaces, dynamic file formats), and using separate layers for different standards is a **valid, endorsed application** of these core USD features.
 
 ---
 
@@ -3548,7 +4061,7 @@ Used by:
 Recommended layers:
 
 ```
-020_LYR_USD/
+030_USD_LYR/
     AssetImport_LYR.usda        (geometry)
     Variant_LYR.usda            (variants)
     Mtl_Work_LYR.usda           (materials)
@@ -4113,7 +4626,7 @@ Primvars provide lightweight overrides.
 
 Stack material overrides in:
 ```
-020_LYR_USD/Mtl_Work_LYR.usda
+030_USD_LYR/Mtl_Work_LYR.usda
 ```
 
 Example override:
@@ -4207,7 +4720,7 @@ A governance model defines:
 ### Example governance rules:
 - All assets use `Asset_ROOT.usda`
 - Geometry always lives in `010_ASS_USD`
-- Materials authored only in `020_LYR_USD/Mtl_Work_LYR.usda`
+- Materials authored only in `030_USD_LYR/Mtl_Work_LYR.usda`
 - No absolute paths  
 - No geometry in variant layers  
 - No authoring in root layer  
@@ -4293,6 +4806,57 @@ Before diving deep into implementation, establish clear project planning and man
 - Regular feedback loops
 - Continuous improvement
 - Adapt to discoveries and changing requirements
+
+### Recommended Implementation Approach
+
+When implementing OpenUSD in enterprise environments, follow these principles:
+
+**Start Agile:**
+- Begin with small, focused projects (POC/MVP)
+- Iterate quickly and learn from each cycle
+- Don't try to solve everything at once
+
+**Work Cleanly + Document Properly:**
+- Maintain clean code and asset structure
+- Document decisions, patterns, and learnings
+- Keep documentation up-to-date as you evolve
+
+**Use Open Source:**
+- Leverage open-source tools and standards where possible
+- Contribute back to the community when feasible
+- Avoid vendor lock-in when alternatives exist
+
+**Adapt to Existing Environment:**
+- Don't force-fit solutions that don't match your infrastructure
+- Integrate with existing PLM/PDM/ERP systems
+- Respect organizational constraints and workflows
+
+**Develop Modular Architecture:**
+- Build modules with clear interfaces
+- Design for exchangeability and replaceability
+- Enable teams to work independently on different components
+
+**Orient to Existing Standards:**
+- Consider established standards (e.g., Catena-X, AAS, OPC UA) as reference points
+- Adapt standards to your needs rather than adopting them rigidly
+- Use standards that fit your ecosystem and requirements
+- **Combine standards when beneficial:** Research shows that standards like AAS and OPC UA can be integrated together—you don't have to choose exclusively between them. Use the best aspects of each standard in a modular architecture
+
+**Leverage Digital Product Passport (DPP) Data:**
+- Integrate data from Digital Product Passports where available
+- Use DPP information to enrich USD asset metadata
+- Connect product lifecycle data to digital twin representations
+- **Vision:** When all individual components have complete DPP information, systems could automatically calculate aggregate performance metrics (e.g., total power consumption, efficiency ratings)
+- **Real-world application:** If a single component is replaced (e.g., supplier change), the system could automatically recalculate overall machine performance based on the new component's DPP data
+- **Current state:** This granular component-level integration is still emerging, but machine-to-machine and production-line-level integration is already demonstrated in prototypes (e.g., Bosch Rexroth's "Intelligent Floor" model factory concept)
+- **Practical approach:** Start with production-line and machine-level integration, then evolve toward component-level granularity as DPP data becomes more widely available
+
+**Key Principle:** There is no one-size-fits-all solution. Different organizations have different needs, existing systems, and constraints. The best approach is one that:
+- Starts small and iterates
+- Adapts to your specific environment
+- Builds on open standards without being rigid
+- Creates a maintainable, modular architecture
+- Integrates with your existing data sources and systems
 
 ### Storage and Version Control Planning
 
@@ -4466,7 +5030,7 @@ flowchart TD
 Use payloads.
 
 ### ❌ Random folder structures  
-Use `/000_SOURCE`, `/010_ASS_USD`, `/020_LYR_USD`.
+Use `/000_SOURCE`, `/010_ASS_USD`, `/030_USD_LYR`.
 
 ### ❌ No CI/CD validation  
 Allows broken assets to slip in.
@@ -4823,11 +5387,54 @@ This chapter provides a deep, curated, and comprehensive resource index for Open
 These are the **authoritative, always-current** references maintained by Pixar and the USD working group.
 
 ### ✔ USD Core Documentation
+
+**Official USD Documentation Sites:**
+- **[openusd.org](https://openusd.org/)** - Official OpenUSD website
+- **[Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/)** - Official Learn OpenUSD portal (tutorials, guides, and docs)
+- **[USD GitHub Repository](https://github.com/PixarAnimationStudios/OpenUSD)** - Source code and documentation
+
+**Key Documentation Topics:**
 - **USD Basics**: Composition, pruning, payloads, references, variants  
 - **Schemas**: Built-in schema families with detailed descriptions  
 - **Value Resolution**: How USD merges opinions  
 - **Layer System**: Sublayers, strengths, authorship rules  
-- **Stage Management**: Opening, saving, and composing USD stages  
+- **Stage Management**: Opening, saving, and composing USD stages
+
+**Official Documentation Links for Layer-Based Data Integration:**
+
+**Note:** The following links point to the exact USD concepts that enable standards integration patterns (AAS, OPC UA, Catena-X, etc.). While USD doesn't have named "standards layers," these patterns are valid applications of core USD mechanisms.
+
+1. **[USD Glossary → Layer](https://graphics.pixar.com/usd/release/glossary.html#usdglossary-layer)** - Official definition of USD layers
+   - Foundation concept for understanding how layers work
+
+2. **[USD Composition → Sublayers](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/what-are-sublayers.html)** - Official documentation on sublayers and layer stacking
+   - *Quote:* "A layer may sublayer other layers. Stronger layers override weaker layers. Sublayers allow combining multiple data sources into a single composed scene."
+   - This is the formal basis for using separate layers for different standards
+
+3. **[USD Composition → Value Resolution](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html)** - Official documentation on how USD resolves opinions from multiple layers
+   - Explains how multiple layers can contribute opinions to the same prim
+   - Documents layer strength ordering and composition
+
+4. **[USD Custom Data & Namespaces](https://graphics.pixar.com/usd/release/api/usd_page_front.html#Usd_Page_CustomData)** - Official documentation on custom attributes and namespaced metadata
+   - *Quote:* "Custom attributes and metadata can be added freely as long as they use namespaced identifiers."
+   - This covers using `aas:`, `opcua:`, `catena:` prefixes for domain-specific semantics
+
+5. **[USD Stage Lifetimes and Mutability](https://graphics.pixar.com/usd/release/api/class_usd_stage.html)** - Official documentation on editing layers while stages are open
+   - Documents how stages update when underlying layers change
+   - Enables dynamic data updates for real-time systems
+
+6. **[USD File Format Plugins](https://openusd.org/dev/api/_sdf__page__file_format_plugin.html)** - Official mechanism for live data integration
+   - *Quote:* "A file format plugin can generate layer data dynamically at open time."
+   - This is how companies integrate OPC UA, ROS, PLC values, IoT telemetry, etc.
+   - Documentation covers creating plugins that adapt other file formats to USD, with support for reading, writing, and editing capabilities
+
+7. **[USD Glossary → Layer Stack](https://graphics.pixar.com/usd/release/glossary.html#usdglossary-layerstack)** - Official documentation on layer stacks
+   - *Quote:* "Layer stacks allow constructing a composed result from multiple independent sources of opinions."
+   - USD encourages this pattern for modular, domain-specific data integration
+
+8. **[NVIDIA Omniverse USD Documentation](https://docs.omniverse.nvidia.com/usd/latest/index.html)** - NVIDIA's USD documentation with practical examples
+   - Layer-based workflows
+   - Real-world examples and tutorials  
 
 ### ✔ Schema Reference Guides
 - UsdGeom  
@@ -5012,11 +5619,13 @@ Includes:
 
 # 15.9 Standards & Cross-Domain Frameworks
 
-### Digital Twin Standards
-- AAS (Asset Administration Shell)  
-- Digital Thread (PLM-driven)  
-- MTConnect  
-- OPC UA Information Models  
+### Digital Twin Standards (Examples)
+Various standards and frameworks exist for digital twin integration. Choose based on your specific needs:
+- AAS (Asset Administration Shell) - Industry 4.0 standard  
+- Catena-X - Automotive industry data ecosystem
+- Digital Thread (PLM-driven) - Product lifecycle integration
+- MTConnect - Manufacturing equipment connectivity
+- OPC UA Information Models - Industrial automation standards  
 
 ### Material Standards
 - MaterialX  
@@ -5032,6 +5641,19 @@ Includes:
 - PLM schema mapping  
 - ERP metadata models  
 - CAD metadata standards  
+
+### Real-World Examples & Case Studies
+
+**Bosch Rexroth "Intelligent Floor" Model Factory:**
+- Demonstrates machine-to-machine and production-line-level digital twin integration
+- Prototype showcasing production line digitalization concepts
+- Reference: [Bosch Rexroth Blog - Intelligent Floor Model Factory](https://www.boschrexroth.com/de/de/blog/intelligenter-boden-modellfabrik/)
+- Shows practical application of standards integration at production scale
+
+**Combined Standards Integration:**
+- Research institutions have demonstrated successful integration of AAS and OPC UA
+- Organizations can combine standards rather than choosing exclusively between them
+- Use best aspects of each standard in a modular, exchangeable architecture
 
 ---
 
@@ -5069,6 +5691,9 @@ Includes:
 - Industrial components  
 - Simulation-ready materials  
 
+### USD Assets Working Group (ASWF)
+- [USD Assets Working Group Repository](https://github.com/usd-wg/assets) – Small, schema- and pipeline-oriented USD assets with documentation and test cases. Focused on educational and test assets rather than full production scenes.
+
 ### Enterprise Sample Projects
 - Full factories  
 - Warehouses  
@@ -5100,7 +5725,7 @@ This chapter provides a "cheat sheet" for getting started quickly with the folde
 # 16.1 Quick Workflow Overview
 
 1. **Source Prep**: Convert CAD → USD assets → place in `010_ASS_USD/`
-2. **Layer Creation**: Create layer files in `020_LYR_USD/` for modifications (variants, materials, overrides)
+2. **Layer Creation**: Create layer files in `030_USD_LYR/` for modifications (variants, materials, overrides)
 3. **Composition**: Reference layers in `GoodStart_ROOT.usda` (array order: Opinion → Variant → Material → AssetImport, where first = strongest)
 4. **Pathing**: Use **relative paths** (`@./folder/file.usd@`) for portability
 5. **Validation**: Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
@@ -5132,7 +5757,7 @@ python scripts/validate_asset.py 010_ASS_USD/part_assembly.usd
 
 ### Step 4: Create Asset Import Layer
 ```usda
-# In 020_LYR_USD/AssetImport_LYR.usda
+# In 030_USD_LYR/AssetImport_LYR.usda
 def Xform "PartAssembly" (
     prepend references = @../010_ASS_USD/part_assembly.usd@
 )
@@ -5143,7 +5768,7 @@ def Xform "PartAssembly" (
 
 ### Step 5: Add Modifications via Layers
 ```usda
-# In 020_LYR_USD/Mtl_work_LYR.usda
+# In 030_USD_LYR/Mtl_work_LYR.usda
 over "PartAssembly"
 {
     over "SubAssembly"
@@ -5160,10 +5785,10 @@ The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `sub
 
 ```usda
 subLayers = [
-    @./020_LYR_USD/Opinion_xyz_LYR.usda@,    # First = strongest (applied last, overrides others)
-    @./020_LYR_USD/Variant_LYR.usda@,        # Second
-    @./020_LYR_USD/Mtl_work_LYR.usda@,       # Third
-    @./020_LYR_USD/AssetImport_LYR.usda@     # Last = weakest (applied first, can be overridden)
+    @./030_USD_LYR/Opinion_xyz_LYR.usda@,       # First = strongest (applied last, overrides others)
+     @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Second
+    @./030_USD_LYR/Mtl_work_LYR.usda@,          # Third
+    @./030_USD_LYR/AssetImport_LYR.usda@   # Last = weakest (applied first, can be overridden)
 ]
 ```
 
@@ -5182,15 +5807,15 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 1. **Source Files**: CAD files in `000_SOURCE/` or external PLM/PDM systems
 2. **Convert to USD**: Convert to `010_ASS_USD/`
 3. **Add Metadata**: Map CAD metadata to USD metadata (custom attributes or customData)
-4. **Apply Modifications**: Use layers in `020_LYR_USD/`
+4. **Apply Modifications**: Use layers in `030_USD_LYR/`
 5. **Link to Root**: Ensure proper linking in `GoodStart_ROOT.usda`
-6. **AAS Integration**: Connect USD assets to Asset Administration Shell (AAS)
+6. **Standards Integration** (optional): Connect USD assets to enterprise standards (e.g., AAS, Catena-X, OPC UA) based on your organization's requirements
 
 ### DCC Workflow
 1. **Import Assets**: Export USD files from DCC tools to `010_ASS_USD/`
    - **Maya, Houdini, 3ds Max**: Full support
    - **Blender, Cinema 4D**: Endpoint assets only (destructive export)
-2. **Reference Assets**: Use layers in `020_LYR_USD/` to reference assets
+2. **Reference Assets**: Use layers in `030_USD_LYR/` to reference assets
 3. **Apply Modifications**: Add opinions, variants, and material changes through layers (using Maya/Houdini)
 4. **Link to Root**: Ensure proper linking in `GoodStart_ROOT.usda`
 
