@@ -355,6 +355,36 @@ This folder structure provides a **complete, ready-to-use foundation** with most
 
 ---
 
+## Development Mindset & Architecture Principles
+
+### Mindset
+
+- **Get Started!!! But Start Structured** - Use a proven foundation like this one to begin with structure
+- **Start Small** - Begin with a POC/MVP, learn incrementally, iterate
+- **Work Cleanly!!! + Document Properly** - Establish workflows, standards, and documentation from the start
+- **Expect Mistakes** - Learn from failures, find smart ways to fix them, build validation into your pipeline
+
+### Architecture
+
+- **Use Open Source** - Leverage open-source tools and contribute back when possible
+- **Adapt to Existing Environment** - Integrate with existing PLM/PDM/ERP systems, respect IT infrastructure
+- **Know Limitations** - Understand what OpenUSD excels at and where other tools are better
+- **Make Conscious Decisions** - Evaluate trade-offs, document why you chose an approach
+- **Modular Design** - Develop interchangeable modules with clear architecture
+- **Separation of Concerns** - Let backend handle backend (PLM/ERP), frontend handle frontend (rendering/interaction)
+
+### Metadata Integration
+
+- **Check USD Schemas First** - Use standard USD schemas when possible before creating custom attributes
+- **Coordinate with AOUSD** - If defining new schemas, coordinate with [Alliance for OpenUSD](https://aousd.org/)
+- **Orient to Existing Standards** - Reference Catena-X, AAS, OPC UA, Digital Product Passport (DPP)
+- **DPP Integration** - Europe requires DPP for many products; design metadata structure to accommodate it
+- **Reference, Don't Duplicate** - Use USD metadata to reference backend data, not duplicate it
+
+**📖 For detailed guidance:** See the [OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) section 6.2.1 for comprehensive development mindset and architecture principles.
+
+---
+
 ## Prerequisites
 
 Before starting with USD GoodStart, ensure you have the following installed and configured:
