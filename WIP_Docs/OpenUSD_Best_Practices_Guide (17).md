@@ -1610,6 +1610,31 @@ Not references or payloads.
 ### ✔ Use multiple layers instead of overwriting  
 Layering is the power of USD.
 
+### ✔ **Lock layers you're not working on**
+**Critical workflow safety practice:** Always lock layers that you are not actively editing. This prevents accidental modifications to the wrong layer, which can cause composition conflicts, break overrides, or corrupt the layer stack. In Omniverse Composer and other USD editing tools, use the layer locking feature to protect layers from unintended changes. Only unlock the specific layer you need to edit, work on it, then lock it again before moving to another layer.
+
+**Why this matters:**
+- Editing the wrong layer can break composition order and override relationships
+- Locked layers provide visual feedback about which layer is active
+- Prevents accidental drag-and-drop operations between layers (see warning below)
+- Essential for multi-user workflows where multiple team members work on different layers
+
+### ⚠️ **Drag-and-Drop Between Layers: Use with Caution**
+Within the layer tab of USD editing tools (such as Omniverse Composer), you can move actions, deltas, and edits between layers via drag-and-drop. While this can be convenient for reorganizing edits, **use this feature with extreme caution**:
+
+**Risks:**
+- Moving edits to the wrong layer can break composition strength ordering (LIV(E)RPS)
+- Overrides may stop working if moved to a weaker layer
+- Can create circular dependencies or invalid layer relationships
+- May cause unexpected composition results that are hard to debug
+
+**Best Practice:**
+- **Prefer creating new edits in the correct layer** rather than moving existing edits
+- If you must move edits, verify the layer stack order and composition strength first
+- Test thoroughly after moving edits between layers
+- Document any layer reorganization in your project notes
+- Consider using version control to track layer changes before drag-and-drop operations
+
 ---
 
 # 4.14 Anti-Patterns
@@ -1821,6 +1846,212 @@ Use payloads whenever possible
 ### ✔ Use variants for states, not animations  
 Animations belong in clips or primvars
 
+### ✔ Declare properties without values to allow variant overrides  
+When adding variants to existing assets, **declare properties without initial values** rather than removing them entirely. This preserves property definitions for connections while allowing variants to set values.
+
+**The Problem: Local Property Values Override Variants**
+
+This is a common issue when retrofitting variants onto existing assets. Consider this scenario:
+
+**Step 1: Artist creates an asset with a local property value:**
+```usda
+def Xform "Branch" {
+  custom double length = 1  # Local opinion - strongest in LIVERPS
+}
+```
+
+**Step 2: You want to add variants for "small" and "large" sizes:**
+The intuitive approach would be to add variants while keeping the existing property:
+
+```usda
+def Xform "Branch" (
+  variantSets = ["sizes"]
+  variants = {
+    string sizes = "small"
+  }
+)
+{
+  custom double length = 1  # ❌ PROBLEM: This Local opinion overrides variants!
+  variantSet "sizes" = {
+    "small" {
+      custom double length = 0.5  # ❌ This value is ignored!
+    }
+    "large" {
+      custom double length = 2    # ❌ This value is also ignored!
+    }
+  }
+}
+```
+
+**Why this doesn't work:** Due to LIVERPS composition strength (Local > Variants), the local `length = 1` always wins, regardless of which variant is selected. The variant values are silently ignored.
+
+**Step 3: The problematic workaround (removing the property entirely):**
+Many developers discover they must remove the local property to make variants work:
+
+```usda
+def Xform "Branch" (
+  variantSets = ["sizes"]
+  variants = {
+    string sizes = "small"
+  }
+)
+{
+  # Property removed - variants can now set values
+  variantSet "sizes" = {
+    "small" {
+      custom double length = 0.5
+    }
+    "large" {
+      custom double length = 2
+    }
+  }
+}
+```
+
+**New problem:** The property no longer exists at the prim level, which causes issues:
+- **Connections break:** `</Branch.length>` doesn't resolve when variants aren't loaded
+  ```usda
+  # This connection fails if length property doesn't exist at prim level:
+  def Cylinder "Visual" {
+    double height.connect = </Branch.length>  # ❌ Connection to "nothing"
+  }
+  ```
+- **Property feels "missing":** Tools and scripts expect the property to exist
+- **No metadata possible:** Can't add documentation or metadata to a non-existent property
+- **Type safety lost:** The property type isn't declared upfront
+- **Confusing for artists:** The property appears to be missing where you'd expect it to be
+
+**Root cause:** A local property value (`custom double length = 1`) creates a Local opinion that overrides variant values due to LIVERPS strength ordering.
+
+**❌ Incorrect approach #1 (local value overrides variants):**
+```usda
+def Xform "Branch" (
+  variantSets = ["sizes"]
+  variants = {
+    string sizes = "small"
+  }
+)
+{
+  custom double length = 1  # ❌ Local opinion overrides variants - variant values ignored!
+  variantSet "sizes" = {
+    "small" {
+      custom double length = 0.5  # This value is never used
+    }
+    "large" {
+      custom double length = 2    # This value is also never used
+    }
+  }
+}
+# Result: length always equals 1, regardless of variant selection
+```
+
+**❌ Incorrect approach #2 (removing property breaks connections):**
+```usda
+def Xform "Branch" (
+  variantSets = ["sizes"]
+  variants = {
+    string sizes = "small"
+  }
+)
+{
+  # Property removed - variants work, but connections break!
+  variantSet "sizes" = {
+    "small" {
+      custom double length = 0.5
+    }
+    "large" {
+      custom double length = 2
+    }
+  }
+}
+# Result: </Branch.length> doesn't resolve when variants aren't loaded
+```
+
+**✅ Correct approach (declare without value):**
+```usda
+def Xform "Branch" (
+  variantSets = ["sizes"]
+  variants = {
+    string sizes = "small"
+  }
+)
+{
+  custom double length  # Declared but NOT assigned - variants can set values
+  variantSet "sizes" = {
+    "small" {
+      custom double length = 0.5
+    }
+    "large" {
+      custom double length = 2
+    }
+  }
+}
+```
+
+**Benefits:**
+- Property exists for connections (e.g., `</Branch.length>` works even when variants aren't loaded)
+- Allows metadata on property declaration (e.g., `custom color3f myColor ( colorSpace = "srgb_linear")`)
+- Provides type safety and documentation
+- Variants can set values without Local opinion conflicts
+
+**Key principle:** A property declaration without a value doesn't create a Local opinion, so variant opinions (which are weaker than Local but stronger than Payloads) can provide the values.
+
+### When to Use Thomas's Approach vs Jan's Payload Pattern
+
+These are **complementary strategies** that solve different problems at different architectural levels:
+
+**Thomas's Approach (Property Declaration Technique):**
+- **Use when:** Adding variants to **existing assets** that already have properties
+- **Use when:** Retrofitting variant support to legacy USD files
+- **Use when:** Properties need to exist for connections but values come from variants
+- **Scope:** Property-level technique within an asset
+- **Example:** Artist created `custom double length = 1`, now you want variants to control it
+
+**Jan's Approach (Payload-Based Architecture):**
+- **Use when:** Designing **new assets from scratch**
+- **Use when:** Building production-ready, scalable asset libraries
+- **Use when:** Heavy geometry needs lazy loading (CAD, robots, machinery)
+- **Scope:** Asset-level architecture pattern
+- **Example:** Creating a new pump asset with geometry in payload, variants lofted above
+
+**Combined Best Practice:**
+For new assets, use **Jan's payload pattern** AND **Thomas's property declaration technique** together:
+
+```usda
+# Asset Root File (minimal, as per Jan's approach)
+def Xform "Branch" (
+  prepend payload = @./Payloads/Branch_payload.usdc@  # Geometry in payload (never Local)
+)
+{
+  # Property declared without value (Thomas's approach)
+  # This allows variants to set values while keeping property available for connections
+  custom double length  # No Local opinion - variants control the value
+  
+  # Variants lofted above payload (Jan's approach)
+  variantSet "sizes" = "small" {
+    "small" {
+      custom double length = 0.5
+    }
+    "large" {
+      custom double length = 2
+    }
+  }
+}
+```
+
+**Decision Matrix:**
+
+| Scenario | Approach | Reason |
+|----------|----------|--------|
+| New asset with heavy geometry | Jan's payload pattern | Performance, scalability |
+| Adding variants to existing asset | Thomas's property declaration | Preserves connections, allows overrides |
+| Property needs metadata | Thomas's approach | Metadata requires property declaration |
+| Building asset library | Jan's payload pattern | Standard production architecture |
+| Legacy asset retrofit | Thomas's approach | Works with existing structure |
+| Property must exist for connections | Thomas's approach | Property declaration enables connections |
+
+**Key Insight:** Jan's approach prevents the problem (no Local opinions in payloads), while Thomas's approach solves it when you can't avoid Local opinions (retrofitting existing assets).
+
 ---
 
 # 5.8 Primvars — The Power Tool of USD
@@ -1982,6 +2213,9 @@ Difficult to maintain.
 
 ### ❌ Using variants for material color  
 Primvars should do that.
+
+### ❌ Local property values overriding variants  
+Setting a property value at the local level (`custom double length = 1`) prevents variants from overriding it due to LIVERPS strength (Local > Variants). Instead, declare the property without a value and let variants set it. See Section 5.7 for the correct pattern.
 
 ---
 
