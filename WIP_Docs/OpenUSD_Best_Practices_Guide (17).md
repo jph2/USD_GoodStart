@@ -1,3 +1,6 @@
+**Version:** 0.9.4-beta  
+**Last Updated:** 12.12.2025
+
 
 # OpenUSD Best Practices Guide (Maximum Detail Edition)
 

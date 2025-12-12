@@ -1,7 +1,7 @@
 # 020_TEX
 
-**Version:** 0.9.3-beta  
-**Last Updated:** 10.12.2025
+**Version:** 0.9.4-beta
+**Last Updated:** 12.12.2025
 
 ## Purpose
 

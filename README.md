@@ -1,7 +1,7 @@
 # USD GoodStart
 
-**Version:** 0.9.3-beta  
-**Last Updated:** 10.12.2025
+**Version:** 0.9.4-beta  
+**Last Updated:** 12.12.2025
 
 **Pretex (why the hell..)**
 Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
