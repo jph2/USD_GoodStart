@@ -2,7 +2,7 @@
 
 > **Enjoy the GoodStart — and reach out if you want help shipping faster.**  
 > I hope you enjoy the GoodStart I’m providing here. If you’re short on time (or want an experienced second brain), I’m available for consulting on **OpenUSD / Omniverse workflows**, **composition & layering strategy**, **CAD→USD pipelines**, **validation/CI**, and **digital-twin metadata**.  
-> **Contact:** DM me on LinkedIn (please mention **Version: 0.9.5-beta**) or email **jh@haluszka.com**.
+> **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) (please mention **Version: 0.9.5-beta**), visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.
 
 **Version:** 0.9.5-beta  
 **Last Updated:** 12.12.2025
