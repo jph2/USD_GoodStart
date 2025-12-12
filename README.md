@@ -1,6 +1,6 @@
 # USD GoodStart
 
-**Version:** 0.9.4-beta  
+**Version:** 0.9.5-beta  
 **Last Updated:** 12.12.2025
 
 **Pretex (why the hell..)**
@@ -138,35 +138,38 @@ Asset_Root_File.usda (Interface - Lightweight)
 
 ---
 
-## Quick Reference
+## 📚 Comprehensive Documentation
 
-**Folder-Specific Guides:**
-- **[000_SOURCE/](000_SOURCE/README.md)** - Source files folder (CAD files, DCC source files, conversion pipeline)
-- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD geometry/payload assets (converted from source)
+For detailed technical guidance on OpenUSD workflows, digital twin implementation, and advanced features, see the **[OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md)** in the `WIP_Docs/` folder.
+
+This comprehensive guide covers:
+- Complete OpenUSD technical reference
+- Digital twin implementation patterns
+- CAD integration workflows
+- Validation and CI/CD pipelines
+- Industry best practices and learning resources
+
+---
+
+## Notes
+
+- This is a clean starting template - customize as needed for your project
+- The `0_` prefix in asset names is used for sorting default assets
+- Layers are loaded in order - later layers override earlier ones
+- Asset-specific textures can be stored within asset folders, while global textures go in `020_TEX/`
+
+**Folder Documentation:**
+Each folder contains its own README with detailed information:
+- **[000_SOURCE/](000_SOURCE/README.md)** - Source files and CAD originals
+- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD geometry/payload assets
 - **[020_TEX/](020_TEX/README.md)** - Global/shared textures
-- **[030_USD_LYR/](030_USD_LYR/README.md)** - General USD layers (materials, layout, opinions, asset import)
+- **[030_USD_LYR/](030_USD_LYR/README.md)** - General USD layers
 - **[040_SIM_LYR/](040_SIM_LYR/README.md)** - Simulation & physics layers
 - **[050_VARIANTS_LYR/](050_VARIANTS_LYR/README.md)** - Variant/configuration layers
 - **[060_METADATA_LYR/](060_METADATA_LYR/README.md)** - Metadata & standards layers
 
-Each folder README provides quick reference for that specific folder. For comprehensive documentation, see sections below.
-
-**📚 Work-in-Progress Documentation (`WIP_Docs/`):**
-The `WIP_Docs/` folder contains work-in-progress documentation that will hold more detailed guides in the future. Currently, most content is in this main README. **Future plans:**
-- This README will be reduced to the **TLDR section** only
-- All other detailed sections will move to an upcoming **OpenUSD Best Practices Guide** (currently being developed in `WIP_Docs/`)
-- The guide will provide comprehensive documentation on how to use OpenUSD in general and with this template
-
-**Current WIP_Docs contents:**
-- `AssetStructureBestPractices.md` - Asset structure patterns and best practices
-- `OpenUSD_Best_Practices_Guide (17).md` - Comprehensive OpenUSD guide (in development)
-- Various analysis and planning documents
-
-**Note:** All documents are evolving and may contain draft content, this is especially true for the WIP_Docs . The main README remains the primary source of information until the guide is finalized.
 
 ---
-
-## About OpenUSD and Digital Twins
 
 **OpenUSD** (Universal Scene Description) was originally developed by [Pixar Animation Studios](https://openusd.org/) as a universal scene description format to be sent to renderers for visual effects and CGI production. However, its powerful composition system, non-destructive workflows, and ability to handle complex 3D data make it an ideal foundation for **digital twin applications**.
 
@@ -422,7 +425,7 @@ In Omniverse/Kit, realtime data is typically handled by **adapters** (extensions
 
 **Registry template:** track your prefixes/fields in `WIP_Docs/Metadata_Schema_Registry.md`.
 
-**📖 For detailed guidance:** See the [OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) section 6.2.1 for comprehensive development mindset and architecture principles.
+**📖 For detailed guidance:** See the [OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) Chapter 1.5 for project structure and organizational principles.
 
 ---
 

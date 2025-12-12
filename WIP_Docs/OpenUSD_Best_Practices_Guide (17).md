@@ -1,8 +1,268 @@
-**Version:** 0.9.4-beta  
+**Version:** 0.9.5-beta  
 **Last Updated:** 12.12.2025
 
 
 # OpenUSD Best Practices Guide (Maximum Detail Edition)
+
+## Chapter 0: Prerequisites and Setup
+
+Before diving into OpenUSD development and digital twin workflows, ensure you have the necessary software, tools, and environment configured. This chapter covers the foundational requirements for working with USD GoodStart and OpenUSD in general.
+
+### 0.1 Required Software
+
+#### Omniverse Kit/App
+- **Omniverse Composer**: Recommended version: Latest stable
+- **Omniverse Kit SDK**: For extension development
+- **Download**: [NVIDIA Omniverse](https://www.nvidia.com/en-us/omniverse/) and [kit-app-template](https://github.com/NVIDIA-Omniverse/kit-app-template)
+
+#### Python Environment
+- **Python**: 3.8+ (Python 3.10+ recommended)
+- **USD Core**: `pip install usd-core` - Python bindings for USD
+- **Additional packages**: May be required for CAD conversion
+
+#### USD Tools
+- **USD Python API** (`usd-core` from PyPI): Python bindings for USD
+- **usdview**: Classic USD validation and inspection tool from Pixar
+  - Essential for validating USD files and checking structure
+  - Inspect prims, attributes, relationships, and composition
+  - Visualize USD scenes and debug composition issues
+  - Always helpful for USD file validation and troubleshooting
+  - Part of the official OpenUSD repository
+- **USD C++ SDK**: Optional for advanced development and custom plugins
+
+### 0.2 CAD Tools (Optional, for CAD-to-USD workflows)
+
+#### CAD Software
+- CATIA, SolidWorks, Autodesk Inventor, Rhino 3D, or similar
+- STEP file support for intermediate conversion
+
+#### CAD Conversion Tools
+- **NVIDIA Omniverse CAD Converter Extension**: Recommended production solution
+  - Built-in CAD converter within Omniverse Kit apps and Composer
+  - Supports common CAD formats (STEP, IGES, etc.) directly to USD
+  - Works from content browser with context menu option
+  - Actively maintained and optimized for Omniverse workflows
+  - Official documentation: [CAD Converter Manual](https://docs.omniverse.nvidia.com/extensions/latest/ext_cad-converter/manual.html)
+- **CAD-to-OpenUSD**: Open-source conversion scripts (Work in Progress, November 2024)
+  - Useful for custom pipeline development
+  - Requires development effort for production use
+- **NVIDIA Omniverse Connectors**: Production-ready connectors for:
+  - Autodesk 3ds Max, Maya, Revit, Inventor
+  - SolidWorks, Siemens NX, CATIA
+  - Blender, Unreal Engine, Unity
+  - And many more CAD/DCC tools
+- **OpenUSD Exchange SDK**: SDK for building custom USD I/O plugins and converters
+  - For pipeline-specific requirements
+  - Requires development using USD SDK and CAD SDKs (OpenCASCADE, FreeCAD, or commercial CAD SDKs)
+- **CAD Vendor Native Exporters**: Many CAD vendors provide native USD export capabilities
+- **STEP Intermediate Format**: Use STEP files as a stable intermediate format for CAD conversion workflows
+
+### 0.3 DCC Tools (Optional, for content creation)
+
+#### 3D Software
+- **Houdini** (`.hiplc` files): Full USD support with layering and referencing
+- **Maya** (`.ma`/`.mb` files): Full USD support with layering and referencing
+- **3ds Max**: Full USD support with layering and referencing
+- **Blender** (USD export support): Limited: Read/write only, no layering/referencing
+- **Cinema 4D**: Limited: Read/write only, no layering/referencing
+
+### 0.4 DCC Tool Limitations for USD Workflows
+
+Some DCC tools have significant limitations when working with USD:
+
+#### Blender, Cinema 4D, and Similar Tools:
+- ✅ Can read and write USD files (`.usd`, `.usda`, `.usdc`, `.usdz` formats)
+- ❌ Do NOT support USD's core composition features:
+  - No layering support (cannot work with sublayers)
+  - No referencing support (cannot create or maintain references)
+  - No composition arcs (LIV(E)RPS) support
+  - No non-destructive workflows
+- ⚠️ Work destructively - These tools modify USD files directly without preserving composition structure
+- 📍 Use case: Can only be used to create "endpoint" assets (the lowest sublayer - the asset itself)
+- ❌ Cannot be used for modifying layers on top of assets or working with USD's composition system
+
+#### Why This Matters:
+- The difference between exporting USD from Blender/C4D vs. exporting FBX/Alembic/OBJ is minimal - they're essentially export endpoints
+- For USD workflows requiring layering, referencing, or non-destructive editing, use Maya, Houdini, or 3ds Max instead
+- Blender/C4D are suitable for creating base assets but cannot participate in USD's composition workflows
+
+#### Recommendation:
+- Use Maya, Houdini, or 3ds Max for USD workflows requiring:
+  - Layer-based modifications
+  - Asset referencing
+  - Non-destructive editing
+  - Composition arcs (variants, payloads, inherits, etc.)
+- Use Blender/C4D only for creating final export assets that will be referenced by other USD files
+
+### 0.5 Houdini: The Powerhouse for USD Pipeline Automation
+
+Houdini stands out as the premier tool for USD pipeline development and automation, offering capabilities that complement and extend beyond what Omniverse provides.
+
+#### Why Houdini is Essential for USD Workflows:
+
+- 🎯 **Best USD Integration**: Houdini has the deepest and most comprehensive USD integration apart from Omniverse itself. It provides native, first-class support for all USD composition arcs and features.
+
+- 🎨 **Visual Variant Creation**: Building variants in Houdini is visually cleaner and more intuitive than creating them directly in Omniverse. Houdini's node-based workflow makes variant management more accessible and maintainable.
+
+- 🔄 **Reusable Workflows**: Once you build a workflow in Houdini, you can reuse it across projects. Houdini's procedural nature means you can create templates, tools, and pipelines that scale with your needs.
+
+- 🤖 **Pipeline Automation**: Houdini's procedural nature makes it an excellent automation tool for building pipelines. You can run USD files through Houdini workflows to automate repetitive tasks, batch processing, and complex transformations.
+
+- ✏️ **Geometry Modeling**: Unlike Omniverse, which cannot alter geometry, Houdini provides full modeling capabilities. You can model, sculpt, and modify geometry directly within USD workflows, making it essential for asset creation and refinement.
+
+- ⚡ **Procedural Power**: Houdini's procedural nature is a killer feature for USD pipelines. You can:
+  - Generate complex USD structures procedurally
+  - Automate asset processing and transformation
+  - Build reusable pipeline tools
+  - Create dynamic, data-driven workflows
+  - Process large batches of USD files efficiently
+
+#### Use Cases:
+- Creating and managing variants visually
+- Building automated USD processing pipelines
+- Geometry modeling and refinement within USD workflows
+- Batch processing and transformation of USD assets
+- Developing reusable pipeline tools and templates
+- Complex procedural USD scene generation
+
+#### Integration with USD GoodStart:
+- Store Houdini files (`.hiplc`) in the project root
+- Use Houdini to create variants, process assets, and automate workflows
+- Export processed USD files to `010_ASS_USD/` for use in the scene
+- Leverage Houdini's USD nodes for layer management and composition
+
+#### Recommended Houdini USD Resources:
+- **USD Survival Guide** by Luca Scheller: A practical onboarding guide to USD for software developers and pipeline TDs, with extensive Houdini examples and production workflows. Originally presented at Siggraph 2023.
+- **Houdini USD Tutorial Collection**: Curated collection of Houdini USD tutorials and resources covering Solaris, LOPs, USD asset building, MaterialX, variants, and production workflows. Includes official SideFX documentation, YouTube tutorials, and practical guides.
+
+### 0.6 Version Control: Why It Matters
+
+Version control is essential for USD projects because it enables:
+- **Collaboration**: Multiple team members can work on the same assets without conflicts
+- **History tracking**: See what changed, when, and why
+- **Rollback capability**: Safely revert to previous versions if something breaks
+- **Clean reference paths**: No need for version numbers in file paths (e.g., `asset_v1.usd`, `asset_v2.usd`) - version control handles versioning automatically
+- **Stable asset references**: USD references can point to stable paths like `@./010_ASS_USD/pump.usd@` without worrying about version numbers cluttering your scene structure
+
+#### Why Clean Reference Paths Matter:
+When using version control, your USD references should use stable, version-agnostic paths. Instead of:
+```usda
+# ❌ Bad: Version numbers in paths
+def Xform "Pump" (
+    references = @./010_ASS_USD/pump_v2.3.usd@
+)
+```
+
+Use:
+```usda
+# ✅ Good: Clean, stable paths
+def Xform "Pump" (
+    references = @./010_ASS_USD/pump.usd@
+)
+```
+
+Version control handles the versioning - you can always check out the specific version you need, and your USD files remain clean and maintainable.
+
+#### Version Control Options:
+
+| Solution | Best For | Integration | Key Features | Limitations |
+|----------|----------|-------------|--------------|-------------|
+| **Omniverse Nucleus** | **Omniverse-native workflows** | **Tightest integration** with Omniverse Kit/Apps | • **Live collaboration** - Real-time multi-user editing<br/>• **Checkpoints** - Immutable version snapshots<br/>• **USD-native** - Built specifically for USD workflows<br/>• **Branching support** - Parallel development (evolving)<br/>• **Direct DCC mounting** - Assets accessible in Omniverse/Unreal<br/>• **Centralized asset management** - Single source of truth | • Requires Nucleus Server setup<br/>• Omniverse ecosystem dependency<br/>• Less suitable for non-USD workflows |
+| **Git + Git LFS** | **Open-source, flexible workflows** | Works with any tool | • **Industry standard** - Widely adopted<br/>• **Open source** - No vendor lock-in<br/>• **Branching & merging** - Full version control features<br/>• **Git LFS** - Handles large binary files<br/>• **CI/CD integration** - Automated workflows<br/>• **Standard VCS** - Can migrate between hosts | • Steeper learning curve<br/>• Requires technical knowledge<br/>• Binary file handling can be complex<br/>• No real-time collaboration |
+| **Anchorpoint** | **Teams without version control** | Works with existing folder structure | • **Artist-friendly** - Simple two-button interface<br/>• **Git-based** - Built on Git/Git LFS<br/>• **No reorganization needed** - Works with existing folders<br/>• **File locking** - Prevents conflicts<br/>• **TB-scale support** - Handles large projects<br/>• **DCC integration** - Blender, Photoshop, Unity, Unreal | • Commercial tool<br/>• Not tested in this project<br/>• Requires Git server setup |
+| **Diversion.dev** | **Game/3D pipelines, Unreal Engine** | Direct Unreal Engine plugin | • **Cloud-native** - Modern Git-like workflow<br/>• **Unreal integration** - Direct plugin for UE<br/>• **Easy setup** - Simple for small teams<br/>• **Fast uploads** - Optimized for large binaries<br/>• **Private workspaces** - Cloud syncs before commit | • Closed ecosystem - Vendor lock-in<br/>• Limited third-party integrations<br/>• Less mature than Git/Perforce |
+| **Assembla** | **Enterprise compliance, hosted Perforce** | Git/SVN/Perforce repos | • **Enterprise compliance** - SOC 2, GDPR<br/>• **Hosted Perforce** - Only cloud Perforce service<br/>• **Mature ecosystem** - CI/CD, IDE integrations<br/>• **Multiple VCS** - Git, SVN, or Perforce<br/>• **Strong security** - Access controls, audit logs | • Traditional pull/push model<br/>• No real-time collaboration<br/>• Enterprise pricing<br/>• Manual import/export workflow |
+| **PLM/PDM/ERP Systems** | **Established organizations** | Enterprise integration | • **Already in place** - No new system needed<br/>• **Product lifecycle management** - Full traceability<br/>• **Engineering data** - CAD/engineering integration<br/>• **Enterprise-grade** - Scalable and secure | • May not be USD-native<br/>• Integration complexity<br/>• May require custom connectors |
+
+#### Omniverse Nucleus - Deep Integration:
+
+Omniverse Nucleus is NVIDIA's version control and collaboration system specifically designed for USD workflows. It provides the **tightest integration** when working with Omniverse Kit applications:
+
+- **Live Collaboration**: Multiple users can work simultaneously on the same USD stage with real-time updates
+- **Checkpoints**: Create immutable snapshots of your work at any point, allowing safe rollback and version control
+- **USD-Native**: Built from the ground up for USD, understanding composition arcs, layers, and references
+- **Centralized Asset Management**: Single source of truth for all USD assets, ensuring consistency across projects
+- **Seamless Integration**: Works directly with Omniverse Kit apps, Connectors, and extensions without additional setup
+
+#### Anchorpoint - Artist-Friendly Git Solution:
+
+Anchorpoint is a Git-based version control solution designed specifically for artists and creative teams. It's an excellent alternative to Nucleus for teams that want version control without committing to the Omniverse ecosystem:
+
+- **Works with Your Existing Folder Structure**: Unlike Nucleus, Anchorpoint adds version control on top of your existing folder structure without requiring reorganization. This means you can version control assets in standard folders that any tool can access.
+
+- **Universal Tool Access**: A major advantage over Nucleus - Tools like Photoshop, Substance Painter, and other DCC applications can directly access files in Anchorpoint-managed folders without special connectors or server mounting. This eliminates the complexity of storing assets in multiple locations.
+
+- **Git-Based Foundation**: Built on Git and Git LFS, providing industry-standard version control with full branching, merging, and history tracking capabilities.
+
+- **Artist-Friendly Interface**: Simple two-button interface designed for non-technical users, making Git accessible to artists who don't want to learn command-line tools.
+
+- **File Locking**: Prevents conflicts when multiple team members work on the same files, essential for binary assets.
+
+- **TB-Scale Support**: Handles large projects without slowdowns, with selective checkout to download only what you need.
+
+- **DCC Integration**: Native support for Blender, ZBrush, Photoshop, Substance, Unity, Unreal Engine, and Godot.
+
+- **Python API**: Automate workflows with Python-based actions for custom pipeline integration.
+
+#### When Anchorpoint Makes Sense:
+
+- **Mixed tool workflows**: When you need to work with tools that can't directly access Nucleus Server (Photoshop, Substance Designer, etc.)
+- **Teams without version control**: If your team doesn't have version control yet and needs an easy-to-adopt solution
+- **Standard folder structure**: When you want to keep your existing folder organization without restructuring for Nucleus
+- **Git compatibility**: When you need Git-based version control but want an artist-friendly interface
+- **Multi-platform workflows**: When working across different platforms and tools that need direct file system access
+
+#### Practical Workflow: Combining Systems
+
+Modern USD pipelines often benefit from **combining multiple version control systems**:
+
+- **Use Nucleus for live collaboration**: Real-time, collaborative 3D scene development between Omniverse and Unreal Engine
+- **Use traditional VCS for long-term versioning**: Git/Perforce/Assembla for source control, backup, compliance, and long-term asset management
+- **Workflow example**:
+  1. Pull latest assets from your traditional VCS (Git/Assembla)
+  2. Work in Omniverse/Unreal, saving USD files to Nucleus for live collaboration
+  3. Periodically commit changes back to traditional VCS for long-term versioning, backup, or compliance
+
+#### When to Use Each Solution:
+
+- **Use Nucleus** if you're working primarily in the Omniverse ecosystem and need tight integration with Kit apps and real-time collaboration
+- **Use Git/Git LFS** if you need open-source, flexible version control that works across different tools and platforms
+- **Use Anchorpoint** if your team doesn't have version control yet and needs an artist-friendly Git solution, or if you work with tools that can't directly access Nucleus Server (Photoshop, Substance Designer, etc.) - Anchorpoint works with standard folder structures that any tool can access
+- **Use Diversion.dev** if you're working primarily with Unreal Engine and want a modern, cloud-native VCS with direct UE integration
+- **Use Assembla** if you need enterprise compliance (SOC 2, GDPR) and want hosted Perforce or multiple VCS options (Git/SVN/Perforce)
+- **Integrate with existing PLM/PDM** if you're working with established organizations that already have enterprise systems
+
+#### For Established Organizations:
+When implementing larger digital twins for established organizations, they very likely already have version control systems in place:
+- **PLM systems** (Product Lifecycle Management) - Handle product data and revisions
+- **PDM systems** (Product Data Management) - Manage engineering data and versions
+- **Enterprise version control** - May use Perforce, SVN, or other enterprise solutions
+
+In these cases, integrate your USD workflow with their existing systems rather than introducing new version control tools.
+
+### 0.7 Additional Tools
+
+#### ShapeFX Loki
+**Promising USD-native tool** based on OpenDCC:
+- Built on **OpenDCC** - Open-source application framework from the AOUSD community
+- **Native USD reading** - Can read USD files natively with full composition support
+- **USD-native editing** - Edit OpenUSD files directly without export/import workflows
+- **Material Editor** - Create and refine materials using USDShade graphs with MaterialX support
+- **Multi-stage editing** - Open and manage multiple USD stages simultaneously
+- **Hydra rendering** - Production-grade rendering powered by Hydra
+- **Python scripting** - Access USDStage directly via built-in Python Script Editor
+- **Layer management** - Inspect and manage stage compositions with intuitive tools
+- **Render View** - Standalone tool for AOV and image inspection
+- **Comprehensive USD inspection** - Explore and edit every aspect of USD scenes
+- **Apache 2.0 license** - Open-source framework (OpenDCC) with commercial application (ShapeFX Loki)
+- **Active development** - Actively developed by Alex Kalyuzhnyy and the ShapeFX team
+- **Community support** - Part of the AOUSD community ecosystem
+- **Good to have in the toolbox** - Useful for USD workflows and scene management
+- **Support the development** - Consider supporting Alex Kalyuzhnyy's development efforts
+- GitHub: [shapefx/OpenDCC](https://github.com/shapefx/OpenDCC)
+- Forum: [OpenDCC is now open source](https://forum.aousd.org/t/opendcc-is-now-open-source/2448)
+
+---
 
 ## Chapter 1: Core Principles
 
@@ -491,7 +751,257 @@ def Collection "AllSafetySensors" {
 
 ---
 
+## Chapter 1.5: Project Structure and Organization
 
+Successful USD projects require clear organizational patterns that scale with team size and project complexity. This chapter covers the USD GoodStart folder structure and organizational principles that have proven effective for digital twin and industrial workflows.
+
+### 1.5.1 USD GoodStart Folder Structure
+
+The USD GoodStart template provides a proven folder hierarchy that separates concerns while maintaining clear relationships between different types of content:
+
+```
+USD_GoodStart/
+├── 000_SOURCE/          # Source files used in the project (CAD/DCC originals, configs)
+├── 010_ASS_USD/         # All USD geometry/payload assets (converted from source)
+├── 020_TEX/             # Global/shared texture files
+├── 030_USD_LYR/         # General USD layers (materials, opinions, layout, asset import)
+├── 040_SIM_LYR/         # Simulation/physics layers (collisions, joints, sensors, etc.)
+├── 050_VARIANTS_LYR/    # Variant/configuration layers / payload references
+├── 060_METADATA_LYR/    # Metadata & standards layers (PLM/ERP/CAD, AAS, OPC UA, etc.)
+├── GoodStart_ROOT.usda  # Master root file that references all layer stacks + assets
+├── GoodStart.hiplc      # Houdini file (or .ma/.mb/.max for other DCC tools)
+└── README.md            # This file
+```
+
+#### Important Notes:
+- **Folder numbers do not indicate layer order** - Layer order is determined by the `subLayers` array in `GoodStart_ROOT.usda`, not folder names
+- **Numbers are organizational prefixes** for clarity and categorization only
+- **Relative paths are mandatory** - All USD references must use `@./folder/file.usd@` syntax
+
+### 1.5.2 Folder Purpose and Workflow
+
+#### 000_SOURCE/ - Source Files and Materials
+**Purpose:** Store original CAD/DCC source files, configurations, and materials used in the project.
+
+**Contents:**
+- CAD files (JT, CATIA, Rhino, STEP, etc.)
+- DCC source files (Maya scenes, Houdini files, etc.)
+- Original textures and materials
+- Configuration files and scripts
+
+**Workflow:**
+1. Place original CAD exports here
+2. Use as input for CAD-to-USD conversion
+3. Maintain version control for traceability
+4. Never modify files in this folder - they're the source of truth
+
+#### 010_ASS_USD/ - USD Geometry & Payload Assets
+**Purpose:** Store all converted USD geometry and payload assets.
+
+**Contents:**
+- Converted CAD models (`pump.usd`, `conveyor.usdc`)
+- DCC-created assets (`robot_arm.usd`)
+- Payload files with heavy geometry
+- Asset-specific textures (if not global)
+
+**Workflow:**
+1. Convert CAD files from `000_SOURCE/` to USD format
+2. Validate assets with `python scripts/validate_asset.py`
+3. Store as either `.usda` (interface) or `.usdc` (heavy geometry)
+4. Reference from layer files in `030_USD_LYR/`
+
+#### 020_TEX/ - Global/Shared Textures
+**Purpose:** Centralized storage for textures used across multiple assets.
+
+**Contents:**
+- Shared material textures (diffuse, normal, roughness maps)
+- Environment textures
+- Procedural texture definitions
+
+**Workflow:**
+1. Store global textures here for reuse across assets
+2. Asset-specific textures can stay in asset folders
+3. Use relative paths in material definitions
+4. Optimize texture formats for target platform
+
+#### 030_USD_LYR/ - General USD Layers
+**Purpose:** Department-specific modifications, materials, layouts, and opinions.
+
+**Contents:**
+- `Ass_import_LYR.usda` - References to assets from `010_ASS_USD/`
+- `Mtl_import_LYR.usda` - Material assignments and shading
+- `xyz_Opinion_LYR.usda` - Department-specific overrides and modifications
+- Layout and animation layers
+
+**Critical Layer Stack Order:**
+```usda
+subLayers = [
+    @./030_USD_LYR/xyz_Opinion_LYR.usda@,    # First = strongest (applied last)
+    @./030_USD_LYR/Variant_LYR.usda@,        # Second
+    @./030_USD_LYR/Mtl_import_LYR.usda@,     # Third
+    @./030_USD_LYR/Ass_import_LYR.usda@     # Last = weakest (applied first)
+]
+```
+
+#### 040_SIM_LYR/ - Simulation & Physics Layers
+**Purpose:** Physics properties, collision geometry, and simulation parameters.
+
+**Contents:**
+- Collision meshes and physics properties
+- Joint definitions and articulations
+- Sensor configurations
+- Simulation parameters
+
+**Workflow:**
+- Add physics properties to assets without modifying geometry
+- Define collision proxies separate from visual geometry
+- Configure simulation parameters (mass, friction, etc.)
+
+#### 050_VARIANTS_LYR/ - Variant & Configuration Layers
+**Purpose:** Manage different versions and configurations of assets.
+
+**Contents:**
+- Variant sets for different asset configurations
+- LOD (Level of Detail) switching
+- Configuration options (colors, sizes, features)
+
+**Workflow:**
+- Define variant sets in asset interface layers
+- Use for product configurators and digital twin variations
+- Enable runtime switching between configurations
+
+#### 060_METADATA_LYR/ - Metadata & Standards Layers
+**Purpose:** Store PLM/PDM/ERP integration data and digital twin standards.
+
+**Contents:**
+- PLM system identifiers and revision information
+- AAS (Asset Administration Shell) mappings
+- OPC UA data connections
+- ERP system links
+- Digital product passport information
+
+**Workflow:**
+- Map CAD metadata to USD attributes during conversion
+- Connect to external systems for live data updates
+- Store standards-compliant metadata for interoperability
+
+### 1.5.3 Layer Organization Philosophy
+
+#### Use Only What You Need
+OpenUSD is powerful but can become overwhelming. **Only use layers you actually need** for your project.
+
+**Philosophy:** Start simple, add complexity only when you have a clear requirement that justifies it.
+
+**Anti-Pattern to Avoid:** Creating layers "just in case" or because "it might be useful later."
+
+#### Layer Responsibility Principle
+Each layer should have a single, clear responsibility:
+
+- **Asset Import Layer**: Only handles asset references and basic transforms
+- **Material Layer**: Only handles material assignments and shading
+- **Opinion Layers**: Only contain department-specific modifications
+- **Simulation Layers**: Only contain physics and simulation properties
+
+#### Layer Naming Conventions
+Following the GoodStart standard:
+
+**File Type Suffixes:**
+- `_LYR.usda` → Layer files (USD composition layers)
+- `_GEO.usda/.usd` → Geometry asset files
+- `_MAT.usda` → Material asset files
+
+**Naming Patterns:**
+- `*_import_LYR.usda` → Import layers (Ass_import, Mtl_import)
+- `*_[identifier]_Opinion_LYR.usda` → Opinion layers (abc_Opinion, xyz_Opinion)
+- `*_VAR_LYR.usda` → Variant layers
+- `*_[type]_SIM_LYR.usda` → Simulation layers
+
+### 1.5.4 Root File Management
+
+#### GoodStart_ROOT.usda Purpose
+The root file serves as the master composition file that:
+- Defines the base scene structure (`def Xform "World"`)
+- Contains the `subLayers` array defining layer order
+- Sets metadata (defaultPrim, upAxis, etc.)
+- Provides the entry point for the entire project
+
+#### Root File Thinness Principle
+**Keep the root layer minimal** - anything in the root layer cannot be overridden by sublayers because Local > Sublayer in LIV(E)RPS.
+
+**✅ Root Layer Should Contain:**
+- Base scene structure (`def Xform "World"`)
+- `subLayers` array
+- Metadata (defaultPrim, upAxis)
+- Custom data and documentation
+
+**❌ Root Layer Should NOT Contain:**
+- Geometry data
+- References or payloads
+- Attribute values
+- Material bindings
+
+#### Layer Stacking Strategy
+The `subLayers` array determines composition strength. Order matters:
+
+1. **Opinion layers first** (strongest) - Final department overrides
+2. **Variant layers** - Configuration switching
+3. **Material layers** - Shading and materials
+4. **Asset import layers last** (weakest) - Asset loading
+
+### 1.5.5 Path Management
+
+#### Relative Paths Only
+**Critical:** Always use relative paths (`@./folder/file.usd@`), never absolute paths.
+
+**Why Relative Paths Matter:**
+- **Portability**: Projects can be moved without breaking references
+- **Collaboration**: Works across different machines and networks
+- **Version Control**: Compatible with Git and other VCS systems
+- **Deployment**: Works in different environments (dev, staging, production)
+
+**Path Resolution Rules:**
+- USD resolves relative paths relative to the file containing the reference
+- Validation scripts convert relative paths to absolute for checking
+- Use `@./` for same directory, `@../` for parent directory
+
+### 1.5.6 DCC File Integration
+
+#### DCC Files in Project Root
+Store working DCC files alongside the USD structure:
+- `GoodStart.hiplc` (Houdini)
+- `.ma/.mb` files (Maya)
+- `.max` files (3ds Max)
+
+#### DCC Workflow Integration
+- DCC files reference and modify the USD layers
+- Changes are layered as opinions within USD structure
+- USD files remain the source of truth
+- Different team members can use preferred DCC tools
+
+#### Important DCC Limitations
+- **Full USD Support**: Maya, Houdini, 3ds Max support full USD workflows
+- **Limited Support**: Blender/Cinema 4D can only create endpoint assets (destructive workflow)
+- Use appropriate tools based on your composition needs
+
+### 1.5.7 Scaling Considerations
+
+#### Small Projects (POC/MVP)
+- Use minimal structure: `000_SOURCE/`, `010_ASS_USD/`, `030_USD_LYR/`, root file
+- Single opinion layer for all modifications
+- Focus on learning USD fundamentals
+
+#### Medium Projects (Team Development)
+- Add simulation and variant layers as needed
+- Implement proper validation and CI/CD
+- Establish team workflows and standards
+
+#### Large Projects (Enterprise Digital Twins)
+- Full folder structure with metadata integration
+- Automated conversion pipelines
+- PLM/PDM/ERP system integration
+- Multi-team collaboration workflows
+
+---
 
 ## Chapter 2 — The Reference/Payload Pattern (Full Deep Dive)
 
@@ -6156,3 +6666,9 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 
 
 ---
+
+
+
+
+
+
