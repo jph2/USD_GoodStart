@@ -1,16 +1,21 @@
 # USD GoodStart
 
 > **Enjoy the GoodStart — and reach out if you want help shipping faster.**  
-> I hope you enjoy the GoodStart I’m providing here. If you’re short on time (or want an experienced second brain), I’m available for consulting on **OpenUSD / Omniverse workflows**, **composition & layering strategy**, **CAD→USD pipelines**, **validation/CI**, and **digital-twin metadata**.  
-> **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) (please mention **Version: 0.9.5-beta**), visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.
+
+> I hope you enjoy the GoodStart I’m providing here. If you’re short on time (or want an experienced second brain), I’m available for consulting on **OpenUSD / Omniverse workflows**, **composition & layering strategy**, **CAD→USD pipelines**, **validation/CI**, and **digital-twin metadata** integration architectures.
+
+> **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.
+
 
 **Version:** 0.9.5-beta  
 **Last Updated:** 12.12.2025
+> **What is missing:** ....Apart from adding more Content in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) in the future, the only thing that is still bugging me, is that the Variant layer is also loading the matlib usd file...., so it is not as clean as I would like it to be....., yet...
+
 
 **Pretex (why the hell..)**
 Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
 
-If you are in a hurry, just read the TLDR section..., it will get you up and running  ;)
+If you are in a hurry, just read the TLDR section..., it will get you up and running  ;) , this Read me provides a decent overview..., the 
 
 In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD.
 I also have some Tutorials here: www.haluszka.com#tutorials , 
