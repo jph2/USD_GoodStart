@@ -381,6 +381,27 @@ This folder structure provides a **complete, ready-to-use foundation** with most
 - **DPP Integration** - Europe requires DPP for many products; design metadata structure to accommodate it
 - **Reference, Don't Duplicate** - Use USD metadata to reference backend data, not duplicate it
 
+### Collaboration & “Publishable” Layers (Omniverse Digital Twin)
+
+- **Collaborate via task fragments**: one responsibility = one layer, merged frequently (keep the *interactive* stage loadable in Omniverse).
+  - **Visual/general**: `030_USD_LYR/` (materials, layout, opinions)
+  - **Simulation**: `040_SIM_LYR/` (physics/collisions/sensors)
+  - **Variants/config**: `050_VARIANTS_LYR/` (configuration logic)
+  - **Metadata/standards**: `060_METADATA_LYR/` (PLM/AAS/OPC UA mappings)
+- **Personal opinion ≠ production**: “personal opinion” layers are great for exploration, but treat them as *draft* until reviewed.
+- **Definition of Done (publishable)**:
+  - Opens in Omniverse Kit without missing layers/paths
+  - Validation scripts pass (`scripts/validate_asset.py`, `scripts/validate_scene.py`)
+  - Layer intent is clear (no accidental edits in the wrong layer; variants/metadata/sim live where expected)
+
+### Realtime Data: Adapters → USD Attributes
+
+In Omniverse/Kit, realtime data is typically handled by **adapters** (extensions, ActionGraph, ROS2 bridges, services) that map incoming messages to **USD paths + attributes**, updating the live stage in the Kit event loop.
+
+**Rule of thumb:** start with namespaced custom attributes for speed (e.g. `opcua:runtime:temperature`), promote to schemas when the data model stabilizes and multiple tools/teams need validation/UI.
+
+**Registry template:** track your prefixes/fields in `WIP_Docs/Metadata_Schema_Registry.md`.
+
 **📖 For detailed guidance:** See the [OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) section 6.2.1 for comprehensive development mindset and architecture principles.
 
 ---
