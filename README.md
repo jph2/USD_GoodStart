@@ -139,6 +139,26 @@ Asset_Root_File.usda (Interface - Lightweight)
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
 - ✅ Maya/Houdini/3ds Max = full USD composition support
 
+> **⚠️ Critical: USD Has Many "Flavors" - Tool-Specific Implementations**
+> 
+> **Important Reality Check:** USD is not a single, uniform format. Different tools implement USD in their own way, creating "flavors" that can cause compatibility issues. This is crucial to understand before diving into workflows.
+> 
+> **Examples from Real Experience:**
+> - **Houdini**: Has the best USD implementation, but it's implemented in Houdini's own flavor. They were quick to adopt USD and did it their way.
+> - **VRAD exports**: Completely different structure and conventions from other tools
+> - **DeltaGen exports**: Again, totally different from VRAD and other implementations
+> - **Maya, 3ds Max, Blender**: Each has its own USD export characteristics
+> 
+> **What This Means for You:**
+> - **When you get a new USD file**, be aware it might be structured differently from what you know
+> - **You will need to learn** how that specific tool's USD export works first
+> - **You may need to write scripts** to reshape USD files to work with your pipeline and workflows
+> - **Don't assume** a USD file from one tool will work seamlessly with another without inspection and potentially modification
+> 
+> **This is normal** - USD's flexibility means different tools prioritize different features and structures. Understanding these differences and having scripts to normalize/reshape USD files is part of building a robust pipeline.
+> 
+> **For detailed guidance** on DCC tool limitations and USD implementation differences, see the [OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) Chapter 0.3 and 0.4.
+
 **Note on LIV(E)RPS:** **LIV(E)RPS** (with rElocates) is the official OpenUSD specification from [Pixar](https://openusd.org/). rElocates (E) are officially part of LIV(E)RPS (position 4, between Variants and References) but are **unconfirmed in Omniverse Kit App 108.1**. When working with Omniverse, verify support or use LIVRPS order without rElocates. See `AssetStructureBestPractices.md` for details.
 
 **For Digital Twins:** Integrates CAD metadata, PLM/PDM/ERP systems, and supports integration with digital twin standards (such as Asset Administration Shell/AAS and OPC UA frameworks) for connecting additional data. **Important:** Every company and project needs its own approach to build pipelines and connect data. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
