@@ -1295,8 +1295,8 @@ A typical USD asset or scene uses this hierarchy:
 flowchart TD
     Root[Root.usda<br/>Thin root - entry point]:::root
     Opinion[Opinion_LYR.usda<br/>Top/strongest - Shot or scene overrides]:::strong
-    Variant[Variant_LYR.usda<br/>Variants and configurations]:::medium
-    Material[Mtl_Work_LYR.usda<br/>Materials and shading]:::medium
+    Variant[VAR_LYR.usda<br/>Variants and configurations]:::medium
+    Material[Mtl_import_LYR.usda<br/>Materials and shading]:::medium
     AssetImport[Ass_import_LYR.usda<br/>Bottom/weakest - CRITICAL: Asset loading layer]:::weak
     
     Root --> Opinion
@@ -1336,9 +1336,9 @@ flowchart TD
     %% Top-to-Bottom: Strongest to Weakest
     Root[Root Layer<br/>Scene entry point]:::root
     Opinion[Shot / Layout Overrides<br/>Opinion_LYR]:::strong
-    Variant[Variants<br/>Variant_LYR]:::medium
+    Variant[Variants<br/>VAR_LYR]:::medium
     Material[Materials / Shading<br/>Mtl_Work_LYR]:::medium
-    Import[Geometry + Payloads<br/>AssetImport_LYR]:::weak
+    Import[Geometry + Payloads<br/>Ass_import_LYR]:::weak
     
     Root --> Opinion
     Opinion --> Variant
@@ -1357,8 +1357,8 @@ flowchart TD
 graph BT
     %% Bottom-Up Construction
     Import[Ass_import_LYR.usda<br/>Base Geometry]:::base
-    Mtl[Mtl_Work_LYR.usda<br/>Materials]:::layer
-    Variant[Variant_LYR.usda<br/>Variants]:::layer
+    Mtl[Mtl_import_LYR.usda<br/>Materials]:::layer
+    Variant[VAR_LYR.usda<br/>Variants]:::layer
     Opinion[Opinion_LYR.usda<br/>Overrides]:::layer
     Root[Root.usda<br/>Composition Entry]:::root
 
@@ -1391,8 +1391,8 @@ The `subLayers` array is ordered from **top (strongest)** to **bottom (weakest)*
     defaultPrim = "World"
     subLayers = [
         @./030_USD_LYR/Opinion_xyz_LYR.usda@,      # Top (strongest) - overrides everything
-        @./030_USD_LYR/Variant_LYR.usda@,          # Variants and configurations
-        @./030_USD_LYR/Mtl_work_LYR.usda@,         # Materials and shading
+        @./030_USD_LYR/VAR_LYR.usda@,          # Variants and configurations
+        @./030_USD_LYR/Mtl_import_LYR.usda@,         # Materials and shading
         @./030_USD_LYR/Ass_import_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
     ]
 )
@@ -1441,15 +1441,15 @@ def Xform "Conveyor" (
 ```
 
 **What Happens Next:**
-- Materials layer (`Mtl_work_LYR.usda`) can override materials on loaded assets
-- Variants layer (`Variant_LYR.usda`) can switch between different asset configurations
+- Materials layer (`Mtl_import_LYR.usda`) can override materials on loaded assets
+- Variants layer (`VAR_LYR.usda`) can switch between different asset configurations
 - Opinions layer (`Opinion_xyz_LYR.usda`) can make final scene-specific modifications
 
 This is the **foundation layer** - everything else builds on top of it.
 
 ---
 
-# 4.7 Material Layer: Mtl_Work_LYR.usda
+# 4.7 Material Layer: Mtl_import_LYR.usda
 
 Materials live **above** geometry but **below** scene variants.
 
@@ -1468,7 +1468,7 @@ This allows:
 
 ---
 
-# 4.8 Variant Layer: Variant_LYR.usda
+# 4.8 Variant Layer: VAR_LYR.usda
 
 Variants define discrete configurations.
 
@@ -1517,7 +1517,7 @@ This is where layout artists work.
 
 Consider a robot asset:
 
-### AssetImport_LYR
+### Ass_import_LYR
 Defines geometry and payload:
 
 ```usda
@@ -1535,7 +1535,7 @@ over "RobotA" {
 }
 ```
 
-### Variant_LYR
+### VAR_LYR
 Adds tool attachments:
 
 ```usda
@@ -1829,7 +1829,7 @@ Examples:
 ```mermaid
 flowchart TD
     Asset[Asset.usda]:::root
-    VariantLayer[Variant_LYR.usda<br/>variant definitions]:::variant
+    VariantLayer[VAR_LYR.usda<br/>variant definitions]:::variant
     MtlLayer[Mtl_LYR.usda<br/>material variants]:::variant
     SimLayer[Simulation_LYR.usda<br/>physics variants]:::variant
     Merged[Merged Variant Sets]:::result
@@ -2189,7 +2189,7 @@ This pattern:
 - Authors variants **above** payloads (interface layer, not inside payloads).
 - Declares configuration properties without values at the prim level, then **lets variants set values** (5.7 pattern).
 
-5. **Use configurations in scenes (AssetImport_LYR / factory scenes)**
+5. **Use configurations in scenes (Ass_import_LYR / factory scenes)**
    - In `030_USD_LYR/Ass_import_LYR.usda` (or scene‑specific import layer), reference the interface asset and choose variants per instance:
 
 ```usda
@@ -2590,8 +2590,8 @@ flowchart TD
     RootFile[GoodStart_ROOT.usda<br/>Entry point file]:::usd
     
     ImportLayer[Ass_import_LYR.usda]:::layer
-    MtlLayer[Mtl_Work_LYR.usda]:::layer
-    VariantLayer[Variant_LYR.usda]:::layer
+    MtlLayer[Mtl_import_LYR.usda]:::layer
+    VariantLayer[VAR_LYR.usda]:::layer
     OpinionLayer[Opinion_LYR.usda]:::layer
     
     Root --> Source
@@ -2629,8 +2629,8 @@ flowchart TD
     root --> RootUsd[GoodStart_ROOT.usda\nEntry point]
     
     S030 --> L_Import[Ass_import_LYR.usda]
-    S030 --> L_Mtl[Mtl_Work_LYR.usda]
-    S030 --> L_Var[Variant_LYR.usda]
+    S030 --> L_Mtl[Mtl_import_LYR.usda]
+    S030 --> L_Var[VAR_LYR.usda]
     S030 --> L_Opinion[Opinion_LYR.usda]
     
     classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
@@ -2930,10 +2930,10 @@ These files control *behavior*, not heavy geometry.
 - **Ass_import_LYR.usda**  
   References payloads from `010_ASS_USD`
 
-- **Mtl_Work_LYR.usda**  
+- **Mtl_import_LYR.usda**  
   Material assignments and adjustments
 
-- **Variant_LYR.usda**  
+- **VAR_LYR.usda**  
   All variant sets
 
 - **Opinion_LYR.usda**  
@@ -2996,8 +2996,8 @@ The root file assembles everything:
 (
     subLayers = [
         "./030_USD_LYR/Opinion_LYR.usda",
-        "./050_VAR_LYR/Variant_LYR.usda",
-        "./030_USD_LYR/Mtl_Work_LYR.usda",
+        "./050_VAR_LYR/VAR_LYR.usda",
+        "./030_USD_LYR/Mtl_import_LYR.usda",
         "./030_USD_LYR/Ass_import_LYR.usda"
     ]
 )
@@ -3102,7 +3102,7 @@ Variants map to:
 |------|-----------------|
 | Modelers | 000_SOURCE, 010_ASS_USD |
 | Shaders | 020_TEX, 030_USD_LYR/Mtl_Work_LYR |
-| Variant Authors | 050_VAR_LYR, 030_USD_LYR/Variant_LYR |
+| Variant Authors | 050_VAR_LYR, 030_USD_LYR/VAR_LYR |
 | Simulation | 040_SIM_LYR |
 | Metadata / Standards | 060_META_LYR |
 | Layout | 030_USD_LYR/Opinion_LYR |
@@ -3222,8 +3222,8 @@ A clear folder structure is essential for maintainable USD pipelines.
 ```usda
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,
-    @./050_VAR_LYR/Variant_LYR.usda@,
-    @./030_USD_LYR/Mtl_work_LYR.usda@,
+    @./050_VAR_LYR/VAR_LYR.usda@,
+    @./030_USD_LYR/Mtl_import_LYR.usda@,
     @./030_USD_LYR/Ass_import_LYR.usda@
 ]
 ```
@@ -3694,7 +3694,7 @@ Map to:
 /Materials/M_Steel
 ```
 
-Use `Mtl_Work_LYR.usda` to bind materials.
+Use `Mtl_import_LYR.usda` to bind materials.
 
 ---
 
@@ -4120,8 +4120,8 @@ Include the standards layer in your root file's `subLayers` array. The position 
 (
   subLayers = [
   @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
-  @./050_VAR_LYR/Variant_LYR.usda@,      # Variants 
-  @./030_USD_LYR/Mtl_work_LYR.usda@,      # Material adjustments
+  @./050_VAR_LYR/VAR_LYR.usda@,      # Variants 
+  @./030_USD_LYR/Mtl_import_LYR.usda@,      # Material adjustments
   @./060_META_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
   @./060_META_LYR/AAS_LYR.usda@,          # AAS asset administration
   @./060_META_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
@@ -4141,10 +4141,10 @@ The layer stack processes from **bottom to top** (weakest to strongest):
 2. AAS_LYR.usda
    ↓ Adds standards metadata to loaded prims
    
-3. Mtl_work_LYR.usda
+3. Mtl_import_LYR.usda
    ↓ Adds materials (can reference standards data)
    
-4. Variant_LYR.usda
+4. VAR_LYR.usda
    ↓ Adds variants (can use standards data for configuration)
    
 5. Opinion_xyz_LYR.usda (top)
@@ -4180,8 +4180,8 @@ You can have **separate layers for different standards**, allowing modular integ
 # Root.usda
 subLayers = [
   @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
-  @./050_VAR_LYR/Variant_LYR.usda@,      # Variants 
-  @./030_USD_LYR/Mtl_work_LYR.usda@,          # Material adjustments
+  @./050_VAR_LYR/VAR_LYR.usda@,      # Variants 
+  @./030_USD_LYR/Mtl_import_LYR.usda@,          # Material adjustments
   @./060_META_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
   @./060_META_LYR/AAS_LYR.usda@,          # AAS asset administration
   @./060_META_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
@@ -4243,7 +4243,7 @@ over "Pump" {
   float opcua:runtime:pressure = 2.3
 }
 
-# Variant_LYR.usda (can use standards data for configuration)
+# VAR_LYR.usda (can use standards data for configuration)
 over "Pump" {
   variantSet "Configuration" = "Standard" {
     "Standard" {
@@ -4351,8 +4351,8 @@ Recommended layers:
 ```
 030_USD_LYR/
     Ass_import_LYR.usda        (geometry)
-    Variant_LYR.usda            (variants)
-    Mtl_Work_LYR.usda           (materials)
+    VAR_LYR.usda            (variants)
+    Mtl_import_LYR.usda           (materials)
     Metadata_LYR.usda           (metadata)
 ```
 
@@ -4914,7 +4914,7 @@ Primvars provide lightweight overrides.
 
 Stack material overrides in:
 ```
-030_USD_LYR/Mtl_Work_LYR.usda
+030_USD_LYR/Mtl_import_LYR.usda
 ```
 
 Example override:
@@ -5008,7 +5008,7 @@ A governance model defines:
 ### Example governance rules:
 - All assets use `Asset_ROOT.usda`
 - Geometry always lives in `010_ASS_USD`
-- Materials authored only in `030_USD_LYR/Mtl_Work_LYR.usda`
+- Materials authored only in `030_USD_LYR/Mtl_import_LYR.usda`
 - No absolute paths  
 - No geometry in variant layers  
 - No authoring in root layer  
@@ -5167,7 +5167,7 @@ When implementing OpenUSD in enterprise environments, follow these principles:
 ### Problem: Layers not applying correctly
 - **Solution**: Check layer order in `subLayers` array
 - Verify layer file syntax
-- Ensure `AssetImport_LYR` is at the bottom of the stack (weakest opinion)
+- Ensure `Ass_import_LYR` is at the bottom of the stack (weakest opinion)
 
 ### Problem: Missing textures
 - **Solution**: Check texture paths (relative vs absolute)
@@ -6056,7 +6056,7 @@ def Xform "PartAssembly" (
 
 ### Step 5: Add Modifications via Layers
 ```usda
-# In 030_USD_LYR/Mtl_work_LYR.usda
+# In 030_USD_LYR/Mtl_import_LYR.usda
 over "PartAssembly"
 {
     over "SubAssembly"
@@ -6074,8 +6074,8 @@ The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `sub
 ```usda
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,       # First = strongest (applied last, overrides others)
-     @./050_VAR_LYR/Variant_LYR.usda@,      # Second
-    @./030_USD_LYR/Mtl_work_LYR.usda@,          # Third
+     @./050_VAR_LYR/VAR_LYR.usda@,      # Second
+    @./030_USD_LYR/Mtl_import_LYR.usda@,          # Third
     @./030_USD_LYR/Ass_import_LYR.usda@   # Last = weakest (applied first, can be overridden)
 ]
 ```

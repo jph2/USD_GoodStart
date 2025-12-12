@@ -122,7 +122,7 @@ Asset_Root_File.usda (Interface - Lightweight)
 **Key Best Practices:**
 - ✅ Use **relative paths** (never absolute paths)
 - ✅ **Keep layer structure simple** - Only use layers you actually need. Don't overcomplicate.
-- ✅ Don't import assets in root layer - use `AssetImport_LYR` at bottom and Reference / Payload the assets there. (ignoring this caused me heavy headaches and has been v)
+- ✅ Don't import assets in root layer - use `Ass_import_LYR` at bottom and Reference / Payload the assets there. (ignoring this caused me heavy headaches and has been v)
 - ✅ **Lock layers you're not working on** to prevent accidental edits on the wrong layer
 - ✅ Use **custom attributes** for queryable metadata (PLM IDs, status)
 - ✅ Use **customData dictionary** for static documentation metadata
@@ -307,8 +307,8 @@ over "RobotA" {
 **Layer Stack Order** (array ordering: first = strongest, last = weakest):
 1. **Opinion_xyz_LYR.usda** (first/strongest) - Final overrides
 2. **Variant_LYR.usda** - Variants and configurations  
-3. **Mtl_work_LYR.usda** - Materials and shading
-4. **AssetImport_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
+3. **Mtl_import_LYR.usda** - Materials and shading
+4. **Ass_import_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
 
 **Why AssetImport Must Be Last in Array:**
 - It loads assets into the scene
@@ -731,8 +731,8 @@ Each folder contains its own README with detailed information:
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,
     @./030_USD_LYR/Variant_LYR.usda@,
-    @./030_USD_LYR/Mtl_work_LYR.usda@,
-    @./030_USD_LYR/AssetImport_LYR.usda@
+    @./030_USD_LYR/Mtl_import_LYR.usda@,
+    @./030_USD_LYR/Ass_import_LYR.usda@
 ]
 ```
 
@@ -824,7 +824,7 @@ python scripts/validate_asset.py 010_ASS_USD/part_assembly.usd
 ### Step 4: Create Asset Import Layer
 
 ```usda
-# In 030_USD_LYR/AssetImport_LYR.usda
+# In 030_USD_LYR/Ass_import_LYR.usda
 def Xform "PartAssembly" (
     prepend references = @../010_ASS_USD/part_assembly.usd@
 )
@@ -836,7 +836,7 @@ def Xform "PartAssembly" (
 ### Step 5: Add Modifications via Layers
 
 ```usda
-# In 030_USD_LYR/Mtl_work_LYR.usda
+# In 030_USD_LYR/Mtl_import_LYR.usda
 over "PartAssembly"
 {
     over "SubAssembly"
@@ -856,8 +856,8 @@ The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `sub
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,    # First = strongest (applied last, overrides others)
     @./030_USD_LYR/Variant_LYR.usda@,        # Second
-    @./030_USD_LYR/Mtl_work_LYR.usda@,       # Third
-    @./030_USD_LYR/AssetImport_LYR.usda@     # Last = weakest (applied first, can be overridden)
+    @./030_USD_LYR/Mtl_import_LYR.usda@,       # Third
+    @./030_USD_LYR/Ass_import_LYR.usda@     # Last = weakest (applied first, can be overridden)
 ]
 ```
 
