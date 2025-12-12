@@ -4,7 +4,7 @@
 
 > I hope you enjoy the GoodStart I’m providing here. If you’re short on time (or want an experienced second brain), I’m available for consulting on **OpenUSD / Omniverse workflows**, **composition & layering strategy**, **CAD→USD pipelines**, **validation/CI**, and **digital-twin metadata** integration architectures.
 
-> **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.
+> **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.  , but don't expect me to know everything, cause after all I am 'just' a ProductDesigner gone 3D artist, Realtime Guy, that decided to hop onto the omniverse...., and here I am ... learning,... learning,... learning,... OpenUSD and I wish you a good start!!!
 
 
 **Version:** 0.9.5-beta  
