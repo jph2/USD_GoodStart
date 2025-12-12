@@ -1,0 +1,112 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (0, 0, 50000)
+                double radius = 500
+            }
+            dictionary Perspective = {
+                double3 position = (-348.83605749606886, 141.48606894085162, -19.66282834030719)
+                double3 target = (49.85788709729928, 31.622538068783484, 39.32288107265957)
+            }
+            dictionary Right = {
+                double3 position = (-50000, 0, 0)
+                double radius = 500
+            }
+            dictionary Top = {
+                double3 position = (0, 50000, 0)
+                double radius = 500
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "E:/SynologyDrive/1000_WORK/0100_Customer/1040_Metaphore/010_Project/PipeTest/USD_GoodStart/Lay_USD/AssetImport.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+
+over "Environment"
+{
+    over "ground"
+    {
+        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        bool primvars:isMatteObject = 0
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
+        token visibility = "inherited"
+    }
+}
+
+over "World"
+{
+    over "Geo"
+    {
+        over "nvidia_shader_ball" (
+            variants = {
+                string Mtl_Variant = "material_1"
+            }
+            prepend variantSets = "Mtl_Variant"
+        )
+        {
+            variantSet "Mtl_Variant" = {
+                "material_1" (
+                    customData = {
+                        string[] variantPrimPaths = ["nvidia_shader_ball_09/geo_shaderball_mat_01_All"]
+                    }
+                ) {
+                    over "nvidia_shader_ball_09"
+                    {
+                        over "geo_shaderball_mat_01_All" (
+                            prepend apiSchemas = ["MaterialBindingAPI"]
+                        )
+                        {
+                            rel material:binding = </World/MatLib/mtlxopen_pbr_material_1> (
+                                bindMaterialAs = "strongerThanDescendants"
+                            )
+                        }
+                    }
+
+                }
+                "material_2" (
+                    customData = {
+                        string[] variantPrimPaths = ["nvidia_shader_ball_09/geo_shaderball_mat_01_All"]
+                    }
+                ) {
+                    over "nvidia_shader_ball_09"
+                    {
+                        over "geo_shaderball_mat_01_All" (
+                            prepend apiSchemas = ["MaterialBindingAPI"]
+                        )
+                        {
+                            rel material:binding = </World/MatLib/mtlxopen_pbr_material_2> (
+                                bindMaterialAs = "strongerThanDescendants"
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    over "MatLib" (
+        delete references = @../010_ASS_USD/MatLib_a_MAT.usda@
+        prepend references = @../010_ASS_USD/mat/MatLib_a_MAT.usda@
+    )
+    {
+    }
+}
+

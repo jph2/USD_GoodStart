@@ -1277,7 +1277,7 @@ flowchart TD
     Opinion[Opinion_LYR.usda<br/>Top/strongest - Shot or scene overrides]:::strong
     Variant[Variant_LYR.usda<br/>Variants and configurations]:::medium
     Material[Mtl_Work_LYR.usda<br/>Materials and shading]:::medium
-    AssetImport[AssetImport_LYR.usda<br/>Bottom/weakest - CRITICAL: Asset loading layer]:::weak
+    AssetImport[Ass_import_LYR.usda<br/>Bottom/weakest - CRITICAL: Asset loading layer]:::weak
     
     Root --> Opinion
     Root --> Variant
@@ -1336,7 +1336,7 @@ flowchart TD
 ```mermaid
 graph BT
     %% Bottom-Up Construction
-    Import[AssetImport_LYR.usda<br/>Base Geometry]:::base
+    Import[Ass_import_LYR.usda<br/>Base Geometry]:::base
     Mtl[Mtl_Work_LYR.usda<br/>Materials]:::layer
     Variant[Variant_LYR.usda<br/>Variants]:::layer
     Opinion[Opinion_LYR.usda<br/>Overrides]:::layer
@@ -1373,7 +1373,7 @@ The `subLayers` array is ordered from **top (strongest)** to **bottom (weakest)*
         @./030_USD_LYR/Opinion_xyz_LYR.usda@,      # Top (strongest) - overrides everything
         @./030_USD_LYR/Variant_LYR.usda@,          # Variants and configurations
         @./030_USD_LYR/Mtl_work_LYR.usda@,         # Materials and shading
-        @./030_USD_LYR/AssetImport_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
+        @./030_USD_LYR/Ass_import_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
     ]
 )
 
@@ -1391,7 +1391,7 @@ Nothing else should be authored in the root file unless absolutely necessary.
 
 ---
 
-# 4.6 Geometry Layer: AssetImport_LYR.usda
+# 4.6 Geometry Layer: Ass_import_LYR.usda
 
 **CRITICAL: This layer MUST be at the bottom of the layer stack.**
 
@@ -1411,7 +1411,7 @@ This layer provides:
 **Example:**
 
 ```usda
-# AssetImport_LYR.usda - Bottom layer (weakest)
+# Ass_import_LYR.usda - Bottom layer (weakest)
 def Xform "Conveyor" (
     prepend payload = @../010_ASS_USD/Conveyor/Conveyor_payload.usdc@
 )
@@ -2170,10 +2170,10 @@ This pattern:
 - Declares configuration properties without values at the prim level, then **lets variants set values** (5.7 pattern).
 
 5. **Use configurations in scenes (AssetImport_LYR / factory scenes)**
-   - In `030_USD_LYR/AssetImport_LYR.usda` (or scene‑specific import layer), reference the interface asset and choose variants per instance:
+   - In `030_USD_LYR/Ass_import_LYR.usda` (or scene‑specific import layer), reference the interface asset and choose variants per instance:
 
 ```usda
-# 030_USD_LYR/AssetImport_LYR.usda
+# 030_USD_LYR/Ass_import_LYR.usda
 
 def Xform "Factory" {
 
@@ -2221,7 +2221,7 @@ flowchart TD
     BaseUSD --> Interface[Machine_X_ROOT.usda\nInterface + variantSet \"Configuration\"]:::root
     VarUSD --> Interface
 
-    Interface --> Scene[030_USD_LYR/AssetImport_LYR.usda\nFactory / Line Scenes]:::scene
+    Interface --> Scene[030_USD_LYR/Ass_import_LYR.usda\nFactory / Line Scenes]:::scene
 
     classDef gov fill:#b39ddb,stroke:#4a148c,stroke-width:3px,color:#000;
     classDef cad fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
@@ -2266,6 +2266,66 @@ flowchart TD
   - [OpenUSD Exchange SDK](https://github.com/NVIDIA-Omniverse/usd-exchange)
 - **Governance vs representation**:
   - See **Chapter 1.2 (PLM/PDM Integration)** and **Chapter 9 (CAD → USD Workflow)** in this guide for foundational patterns.
+
+### 5.7.2 Hybrid Pattern: Unified Interface with Shared Defaults
+
+**Use when:** You want to keep all variant logic in a single interface file while ensuring meaningful asset presentation even without variant selection. This pattern bridges the gap between Thomas's property-level technique and Jan's payload-based architecture.
+
+**Key characteristics:**
+- **Single file definition** - All variant logic lives in one interface layer
+- **Shared defaults** - Base asset provides meaningful values for non-variant scenarios
+- **DCC-friendly** - Easier to implement than property declaration retrofits
+- **Post-processing ready** - Can be applied as a "chaser" script after DCC export
+
+```usda
+def Xform "Branch" (
+  references = </Branch_base>  # Reference to base asset
+)
+{
+  # Declare properties without values (allows variant control)
+  custom double length
+
+  # Variant set with meaningful defaults in base asset
+  variantSet "sizes" = "small" {
+    "small" {
+      custom double length = 0.5
+    }
+    "large" {
+      custom double length = 2
+    }
+  }
+}
+
+# Base asset provides default values for meaningful presentation
+over "Branch_base" {
+  custom double length = 1  # Default/fallback value
+}
+```
+
+**Benefits:**
+- **Simplified workflow** - Single file contains all variant definitions
+- **Meaningful defaults** - Asset works even without variant selection
+- **DCC integration** - Can be applied as post-processing after standard exports
+- **Namespace editing** - USD's namespace editing makes this pattern practical for automation
+
+**Integration with GoodStart:**
+This pattern works well in `030_USD_LYR/` layers when you want to add variant logic to existing assets without modifying their payload structure. Particularly useful for shading variants and configuration-level choices that don't require separate geometry payloads.
+
+### 5.7.3 LIVERPS History: Why Variants Are Weaker Than Local (insights from the Legend Spiff  ;)
+
+**You are not alone in your expectation of how variants should work**, including some Pixarians as they came into USD - after all, variants are "more specific" opinions than local, so shouldn't they be stronger? In fact that was the **original behavior** reached by the Presto designers back in 2004/05. However, as we worked with it in the pipeline over the next six or so years, we learned two things:
+
+#### The Problem with "Strong" Variants
+
+It can be incredibly inconvenient. Imagine I have a layerStack, in which a weak layer defines a variantSet with a bunch of variants. Now in a stronger layer in that stack, I simply want to universally override a value that happens to be specified in that weaker variantSet. In the "simple" and very efficient composition engine that ships with USD today, we essentially first "flatten" the layerStack before interpreting the composition arcs. That would mean that the stronger layer's local/direct opinion would lose to the weaker variant opinions, so to override such an opinion, you'd need to add a new one to each variant in the stronger layer… assuming you knew which variantSet was providing it. This obviously wouldn't stand, so…
+
+#### The Complexity Crisis
+
+The Presto algorithm became not-simple, with arcs (possibly even only variantSets, though I'm not sure) being interpreted layer-by-layer within a stack. As we needed to add and modify core composition behaviors, these special rules had to become more and more complex, and by 2010/11, the composition system was kind of buckling under its own complexity and becoming unmaintainable.
+
+#### The Modern Solution
+
+The creation of the modern **Pcp composition engine** was the single-biggest precursor that gave us confidence we could create an open-sourceable scene description system, and IIRC, @blevin discovered in his prototyping that making that change to the relative strength of variant and local opinions was (one of) the big unlock that made the current, recursive, encapsulated composition algorithm possible. Luckily for us, the pattern described above (and our other tooling) just so happened to not, at that point in our pipeline's evolution, rely on the old behavior. So we were able to roll out the new behavior without much of a blip.
 
 ---
 
@@ -2509,7 +2569,7 @@ flowchart TD
     Meta[060_METADATA_LYR/<br/>Metadata & standards layers]:::folder
     RootFile[GoodStart_ROOT.usda<br/>Entry point file]:::usd
     
-    ImportLayer[AssetImport_LYR.usda]:::layer
+    ImportLayer[Ass_import_LYR.usda]:::layer
     MtlLayer[Mtl_Work_LYR.usda]:::layer
     VariantLayer[Variant_LYR.usda]:::layer
     OpinionLayer[Opinion_LYR.usda]:::layer
@@ -2548,7 +2608,7 @@ flowchart TD
     root --> S060[060_METADATA_LYR/\nMetadata & standards]
     root --> RootUsd[GoodStart_ROOT.usda\nEntry point]
     
-    S030 --> L_Import[AssetImport_LYR.usda]
+    S030 --> L_Import[Ass_import_LYR.usda]
     S030 --> L_Mtl[Mtl_Work_LYR.usda]
     S030 --> L_Var[Variant_LYR.usda]
     S030 --> L_Opinion[Opinion_LYR.usda]
@@ -2701,6 +2761,97 @@ This folder structure provides a **complete, ready-to-use foundation** with all 
 
 ---
 
+## 6.2.2 Collaboration via Task Fragments (Omniverse Digital Twin)
+
+This repository is optimized for **realtime, interactive digital twins** in Omniverse/Kit (not primarily for offline rendering). The collaboration model is still the same core OpenUSD idea: **parallel workstreams** in separate layers that compose together.
+
+### Core rule: one responsibility = one layer
+
+- **Goal**: reduce merge conflicts and accidental “wrong layer” edits by keeping each responsibility isolated.
+- **Practice**: treat each task as a **fragment** (a layer change) that can be reviewed, merged, and rolled back independently.
+
+Recommended responsibility split (folder is organizational; layer order comes from `subLayers`):
+
+- **General/visual edits** (`030_USD_LYR/`): materials, layout, “opinions”
+- **Simulation edits** (`040_SIM_LYR/`): physics, collisions, sensors, articulation metadata
+- **Variants/configuration** (`050_VARIANTS_LYR/`): configuration logic, LOD selection logic
+- **Metadata & standards mappings** (`060_METADATA_LYR/`): PLM IDs, AAS mappings, OPC UA node mappings, Catena-X/DPP mapping keys
+
+### Personal opinion vs publishable layers
+
+- **Personal opinions** are useful for exploration and iteration, but they are not automatically “production-ready”.
+- Treat opinions as **Draft** until reviewed (especially when they affect shared assets or shared scenes).
+
+### Minimal review workflow (lightweight)
+
+- **Draft → Review → Approved**
+  - Draft: local edits, experimentation, rapid iteration
+  - Review: check correctness, scope, and layering discipline
+  - Approved: mergeable and safe to use in shared stages
+
+---
+
+## 6.2.3 Definition of Done (DoD): “Publishable” for Digital Twins
+
+In an Omniverse context, “publishable” means **safe to load and interact with** in a Kit-based app, and safe to bind to your realtime adapters.
+
+### DoD checklist (recommended)
+
+- **Loadability**
+  - Stage opens in Omniverse Kit/Composer
+  - No missing layer files, references, or payloads
+  - No absolute paths that break portability
+- **Layer discipline**
+  - Variants live in `050_VARIANTS_LYR/` (not scattered across unrelated layers)
+  - Simulation edits live in `040_SIM_LYR/`
+  - Metadata mappings live in `060_METADATA_LYR/` (not mixed into random visual layers)
+  - “Opinion” layers only contain intended overrides (no accidental geometry imports)
+- **Validation**
+  - `python scripts/validate_asset.py <asset>` passes for modified assets
+  - `python scripts/validate_scene.py GoodStart_ROOT.usda` passes for the composed stage
+- **Interactivity readiness (digital twin)**
+  - Stable prim paths for anything that external systems bind to
+  - Attributes intended for runtime updates are not baked as strong, conflicting opinions in high-strength layers
+
+---
+
+## 6.2.4 Realtime Data Integration + Schemas (Pragmatic Strategy)
+
+### Mental model (Omniverse / Kit)
+
+Realtime data is streamed into Omniverse by having external systems publish data over a protocol/SDK, which is then bound to USD prims and attributes inside a running Kit-based app. The app reacts (Python callbacks, ActionGraph, extensions) and updates the stage in place.
+
+It helps to separate:
+- **Frame streaming** (video/pixel streaming) vs
+- **Data streaming** (telemetry/commands into USD attributes)
+
+### Raw custom attributes vs schemas
+
+You do **not** need schemas to add metadata:
+- Use namespaced custom attributes: `opcua:runtime:temperature`, `aas:submodel:identification`, `plm:id`, etc.
+
+Define schemas when you need:
+- **Validation** (types/ranges/defaults)
+- **Tooling/UI** (structured property panels, discovery)
+- **Interoperability** across teams and apps
+
+**Hybrid best practice**: start with raw namespaced attributes for speed, promote stable fields to schemas when the data model stabilizes and needs stronger guarantees.
+
+### Keep a registry (high leverage)
+
+Maintain a project “what metadata exists” registry:
+- Prefixes, concrete fields, source-of-truth, where it is authored, and whether it is runtime-updated
+
+Template: `WIP_Docs/Metadata_Schema_Registry.md`
+
+# References (selected)
+
+- ASWF USD Assets Working Group (community focus incl. asset structure + schema design): `https://lf-aswf.atlassian.net/wiki/spaces/WGUSD/pages/11274232/USD+Assets`
+- USDWG Collective Project 001 (collaboration + pipeline organization inspiration): `https://github.com/usd-wg/collectiveproject001`
+- AOUSD schema explainer (schemas mental model): `https://aousd.org/blog/explainer-series-for-developers-what-are-openusd-schemas/`
+- Omniverse USD schemas (Omniverse-facing schema notes): `https://docs.omniverse.nvidia.com/usd/latest/usd_schemas.html`
+- Omniverse streaming technology (frame streaming context): `https://docs.omniverse.nvidia.com/omniverse-dgxc/latest/overview/technical_summary/streaming_technology.html`
+
 # 6.3 Folder-by-Folder Deep Explanation
 
 **Note:** Folder numbers (030, 040, 050, 060) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file, not by folder names. These numbers are organizational prefixes for clarity.
@@ -2756,7 +2907,7 @@ Layer-driven composition files for **general USD logic** (visual/layout/material
 These files control *behavior*, not heavy geometry.
 
 ### Recommended files:
-- **AssetImport_LYR.usda**  
+- **Ass_import_LYR.usda**  
   References payloads from `010_ASS_USD`
 
 - **Mtl_Work_LYR.usda**  
@@ -2827,7 +2978,7 @@ The root file assembles everything:
         "./030_USD_LYR/Opinion_LYR.usda",
         "./050_VARIANTS_LYR/Variant_LYR.usda",
         "./030_USD_LYR/Mtl_Work_LYR.usda",
-        "./030_USD_LYR/AssetImport_LYR.usda"
+        "./030_USD_LYR/Ass_import_LYR.usda"
     ]
 )
 ```
@@ -3053,7 +3204,7 @@ subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,
     @./050_VARIANTS_LYR/Variant_LYR.usda@,
     @./030_USD_LYR/Mtl_work_LYR.usda@,
-    @./030_USD_LYR/AssetImport_LYR.usda@
+    @./030_USD_LYR/Ass_import_LYR.usda@
 ]
 ```
 
@@ -3954,7 +4105,7 @@ Include the standards layer in your root file's `subLayers` array. The position 
   @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
   @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
   @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
-  @./030_USD_LYR/AssetImport_LYR.usda@        # Geometry/assets
+  @./030_USD_LYR/Ass_import_LYR.usda@        # Geometry/assets
   ]
 )
 ```
@@ -3964,7 +4115,7 @@ Include the standards layer in your root file's `subLayers` array. The position 
 The layer stack processes from **bottom to top** (weakest to strongest):
 
 ```
-1. AssetImport_LYR.usda (bottom)
+1. Ass_import_LYR.usda (bottom)
    ↓ Loads geometry/assets
    
 2. AAS_LYR.usda
@@ -3986,7 +4137,7 @@ Use `over` to add standards data to prims that were loaded in lower layers:
 
 ```usda
 # AAS_LYR.usda
-# This layer connects AAS data to prims loaded in AssetImport_LYR.usda
+# This layer connects AAS data to prims loaded in Ass_import_LYR.usda
 
 over "Pump" {
   # These attributes are added to the Pump prim
@@ -4014,7 +4165,7 @@ subLayers = [
   @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
   @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
   @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
-  @./030_USD_LYR/AssetImport_LYR.usda@        # Geometry/assets
+  @./030_USD_LYR/Ass_import_LYR.usda@        # Geometry/assets
 ]
 ```
 
@@ -4052,7 +4203,7 @@ over "Pump" {
 **7. Complete Example: Layer-by-Layer Integration**
 
 ```usda
-# AssetImport_LYR.usda (bottom layer - loads geometry)
+# Ass_import_LYR.usda (bottom layer - loads geometry)
 def Xform "Pump" (
   prepend payload = @../010_ASS_USD/Pump_payload.usdc@
 )
@@ -4179,7 +4330,7 @@ Recommended layers:
 
 ```
 030_USD_LYR/
-    AssetImport_LYR.usda        (geometry)
+    Ass_import_LYR.usda        (geometry)
     Variant_LYR.usda            (variants)
     Mtl_Work_LYR.usda           (materials)
     Metadata_LYR.usda           (metadata)
@@ -5874,7 +6025,7 @@ python scripts/validate_asset.py 010_ASS_USD/part_assembly.usd
 
 ### Step 4: Create Asset Import Layer
 ```usda
-# In 030_USD_LYR/AssetImport_LYR.usda
+# In 030_USD_LYR/Ass_import_LYR.usda
 def Xform "PartAssembly" (
     prepend references = @../010_ASS_USD/part_assembly.usd@
 )
@@ -5905,7 +6056,7 @@ subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,       # First = strongest (applied last, overrides others)
      @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Second
     @./030_USD_LYR/Mtl_work_LYR.usda@,          # Third
-    @./030_USD_LYR/AssetImport_LYR.usda@   # Last = weakest (applied first, can be overridden)
+    @./030_USD_LYR/Ass_import_LYR.usda@   # Last = weakest (applied first, can be overridden)
 ]
 ```
 

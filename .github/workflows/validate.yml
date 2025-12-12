@@ -25,8 +25,8 @@ jobs:
     
     - name: Validate USD Assets
       run: |
-        python scripts/validate_asset.py 010_ASS_USD/0_CUBE.usda || true
-        python scripts/validate_asset.py 010_ASS_USD/0_Geo_Shader_Ball.usd || true
+        python scripts/validate_asset.py 010_ASS_USD/0_CUBE_GEO.usda || true
+        python scripts/validate_asset.py 010_ASS_USD/0_Shader_Ball_GEO.usd || true
     
     - name: Validate Scene
       run: |

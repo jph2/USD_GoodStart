@@ -16,8 +16,8 @@ This folder contains **all USD assets** for the project. These are the converted
 ## Default Assets
 
 **Geometry (`geo/` folder):**
-- `0_CUBE.usda` - Default cube geometry
-- `0_Geo_Shader_Ball.usd` - Geoshader ball asset
+- `0_CUBE_GEO.usda` - Default cube geometry
+- `0_Shader_Ball_GEO.usd` - Geoshader ball asset
 
 **Note:** The `0_` prefix is used for sorting purposes and to distinguish default assets from project-specific assets.
 

@@ -7,8 +7,8 @@
                 double radius = 500
             }
             dictionary Perspective = {
-                double3 position = (-249.35748043036375, 285.37168784251014, 265.76362964768674)
-                double3 target = (-33.1396323972466, 189.44548907927197, 177.32341069125852)
+                double3 position = (-534.0535080614046, 388.74633983011296, 48.80323952168747)
+                double3 target = (39.70470193649112, 156.55584698389447, 126.9886893451201)
             }
             dictionary Right = {
                 double3 position = (-50000, 0, 0)
@@ -23,14 +23,15 @@
         dictionary omni_layer = {
             string authoring_layer = "./030_USD_LYR/your very Personal opinion_LYR.usda"
             dictionary locked = {
-                bool "./030_USD_LYR/AssetImport_LYR.usda" = 1
-                bool "./030_USD_LYR/Mtl_work_LYR.usda" = 1
-                bool "./030_USD_LYR/Opinion_abc_LYR.usda" = 1
-                bool "./030_USD_LYR/Opinion_xyz_LYR.usda" = 1
+                bool "./030_USD_LYR/Ass_import_LYR.usda" = 1
+                bool "./030_USD_LYR/Mtl_import_LYR.usda" = 1
+                bool "./030_USD_LYR/abc_Opinion_LYR.usda" = 1
+                bool "./030_USD_LYR/xyz_Opinion_LYR.usda" = 1
                 bool "./030_USD_LYR/sample_USD_LYR.usda" = 1
-                bool "./040_SIM_LYR/sample_Sim_LYR.usda" = 1
-                bool "./050_VARIANTS_LYR/Variant_LYR.usda" = 1
-                bool "./060_METADATA_LYR/sample_Metadata_LYR.usda" = 1
+                bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 1
+                bool "./050_VAR_LYR/VAR_LYR.usda" = 1
+                bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 1
+                bool "./060_META_LYR/sample_META_LYR.usda" = 1
             }
             dictionary muteness = {
             }
@@ -43,16 +44,16 @@
     metersPerUnit = 0.01
     startTimeCode = 0
     subLayers = [
-        @./030_USD_LYR/your very Personal opinion_LYR.usda@,
-        @./050_VARIANTS_LYR/Variant_LYR.usda@,
-        @./030_USD_LYR/Opinion_abc_LYR.usda@,
-        @./030_USD_LYR/Opinion_xyz_LYR.usda@,
-        @./030_USD_LYR/Mtl_work_LYR.usda@,
-        @./040_SIM_LYR/sample_Sim_LYR.usda@,
-        @./060_METADATA_LYR/sample_Metadata_LYR.usda@,
+        @./040_SIM_LYR/sample_SIM_LYR.usda@,
+        @./060_META_LYR/sample_META_LYR.usda@,
         @./030_USD_LYR/sample_USD_LYR.usda@,
-        @./050_VARIANTS_LYR/sample_Variants_LYR.usda@,
-        @./030_USD_LYR/AssetImport_LYR.usda@
+        @./050_VAR_LYR/sample_VAR_LYR.usda@,
+        @./030_USD_LYR/your very Personal opinion_LYR.usda@,
+        @./050_VAR_LYR/VAR_LYR.usda@,
+        @./030_USD_LYR/abc_Opinion_LYR.usda@,
+        @./030_USD_LYR/xyz_Opinion_LYR.usda@,
+        @./030_USD_LYR/Mtl_import_LYR.usda@,
+        @./030_USD_LYR/Ass_import_LYR.usda@
     ]
     timeCodesPerSecond = 60
     upAxis = "Y"
@@ -239,7 +240,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (1482, 1135)
+                uniform int2 resolution = (1383, 1135)
             }
         }
     }
@@ -284,10 +285,10 @@ over "OmniverseKit_Persp" (
     float exposure:time = 0.02
     float focalLength = 18.147562
     float focusDistance = 400
-    custom uniform vector3d omni:kit:centerOfInterest = (8.013550460457489e-15, 1.0684733947276651e-14, -252.53448427154933)
-    float3 xformOp:rotateXYZ = (157.67537, -112.24618, 180)
+    custom uniform vector3d omni:kit:centerOfInterest = (1.9797211386594257e-14, 2.6396281848792338e-14, -623.8780915148822)
+    float3 xformOp:rotateXYZ = (158.15031, -82.24016, 180)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (-249.35748043036375, 285.37168784251014, 265.76362964768674)
+    double3 xformOp:translate = (-534.0535080614046, 388.74633983011296, 48.80323952168747)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
