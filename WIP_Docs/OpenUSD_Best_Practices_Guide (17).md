@@ -829,6 +829,8 @@ Hero assets use:
 
 ## Chapter 3 — Composition Strength (LIVERPS)
 
+**USD Terms & Concepts:** [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [LIVERPS Strength Ordering](https://openusd.org/release/glossary.html#liverps-strength-ordering), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [PrimSpec](https://openusd.org/release/glossary.html#primspec), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Inherits](https://openusd.org/release/glossary.html#inherits), [Specializes](https://openusd.org/release/glossary.html#specializes), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [VariantSet](https://openusd.org/release/glossary.html#variantset), [Direct Opinion](https://openusd.org/release/glossary.html#direct-opinion)
+
 OpenUSD’s **composition engine** is one of its most powerful capabilities. It allows multiple contributors, tools, and systems to apply changes to the same scene **non-destructively**, while USD determines which opinions win. To master USD at a production level, you must understand the **LIVERPS** ordering system:
 
 ```
@@ -1084,6 +1086,8 @@ Inheritance creates clean, reusable patterns for:
 
 ## 3.9.5 Classes: Abstract Templates for Inheritance
 
+**USD Terms & Concepts:** [Class](https://openusd.org/release/glossary.html#class), [Specifier](https://openusd.org/release/glossary.html#specifier), [Inherits](https://openusd.org/release/glossary.html#inherits), [PrimSpec](https://openusd.org/release/glossary.html#primspec), [Composition](https://openusd.org/release/glossary.html#composition), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution)
+
 **Classes** in OpenUSD are prims with the `Sdf.SpecifierClass` specifier. They act as abstract templates or blueprints that define reusable patterns for other prims.
 
 **Key Characteristics:**
@@ -1262,6 +1266,8 @@ Mastering LIVERPS is essential for building scalable industrial USD systems.
 
 
 ## Chapter 4 — Layer Stacking & Workstreams (Full Expansion)
+
+**USD Terms & Concepts:** [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [Layer Offset](https://openusd.org/release/glossary.html#layer-offset), [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [TimeCode](https://openusd.org/release/glossary.html#timecode), [TimeSample](https://openusd.org/release/glossary.html#timesample), [EditTarget](https://openusd.org/release/glossary.html#edittarget), [Session Layer](https://openusd.org/release/glossary.html#session-layer)
 
 Layer stacking is the backbone of USD’s non-destructive workflow. Instead of a single monolithic file, USD encourages **parallel workstreams**, where each department (modeling, materials, simulation, layout, variants, overrides) works in its own layer. USD then composes these layers together in a predictable, controlled order.
 
@@ -1706,6 +1712,8 @@ Layer stacking is the key to building stable, scalable OpenUSD pipelines across 
 
 
 ## Chapter 5 — Parameterization (Variants & Primvars) — Full Expansion
+
+**USD Terms & Concepts:** [Variant](https://openusd.org/release/glossary.html#variant), [VariantSet](https://openusd.org/release/glossary.html#variantset), [Primvar](https://openusd.org/release/glossary.html#primvar), [Interpolation](https://openusd.org/release/glossary.html#interpolation), [Attribute](https://openusd.org/release/glossary.html#attribute), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Layer](https://openusd.org/release/glossary.html#layer), [PrimSpec](https://openusd.org/release/glossary.html#primspec)
 
 Parameterization is one of the most powerful aspects of OpenUSD. It allows assets to be dynamic, configurable, and reusable across endless scenarios. In digital twins, robotics, VFX, CAD pipelines, simulation, and large-scale configurators, **variants and primvars** provide the backbone for flexibility.
 
@@ -2548,6 +2556,8 @@ Parameterization is critical for large-scale digital twins and configurable asse
 
 ## Chapter 6 — Project Structure (Full Expansion)
 
+**USD Terms & Concepts:** [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution)
+
 A clear, standardized project structure is essential for building scalable, maintainable OpenUSD pipelines.  
 Whether your domain is industrial digital twins, VFX, enterprise robotics, automotive, aerospace, or simulation, the arrangement of folders and layers determines:
 
@@ -2681,6 +2691,8 @@ This folder structure provides a **complete, ready-to-use foundation** with all 
 
 ## 6.2.1 Development Mindset & Architecture Principles
 
+**USD Terms & Concepts:** [Composition](https://openusd.org/release/glossary.html#composition), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [LIVERPS Strength Ordering](https://openusd.org/release/glossary.html#liverps-strength-ordering)
+
 ### Mindset
 
 **Get Started!!! But Start Structured**
@@ -2797,6 +2809,8 @@ This folder structure provides a **complete, ready-to-use foundation** with all 
 ---
 
 ## 6.2.2 Collaboration via Task Fragments (Omniverse Digital Twin)
+
+**USD Terms & Concepts:** [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace), [Asset](https://openusd.org/release/glossary.html#asset)
 
 This repository is optimized for **realtime, interactive digital twins** in Omniverse/Kit (not primarily for offline rendering). The collaboration model is still the same core OpenUSD idea: **parallel workstreams** in separate layers that compose together.
 
@@ -3222,6 +3236,8 @@ A clear folder structure is essential for maintainable USD pipelines.
 
 ## Chapter 7: Path Handling
 
+**USD Terms & Concepts:** [Path](https://openusd.org/release/glossary.html#path), [Path Translation](https://openusd.org/release/glossary.html#path-translation), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Asset](https://openusd.org/release/glossary.html#asset), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [Namespace](https://openusd.org/release/glossary.html#namespace)
+
 **Critical**: Always use **relative paths** in USD files for portability and collaboration.
 
 # 7.1 Why Relative Paths Matter
@@ -3286,6 +3302,8 @@ prepend references = @../010_ASS_USD/asset.usd@
 ...
 
 ## Chapter 8: Tools & Software
+
+**USD Terms & Concepts:** [Stage](https://openusd.org/release/glossary.html#stage), [Layer](https://openusd.org/release/glossary.html#layer), [Prim](https://openusd.org/release/glossary.html#prim), [Composition](https://openusd.org/release/glossary.html#composition), [UsdView](https://openusd.org/release/glossary.html#usdview), [usdcat](https://openusd.org/release/glossary.html#usdcat), [usdedit](https://openusd.org/release/glossary.html#usdedit), [usdzip](https://openusd.org/release/glossary.html#usdzip), [usdresolve](https://openusd.org/release/glossary.html#usdresolve), [Crate File Format](https://openusd.org/release/glossary.html#crate-file-format)
 
 # 8.1 Required Software
 
@@ -3398,6 +3416,8 @@ Modern USD pipelines often benefit from combining systems:
 
 
 ## Chapter 9 — CAD to USD Workflow (Full Expansion)
+
+**USD Terms & Concepts:** [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Payload](https://openusd.org/release/glossary.html#payload), [References](https://openusd.org/release/glossary.html#references), [Prim](https://openusd.org/release/glossary.html#prim), [Gprim](https://openusd.org/release/glossary.html#gprim), [Attribute](https://openusd.org/release/glossary.html#attribute), [Property](https://openusd.org/release/glossary.html#property), [Material Binding](https://openusd.org/release/glossary.html#material-binding), [Collection](https://openusd.org/release/glossary.html#collection), [Variant](https://openusd.org/release/glossary.html#variant), [VariantSet](https://openusd.org/release/glossary.html#variantset), [Kind](https://openusd.org/release/glossary.html#kind), [Model Hierarchy](https://openusd.org/release/glossary.html#model-hierarchy)
 
 The CAD → USD pipeline is foundational for industrial digital twins, robotics, and manufacturing.  
 Most of the heavy geometry used in USD originates from engineering systems such as CATIA, NX, SolidWorks, Creo, or Inventor.
@@ -3858,6 +3878,8 @@ A robust CAD → USD workflow ensures your industrial assets are lightweight, sc
 
 
 ## Chapter 10 — Metadata Strategy (Full Expansion)
+
+**USD Terms & Concepts:** [Metadata](https://openusd.org/release/glossary.html#metadata), [AssetInfo](https://openusd.org/release/glossary.html#assetinfo), [CustomData](https://openusd.org/release/glossary.html#customdata), [Prim](https://openusd.org/release/glossary.html#prim), [Property](https://openusd.org/release/glossary.html#property), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Kind](https://openusd.org/release/glossary.html#kind), [Purpose](https://openusd.org/release/glossary.html#purpose), [Collection](https://openusd.org/release/glossary.html#collection), [Layer](https://openusd.org/release/glossary.html#layer), [Composition](https://openusd.org/release/glossary.html#composition)
 
 Metadata is the backbone of industrial USD pipelines.  
 Geometry describes what an object looks like — **metadata describes what an object *is***.
@@ -4447,6 +4469,8 @@ Properly managed metadata turns USD from a geometry container into an enterprise
 
 ## Chapter 11 — Physics, Simulation & Robotics (Full Expansion)
 
+**USD Terms & Concepts:** [Prim](https://openusd.org/release/glossary.html#prim), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Metadata](https://openusd.org/release/glossary.html#metadata), [Layer](https://openusd.org/release/glossary.html#layer), [Composition](https://openusd.org/release/glossary.html#composition), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [TimeSample](https://openusd.org/release/glossary.html#timesample), [TimeCode](https://openusd.org/release/glossary.html#timecode), [Animation](https://openusd.org/release/glossary.html#animation), [Spline](https://openusd.org/release/glossary.html#spline), [Interpolation](https://openusd.org/release/glossary.html#interpolation), [Primvar](https://openusd.org/release/glossary.html#primvar), [Purpose](https://openusd.org/release/glossary.html#purpose), [Instanceable](https://openusd.org/release/glossary.html#instanceable), [Instancing](https://openusd.org/release/glossary.html#instancing)
+
 Simulation in OpenUSD allows digital twins, robots, and industrial assets to behave like their real-world counterparts. USD’s physics schemas define rigid bodies, collisions, articulations, joints, and materials. Tools like Isaac Sim and PhysX interpret these schemas to drive high-fidelity simulations.
 
 This chapter provides a complete production workflow for building simulation-ready USD assets.
@@ -4784,6 +4808,8 @@ USD is uniquely capable of running real industrial simulations when structured p
 
 ## Chapter 12 — Materials & Shading (Full Expansion)
 
+**USD Terms & Concepts:** [Material Binding](https://openusd.org/release/glossary.html#material-binding), [Primvar](https://openusd.org/release/glossary.html#primvar), [Interpolation](https://openusd.org/release/glossary.html#interpolation), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Connection](https://openusd.org/release/glossary.html#connection), [Shader](https://openusd.org/release/glossary.html#shader), [Texture](https://openusd.org/release/glossary.html#texture), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Layer](https://openusd.org/release/glossary.html#layer), [Composition](https://openusd.org/release/glossary.html#composition), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Purpose](https://openusd.org/release/glossary.html#purpose)
+
 USDShade defines a powerful material system supporting MDL, MaterialX, and USD Preview Surface. This chapter covers enterprise workflows for industrial digital twins, robotics, and VFX.
 
 ---
@@ -4979,6 +5005,8 @@ Use proper texture pipelines and structure material overrides in dedicated layer
 
 
 ## Chapter 13 — Implementation Strategy (Full Expansion)
+
+**USD Terms & Concepts:** [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace), [Stage](https://openusd.org/release/glossary.html#stage), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [LIVERPS Strength Ordering](https://openusd.org/release/glossary.html#liverps-strength-ordering), [EditTarget](https://openusd.org/release/glossary.html#edittarget)
 
 A successful OpenUSD deployment requires more than correct files—  
 it requires **a coherent strategy**, governance, automation, and cross-team alignment.  
@@ -5363,6 +5391,8 @@ USD succeeds when the entire organization aligns on structure and rules.
 
 ## Chapter 14 — Asset Lifecycle (Full Expansion)
 
+**USD Terms & Concepts:** [Asset](https://openusd.org/release/glossary.html#asset), [AssetInfo](https://openusd.org/release/glossary.html#assetinfo), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Composition](https://openusd.org/release/glossary.html#composition), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Metadata](https://openusd.org/release/glossary.html#metadata), [Kind](https://openusd.org/release/glossary.html#kind), [Model Hierarchy](https://openusd.org/release/glossary.html#model-hierarchy), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace)
+
 A robust USD pipeline needs a clearly defined asset lifecycle so that teams can collaborate without overwriting each other, breaking scenes, or losing history.  
 A mature asset lifecycle governs how assets move from **Work → Review → Publish → Release → Archive**.
 
@@ -5680,6 +5710,8 @@ The lifecycle is the backbone of a scalable USD deployment.
 
 
 ## Chapter 15 — Resources (Massively Expanded Edition)
+
+**USD Terms & Concepts:** [Stage](https://openusd.org/release/glossary.html#stage), [Layer](https://openusd.org/release/glossary.html#layer), [Prim](https://openusd.org/release/glossary.html#prim), [Property](https://openusd.org/release/glossary.html#property), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [Inherits](https://openusd.org/release/glossary.html#inherits), [Specializes](https://openusd.org/release/glossary.html#specializes), [Variant](https://openusd.org/release/glossary.html#variant), [VariantSet](https://openusd.org/release/glossary.html#variantset), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Metadata](https://openusd.org/release/glossary.html#metadata), [Schema](https://openusd.org/release/glossary.html#schema), [API Schema](https://openusd.org/release/glossary.html#api-schema), [IsA Schema](https://openusd.org/release/glossary.html#isa-schema), [Typed Schema](https://openusd.org/release/glossary.html#typed-schema)
 
 This chapter provides a deep, curated, and comprehensive resource index for OpenUSD, covering documentation, specs, ecosystem tools, learning materials, research topics, standards, and professional training references. It is designed to serve as a long-term reference for engineering, simulation, robotics, VFX, CAD, digital twin, and manufacturing teams.
 
