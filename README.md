@@ -34,10 +34,10 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 ```mermaid
 graph TD
-    Root[GoodStart_ROOT.usda<br/>Main Container] --> Opinion[Opinion_xyz_LYR.usda<br/>Overrides & Opinions]
-    Root --> Variant[Variant_LYR.usda<br/>Variants & Configurations]
-    Root --> Material[Mtl_work_LYR.usda<br/>Materials & Shading]
-    Root --> Asset[AssetImport_LYR.usda<br/>References & Payloads<br/>Geometry Layer]
+    Root[GoodStart_ROOT.usda<br/>Main Container] --> Opinion[xyz_Opinion_LYR.usda<br/>Overrides & Opinions]
+    Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
+    Root --> Material[Mtl_import_LYR.usda<br/>Materials & Shading]
+    Root --> Asset[Ass_import_LYR.usda<br/>References & Payloads<br/>Geometry Layer]
     
     Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
     Assets --> Payloads[Payloads<br/>Heavy Geometry]
@@ -63,16 +63,36 @@ graph TD
 - `000_SOURCE/` - Original CAD/DCC source files
 - `010_ASS_USD/` - USD assets (converted from CAD or created in DCC)
 - `020_TEX/` - Global textures
-- `030_USD_LYR/` - General USD layers (AssetImport, Mtl_work, Variant, Opinions)
+- `030_USD_LYR/` - General USD layers (Ass_import, Mtl_import, VAR, Opinions)
 - `040_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
-- `050_VARIANTS_LYR/` - Variant/configuration layers
-- `060_METADATA_LYR/` - Metadata and standards layers
+- `050_VAR_LYR/` - Variant/configuration layers
+- `060_META_LYR/` - Metadata and standards layers
 
 **📖 Folder Documentation:** Each folder contains its own `README.md` with detailed information on **how to use it** and **why to use it this way**. Check the folder-specific READMEs for:
 - Purpose and workflow details
 - Best practices and conventions
 - Examples and use cases
 - Integration with other folders
+
+**📋 File Naming Conventions (GoodStart Standard):**
+
+**File Type Suffixes:**
+- **`_LYR.usda`** → Layer files (USD composition layers)
+- **`_GEO.usda/.usd`** → Geometry asset files
+- **`_MAT.usda`** → Material asset files
+
+**Naming Patterns:**
+- **Import layers**: `*_import_LYR.usda` (e.g., `Ass_import_LYR.usda`, `Mtl_import_LYR.usda`)
+- **Opinion layers**: `*_[identifier]_Opinion_LYR.usda` (e.g., `abc_Opinion_LYR.usda`, `xyz_Opinion_LYR.usda`)
+- **Asset files**: `*_[TYPE].usda` (e.g., `0_CUBE_GEO.usda`, `MatLib_a_MAT.usda`)
+- **Variant layers**: `*_VAR_LYR.usda` (e.g., `VAR_LYR.usda`)
+- **Simulation layers**: `*_[type]_SIM_LYR.usda` (e.g., `sample_SIM_LYR.usda`)
+
+**Benefits:**
+- **Type identification**: Suffixes immediately show file purpose (`_LYR`, `_GEO`, `_MAT`)
+- **Logical grouping**: Import functions grouped with `_import_`
+- **Alphabetical sorting**: Opinion files sort properly (`abc_Opinion_LYR.usda` before `xyz_Opinion_LYR.usda`)
+- **Consistency**: Standardized abbreviations (`Ass_` for Asset, `Mtl_` for Material, `Var_` for Variant)
 
 **Individual Asset Structure** (Reference/Payload Pattern):
 ```
@@ -85,16 +105,16 @@ Asset_Root_File.usda (Interface - Lightweight)
 **Why this pattern?** Separates lightweight "interface" from heavy "implementation". Users can see variant options, change materials, and get bounding boxes **without loading heavy geometry** (instant, fast, responsive).
 
 **Layer Stack Order** (array ordering: first = strongest, last = weakest):
-1. **Opinion_xyz_LYR.usda** (first/strongest) - Overrides and opinions
-2. **Variant_LYR.usda** - Variants and configurations
-3. **Mtl_work_LYR.usda** - Materials and shading work
-4. **AssetImport_LYR.usda** (last/weakest) - References payloads, holds geometry, imports assets
+1. **xyz_Opinion_LYR.usda** (first/strongest) - Overrides and opinions
+2. **VAR_LYR.usda** - Variants and configurations
+3. **Mtl_import_LYR.usda** - Materials and shading work
+4. **Ass_import_LYR.usda** (last/weakest) - References payloads, holds geometry, imports assets
 
 **Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). First in array = strongest (applied last, overrides others). Last in array = weakest (applied first, can be overridden).
 
 **Quick Workflow:**
 1. Convert CAD → USD assets → place in `010_ASS_USD/`
-2. Create layer files in `030_USD_LYR/` for general USD (visual/layout/material/overrides) and use `040_SIM_LYR/`, `050_VARIANTS_LYR/`, `060_METADATA_LYR/` for simulation, variants, and metadata.
+2. Create layer files in `030_USD_LYR/` for general USD (visual/layout/material/overrides) and use `040_SIM_LYR/`, `050_VAR_LYR/`, `060_META_LYR/` for simulation, variants, and metadata.
 3. Reference layers in `GoodStart_ROOT.usda` (array order: Opinion → Variant → Material → AssetImport, where first = strongest)
 4. Use **relative paths** (`@./folder/file.usd@`) for portability
 5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)

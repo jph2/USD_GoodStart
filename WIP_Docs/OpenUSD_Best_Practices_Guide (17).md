@@ -97,6 +97,26 @@ Use descriptive, intent-driven names:
   - `/testA/mesh001`
   - `/temp/part_final_v7`
 
+#### **1.1.2 File Naming Conventions (GoodStart Standard)**
+
+**File Type Suffixes:**
+- **`_LYR.usda`** → Layer files (USD composition layers)
+- **`_GEO.usda/.usd`** → Geometry asset files
+- **`_MAT.usda`** → Material asset files
+
+**Naming Patterns:**
+- **Import layers**: `*_import_LYR.usda` (e.g., `Ass_import_LYR.usda`, `Mtl_import_LYR.usda`)
+- **Opinion layers**: `*_[identifier]_Opinion_LYR.usda` (e.g., `abc_Opinion_LYR.usda`, `xyz_Opinion_LYR.usda`)
+- **Asset files**: `*_[TYPE].usda` (e.g., `0_CUBE_GEO.usda`, `MatLib_a_MAT.usda`)
+- **Variant layers**: `*_VAR_LYR.usda` (e.g., `VAR_LYR.usda`)
+- **Simulation layers**: `*_[type]_SIM_LYR.usda` (e.g., `sample_SIM_LYR.usda`)
+
+**Benefits:**
+- **Type identification**: Suffixes immediately show file purpose (`_LYR`, `_GEO`, `_MAT`)
+- **Logical grouping**: Import functions grouped with `_import_`
+- **Alphabetical sorting**: Opinion files sort properly (`abc_Opinion_LYR.usda` before `xyz_Opinion_LYR.usda`)
+- **Consistency**: Standardized abbreviations (`Ass_` for Asset, `Mtl_` for Material, `Var_` for Variant)
+
 #### **1.1.2 Public vs Private Namespaces**
 
 **Note:** This convention is not explicitly documented in official OpenUSD specifications but follows common programming best practices (similar to Python's `_private` convention). Teams may adopt this pattern to distinguish between public API prims and internal implementation details.
@@ -2061,7 +2081,7 @@ This case study shows how a 3DEXPERIENCE (PLM) + CATIA configuration workflow ca
 - **Payload‑based architecture** (heavy geometry in `.usdc` payloads, not in the interface layer)
 - **Lofted variants** (variants authored above payloads, not inside them)
 - **Property declaration technique** (declare properties without values so variants can safely drive them)
-- **GoodStart folder structure** (`000_SOURCE`, `010_ASS_USD`, `020_TEX`, `030_USD_LYR`, `040_SIM_LYR`, `050_VARIANTS_LYR`, `060_METADATA_LYR`, `Asset_ROOT.usda`)
+- **GoodStart folder structure** (`000_SOURCE`, `010_ASS_USD`, `020_TEX`, `030_USD_LYR`, `040_SIM_LYR`, `050_VAR_LYR`, `060_META_LYR`, `Asset_ROOT.usda`)
 
 ### Context & Goals
 
@@ -2565,8 +2585,8 @@ flowchart TD
     Tex[020_TEX/<br/>Global textures]:::folder
     Lyr[030_USD_LYR/<br/>General USD layers]:::folder
     Sim[040_SIM_LYR/<br/>Physics, collision, sim metadata]:::folder
-    Vars[050_VARIANTS_LYR/<br/>Variant & config layers]:::folder
-    Meta[060_METADATA_LYR/<br/>Metadata & standards layers]:::folder
+    Vars[050_VAR_LYR/<br/>Variant & config layers]:::folder
+    Meta[060_META_LYR/<br/>Metadata & standards layers]:::folder
     RootFile[GoodStart_ROOT.usda<br/>Entry point file]:::usd
     
     ImportLayer[Ass_import_LYR.usda]:::layer
@@ -2604,8 +2624,8 @@ flowchart TD
     root --> S020[020_TEX/\nGlobal textures]
     root --> S030[030_USD_LYR/\nGeneral layers]
     root --> S040[040_SIM_LYR/\nSimulation layers]
-    root --> S050[050_VARIANTS_LYR/\nVariant layers]
-    root --> S060[060_METADATA_LYR/\nMetadata & standards]
+    root --> S050[050_VAR_LYR/\nVariant layers]
+    root --> S060[060_META_LYR/\nMetadata & standards]
     root --> RootUsd[GoodStart_ROOT.usda\nEntry point]
     
     S030 --> L_Import[Ass_import_LYR.usda]
@@ -2753,11 +2773,11 @@ This folder structure provides a **complete, ready-to-use foundation** with all 
 
 - Europe is making DPP a requirement for many product categories
 - DPP provides standardized product information (materials, sustainability, supply chain, etc.)
-- Integrate DPP data into your USD metadata layers (`060_METADATA_LYR/`)
+- Integrate DPP data into your USD metadata layers (`060_META_LYR/`)
 - Design your metadata structure to accommodate DPP requirements from the start
 - This ensures compliance and future-proofs your digital twin implementations
 
-**Best Practice**: Create dedicated metadata layers (e.g., `DPP_LYR.usda`, `AAS_LYR.usda`) in `060_METADATA_LYR/` that reference external standards and systems, rather than duplicating all data in USD files.
+**Best Practice**: Create dedicated metadata layers (e.g., `DPP_LYR.usda`, `AAS_LYR.usda`) in `060_META_LYR/` that reference external standards and systems, rather than duplicating all data in USD files.
 
 ---
 
@@ -2774,8 +2794,8 @@ Recommended responsibility split (folder is organizational; layer order comes fr
 
 - **General/visual edits** (`030_USD_LYR/`): materials, layout, “opinions”
 - **Simulation edits** (`040_SIM_LYR/`): physics, collisions, sensors, articulation metadata
-- **Variants/configuration** (`050_VARIANTS_LYR/`): configuration logic, LOD selection logic
-- **Metadata & standards mappings** (`060_METADATA_LYR/`): PLM IDs, AAS mappings, OPC UA node mappings, Catena-X/DPP mapping keys
+- **Variants/configuration** (`050_VAR_LYR/`): configuration logic, LOD selection logic
+- **Metadata & standards mappings** (`060_META_LYR/`): PLM IDs, AAS mappings, OPC UA node mappings, Catena-X/DPP mapping keys
 
 ### Personal opinion vs publishable layers
 
@@ -2802,9 +2822,9 @@ In an Omniverse context, “publishable” means **safe to load and interact wit
   - No missing layer files, references, or payloads
   - No absolute paths that break portability
 - **Layer discipline**
-  - Variants live in `050_VARIANTS_LYR/` (not scattered across unrelated layers)
+  - Variants live in `050_VAR_LYR/` (not scattered across unrelated layers)
   - Simulation edits live in `040_SIM_LYR/`
-  - Metadata mappings live in `060_METADATA_LYR/` (not mixed into random visual layers)
+  - Metadata mappings live in `060_META_LYR/` (not mixed into random visual layers)
   - “Opinion” layers only contain intended overrides (no accidental geometry imports)
 - **Validation**
   - `python scripts/validate_asset.py <asset>` passes for modified assets
@@ -2956,14 +2976,14 @@ Contents:
 
 ---
 
-## **050_VARIANTS_LYR/**  
+## **050_VAR_LYR/**  
 Variant and configuration layers and/or payload references.
 
 Used for LODs, tool options, product variants, and other discrete states.
 
 ---
 
-## **060_METADATA_LYR/**  
+## **060_META_LYR/**  
 Metadata and standards integration layers (PLM/ERP/CAD metadata, AAS, OPC UA, Catena-X, etc.).
 
 ---
@@ -2976,7 +2996,7 @@ The root file assembles everything:
 (
     subLayers = [
         "./030_USD_LYR/Opinion_LYR.usda",
-        "./050_VARIANTS_LYR/Variant_LYR.usda",
+        "./050_VAR_LYR/Variant_LYR.usda",
         "./030_USD_LYR/Mtl_Work_LYR.usda",
         "./030_USD_LYR/Ass_import_LYR.usda"
     ]
@@ -3028,8 +3048,8 @@ Each asset folder contains:
     020_TEX/
     030_USD_LYR/
     040_SIM_LYR/
-    050_VARIANTS_LYR/
-    060_METADATA_LYR/
+    050_VAR_LYR/
+    060_META_LYR/
     AssetName_ROOT.usda
 ```
 
@@ -3082,9 +3102,9 @@ Variants map to:
 |------|-----------------|
 | Modelers | 000_SOURCE, 010_ASS_USD |
 | Shaders | 020_TEX, 030_USD_LYR/Mtl_Work_LYR |
-| Variant Authors | 050_VARIANTS_LYR, 030_USD_LYR/Variant_LYR |
+| Variant Authors | 050_VAR_LYR, 030_USD_LYR/Variant_LYR |
 | Simulation | 040_SIM_LYR |
-| Metadata / Standards | 060_METADATA_LYR |
+| Metadata / Standards | 060_META_LYR |
 | Layout | 030_USD_LYR/Opinion_LYR |
 | Pipeline | Root, validation |
 
@@ -3175,8 +3195,8 @@ Reduced reuse.
 | 020_TEX | Global textures |
 | 030_USD_LYR | Layers: materials, variants, overrides |
 | 040_SIM_LYR | Simulation metadata & sim layers |
-| 050_VARIANTS_LYR | Variant/configuration layers |
-| 060_METADATA_LYR | Metadata & standards layers |
+| 050_VAR_LYR | Variant/configuration layers |
+| 060_META_LYR | Metadata & standards layers |
 | Root | Scene/asset entry point |
 
 A clear folder structure is essential for maintainable USD pipelines.
@@ -3202,7 +3222,7 @@ A clear folder structure is essential for maintainable USD pipelines.
 ```usda
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,
-    @./050_VARIANTS_LYR/Variant_LYR.usda@,
+    @./050_VAR_LYR/Variant_LYR.usda@,
     @./030_USD_LYR/Mtl_work_LYR.usda@,
     @./030_USD_LYR/Ass_import_LYR.usda@
 ]
@@ -4100,11 +4120,11 @@ Include the standards layer in your root file's `subLayers` array. The position 
 (
   subLayers = [
   @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
-  @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Variants 
+  @./050_VAR_LYR/Variant_LYR.usda@,      # Variants 
   @./030_USD_LYR/Mtl_work_LYR.usda@,      # Material adjustments
-  @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
-  @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
-  @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
+  @./060_META_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
+  @./060_META_LYR/AAS_LYR.usda@,          # AAS asset administration
+  @./060_META_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
   @./030_USD_LYR/Ass_import_LYR.usda@        # Geometry/assets
   ]
 )
@@ -4160,11 +4180,11 @@ You can have **separate layers for different standards**, allowing modular integ
 # Root.usda
 subLayers = [
   @./030_USD_LYR/Opinion_LYR.usda@,           # opinions of somebody
-  @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Variants 
+  @./050_VAR_LYR/Variant_LYR.usda@,      # Variants 
   @./030_USD_LYR/Mtl_work_LYR.usda@,          # Material adjustments
-  @./060_METADATA_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
-  @./060_METADATA_LYR/AAS_LYR.usda@,          # AAS asset administration
-  @./060_METADATA_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
+  @./060_META_LYR/OPCUA_LYR.usda@,        # OPC UA real-time data
+  @./060_META_LYR/AAS_LYR.usda@,          # AAS asset administration
+  @./060_META_LYR/CatenaX_LYR.usda@,      # Catena-X supply chain data
   @./030_USD_LYR/Ass_import_LYR.usda@        # Geometry/assets
 ]
 ```
@@ -6054,7 +6074,7 @@ The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `sub
 ```usda
 subLayers = [
     @./030_USD_LYR/Opinion_xyz_LYR.usda@,       # First = strongest (applied last, overrides others)
-     @./050_VARIANTS_LYR/Variant_LYR.usda@,      # Second
+     @./050_VAR_LYR/Variant_LYR.usda@,      # Second
     @./030_USD_LYR/Mtl_work_LYR.usda@,          # Third
     @./030_USD_LYR/Ass_import_LYR.usda@   # Last = weakest (applied first, can be overridden)
 ]
