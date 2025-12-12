@@ -6,6 +6,8 @@
 
 ## Chapter 1: Core Principles
 
+**USD Terms & Concepts:** [Composition](https://openusd.org/release/glossary.html#composition), [Layer](https://openusd.org/release/glossary.html#layer), [Prim](https://openusd.org/release/glossary.html#prim), [Property](https://openusd.org/release/glossary.html#property), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Metadata](https://openusd.org/release/glossary.html#metadata), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [PrimSpec](https://openusd.org/release/glossary.html#primspec), [PropertySpec](https://openusd.org/release/glossary.html#propertyspec), [Specifier](https://openusd.org/release/glossary.html#specifier), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace)
+
 OpenUSD (Universal Scene Description) provides a powerful, scalable, and non-destructive way to represent complex digital worlds. The core strengths of OpenUSD lie in its **flexibility** and **non-destructiveness**—the ability to reorganize assets in multiple ways, stacking features and adjustments on top of each other without losing the original data. This compositional approach allows teams to add modifications, variants, materials, and overrides as separate layers that can be enabled, disabled, or swapped without altering the underlying geometry or structure.
 
 The schemas and architecture of OpenUSD are designed to accommodate extensive customization and adjustments, enabling workflows that adapt to diverse industry requirements. The **Alliance for OpenUSD (AOUSD)**—the foundation steering OpenUSD's further development—is actively working to evolve schemas and standards to meet the emerging needs across different industries, ensuring OpenUSD remains a forward-looking, adaptable platform.
@@ -85,6 +87,8 @@ flowchart TD
 
 ### 1.1 Legibility
 
+**USD Terms & Concepts:** [Naming Conventions](https://openusd.org/release/glossary.html#naming-conventions), [Public vs Private Namespaces](https://openusd.org/release/glossary.html#public-vs-private-namespaces), [Path](https://openusd.org/release/glossary.html#path), [Prim](https://openusd.org/release/glossary.html#prim), [Property](https://openusd.org/release/glossary.html#property), [Attribute](https://openusd.org/release/glossary.html#attribute), [Relationship](https://openusd.org/release/glossary.html#relationship), [Metadata](https://openusd.org/release/glossary.html#metadata)
+
 Legibility ensures that teams can understand assets instantly, even years later. USD files may be opened by many teams—simulation engineers, artists, robotics researchers—so clarity is essential.
 
 #### **1.1.1 Naming Conventions**
@@ -138,6 +142,8 @@ This convention helps prevent accidental overrides or misuse of internal prims b
 ---
 
 ### 1.2 Modularity
+
+**USD Terms & Concepts:** [Composition](https://openusd.org/release/glossary.html#composition), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Inherits](https://openusd.org/release/glossary.html#inherits), [Specializes](https://openusd.org/release/glossary.html#specializes), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Path Translation](https://openusd.org/release/glossary.html#path-translation), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution)
 
 Modularity allows assets to be reused, composed, and versioned cleanly.
 
@@ -274,6 +280,8 @@ The PLM/PDM/version control system manages which version is at `/Pump/Pump.usd`:
 ---
 
 ### 1.3 Performance
+
+**USD Terms & Concepts:** [Stage](https://openusd.org/release/glossary.html#stage), [Stage Traversal](https://openusd.org/release/glossary.html#stage-traversal), [Instancing](https://openusd.org/release/glossary.html#instancing), [Instanceable](https://openusd.org/release/glossary.html#instanceable), [Load / Unload](https://openusd.org/release/glossary.html#load-unload), [Crate File Format](https://openusd.org/release/glossary.html#crate-file-format), [Layer](https://openusd.org/release/glossary.html#layer), [Layer Offset](https://openusd.org/release/glossary.html#layer-offset), [Value Clips](https://openusd.org/release/glossary.html#value-clips), [TimeSample](https://openusd.org/release/glossary.html#timesample), [Spline](https://openusd.org/release/glossary.html#spline), [Flatten](https://openusd.org/release/glossary.html#flatten)
 
 Performance is essential for real-time visualization, robotics simulation, and large scenes.
 
@@ -440,6 +448,8 @@ def Xform "Factory" (
 
 ### 1.4 Navigability
 
+**USD Terms & Concepts:** [Model](https://openusd.org/release/glossary.html#model), [Model Hierarchy](https://openusd.org/release/glossary.html#model-hierarchy), [Assembly](https://openusd.org/release/glossary.html#assembly), [Component](https://openusd.org/release/glossary.html#component), [Group](https://openusd.org/release/glossary.html#group), [Kind](https://openusd.org/release/glossary.html#kind), [Purpose](https://openusd.org/release/glossary.html#purpose), [Collection](https://openusd.org/release/glossary.html#collection), [Subcomponent](https://openusd.org/release/glossary.html#subcomponent), [Path](https://openusd.org/release/glossary.html#path), [Namespace](https://openusd.org/release/glossary.html#namespace), [PseudoRoot](https://openusd.org/release/glossary.html#pseudoroot), [Stage Traversal](https://openusd.org/release/glossary.html#stage-traversal)
+
 Large digital twins may contain millions of prims, so clear hierarchy is critical.
 
 #### **1.4.1 Recommended Hierarchy**
@@ -484,6 +494,8 @@ def Collection "AllSafetySensors" {
 
 
 ## Chapter 2 — The Reference/Payload Pattern (Full Deep Dive)
+
+**USD Terms & Concepts:** [References](https://openusd.org/release/glossary.html#references), [Payload](https://openusd.org/release/glossary.html#payload), [Composition Arcs](https://openusd.org/release/glossary.html#composition-arcs), [Asset](https://openusd.org/release/glossary.html#asset), [Asset Resolution](https://openusd.org/release/glossary.html#asset-resolution), [Path Translation](https://openusd.org/release/glossary.html#path-translation), [Layer](https://openusd.org/release/glossary.html#layer), [LayerStack](https://openusd.org/release/glossary.html#layerstack), [Value Resolution](https://openusd.org/release/glossary.html#value-resolution), [Load / Unload](https://openusd.org/release/glossary.html#load-unload), [PrimSpec](https://openusd.org/release/glossary.html#primspec), [List Editing](https://openusd.org/release/glossary.html#list-editing), [Sublayers](https://openusd.org/release/glossary.html#sublayers), [Variant](https://openusd.org/release/glossary.html#variant), [VariantSet](https://openusd.org/release/glossary.html#variantset)
 
 The Reference/Payload Pattern is the single most critical structural concept in OpenUSD production pipelines. It defines how lightweight “interface layers” connect to heavyweight “implementation layers,” enabling teams to build scalable, high‑performance, modular digital worlds.
 

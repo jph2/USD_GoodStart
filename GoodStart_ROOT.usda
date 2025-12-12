@@ -7,8 +7,8 @@
                 double radius = 500
             }
             dictionary Perspective = {
-                double3 position = (-534.0535080614046, 388.74633983011296, 48.80323952168747)
-                double3 target = (39.70470193649112, 156.55584698389447, 126.9886893451201)
+                double3 position = (-959.3117492373635, 395.54838616353857, -223.7027945145733)
+                double3 target = (35.290955726311836, 99.71524028334488, 86.9970593665785)
             }
             dictionary Right = {
                 double3 position = (-50000, 0, 0)
@@ -26,8 +26,8 @@
                 bool "./030_USD_LYR/Ass_import_LYR.usda" = 1
                 bool "./030_USD_LYR/Mtl_import_LYR.usda" = 1
                 bool "./030_USD_LYR/abc_Opinion_LYR.usda" = 1
-                bool "./030_USD_LYR/xyz_Opinion_LYR.usda" = 1
                 bool "./030_USD_LYR/sample_USD_LYR.usda" = 1
+                bool "./030_USD_LYR/xyz_Opinion_LYR.usda" = 1
                 bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 1
                 bool "./050_VAR_LYR/VAR_LYR.usda" = 1
                 bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 1
@@ -240,7 +240,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (1383, 1135)
+                uniform int2 resolution = (2646, 1110)
             }
         }
     }
@@ -285,10 +285,10 @@ over "OmniverseKit_Persp" (
     float exposure:time = 0.02
     float focalLength = 18.147562
     float focusDistance = 400
-    custom uniform vector3d omni:kit:centerOfInterest = (1.9797211386594257e-14, 2.6396281848792338e-14, -623.8780915148822)
-    float3 xformOp:rotateXYZ = (158.15031, -82.24016, 180)
+    custom uniform vector3d omni:kit:centerOfInterest = (3.437211568819086e-14, 4.5829487584254465e-14, -1083.1833594199095)
+    float3 xformOp:rotateXYZ = (164.15031, -72.65193, 180)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (-534.0535080614046, 388.74633983011296, 48.80323952168747)
+    double3 xformOp:translate = (-959.3117492373635, 395.54838616353857, -223.7027945145733)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
