@@ -5,6 +5,69 @@
 
 This directory contains utility scripts for USD GoodStart project management and validation.
 
+## Setup Script
+
+### setup_usd_project.py
+
+**Interactive project setup script** that generates a complete USD_GoodStart folder structure with configurable templates.
+
+**Features:**
+- Interactive questions for project configuration
+- Multiple project types (simple product, complex product, production line, production side)
+- Automatic folder structure generation
+- USD file template generation (root, layers, sub-assemblies)
+- Sample scene option for learning
+- README generation for each folder
+
+**Usage:**
+
+**Option 1: Direct Python (requires Python in PATH)**
+```bash
+# Run in current directory
+python scripts/setup_usd_project.py
+
+# Run in specific directory
+python scripts/setup_usd_project.py /path/to/new/project
+```
+
+**Option 2: Standalone Wrappers (recommended)**
+```bash
+# Windows Batch file (double-click or run from command line)
+scripts\setup_usd_project.bat [target_directory]
+
+# PowerShell script
+.\scripts\setup_usd_project.ps1 [target_directory]
+
+# Or simply double-click setup_usd_project.bat in Windows Explorer
+```
+
+**Interactive Questions:**
+1. **Project Type**: Choose from 4 templates:
+   - Simple Product (single product setup)
+   - Complex Product (car-like with sub-assemblies: Interior, Exterior, Drivetrain, Technology)
+   - Production Line (multiple products/processes)
+   - Production Side (factory/plant level)
+
+2. **Product Name**: Used for root file name and default prim
+
+3. **Default Prim**: Defaults to product name or "World"
+
+4. **Include Samples**: Option to include sample scene files for learning
+
+5. **Sub-Assemblies** (for complex products): Customize sub-assembly names
+
+**Generated Structure:**
+- Complete folder hierarchy (000_SOURCE through 060_META_LYR)
+- Root USD file (`{ProductName}_ROOT.usda`)
+- Layer files (opinion, variant, material, asset import, simulation, metadata)
+- Sub-assembly files (for complex products)
+- README files in each folder
+- Sample assets (if samples enabled)
+
+**Requirements:**
+- Python 3.8+
+- USD libraries optional (script works without them, but cannot validate USD syntax)
+
 ## Validation Scripts
 
 ### validate_usd.py (Convenience Script - Recommended)

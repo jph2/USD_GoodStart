@@ -44,7 +44,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 ## TLDR (Too Long; Didn't Read)
 
-**What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts.
+**What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts. ... lazy? → [go here](#laziness-is-what-got-us-here)
 
 <a href="https://www.youtube.com/watch?v=FpI3K3YxUeg" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg" alt="Watch the video"></a>
 
@@ -149,6 +149,25 @@ Asset_Root_File.usda (Interface - Lightweight)
 - ⚠️ **Start simple, add complexity only when needed** - OpenUSD can do amazing things, but the abyss is deep. Use only what you need. But it is good to have a basic structure or a best practsise - how you personally or in a Team- want to structure your work.
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
 - ✅ Maya/Houdini/3ds Max = full USD composition support
+
+## Laziness is What Got Us Here
+
+You have three options to get started:
+
+1. **Do everything by hand** — Create the folder structure, generate all the layer files, and manually rename the default prim across all layers to match your product name.
+2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
+3. **Run the setup script** — Use the automated script to generate everything for you.
+
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/setup_usd_project_standalone.zip`](scripts/setup_usd_project_standalone.zip)), and it will:
+- Generate the complete folder structure
+- Create all layer files with consistent default prim naming
+- Set up a simplified scene with sample assets (cube, shader ball, materials)
+- Configure everything with "Safe Mode" defaults (all layers locked, session layer as active authoring layer)
+
+The script asks you a few simple questions (product name, default prim name, whether to include samples) and handles the rest. No more manual prim renaming across dozens of layer files!
+
+> **Note:** The script generates a slightly simplified scene compared to the full Copy-paste from GitHub, but it follows all the same best practices and layer structure patterns described in this README.
+
 
 ## Quick Tip (Core Rule): “Safe Mode” — Don’t Pollute Your Layers
 
