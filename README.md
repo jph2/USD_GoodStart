@@ -10,8 +10,6 @@
 **Version:** 0.9.5-beta  
 **Last Updated:** 12.12.2025
 > **What is missing:** ....Apart from adding more Content in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) in the future, the only thing that is still bugging me, is that the Variant layer is also loading the matlib usd file...., so it is not as clean as I would like it to be....., yet...
-
-
 ## Roadmap / Upcoming (keep an eye on these)
 These are **planned / in-progress ecosystem projects** that will likely feed back into this GoodStart as patterns, scripts, or optional tooling.
 
@@ -130,6 +128,8 @@ Asset_Root_File.usda (Interface - Lightweight)
 3. **Mtl_import_LYR.usda** - Materials and shading work
 4. **Ass_import_LYR.usda** (last/weakest) - References payloads, holds geometry, imports assets
 
+**Quick tidy rule:** if you want to keep things clean, **do all variant/config work in the 2nd layer (`VAR_LYR.usda`)** (or in the Session Layer for temporary experimentation — see [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)), so variant changes don’t “leak” into material/asset layers.
+
 **Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). First in array = strongest (applied last, overrides others). Last in array = weakest (applied first, can be overridden).
 
 **Quick Workflow:**
@@ -149,6 +149,17 @@ Asset_Root_File.usda (Interface - Lightweight)
 - ⚠️ **Start simple, add complexity only when needed** - OpenUSD can do amazing things, but the abyss is deep. Use only what you need. But it is good to have a basic structure or a best practsise - how you personally or in a Team- want to structure your work.
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
 - ✅ Maya/Houdini/3ds Max = full USD composition support
+
+## Quick Tip (Core Rule): “Safe Mode” — Don’t Pollute Your Layers
+
+If you don’t want **any** accidental file edits while exploring variants/materials/etc. in Omniverse:
+
+- **Lock all persistent layers** (everything except the session layer)
+- **Set the Session Layer as the active authoring layer** (top green layer in the Layers panel)
+
+![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer01.png)
+
+For the full explanation + scripting helpers, see: [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)
 
 > **⚠️ Critical: USD Has Many "Flavors" - Tool-Specific Implementations**
 > 
