@@ -1,10 +1,10 @@
-# 020_USD_LYR
+# 020_BASE_LYR
 
 **Purpose:** General USD layers (visual, layout, material, opinion layers).
 
 See the main README.md for detailed usage instructions.
 
-ACTION_LYR.usda -> Action Graphs
+ACTGR_LYR.usda -> Action Graphs
 ANIM_LYR.usda -> Animation tracks
 ASS_LYR.usda -> Assets | Local | Reference | Payloads
 MTL_LYR.usda -> Material Libaries | Local materials 

@@ -53,9 +53,10 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 ```mermaid
 graph TD
     Root[USD_GoodStart_ROOT.usda<br/>Main Container] --> Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
+    Root --> Env[ENV_LYR.usda<br/>Environment & Lighting]
     Root --> Sim[SIM_LYR.usda<br/>Simulation & Physics]
     Root --> Data[DATA_LYRs.usda<br/>Data & Metadata]
-    Root --> Action[ACTION_LYR.usda<br/>Actions]
+    Root --> Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
     Root --> Anim[ANIM_LYR.usda<br/>Animation]
     Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
     Root --> Material[MTL_LYR.usda<br/>Materials & Shading]
@@ -79,7 +80,8 @@ graph TD
     style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
     style Sim fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
     style Data fill:#a1887f,stroke:#3e2723,stroke-width:2px,color:#000
-    style Action fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
+    style Env fill:#c5e1a5,stroke:#558b2f,stroke-width:2px,color:#000
+    style Actgr fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Anim fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Composition fill:#78909c,stroke:#263238,stroke-width:4px,color:#000
     style Source fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
@@ -99,7 +101,7 @@ graph TD
 - `010_ASS_USD/USD_Endpoint/` - **Stable geometry endpoints** (exports from CAD/DCC tools - Blender/Rhino plugins)
 - `010_ASS_USD/MatLib/` - Material libraries (reusable materials)
 - `010_ASS_USD/tex/` - Textures (global and asset-specific)
-- `020_BASE_LYR/` - **Base layers** (opinion, asset import, material import, variant, action, animation)
+- `020_BASE_LYR/` - **Base layers** (opinion, environment, asset import, material import, variants, action-graph, animation)
 - `030_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
 - `040_DATA_LYRs/` - **Data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA)
 
@@ -155,11 +157,17 @@ Asset_Root_File.usda (Interface - Lightweight)
 
 **Why this pattern?** Separates lightweight "interface" from heavy "implementation". Users can see variant options, change materials, and get bounding boxes **without loading heavy geometry** (instant, fast, responsive).
 
-**Layer Stack Order** (array ordering: first = strongest, last = weakest):
-1. **xyz_Opinion_LYR.usda** (first/strongest) - Overrides and opinions
-2. **VAR_LYR.usda** - Variants and configurations
-3. **Mtl_import_LYR.usda** - Materials and shading work
-4. **Ass_import_LYR.usda** (last/weakest) - References payloads, holds geometry, imports assets
+**Layer Stack Order (GoodStart_ROOT.usda)**  
+Array ordering: first = strongest, last = weakest:
+1. **OPIN_LYR.usda** – Overrides & opinions (strongest)
+2. **ENV_LYR.usda** – Environment, ground, lighting, render defaults
+3. **SIM_LYR.usda** – Simulation & physics
+4. **DATA_LYRs.usda** – Data & metadata (PLM/ERP/AAS/OPC UA, sensor data)
+5. **ACTGR_LYR.usda** – Action graph / behavior logic
+6. **ANIM_LYR.usda** – Animation
+7. **VAR_LYR.usda** – Variants & configurations
+8. **MTL_LYR.usda** – Materials & shading work
+9. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
 **Quick tidy rule:** if you want to keep things clean, **do all variant/config work in the 2nd layer (`VAR_LYR.usda`)** (or in the Session Layer for temporary experimentation — see [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)), so variant changes don’t “leak” into material/asset layers.
 
@@ -167,8 +175,8 @@ Asset_Root_File.usda (Interface - Lightweight)
 
 **Quick Workflow:**
 1. Convert CAD → USD assets → place in `010_ASS_USD/USD_Endpoint/` (stable endpoint paths)
-2. Create layer files in `020_BASE_LYR/` for base layers (opinion, asset import, material import, variant, action, animation) and use `030_SIM_LYR/`, `040_DATA_LYRs/` for simulation and data/metadata.
-3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Simulation → Data → Action → Animation → Variant → Material → AssetImport, where first = strongest)
+2. Create layer files in `020_BASE_LYR/` for base layers (opinion, environment, asset import, material import, variants, action-graph, animation) and use `030_SIM_LYR/`, `040_DATA_LYRs/` for simulation and data/metadata.
+3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Environment → Simulation → Data → ACTGR → Animation → Variant → Material → AssetImport, where first = strongest)
 4. Use **relative paths** (`@./folder/file.usd@`) for portability
 5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
 
@@ -182,6 +190,26 @@ Asset_Root_File.usda (Interface - Lightweight)
 - ⚠️ **Start simple, add complexity only when needed** - OpenUSD can do amazing things, but the abyss is deep. Use only what you need. But it is good to have a basic structure or a best practsise - how you personally or in a Team- want to structure your work.
 - ⚠️ Blender/Cinema 4D = endpoint only (destructive editing, no layering)
 - ✅ Maya/Houdini/3ds Max = full USD composition support
+
+### Omniverse Layer Metadata Pattern (GoodStart Standard)
+
+All root and base layers in USD_GoodStart follow an Omniverse-style header pattern so the project behaves “natively” in Omniverse Kit:
+
+- **`customLayerData.cameraSettings`** – Per-layer default cameras (`Front`, `Perspective`, `Right`, `Top`) with consistent clipping ranges and positions.
+- **`customLayerData.omni_layer`** – Omniverse-specific layer metadata:
+  - `authoring_layer` – Points at `./020_BASE_LYR/ASS_LYR.usda` in the root (or `./GoodStart_ROOT.usda` inside base layers) so Omniverse knows the intended authoring target.
+  - `locked` – Explicit lock state for all key layers (`020_BASE_LYR/*_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers, etc.) implementing the **“Safe Mode”** convention.
+  - `muteness` – Reserved for Omniverse muting state (kept empty in the template).
+- **Core header invariants**:
+  - `defaultPrim = "World"` (for root and base layers)
+  - `metersPerUnit = 1`, `upAxis = "Y"`
+  - `startTimeCode = 0`, `endTimeCode = 100`, `timeCodesPerSecond = 60`
+
+The **setup script + standalone zip** generate new projects with this metadata pattern baked in, so any new GoodStart-based project opens in Omniverse with:
+
+- A consistent camera rig
+- A pre-configured, locked layer stack
+- Environment + lighting coming from `ENV_LYR.usda`
 
 ## Laziness is What Got Us Here
 
@@ -209,7 +237,7 @@ If you don’t want **any** accidental file edits while exploring variants/mater
 - **Lock all persistent layers** (everything except the session layer)
 - **Set the Session Layer as the active authoring layer** (top green layer in the Layers panel)
 
-![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer02.png)
+![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer03.png)
 
 For the full explanation + scripting helpers, see: [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)
 

@@ -25,11 +25,13 @@
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "./GoodStart_ROOT.usda"
+            string authoring_layer = "./020_BASE_LYR/ASS_LYR.usda"
             dictionary locked = {
+                bool "./020_BASE_LYR/ACTGR_LYR.usda" = 1
                 bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
                 bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
                 bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
                 bool "./020_BASE_LYR/MTL_LYR.usda" = 1
                 bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
@@ -55,9 +57,10 @@
     startTimeCode = 0
     subLayers = [
         @./020_BASE_LYR/OPIN_LYR.usda@,
+        @./020_BASE_LYR/ENV_LYR.usda@,
         @./030_SIM_LYR/SIM_LYR.usda@,
         @./040_DATA_LYRs/DATA_LYRs.usda@,
-        @./020_BASE_LYR/ACTION_LYR.usda@,
+        @./020_BASE_LYR/ACTGR_LYR.usda@,
         @./020_BASE_LYR/ANIM_LYR.usda@,
         @./020_BASE_LYR/VAR_LYR.usda@,
         @./020_BASE_LYR/MTL_LYR.usda@,
@@ -211,7 +214,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (2724, 1347)
+                uniform int2 resolution = (2145, 1135)
             }
         }
     }
@@ -340,21 +343,5 @@ over "OmniverseKit_Top" (
 
 over "World"
 {
-    over "Ball" (
-        delete references = [
-            @./010_ASS_USD/geo/0_Shader_Ball_GEO.usda@,
-            @./010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda@
-        ]
-        prepend references = @./010_ASS_USD/USD_Endpoint/0_Shader_Ball_GEO.usda@
-    )
-    {
-    }
-
-    over "Cube" (
-        delete references = @./010_ASS_USD/geo/0_CUBE_GEO.usda@
-        prepend references = @./010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda@
-    )
-    {
-    }
 }
 

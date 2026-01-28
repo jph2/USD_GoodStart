@@ -945,29 +945,51 @@ USD_GoodStart/
 4. Optimize texture formats for target platform
 
 #### 020_BASE_LYR/ - Base Layers
-**Purpose:** Core composition layers for opinions, asset imports, material imports, variants, actions, and animations.
+**Purpose:** Core composition layers for opinions, environment, asset imports, material imports, variants, action-graphs, and animations.
 
 **Contents:**
-- `OPIN_LYR.usda` - Overrides & opinions (strongest layer)
-- `ASS_LYR.usda` - Asset import layer (references to `010_ASS_USD/USD_Endpoint/`)
-- `MTL_LYR.usda` - Material layer (material assignments and shading, references `MatLib/`)
-- `VAR_LYR.usda` - Variant & configuration layers
-- `ACTION_LYR.usda` - Action layers (placeholders)
-- `ANIM_LYR.usda` - Animation layers (placeholders)
+- `OPIN_LYR.usda`  - Overrides & opinions (strongest base layer)
+- `ENV_LYR.usda`   - Environment & lighting (ground, dome light, distant light, render defaults)
+- `ASS_LYR.usda`   - Asset import layer (references to `010_ASS_USD/USD_Endpoint/`)
+- `MTL_LYR.usda`   - Material layer (material assignments and shading, references `MatLib/`)
+- `VAR_LYR.usda`   - Variant & configuration layers
+- `ACTGR_LYR.usda` - Action-graph / behavior logic
+- `ANIM_LYR.usda`  - Animation layers
 
 **Critical Layer Stack Order (in `USD_GoodStart_ROOT.usda`):**
 ```usda
 subLayers = [
-    @./020_BASE_LYR/OPIN_LYR.usda@,          # First = strongest (applied last)
-    @./030_SIM_LYR/SIM_LYR.usda@,            # Simulation layer
-    @./040_DATA_LYRs/DATA_LYRs.usda@,        # Data & metadata layer
-    @./020_BASE_LYR/ACTION_LYR.usda@,        # Action layer
-    @./020_BASE_LYR/ANIM_LYR.usda@,          # Animation layer
-    @./020_BASE_LYR/VAR_LYR.usda@,           # Variant layer
-    @./020_BASE_LYR/MTL_LYR.usda@,           # Material layer
-    @./020_BASE_LYR/ASS_LYR.usda@            # Last = weakest (applied first)
+    @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last)
+    @./020_BASE_LYR/ENV_LYR.usda@,       # Environment (ground, lighting, render defaults)
+    @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation layer
+    @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data & metadata layer
+    @./020_BASE_LYR/ACTGR_LYR.usda@,     # Action-graph / logic
+    @./020_BASE_LYR/ANIM_LYR.usda@,      # Animation layer
+    @./020_BASE_LYR/VAR_LYR.usda@,       # Variant layer
+    @./020_BASE_LYR/MTL_LYR.usda@,       # Material layer
+    @./020_BASE_LYR/ASS_LYR.usda@        # Last = weakest (applied first)
 ]
 ```
+
+#### Omniverse Layer Metadata Pattern for Root + Base Layers
+
+`USD_GoodStart_ROOT.usda` and all base layers in `020_BASE_LYR/` follow a shared Omniverse-style header pattern:
+
+- `customLayerData.cameraSettings` defines default cameras (`Front`, `Perspective`, `Right`, `Top`) with consistent clipping ranges and positions.
+- `customLayerData.omni_layer` holds Omniverse-specific layer metadata:
+  - `authoring_layer` – points to `./020_BASE_LYR/ASS_LYR.usda` in the root, and `./GoodStart_ROOT.usda` inside base layers.
+  - `locked` – explicit lock state for core layers (`020_BASE_LYR/*_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers), implementing the **Safe Mode** convention.
+  - `muteness` – reserved for Omniverse muting state (empty in the template).
+- Core header invariants:
+  - `defaultPrim = "World"`
+  - `metersPerUnit = 1`, `upAxis = "Y"`
+  - `startTimeCode = 0`, `endTimeCode = 100`, `timeCodesPerSecond = 60`
+
+The **USD_GoodStart setup script + standalone zip** generate new projects with this metadata baked in, so any GoodStart-derived project opens in Omniverse with:
+
+- A consistent camera rig
+- A pre-configured, locked layer stack
+- Environment and lighting defined in `ENV_LYR.usda`
 
 #### 030_SIM_LYR/ - Simulation & Physics Layers
 **Purpose:** Physics properties, collision geometry, and simulation parameters.

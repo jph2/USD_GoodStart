@@ -30,7 +30,9 @@
                 bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
                 bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
                 bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
                 bool "./020_BASE_LYR/MTL_LYR.usda" = 1
+                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 0
                 bool "./030_SIM_LYR/SIM_LYR.usda" = 1
                 bool "./030_USD_LYR/Ass_import_LYR.usda" = 0

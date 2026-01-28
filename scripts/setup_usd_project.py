@@ -38,7 +38,7 @@ FOLDER_STRUCTURE = [
     "010_ASS_USD/tex",
     "020_BASE_LYR",
     "030_SIM_LYR",
-    "040_DATA_LYRs"
+    "040_DATA_LYRs",
 ]
 
 
@@ -49,19 +49,6 @@ FOLDER_STRUCTURE = [
 def get_root_template(product_name: str, default_prim: str, include_samples: bool, sublayers: List[str], meters_per_unit: float = 1.0) -> str:
     """Generate root USD file template."""
     sublayers_str = ",\n        ".join([f"@{layer}@" for layer in sublayers])
-    
-    # Lock ALL layers by default (safe mode - prevents accidental edits to persistent layers)
-    # Users should use Session Layer for authoring
-    locked_layers = []
-    for layer in sublayers:
-        locked_layers.append(f'                bool "{layer}" = 1')
-    if locked_layers:
-        locked_str = "\n".join(locked_layers)
-    else:
-        locked_str = ""
-    
-    # Omit authoring_layer - Session Layer should be set manually in Omniverse UI
-    authoring_layer_line = ""
     
     # Calculate ground plane size: 10x10 meters
     # Half-size in scene units: 5 meters / meters_per_unit
@@ -99,9 +86,24 @@ def get_root_template(product_name: str, default_prim: str, include_samples: boo
             string boundCamera = "/OmniverseKit_Persp"
         }}
         dictionary omni_layer = {{
-{authoring_layer_line}
             dictionary locked = {{
-{locked_str}
+                bool "./020_BASE_LYR/ACTGR_LYR.usda" = 1
+                bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
+                bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
+                bool "./020_BASE_LYR/MTL_LYR.usda" = 1
+                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/VAR_LYR.usda" = 1
+                bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./030_USD_LYR/Ass_import_LYR.usda" = 0
+                bool "./030_USD_LYR/Mtl_import_LYR.usda" = 0
+                bool "./030_USD_LYR/sample_USD_LYR.usda" = 0
+                bool "./030_USD_LYR/your very Personal opinion_LYR.usda" = 0
+                bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
+                bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 0
+                bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 0
+                bool "./060_META_LYR/sample_META_LYR.usda" = 1
             }}
             dictionary muteness = {{
             }}
@@ -295,40 +297,90 @@ def get_layer_template(layer_type: str, layer_name: str, default_prim: str = "Wo
         layer_name: Name identifier for the layer
         default_prim: Default prim name to use (defaults to "World" for backward compatibility)
     """
+    header = f'''#usda 1.0
+(
+    customLayerData = {{
+        dictionary cameraSettings = {{
+            dictionary Front = {{
+                double2 clippingRange = (0.01, 100)
+                double3 position = (0, 0, 10)
+                double radius = 7.5
+            }}
+            dictionary Perspective = {{
+                double2 clippingRange = (0.01, 100)
+                double3 position = (6.19289454004624, 7.024767839765761, 13.420619843416928)
+                double3 target = (0.0649537519511938, -0.16707580451681903, 0.05387260142201633)
+            }}
+            dictionary Right = {{
+                double2 clippingRange = (0.01, 100)
+                double3 position = (-10, 0, 0)
+                double radius = 7.5
+            }}
+            dictionary Top = {{
+                double2 clippingRange = (0.01, 100)
+                double3 position = (0, 10, 0)
+                double radius = 7.5
+            }}
+            string boundCamera = "/OmniverseKit_Persp"
+        }}
+        dictionary omni_layer = {{
+            string authoring_layer = "./GoodStart_ROOT.usda"
+            dictionary locked = {{
+                bool "./020_BASE_LYR/ACTGR_LYR.usda" = 1
+                bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
+                bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
+                bool "./020_BASE_LYR/MTL_LYR.usda" = 1
+                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/VAR_LYR.usda" = 1
+                bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./030_USD_LYR/Ass_import_LYR.usda" = 0
+                bool "./030_USD_LYR/Mtl_import_LYR.usda" = 0
+                bool "./030_USD_LYR/sample_USD_LYR.usda" = 0
+                bool "./030_USD_LYR/your very Personal opinion_LYR.usda" = 0
+                bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
+                bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 0
+                bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 0
+                bool "./060_META_LYR/sample_META_LYR.usda" = 1
+            }}
+            dictionary muteness = {{
+            }}
+        }}
+        dictionary renderSettings = {{
+        }}
+    }}
+    defaultPrim = "{default_prim}"
+    endTimeCode = 100
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
+'''
+
     templates = {
-        "opinion": f'''#usda 1.0
-(
-    doc = "Opinion/override layer for Personal opinions / overides."
-)
+        "opinion": f'''{header}
 
 over "{default_prim}"
 {{
 }}
 ''',
-        "abc_opinion": f'''#usda 1.0
-(
-    doc = "Opinion layer abc for {layer_name}."
-)
+        "abc_opinion": f'''{header}
 
 over "{default_prim}"
 {{
-    # Add opinions here
+    # Add opinions here for {layer_name}
 }}
 ''',
-        "xyz_opinion": f'''#usda 1.0
-(
-    doc = "Opinion layer xyz for {layer_name}."
-)
+        "xyz_opinion": f'''{header}
 
 over "{default_prim}"
 {{
-    # Add opinions here
+    # Add opinions here for {layer_name}
 }}
 ''',
-        "ass_import": f'''#usda 1.0
-(
-    doc = "Asset import layer for {layer_name}. References and payloads assets from 010_ASS_USD/USD_Endpoint/."
-)
+        "ass_import": f'''{header}
 
 def "{default_prim}"
 {{
@@ -353,33 +405,24 @@ def "{default_prim}"
     }}
 }}
 ''',
-        "mtl_import": f'''#usda 1.0
-(
-    doc = "Material import layer for {layer_name}. References material libraries from 010_ASS_USD/MatLib/."
-)
+        "mtl_import": f'''{header}
 
 def "{default_prim}"
 {{
     def Scope "Looks"
     {{
-        # Add materials here
+        # Add materials here (MatLib from 010_ASS_USD/MatLib)
     }}
 }}
 ''',
-        "var": f'''#usda 1.0
-(
-    doc = "Variant/configuration layer for {layer_name}."
-)
+        "var": f'''{header}
 
 over "{default_prim}"
 {{
-    # Add variants here
+    # Add variants here (e.g. VariantSets for configuration)
 }}
 ''',
-        "sim": f'''#usda 1.0
-(
-    doc = "Simulation layer for {layer_name}. Physics, collisions, articulations, Simulations."
-)
+        "sim": f'''{header}
 
 def "{default_prim}"
 {{
@@ -390,28 +433,21 @@ def "{default_prim}"
     # - Sensor definitions
 }}
 ''',
-        "action": f'''#usda 1.0
-(
-    doc = "Action layer for {layer_name}."
-)
+        "action": f'''{header}
 
 over "{default_prim}"
 {{
+    # Add action-related prims or bindings here
 }}
 ''',
-        "anim": f'''#usda 1.0
-(
-    doc = "Animation layer for {layer_name}."
-)
+        "anim": f'''{header}
 
 over "{default_prim}"
 {{
+    # Add animation prims, clips, or bindings here
 }}
 ''',
-        "data": f'''#usda 1.0
-(
-    doc = "Metadata layer for {layer_name}. PLM/ERP/AAS/OPC UA / sensor / data metadata."
-)
+        "data": f'''{header}
 
 over "{default_prim}"
 {{
@@ -591,13 +627,14 @@ def create_root_file(base_path: Path, default_prim: str,
     # Strongest to weakest order:
     sublayers.extend([
         "./020_BASE_LYR/OPIN_LYR.usda",      # Strongest - opinions/overrides
+        "./020_BASE_LYR/ENV_LYR.usda",       # Environment (lighting, ground, render defaults)
         "./030_SIM_LYR/SIM_LYR.usda",        # Simulation
         "./040_DATA_LYRs/DATA_LYRs.usda",    # Data/metadata
-        "./020_BASE_LYR/ACTION_LYR.usda",    # Actions (placeholder)
-        "./020_BASE_LYR/ANIM_LYR.usda",      # Animation (placeholder)
+        "./020_BASE_LYR/ACTGR_LYR.usda",     # Action graph / behavior
+        "./020_BASE_LYR/ANIM_LYR.usda",      # Animation
         "./020_BASE_LYR/VAR_LYR.usda",       # Variants
         "./020_BASE_LYR/MTL_LYR.usda",       # Materials
-        "./020_BASE_LYR/ASS_LYR.usda"        # Weakest - asset imports
+        "./020_BASE_LYR/ASS_LYR.usda",       # Weakest - asset imports
     ])
     
     # Root file is always named USD_GoodStart_ROOT.usda
@@ -623,10 +660,11 @@ def create_layer_files(base_path: Path, include_samples: bool, default_prim: str
     # Base layers (always created) - match user's new structure
     layers_to_create.extend([
         ("020_BASE_LYR", "OPIN_LYR.usda", "opinion"),
+        ("020_BASE_LYR", "ENV_LYR.usda", "opinion"),
         ("020_BASE_LYR", "ASS_LYR.usda", "ass_import"),
         ("020_BASE_LYR", "MTL_LYR.usda", "mtl_import"),
         ("020_BASE_LYR", "VAR_LYR.usda", "var"),
-        ("020_BASE_LYR", "ACTION_LYR.usda", "action"),
+        ("020_BASE_LYR", "ACTGR_LYR.usda", "action"),
         ("020_BASE_LYR", "ANIM_LYR.usda", "anim"),
     ])
     
