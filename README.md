@@ -101,6 +101,7 @@ graph TD
 - `010_ASS_USD/USD_Endpoint/` - **Stable geometry endpoints** (exports from CAD/DCC tools - Blender/Rhino plugins)
 - `010_ASS_USD/MatLib/` - Material libraries (reusable materials)
 - `010_ASS_USD/tex/` - Textures (global and asset-specific)
+- `010_ASS_USD/Envs/` - Environment library; contains a dummy `Environment.usda` stage as a placeholder, assuming that different environments will be created and loaded/used separately. `ENV_LYR.usda` is responsible for wiring an environment from here into the layer stack.
 - `020_BASE_LYR/` - **Base layers** (opinion, environment, asset import, material import, variants, action-graph, animation)
 - `030_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
 - `040_DATA_LYRs/` - **Data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA)

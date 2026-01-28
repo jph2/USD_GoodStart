@@ -36,6 +36,7 @@ FOLDER_STRUCTURE = [
     "010_ASS_USD/USD_Endpoint",
     "010_ASS_USD/MatLib",
     "010_ASS_USD/tex",
+    "010_ASS_USD/Envs",
     "020_BASE_LYR",
     "030_SIM_LYR",
     "040_DATA_LYRs",
@@ -794,6 +795,32 @@ def Xform "Geo" (
     print(f"  [OK] 010_ASS_USD/USD_Endpoint/0_Shader_Ball_GEO.usda")
 
 
+def create_envs_dummy(base_path: Path):
+    """Create a dummy environment file under 010_ASS_USD/Envs.
+
+    This is a parking place for alternate environments that ENV_LYR.usda can load.
+    The default content is intentionally minimal; real projects can replace or add
+    additional environment stages here.
+    """
+    print("\nCreating dummy environment in 010_ASS_USD/Envs/ ...")
+
+    env_content = '''#usda 1.0
+(
+    doc = "Dummy environment placeholder for USD_GoodStart Envs/ folder."
+    defaultPrim = "Environment"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Environment"
+{
+}
+'''
+    env_path = base_path / "010_ASS_USD" / "Envs" / "Environment.usda"
+    env_path.write_text(env_content, encoding='utf-8')
+    print("  [OK] 010_ASS_USD/Envs/Environment.usda")
+
+
 # ============================================================================
 # Main Setup Function
 # ============================================================================
@@ -859,6 +886,7 @@ def setup_project(target_dir: Optional[Path] = None):
         create_layer_files(base_path, include_samples, default_prim)
         create_sub_assembly_files(base_path, sub_assemblies)
         create_sample_assets(base_path, include_samples, default_prim, meters_per_unit)
+        create_envs_dummy(base_path)
         
         print("\n" + "=" * 70)
         print("  [OK] Project setup complete!")

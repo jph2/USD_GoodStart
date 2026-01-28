@@ -874,8 +874,9 @@ USD_GoodStart/
 ├── 010_ASS_USD/                   # USD assets folder
 │   ├── USD_Endpoint/              # Stable DCC endpoints (geometry exports from Blender/Rhino)
 │   ├── MatLib/                    # Material libraries
-│   └── tex/                       # Texture files
-├── 020_BASE_LYR/                  # Base layers (opinion, asset import, material import, variant, action, animation)
+│   ├── tex/                       # Texture files
+│   └── Envs/                      # Environment library (dummy + future environment stages, wired via ENV_LYR.usda)
+├── 020_BASE_LYR/                  # Base layers (opinion, environment, asset import, material import, variants, action-graphs, animation)
 ├── 030_SIM_LYR/                    # Simulation/physics layers (collisions, joints, sensors, etc.)
 ├── 040_DATA_LYRs/                  # Data & metadata layers (PLM/ERP/CAD, AAS, OPC UA, etc.) - plural for future expansion
 ├── USD_GoodStart_ROOT.usda        # Master root file that references all layer stacks + assets (always this name)
@@ -922,6 +923,10 @@ USD_GoodStart/
   - Purpose: Centralized storage for textures used by materials
   - Contents: Texture files (diffuse, normal, roughness maps, etc.)
   - Workflow: Textures referenced by materials in `MatLib/` and `MTL_LYR.usda`
+ - **`Envs/`** – Environment library
+   - Purpose: Storage for environment stages (HDRI domes, ground/light rigs, full scene environments).
+   - Contents: By default, a dummy `Environment.usda` placeholder; projects are expected to add/replace with real environment stages.
+   - Workflow: Environment stages from `Envs/` are wired into the layer stack via `020_BASE_LYR/ENV_LYR.usda`.
 
 **Workflow:**
 1. Convert CAD files from `000_SOURCE/` to USD format → place in `USD_Endpoint/`
