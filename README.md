@@ -9,13 +9,11 @@
 
 **Version:** 1.0.0  
 **Last Updated:** 28.01.2026
-> **What is missing:** ....Apart from adding more Content in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) in the future, the only thing that is still bugging me, is that the Variant layer is also loading the matlib usd file...., so it is not as clean as I would like it to be....., yet...
+> **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Matthias). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
 ## Roadmap / Upcoming (keep an eye on these)
 These are **planned / in-progress ecosystem projects** that will likely feed back into this GoodStart as patterns, scripts, or optional tooling.
 
-- **USD‑ComfyUI (node-based USD automation)**: a ComfyUI custom-node library for OpenUSD workflows (headless + node graphs), with stage/prim/material/variant/debug utilities.  
-  - Research notes: `OV_Dev/OV_USD_Research/research/01_Research_DISCOVERY/USD_ComfyUI_DISCOVERY.MD` and `USD_ComfyUI_IMPLEMENTATION_SUMMARY.md`
-  - The implementation summary links the node code back to `OV_USD_Scripts`.
+- **Visual USD Pipelining System (in research)**: I'm working on a visual/node-based pipelining system for OpenUSD workflows. No release date yet — will use samples from the OpenUSD study groups to test and refine the approach.
 
 - **USD code “agent tooling” / MCP direction**
   - **USDcodeNIM MCP** (exists): `USDcodeNIM_MCP` (USD code validation/generation helpers via NIM).
