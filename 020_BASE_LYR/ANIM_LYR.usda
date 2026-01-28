@@ -1,0 +1,9 @@
+#usda 1.0
+(
+    doc = "Animation layer for ANIM."
+)
+
+over "World"
+{
+}
+

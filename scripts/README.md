@@ -1,7 +1,7 @@
 # Scripts
 
-**Version:** 0.9.4-beta
-**Last Updated:** 12.12.2025
+**Version:** 1.0.0
+**Last Updated:** 27.01.2026
 
 This directory contains utility scripts for USD GoodStart project management and validation.
 
@@ -42,24 +42,18 @@ scripts\setup_usd_project.bat [target_directory]
 ```
 
 **Interactive Questions:**
-1. **Project Type**: Choose from 4 templates:
-   - Simple Product (single product setup)
-   - Complex Product (car-like with sub-assemblies: Interior, Exterior, Drivetrain, Technology)
-   - Production Line (multiple products/processes)
-   - Production Side (factory/plant level)
+1. **Default Prim Name**: Name for the default prim (defaults to "World")
+   - Note: Root file is always named `USD_GoodStart_ROOT.usda`
+   - Only the default prim name changes based on your input
 
-2. **Product Name**: Used for root file name and default prim
+2. **Include Samples**: Option to include sample scene files for learning
 
-3. **Default Prim**: Defaults to product name or "World"
-
-4. **Include Samples**: Option to include sample scene files for learning
-
-5. **Sub-Assemblies** (for complex products): Customize sub-assembly names
+3. **Unit System**: Choose millimeters, centimeters, or meters (affects scene scale and camera settings)
 
 **Generated Structure:**
-- Complete folder hierarchy (000_SOURCE through 060_META_LYR)
-- Root USD file (`{ProductName}_ROOT.usda`)
-- Layer files (opinion, variant, material, asset import, simulation, metadata)
+- Complete folder hierarchy (000_SOURCE, 010_ASS_USD/USD_Endpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs)
+- Root USD file (`USD_GoodStart_ROOT.usda` - always this name)
+- Layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)
 - Sub-assembly files (for complex products)
 - README files in each folder
 - Sample assets (if samples enabled)

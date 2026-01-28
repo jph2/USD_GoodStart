@@ -45,24 +45,24 @@ python scripts\setup_usd_project.py "D:\MyProject"
 
 The setup script interactively generates a complete USD_GoodStart project structure:
 
-1. **Asks questions** about project type, name, and configuration
-2. **Creates folder structure** (000_SOURCE through 060_META_LYR)
+1. **Asks questions** about default prim name, unit system, and configuration
+2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Endpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs)
 3. **Generates USD files** programmatically:
    - Root file with proper layer ordering
-   - All layer files (opinion, variant, material, asset import, simulation, metadata)
-   - Default assets (cube and shader ball geometry)
-   - Materials (blue and red OmniPBR)
-   - Variant sets (cube material variants)
+   - All layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)
+   - Default assets (cube and shader ball geometry) in USD_Endpoint folder
+   - Material library structure in MatLib folder
 4. **Creates README files** in each folder
-5. **Sets up safe mode** (all layers locked, session layer for authoring)
+5. **Sets up layer locking** (data layer locked by default, others unlocked for editing)
 
 ## Output
 
 After running, you'll have:
 - Complete project structure ready for Omniverse Composer
-- Working scene with default assets
-- Layer-specific opinions (abc_Opinion, xyz_Opinion) for testing layer behavior
+- Working scene with default assets (cube and ball at origin)
+- Properly organized layers (base layers, simulation, data layers)
 - All files following USD_GoodStart best practices
+- Unit system selection (millimeters, centimeters, or meters)
 
 ## Troubleshooting
 

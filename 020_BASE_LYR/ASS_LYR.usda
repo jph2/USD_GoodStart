@@ -1,0 +1,28 @@
+#usda 1.0
+(
+    doc = "Asset import layer for Ass_import. References and payloads assets from 010_ASS_USD/."
+)
+
+def "World"
+{
+    def Xform "Cube" (
+        references = @../010_ASS_USD/geo/0_CUBE_GEO.usda@
+    )
+    {
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+
+    def Xform "Ball" (
+        references = @../010_ASS_USD/geo/0_Shader_Ball_GEO.usda@
+    )
+    {
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+}
+

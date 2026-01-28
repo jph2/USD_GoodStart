@@ -1,0 +1,12 @@
+#usda 1.0
+(
+    doc = "Material import layer for Mtl_import. References material libraries from 010_ASS_USD/MatLib/."
+)
+
+def "World"
+{
+    def Scope "Looks"
+    {
+    }
+}
+

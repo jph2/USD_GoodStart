@@ -3,44 +3,34 @@
     customLayerData = {
         dictionary cameraSettings = {
             dictionary Front = {
-                double2 clippingRange = (0.01, 100)
-                double3 position = (0, 0, 10)
-                double radius = 7.5
+                double3 position = (0, 0, 50000)
+                double radius = 500
             }
             dictionary Perspective = {
-                double2 clippingRange = (0.01, 100)
-                double3 position = (6.19289454004624, 7.024767839765761, 13.420619843416928)
-                double3 target = (0.0649537519511938, -0.16707580451681903, 0.05387260142201633)
+                double3 position = (-959.3117492373635, 395.54838616353857, -223.7027945145733)
+                double3 target = (35.290955726311836, 99.71524028334488, 86.9970593665785)
             }
             dictionary Right = {
-                double2 clippingRange = (0.01, 100)
-                double3 position = (-10, 0, 0)
-                double radius = 7.5
+                double3 position = (-50000, 0, 0)
+                double radius = 500
             }
             dictionary Top = {
-                double2 clippingRange = (0.01, 100)
-                double3 position = (0, 10, 0)
-                double radius = 7.5
+                double3 position = (0, 50000, 0)
+                double radius = 500
             }
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "./GoodStart_ROOT.usda"
+            string authoring_layer = "./030_USD_LYR/your very Personal opinion_LYR.usda"
             dictionary locked = {
-                bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
-                bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
-                bool "./020_BASE_LYR/ASS_LYR.usda" = 1
-                bool "./020_BASE_LYR/MTL_LYR.usda" = 1
-                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
-                bool "./020_BASE_LYR/VAR_LYR.usda" = 1
-                bool "./030_SIM_LYR/SIM_LYR.usda" = 1
-                bool "./030_USD_LYR/Ass_import_LYR.usda" = 0
-                bool "./030_USD_LYR/Mtl_import_LYR.usda" = 0
-                bool "./030_USD_LYR/sample_USD_LYR.usda" = 0
-                bool "./030_USD_LYR/your very Personal opinion_LYR.usda" = 0
-                bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
-                bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 0
-                bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 0
+                bool "./030_USD_LYR/Ass_import_LYR.usda" = 1
+                bool "./030_USD_LYR/Mtl_import_LYR.usda" = 1
+                bool "./030_USD_LYR/abc_Opinion_LYR.usda" = 1
+                bool "./030_USD_LYR/sample_USD_LYR.usda" = 1
+                bool "./030_USD_LYR/xyz_Opinion_LYR.usda" = 1
+                bool "./040_SIM_LYR/sample_SIM_LYR.usda" = 1
+                bool "./050_VAR_LYR/VAR_LYR.usda" = 1
+                bool "./050_VAR_LYR/sample_VAR_LYR.usda" = 1
                 bool "./060_META_LYR/sample_META_LYR.usda" = 1
             }
             dictionary muteness = {
@@ -51,17 +41,19 @@
     }
     defaultPrim = "World"
     endTimeCode = 100
-    metersPerUnit = 1
+    metersPerUnit = 0.01
     startTimeCode = 0
     subLayers = [
-        @./020_BASE_LYR/OPIN_LYR.usda@,
-        @./030_SIM_LYR/SIM_LYR.usda@,
-        @./040_DATA_LYRs/DATA_LYRs.usda@,
-        @./020_BASE_LYR/ACTION_LYR.usda@,
-        @./020_BASE_LYR/ANIM_LYR.usda@,
-        @./020_BASE_LYR/VAR_LYR.usda@,
-        @./020_BASE_LYR/MTL_LYR.usda@,
-        @./020_BASE_LYR/ASS_LYR.usda@
+        @./040_SIM_LYR/sample_SIM_LYR.usda@,
+        @./060_META_LYR/sample_META_LYR.usda@,
+        @./030_USD_LYR/sample_USD_LYR.usda@,
+        @./050_VAR_LYR/sample_VAR_LYR.usda@,
+        @./030_USD_LYR/your very Personal opinion_LYR.usda@,
+        @./050_VAR_LYR/VAR_LYR.usda@,
+        @./030_USD_LYR/abc_Opinion_LYR.usda@,
+        @./030_USD_LYR/xyz_Opinion_LYR.usda@,
+        @./030_USD_LYR/Mtl_import_LYR.usda@,
+        @./030_USD_LYR/Ass_import_LYR.usda@
     ]
     timeCodesPerSecond = 60
     upAxis = "Y"
@@ -69,7 +61,7 @@
 
 def Xform "Environment"
 {
-    int ground:size = 10
+    int ground:size = 1400
     string ground:type = "On"
     token visibility = "inherited"
     double3 xformOp:rotateXYZ = (0, 0, 0)
@@ -86,6 +78,12 @@ def Xform "Environment"
         float inputs:exposure = 9
         float inputs:intensity = 1
         float inputs:shaping:cone:angle = 180
+        float inputs:shaping:cone:softness
+        float inputs:shaping:focus
+        color3f inputs:shaping:focusTint
+        asset inputs:shaping:ies:file
+        asset inputs:texture:file = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/CarLight_512x256.hdr@
+        token inputs:texture:format = "latlong"
         token visibility = "inherited"
         double3 xformOp:rotateXYZ = (0, -90, -90)
         double3 xformOp:scale = (1, 1, 1)
@@ -102,6 +100,11 @@ def Xform "Environment"
         bool inputs:enableColorTemperature = 1
         float inputs:exposure = 10
         float inputs:intensity = 1
+        float inputs:shaping:cone:angle = 180
+        float inputs:shaping:cone:softness
+        float inputs:shaping:focus
+        color3f inputs:shaping:focusTint
+        asset inputs:shaping:ies:file
         token visibility = "inherited"
         double3 xformOp:rotateXYZ = (-105, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
@@ -125,8 +128,34 @@ def Xform "Environment"
                 float inputs:albedo_add = 0
                 float inputs:albedo_brightness = 0.52
                 float inputs:albedo_desaturation = 1
+                asset inputs:diffuse_texture = @../../../../../../../synologydrive/9999_localrepo/kir_app_108_1/_build/windows-x86_64/release/extscache/omni.kit.stage_templates-2.0.1 1750604f/data/ov_uv_grids_basecolor_1024.png@ (
+                    colorSpace = "sRGB"
+                    customData = {
+                        asset default = @@
+                    }
+                )
                 bool inputs:project_uvw = 0
                 float inputs:reflection_roughness_constant = 0.333
+                float inputs:texture_rotate = 0 (
+                    customData = {
+                        float default = 0
+                    }
+                )
+                float2 inputs:texture_scale = (0.5, 0.5) (
+                    customData = {
+                        float2 default = (1, 1)
+                    }
+                )
+                float2 inputs:texture_translate = (0, 0) (
+                    customData = {
+                        float2 default = (0, 0)
+                    }
+                )
+                bool inputs:world_or_object = 0 (
+                    customData = {
+                        bool default = 0
+                    }
+                )
                 token outputs:out (
                     renderType = "material"
                 )
@@ -138,7 +167,7 @@ def Xform "Environment"
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {
-        float3[] extent = [(-10, -10, 0), (10, 10, 0)]
+        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
         int[] faceVertexCounts = [4]
         int[] faceVertexIndices = [0, 1, 3, 2]
         rel material:binding = </Environment/Looks/Grid> (
@@ -147,9 +176,9 @@ def Xform "Environment"
         normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
             interpolation = "faceVarying"
         )
-        point3f[] points = [(-5, -5, 0), (5, -5, 0), (-5, 5, 0), (5, 5, 0)]
+        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
         bool primvars:isMatteObject = 0
-        texCoord2f[] primvars:st = [(0, 0), (10, 0), (10, 10), (0, 10)] (
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
             interpolation = "faceVarying"
         )
         uniform token subdivisionScheme = "none"
@@ -211,7 +240,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (2724, 1347)
+                uniform int2 resolution = (2646, 1110)
             }
         }
     }
@@ -256,10 +285,10 @@ over "OmniverseKit_Persp" (
     float exposure:time = 0.02
     float focalLength = 18.147562
     float focusDistance = 400
-    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -16.36900134820647)
-    float3 xformOp:rotateXYZ = (-26.062895, 24.628931, 0)
+    custom uniform vector3d omni:kit:centerOfInterest = (3.437211568819086e-14, 4.5829487584254465e-14, -1083.1833594199095)
+    float3 xformOp:rotateXYZ = (164.15031, -72.65193, 180)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (6.19289454004624, 7.024767839765761, 13.420619843416928)
+    double3 xformOp:translate = (-959.3117492373635, 395.54838616353857, -223.7027945145733)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
@@ -278,13 +307,13 @@ over "OmniverseKit_Front" (
 )
 {
     float2 clippingRange = (1, 10000000)
-    float horizontalAperture = 75
-    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -10)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
     token projection = "orthographic"
-    float verticalAperture = 75
+    float verticalAperture = 5000
     float3 xformOp:rotateXYZ = (-0, 0, -0)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (0, 0, 10)
+    double3 xformOp:translate = (0, 0, 50000)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
@@ -303,13 +332,13 @@ over "OmniverseKit_Right" (
 )
 {
     float2 clippingRange = (1, 10000000)
-    float horizontalAperture = 75
-    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -10)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
     token projection = "orthographic"
-    float verticalAperture = 75
+    float verticalAperture = 5000
     float3 xformOp:rotateXYZ = (0, -90, -0)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (-10, 0, 0)
+    double3 xformOp:translate = (-50000, 0, 0)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
@@ -328,33 +357,13 @@ over "OmniverseKit_Top" (
 )
 {
     float2 clippingRange = (1, 10000000)
-    float horizontalAperture = 75
-    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -10)
+    float horizontalAperture = 5000
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -50000)
     token projection = "orthographic"
-    float verticalAperture = 75
+    float verticalAperture = 5000
     float3 xformOp:rotateXYZ = (90, -4.961563e-15, 180)
     float3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (0, 10, 0)
+    double3 xformOp:translate = (0, 50000, 0)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-}
-
-over "World"
-{
-    over "Ball" (
-        delete references = [
-            @./010_ASS_USD/geo/0_Shader_Ball_GEO.usda@,
-            @./010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda@
-        ]
-        prepend references = @./010_ASS_USD/USD_Endpoint/0_Shader_Ball_GEO.usda@
-    )
-    {
-    }
-
-    over "Cube" (
-        delete references = @./010_ASS_USD/geo/0_CUBE_GEO.usda@
-        prepend references = @./010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda@
-    )
-    {
-    }
 }
 

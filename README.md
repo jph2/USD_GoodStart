@@ -7,8 +7,8 @@
 > **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.  , but don't expect me to know everything, cause after all I am 'just' a ProductDesigner gone 3D artist, Realtime Guy, that decided to hop onto the omniverse...., and here I am ... learning,... learning,... learning,... OpenUSD and I wish you a good start!!!
 
 
-**Version:** 0.9.5-beta  
-**Last Updated:** 12.12.2025
+**Version:** 1.0.0  
+**Last Updated:** 28.01.2026
 > **What is missing:** ....Apart from adding more Content in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md) in the future, the only thing that is still bugging me, is that the Variant layer is also loading the matlib usd file...., so it is not as clean as I would like it to be....., yet...
 ## Roadmap / Upcoming (keep an eye on these)
 These are **planned / in-progress ecosystem projects** that will likely feed back into this GoodStart as patterns, scripts, or optional tooling.
@@ -48,20 +48,29 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 <a href="https://www.youtube.com/watch?v=FpI3K3YxUeg" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg" alt="Watch the video"></a>
 
+> **Note about the video:** The video demonstrates layer workflows using a simpler setup with a material ball asset. That older setup (including the material ball) is preserved in the `History/` folder (`E:\SynologyDrive\9999_LocalRepo\USD_GoodStart\History`), so you can access it or retrieve specific assets from previous versions if needed.
+
 **Quick Structure:**
 
 ```mermaid
 graph TD
-    Root[GoodStart_ROOT.usda<br/>Main Container] --> Opinion[xyz_Opinion_LYR.usda<br/>Overrides & Opinions]
+    Root[USD_GoodStart_ROOT.usda<br/>Main Container] --> Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
+    Root --> Sim[SIM_LYR.usda<br/>Simulation & Physics]
+    Root --> Data[DATA_LYRs.usda<br/>Data & Metadata]
+    Root --> Action[ACTION_LYR.usda<br/>Actions]
+    Root --> Anim[ANIM_LYR.usda<br/>Animation]
     Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
-    Root --> Material[Mtl_import_LYR.usda<br/>Materials & Shading]
-    Root --> Asset[Ass_import_LYR.usda<br/>References & Payloads<br/>Geometry Layer]
+    Root --> Material[MTL_LYR.usda<br/>Materials & Shading]
+    Root --> Asset[ASS_LYR.usda<br/>References & Payloads<br/>Asset Import<br/>Lowest Layer]
     
     Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
-    Assets --> Payloads[Payloads<br/>Heavy Geometry]
-    Payloads --> Asset
+    Assets --> MatLib[MatLib/<br/>Material Libraries]
+    Assets --> Tex[tex/<br/>Textures]
+    Assets --> Endpoint[USD_Endpoint/<br/>Stable DCC Endpoints]
     
-    Textures[020_TEX/<br/>Global Textures] --> Material
+    Endpoint --> Asset
+    MatLib --> Material
+    Tex --> Material
     
     Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>rElocates<br/>References Payloads<br/>Specializes]
     
@@ -70,21 +79,47 @@ graph TD
     style Opinion fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
     style Variant fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
     style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
+    style Sim fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
+    style Data fill:#a1887f,stroke:#3e2723,stroke-width:2px,color:#000
+    style Action fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
+    style Anim fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Composition fill:#78909c,stroke:#263238,stroke-width:4px,color:#000
     style Source fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
-    style Textures fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
     style Assets fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
-    style Payloads fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
+    style Endpoint fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style MatLib fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style Tex fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
 ```
 
+**Material & Texture Flow:**
+- **Material Libraries (`MatLib/`)** → Referenced by **`MTL_LYR.usda`** (Material Layer)
+- **Textures (`tex/`)** → Referenced by materials in **`MTL_LYR.usda`** when creating new materials
+- When creating new materials, place material definitions in `MatLib/` and reference textures from `tex/` - both are composed into the Material Layer
+
 **Folder Organization:**
-- `000_SOURCE/` - Original CAD/DCC source files
-- `010_ASS_USD/` - USD assets (converted from CAD or created in DCC)
-- `020_TEX/` - Global textures
-- `030_USD_LYR/` - General USD layers (Ass_import, Mtl_import, VAR, Opinions)
-- `040_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
-- `050_VAR_LYR/` - Variant/configuration layers
-- `060_META_LYR/` - Metadata and standards layers
+- `000_SOURCE/` - Original CAD/DCC/2D Texture source files
+- `010_ASS_USD/USD_Endpoint/` - **Stable geometry endpoints** (exports from CAD/DCC tools - Blender/Rhino plugins)
+- `010_ASS_USD/MatLib/` - Material libraries (reusable materials)
+- `010_ASS_USD/tex/` - Textures (global and asset-specific)
+- `020_BASE_LYR/` - **Base layers** (opinion, asset import, material import, variant, action, animation)
+- `030_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
+- `040_DATA_LYRs/` - **Data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA)
+
+**Why This Structure?**
+
+The new structure was designed with **clarity, purpose, and scalability** in mind:
+
+1. **`USD_Endpoint/`** - Named "endpoint" because DCC tools (Blender, Rhino) export to these **stable, unchanging paths**. The name stays constant even as assets are updated, making it a reliable reference point for your USD scene.
+
+2. **`MatLib/`** - Materials are separated from geometry, allowing **reusable material libraries** that can be shared across multiple assets and projects.
+
+3. **`tex/`** - Textures moved into `010_ASS_USD/` since they're **asset-related content**, keeping all asset data together.
+
+4. **`020_BASE_LYR/`** - **Consolidates base layers** (opinion, asset import, material import, variant, action, animation) into one logical group, making the structure cleaner and easier to navigate.
+
+5. **`040_DATA_LYRs/`** - **Plural naming** reflects that there will be **multiple data layers** for digital twin integration (PLM, ERP, AAS, OPC UA, sensor data, etc.). This is where the entire data-driven digital twin connects to the 3D USD data.
+
+6. **Root file always `USD_GoodStart_ROOT.usda`** - The root file name stays constant. Only the default prim name changes based on your project needs, ensuring consistent file references across projects.
 
 **📖 Folder Documentation:** Each folder contains its own `README.md` with detailed information on **how to use it** and **why to use it this way**. Check the folder-specific READMEs for:
 - Purpose and workflow details
@@ -133,9 +168,9 @@ Asset_Root_File.usda (Interface - Lightweight)
 **Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). First in array = strongest (applied last, overrides others). Last in array = weakest (applied first, can be overridden).
 
 **Quick Workflow:**
-1. Convert CAD → USD assets → place in `010_ASS_USD/`
-2. Create layer files in `030_USD_LYR/` for general USD (visual/layout/material/overrides) and use `040_SIM_LYR/`, `050_VAR_LYR/`, `060_META_LYR/` for simulation, variants, and metadata.
-3. Reference layers in `GoodStart_ROOT.usda` (array order: Opinion → Variant → Material → AssetImport, where first = strongest)
+1. Convert CAD → USD assets → place in `010_ASS_USD/USD_Endpoint/` (stable endpoint paths)
+2. Create layer files in `020_BASE_LYR/` for base layers (opinion, asset import, material import, variant, action, animation) and use `030_SIM_LYR/`, `040_DATA_LYRs/` for simulation and data/metadata.
+3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Simulation → Data → Action → Animation → Variant → Material → AssetImport, where first = strongest)
 4. Use **relative paths** (`@./folder/file.usd@`) for portability
 5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
 
@@ -158,13 +193,13 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/setup_usd_project_standalone.zip`](scripts/setup_usd_project_standalone.zip)), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone.zip`](scripts/USD_GoodStart_Setup_Standalone.zip)), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
-- Set up a simplified scene with sample assets (cube, shader ball, materials)
+- Set up a simplified scene with sample assets (cube, shader ball) in `USD_Endpoint/`
 - Configure everything with "Safe Mode" defaults (all layers locked, session layer as active authoring layer)
 
-The script asks you a few simple questions (product name, default prim name, whether to include samples) and handles the rest. No more manual prim renaming across dozens of layer files!
+The script asks you a few simple questions (default prim name, unit system, whether to include samples) and handles the rest. The root file is always named `USD_GoodStart_ROOT.usda` - only the default prim name changes based on your input.
 
 > **Note:** The script generates a slightly simplified scene compared to the full Copy-paste from GitHub, but it follows all the same best practices and layer structure patterns described in this README.
 
@@ -176,7 +211,7 @@ If you don’t want **any** accidental file edits while exploring variants/mater
 - **Lock all persistent layers** (everything except the session layer)
 - **Set the Session Layer as the active authoring layer** (top green layer in the Layers panel)
 
-![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer01.png)
+![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer02.png)
 
 For the full explanation + scripting helpers, see: [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)
 
@@ -185,9 +220,9 @@ For the full explanation + scripting helpers, see: [VarianSets_In_SessionLyr_RES
 > **Important Reality Check:** USD is not a single, uniform format. Different tools implement USD in their own way, creating "flavors" that can cause compatibility issues. This is crucial to understand before diving into workflows.
 > 
 > **Examples from Real Experience:**
-> - **Houdini**: Has the best USD implementation, but it's implemented in Houdini's own flavor. They were quick to adopt USD and did it their way.
-> - **VRAD exports**: Completely different structure and conventions from other tools
-> - **DeltaGen exports**: Again, totally different from VRAD and other implementations
+> - **Houdini**: Has outstanding USD integration (SideFX was an early driving force for OpenUSD adoption), but it's implemented in Houdini's own flavor. **USD files from Houdini require processing/conversion to be compliant with Omniverse's USD implementation.**
+> - **VRED exports**: Completely different structure and conventions from other tools
+> - **DeltaGen exports**: Again, totally different from VRED and other implementations
 > - **Maya, 3ds Max, Blender**: Each has its own USD export characteristics
 > 
 > **What This Means for You:**
@@ -226,17 +261,15 @@ This comprehensive guide covers:
 - This is a clean starting template - customize as needed for your project
 - The `0_` prefix in asset names is used for sorting default assets
 - Layers are loaded in order - later layers override earlier ones
-- Asset-specific textures can be stored within asset folders, while global textures go in `020_TEX/`
+- Asset-specific textures can be stored within asset folders, while global textures go in `010_ASS_USD/tex/`
 
 **Folder Documentation:**
 Each folder contains its own README with detailed information:
 - **[000_SOURCE/](000_SOURCE/README.md)** - Source files and CAD originals
-- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD geometry/payload assets
-- **[020_TEX/](020_TEX/README.md)** - Global/shared textures
-- **[030_USD_LYR/](030_USD_LYR/README.md)** - General USD layers
-- **[040_SIM_LYR/](040_SIM_LYR/README.md)** - Simulation & physics layers
-- **[050_VARIANTS_LYR/](050_VARIANTS_LYR/README.md)** - Variant/configuration layers
-- **[060_METADATA_LYR/](060_METADATA_LYR/README.md)** - Metadata & standards layers
+- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets (USD_Endpoint, MatLib, tex)
+- **[020_BASE_LYR/](020_BASE_LYR/README.md)** - Base layers (opinion, asset import, material import, variant, action, animation)
+- **[030_SIM_LYR/](030_SIM_LYR/README.md)** - Simulation & physics layers
+- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Data layers (PLM/ERP/AAS/OPC UA integration)
 
 
 ---
@@ -366,26 +399,30 @@ over "RobotA" {
 
 ✅ **Correct:** Author transforms in department layers, not the root:
 ```usda
-# In GoodStart_ROOT.usda - Only sublayers, no transforms!
+# In USD_GoodStart_ROOT.usda - Only sublayers, no transforms!
 (
-    subLayers = [@./030_USD_LYR/Opinion_LYR.usda@]
+    subLayers = [@./020_BASE_LYR/OPIN_LYR.usda@]
 )
 
-# In Opinion_LYR.usda - This is where transforms belong
+# In OPIN_LYR.usda - This is where transforms belong
 over "RobotA" {
     double3 xformOp:translate = (0, 0, 0)  # ✅ This works!
 }
 ```
 
 **Layer Stack Order** (array ordering: first = strongest, last = weakest):
-1. **Opinion_xyz_LYR.usda** (first/strongest) - Final overrides
-2. **Variant_LYR.usda** - Variants and configurations  
-3. **Mtl_import_LYR.usda** - Materials and shading
-4. **Ass_import_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
+1. **OPIN_LYR.usda** (first/strongest) - Final overrides and opinions
+2. **SIM_LYR.usda** - Simulation and physics
+3. **DATA_LYRs.usda** - Data and metadata (PLM/ERP/AAS/OPC UA)
+4. **ACTION_LYR.usda** - Actions (placeholder for future use)
+5. **ANIM_LYR.usda** - Animation (placeholder for future use)
+6. **VAR_LYR.usda** - Variants and configurations  
+7. **MTL_LYR.usda** - Materials and shading
+8. **ASS_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
 
 **Why AssetImport Must Be Last in Array:**
-- It loads assets into the scene
-- Earlier layers (materials, variants, opinions) need to override what's loaded
+- It loads assets into the scene from stable endpoints (`010_ASS_USD/USD_Endpoint/`)
+- Earlier layers (materials, variants, opinions, simulation, data) need to override what's loaded
 - The `subLayers` array is ordered strongest-first: first = strongest (applied last), last = weakest (applied first)
 - If AssetImport were first in the array, nothing could override the loaded assets
 
@@ -412,19 +449,20 @@ This project follows a structured folder organization to maintain clarity and sc
 
 ```
 USD_GoodStart/
-├── 000_SOURCE/          # Source files used in the project (CAD, DCC originals, configs)
-├── 010_ASS_USD/         # All USD geometry/payload assets (converted from source)
-├── 020_TEX/             # Global/shared texture files
-├── 030_USD_LYR/         # General USD layers (materials, opinions, layout, asset import)
-├── 040_SIM_LYR/         # Simulation/physics layers (collisions, joints, sensors, etc.)
-├── 050_VARIANTS_LYR/    # Variant & configuration layers / payload references
-├── 060_METADATA_LYR/    # Metadata & standards layers (PLM/ERP/CAD, AAS, OPC UA, etc.)
-├── GoodStart_ROOT.usda  # Master root file that references all layer stacks + assets
-├── GoodStart.hiplc      # Houdini file (or .ma/.mb/.max for other DCC tools)
-└── README.md            # This file
+├── 000_SOURCE/                    # Source files used in the project (CAD, DCC originals, configs)
+├── 010_ASS_USD/                   # All USD assets (geometry, materials, textures)
+│   ├── USD_Endpoint/              # Stable geometry endpoints (DCC exports - Blender/Rhino)
+│   ├── MatLib/                    # Material libraries (reusable materials)
+│   └── tex/                       # Textures (global and asset-specific)
+├── 020_BASE_LYR/                  # Base layers (opinion, asset import, material import, variant, action, animation)
+├── 030_SIM_LYR/                   # Simulation/physics layers (collisions, joints, sensors, etc.)
+├── 040_DATA_LYRs/                 # Data layers (plural - multiple layers for PLM/ERP/AAS/OPC UA integration)
+├── USD_GoodStart_ROOT.usda        # Master root file that references all layer stacks + assets
+├── GoodStart.hiplc                # Houdini file (or .ma/.mb/.max for other DCC tools)
+└── README.md                      # This file
 ```
 
-**Important Note:** Folder numbers (030, 040, 050, 060) **do not indicate layer order**. Layer order is determined by the `subLayers` array in `GoodStart_ROOT.usda`, not by folder names. The folder numbers are organizational prefixes for clarity and categorization.
+**Important Note:** Folder numbers (020, 030, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in `USD_GoodStart_ROOT.usda`, not by folder names. The folder numbers are organizational prefixes for clarity and categorization.
 
 ---
 
@@ -477,10 +515,9 @@ This folder structure provides a **complete, ready-to-use foundation** with most
 ### Collaboration & “Publishable” Layers (Omniverse Digital Twin)
 
 - **Collaborate via task fragments**: one responsibility = one layer, merged frequently (keep the *interactive* stage loadable in Omniverse).
-  - **Visual/general**: `030_USD_LYR/` (materials, layout, opinions)
-  - **Simulation**: `040_SIM_LYR/` (physics/collisions/sensors)
-  - **Variants/config**: `050_VARIANTS_LYR/` (configuration logic)
-  - **Metadata/standards**: `060_METADATA_LYR/` (PLM/AAS/OPC UA mappings)
+  - **Base layers**: `020_BASE_LYR/` (opinion, asset import, material import, variant, action, animation)
+  - **Simulation**: `030_SIM_LYR/` (physics/collisions/sensors)
+  - **Data/metadata**: `040_DATA_LYRs/` (PLM/ERP/AAS/OPC UA mappings - plural for multiple data layers)
 - **Personal opinion ≠ production**: “personal opinion” layers are great for exploration, but treat them as *draft* until reviewed.
 - **Definition of Done (publishable)**:
   - Opens in Omniverse Kit without missing layers/paths
@@ -594,6 +631,18 @@ Some DCC tools have **significant limitations** when working with USD:
 ### Houdini: The Powerhouse for USD Pipeline Automation
 
 **Houdini stands out as the premier tool for USD pipeline development and automation**, offering capabilities that complement and extend beyond what Omniverse provides.
+
+> **⚠️ Critical: Houdini-Omniverse Compatibility Issue**
+> 
+> **Important Reality Check:** While Houdini has outstanding USD integration and SideFX was an early driving force for OpenUSD adoption, **Houdini's USD implementation does not match Omniverse's USD flavor**. 
+> 
+> **What This Means:**
+> - Houdini can create powerful USD pipelines and automate complex workflows
+> - **However**, USD files exported from Houdini may not be directly compatible with Omniverse
+> - **USD files from Houdini must be processed/converted** to make them compliant with Omniverse's USD implementation
+> - This compatibility gap requires additional pipeline steps when working between Houdini and Omniverse
+> 
+> **Workflow Consideration:** When using Houdini in a pipeline that targets Omniverse, plan for a conversion/compliance step to ensure USD files work correctly in Omniverse environments.
 
 **Why Houdini is Essential for USD Workflows:**
 
@@ -762,29 +811,32 @@ In these cases, integrate your USD workflow with their existing systems rather t
 
 ## Quick Start - Using the Folders in this Repo
 
-1. **Assets**: Place your USD assets in `010_ASS_USD/`
-2. **General USD Layers**: Create or edit layers in `030_USD_LYR/` for materials, layout, and opinions. Use `040_SIM_LYR/`, `050_VARIANTS_LYR/`, and `060_METADATA_LYR/` for simulation, variants, and metadata.
-3. **Textures**: Add global/shared textures to `020_TEX/`
-4. **Root File**: The `GoodStart_ROOT.usda` file references all layer stacks and serves as the entry point
+1. **Assets**: Place your USD geometry assets in `010_ASS_USD/USD_Endpoint/` (stable endpoint paths for DCC exports)
+2. **Materials**: Create material libraries in `010_ASS_USD/MatLib/` for reusable materials
+3. **Textures**: Add textures to `010_ASS_USD/tex/` (global and asset-specific)
+4. **Base Layers**: Create or edit layers in `020_BASE_LYR/` for opinion, asset import, material import, variant, action, and animation layers
+5. **Simulation**: Use `030_SIM_LYR/` for simulation and physics layers
+6. **Data Integration**: Use `040_DATA_LYRs/` for data layers (PLM/ERP/AAS/OPC UA integration)
+7. **Root File**: The `USD_GoodStart_ROOT.usda` file references all layer stacks and serves as the entry point
 
 ## Folder Details
 
 Each folder contains its own README with detailed information:
 
 - **[000_SOURCE/](000_SOURCE/README.md)** - Source files and materials (CAD/DCC, configs)
-- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD geometry & payload assets
-- **[020_TEX/](020_TEX/README.md)** - Global/shared textures
-- **[030_USD_LYR/](030_USD_LYR/README.md)** - General USD layers (materials, layout, opinions, asset import)
-- **[040_SIM_LYR/](040_SIM_LYR/README.md)** - Simulation & physics layers
-- **[050_VARIANTS_LYR/](050_VARIANTS_LYR/README.md)** - Variant/configuration layers
-- **[060_METADATA_LYR/](060_METADATA_LYR/README.md)** - Metadata & standards layers
+- **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets (USD_Endpoint, MatLib, tex)
+- **[020_BASE_LYR/](020_BASE_LYR/README.md)** - Base layers (opinion, asset import, material import, variant, action, animation)
+- **[030_SIM_LYR/](030_SIM_LYR/README.md)** - Simulation & physics layers
+- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Data layers (PLM/ERP/AAS/OPC UA integration)
 
 ## Root File
 
-`GoodStart_ROOT.usda` is the master file that:
-- References all layer stacks from `030_USD_LYR/`, `040_SIM_LYR/`, `050_VARIANTS_LYR/`, `060_METADATA_LYR`
+`USD_GoodStart_ROOT.usda` is the master file that:
+- **Always named `USD_GoodStart_ROOT.usda`** - The filename stays constant across all projects
+- References all layer stacks from `020_BASE_LYR/`, `030_SIM_LYR/`, `040_DATA_LYRs/`
 - Serves as the entry point for the entire project
 - Contains the base world/root prim and high-level scene structure
+- Only the **default prim name** changes based on your project needs (e.g., "World", "ProductName", etc.)
 
 ## Path Best Practices: Use Relative Paths
 
@@ -802,26 +854,30 @@ Each folder contains its own README with detailed information:
 **Layer References** (in root file):
 ```usda
 subLayers = [
-    @./030_USD_LYR/Opinion_xyz_LYR.usda@,
-    @./030_USD_LYR/Variant_LYR.usda@,
-    @./030_USD_LYR/Mtl_import_LYR.usda@,
-    @./030_USD_LYR/Ass_import_LYR.usda@
+    @./020_BASE_LYR/OPIN_LYR.usda@,
+    @./030_SIM_LYR/SIM_LYR.usda@,
+    @./040_DATA_LYRs/DATA_LYRs.usda@,
+    @./020_BASE_LYR/ACTION_LYR.usda@,
+    @./020_BASE_LYR/ANIM_LYR.usda@,
+    @./020_BASE_LYR/VAR_LYR.usda@,
+    @./020_BASE_LYR/MTL_LYR.usda@,
+    @./020_BASE_LYR/ASS_LYR.usda@
 ]
 ```
 
 **Asset References** (in layer files):
 ```usda
 def Xform "PartAssembly" (
-    prepend references = @../010_ASS_USD/part_assembly.usd@
+    prepend references = @../010_ASS_USD/USD_Endpoint/part_assembly.usd@
 )
 {
-    # Asset referenced using relative path
+    # Asset referenced using relative path to stable endpoint
 }
 ```
 
 **Texture References** (in material definitions):
 ```usda
-asset inputs:diffuse_texture = @../020_TEX/texture_name.png@ (
+asset inputs:diffuse_texture = @../010_ASS_USD/tex/texture_name.png@ (
     colorSpace = "sRGB"
 )
 ```
@@ -883,33 +939,33 @@ cp /path/to/cad/export/part_assembly.step 000_SOURCE/
 # Using CAD-to-OpenUSD conversion scripts
 # See: https://github.com/nAurava-Technologies/CAD-to-OpenUSD
 cd 000_SOURCE/
-# Convert STEP to USD
-python cad2usd.py part_assembly.step ../010_ASS_USD/part_assembly.usd
+# Convert STEP to USD - place in stable endpoint folder
+python cad2usd.py part_assembly.step ../010_ASS_USD/USD_Endpoint/part_assembly.usd
 ```
 
 ### Step 3: Asset Validation
 
 ```bash
 # Validate USD asset (see validation scripts section)
-python scripts/validate_asset.py 010_ASS_USD/part_assembly.usd
+python scripts/validate_asset.py 010_ASS_USD/USD_Endpoint/part_assembly.usd
 ```
 
 ### Step 4: Create Asset Import Layer
 
 ```usda
-# In 030_USD_LYR/Ass_import_LYR.usda
+# In 020_BASE_LYR/ASS_LYR.usda
 def Xform "PartAssembly" (
-    prepend references = @../010_ASS_USD/part_assembly.usd@
+    prepend references = @../010_ASS_USD/USD_Endpoint/part_assembly.usd@
 )
 {
-    # Asset is now referenced in the scene
+    # Asset is now referenced in the scene from stable endpoint
 }
 ```
 
 ### Step 5: Add Modifications via Layers
 
 ```usda
-# In 030_USD_LYR/Mtl_import_LYR.usda
+# In 020_BASE_LYR/MTL_LYR.usda
 over "PartAssembly"
 {
     over "SubAssembly"
@@ -923,14 +979,18 @@ over "PartAssembly"
 
 ### Step 6: Link to Root File
 
-The root file (`GoodStart_ROOT.usda`) automatically includes all layers via `subLayers`:
+The root file (`USD_GoodStart_ROOT.usda`) automatically includes all layers via `subLayers`:
 
 ```usda
 subLayers = [
-    @./030_USD_LYR/Opinion_xyz_LYR.usda@,    # First = strongest (applied last, overrides others)
-    @./030_USD_LYR/Variant_LYR.usda@,        # Second
-    @./030_USD_LYR/Mtl_import_LYR.usda@,       # Third
-    @./030_USD_LYR/Ass_import_LYR.usda@     # Last = weakest (applied first, can be overridden)
+    @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last, overrides others)
+    @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation
+    @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data/metadata
+    @./020_BASE_LYR/ACTION_LYR.usda@,    # Actions
+    @./020_BASE_LYR/ANIM_LYR.usda@,      # Animation
+    @./020_BASE_LYR/VAR_LYR.usda@,       # Variants
+    @./020_BASE_LYR/MTL_LYR.usda@,       # Materials
+    @./020_BASE_LYR/ASS_LYR.usda@        # Last = weakest (applied first, can be overridden)
 ]
 ```
 
@@ -940,10 +1000,10 @@ subLayers = [
 
 ```bash
 # Validate entire scene
-python scripts/validate_scene.py GoodStart_ROOT.usda
+python scripts/validate_scene.py USD_GoodStart_ROOT.usda
 
 # Export for production (if needed)
-usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
+usdcat USD_GoodStart_ROOT.usda -o production/USD_GoodStart_ROOT.usdc
 ```
 
 ## Workflow
@@ -951,24 +1011,24 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 ### Digital Twin Workflow
 
 1. **Source Files**: CAD files or other source materials in `000_SOURCE/` or external systems (PLM/PDM/ERP)
-2. **Convert to USD**: Convert source files to USD format and place in `010_ASS_USD/`
+2. **Convert to USD**: Convert source files to USD format and place in `010_ASS_USD/USD_Endpoint/` (stable endpoint paths)
 3. **Add Metadata**: Map CAD metadata to USD metadata and connect to external data sources
-4. **Apply Modifications**: Use layers in `030_USD_LYR/`, `040_SIM_LYR/`, `050_VARIANTS_LYR/`, and `060_METADATA_LYR/` to add digital twin-specific modifications, opinions, simulation logic, configuration, and metadata.
-5. **Link to Root**: Ensure all assets and modifications are properly linked in `GoodStart_ROOT.usda`
-6. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
+4. **Apply Modifications**: Use layers in `020_BASE_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` to add digital twin-specific modifications, opinions, simulation logic, configuration, and metadata.
+5. **Link to Root**: Ensure all assets and modifications are properly linked in `USD_GoodStart_ROOT.usda`
+6. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data via `040_DATA_LYRs/`. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 ### DCC Workflow (Optional)
 
 **Important**: Not all DCC tools support USD's composition features. See "DCC Tool Limitations" section above.
 
-1. **Import Assets**: Export USD files from DCC tools to `010_ASS_USD/`
+1. **Import Assets**: Export USD files from DCC tools to `010_ASS_USD/USD_Endpoint/` (stable endpoint paths)
    - **Full USD support** (Maya, Houdini, 3ds Max): Can export with full composition support
-   - **Limited support** (Blender, Cinema 4D): Can only create endpoint assets (destructive export)
-2. **Reference Assets**: Use layers in `030_USD_LYR/` to reference and modify assets
-   - ⚠️ **Note**: Blender/C4D cannot work with layers - they can only create the base asset
+   - **Limited support** (Blender, Cinema 4D, Rhino): Can only create endpoint assets (destructive export) - these are the "endpoints" that stay stable
+2. **Reference Assets**: Use layers in `020_BASE_LYR/ASS_LYR.usda` to reference and modify assets
+   - ⚠️ **Note**: Blender/C4D/Rhino cannot work with layers - they can only create the base asset endpoint
 3. **Apply Modifications**: Add opinions, variants, and material changes through layers
    - Use Maya, Houdini, or 3ds Max for layer-based modifications
-4. **Link to Root**: Ensure all modifications are properly linked in `GoodStart_ROOT.usda`
+4. **Link to Root**: Ensure all modifications are properly linked in `USD_GoodStart_ROOT.usda`
 
 ## Project Planning and Implementation Strategy
 
@@ -1579,12 +1639,12 @@ Validation scripts are provided in the `scripts/` directory:
 
 - **`scripts/validate_asset.py`**: Validates individual USD assets
   ```bash
-  python scripts/validate_asset.py 010_ASS_USD/asset.usd
+  python scripts/validate_asset.py 010_ASS_USD/USD_Endpoint/asset.usd
   ```
 
 - **`scripts/validate_scene.py`**: Validates entire scene (root + all layers)
   ```bash
-  python scripts/validate_scene.py GoodStart_ROOT.usda
+  python scripts/validate_scene.py USD_GoodStart_ROOT.usda
   ```
 
 **Manual Validation Tools:**
@@ -1645,9 +1705,9 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 ### Opening in Omniverse Composer
 
 1. **Launch Omniverse Composer**
-2. **Open Root File**: File → Open → Select `GoodStart_ROOT.usda`
-3. **Verify Layers**: Check that all layers in `030_USD_LYR/`, `040_SIM_LYR/`, `050_VARIANTS_LYR/`, and `060_METADATA_LYR` are loaded correctly
-4. **Inspect Assets**: Navigate to assets in `010_ASS_USD/` via the layer stack
+2. **Open Root File**: File → Open → Select `USD_GoodStart_ROOT.usda`
+3. **Verify Layers**: Check that all layers in `020_BASE_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` are loaded correctly
+4. **Inspect Assets**: Navigate to assets in `010_ASS_USD/USD_Endpoint/` via the layer stack
 
 ### Working with Nucleus Server
 
@@ -1657,9 +1717,9 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 - Note: Source files (`.psd`, `.sbsar`) should be stored outside Nucleus (see `020_TEX/README.md`)
 
 **Common Issues:**
-- **Missing Assets**: Check file paths in layer files - use relative paths when possible
+- **Missing Assets**: Check file paths in layer files - use relative paths to `010_ASS_USD/USD_Endpoint/` when possible
 - **Layer Not Loading**: Verify layer is listed in `subLayers` array in root file
-- **Texture Not Found**: Check texture paths in material definitions
+- **Texture Not Found**: Check texture paths in material definitions (should reference `010_ASS_USD/tex/`)
 
 ### DCC Tool Integration
 
@@ -1701,13 +1761,13 @@ See "Houdini: The Powerhouse for USD Pipeline Automation" section above for deta
 - Verify all referenced files exist
 
 **Problem**: Layers not applying correctly
-- **Solution**: Check layer order in `subLayers` array
+- **Solution**: Check layer order in `subLayers` array in `USD_GoodStart_ROOT.usda`
 - Verify layer file syntax
-- Ensure asset import layer is at bottom of stack
+- Ensure asset import layer (`ASS_LYR.usda`) is at bottom of stack
 
 **Problem**: Missing textures
 - **Solution**: Check texture paths (relative vs absolute)
-- Verify texture files exist in `020_TEX/` or asset-specific texture folders
+- Verify texture files exist in `010_ASS_USD/tex/` or asset-specific texture folders
 - Check color space settings in material definitions
 
 **Problem**: CAD conversion issues
@@ -1720,6 +1780,8 @@ See "Houdini: The Powerhouse for USD Pipeline Automation" section above for deta
 - This is a clean starting template - customize as needed for your project
 - The `0_` prefix in asset names is used for sorting default assets
 - Layers are loaded in order - later layers override earlier ones
-- Asset-specific textures can be stored within asset folders, while global textures go in `020_TEX/`
+- Asset-specific textures can be stored within asset folders, while global textures go in `010_ASS_USD/tex/`
+- Root file is always named `USD_GoodStart_ROOT.usda` - only the default prim name changes
+- Geometry assets go in `010_ASS_USD/USD_Endpoint/` as stable endpoints for DCC exports
 
 

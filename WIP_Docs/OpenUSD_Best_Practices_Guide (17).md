@@ -92,7 +92,7 @@ VFI Samples scripts can be adapted to work with the USD GoodStart project struct
 1. **CAD Conversion**: Use VFI's `convert_jt.py` to batch convert CAD files from `000_SOURCE/` to `010_ASS_USD/`
 2. **Validation**: VFI's Asset Validator complements your custom validation scripts - use both for comprehensive quality assurance
 3. **Optimization**: Apply VFI's Scene Optimizer patterns to optimize assets before referencing them in your layer structure
-4. **Material Workflows**: Adapt VFI's material assignment patterns to work with your `020_TEX/` and material layer structure
+4. **Material Workflows**: Adapt VFI's material assignment patterns to work with your `010_ASS_USD/tex/` and `010_ASS_USD/MatLib/` structure
 
 **Key Learning from VFI Samples:**
 
@@ -365,38 +365,38 @@ References:
 ```mermaid
 flowchart TD
     %% Styling - High Contrast
-    classDef governance fill:#b39ddb,stroke:#4a148c,stroke-width:3px,color:#000;
-    classDef assets fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
-    classDef pipeline fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000;
-    classDef runtime fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
+    classDef governance fill:#b39ddb,stroke:#4a148c,stroke-width:3px,color:#000
+    classDef assets fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000
+    classDef pipeline fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
+    classDef runtime fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
 
-    subgraph Governance["1. Governance & Backend"]
+    subgraph Governance["1. Governance and Backend"]
         direction TB
-        PLM[PLM / PDM / ERP]
-        AAS[Asset Admin Shell\n(e.g. AAS, Catena-X, OPC UA)]
-        DB[Databases & Sensors]
+        PLM["PLM / PDM / ERP"]
+        AAS["Asset Admin Shell<br/>e.g. AAS, Catena-X, OPC UA"]
+        DB["Databases and Sensors"]
     end
 
     subgraph Assets["2. OpenUSD Asset Pipeline"]
         direction TB
-        A_Source[000_SOURCE]
-        A_Geom[010_ASS_USD\nPayloads]
-        A_Layers[030_USD_LYR\nLogic Layers]
-        A_Tex[020_TEX]
+        A_Source["000_SOURCE"]
+        A_Geom["010_ASS_USD<br/>Payloads"]
+        A_Layers["020_BASE_LYR<br/>Logic Layers"]
+        A_Tex["010_ASS_USD tex"]
     end
 
-    subgraph Pipeline["3. Pipeline & Publishing"]
+    subgraph Pipeline["3. Pipeline and Publishing"]
         direction TB
-        Tools[DCC Tools\nHoudini/Maya/Omniverse]
-        CI[Validation & CI/CD]
-        Pub[Publishing API]
+        Tools["DCC Tools<br/>Houdini/Maya/Omniverse"]
+        CI["Validation and CI/CD"]
+        Pub["Publishing API"]
     end
 
-    subgraph Runtime["4. Execution & Digital Twin"]
+    subgraph Runtime["4. Execution and Digital Twin"]
         direction TB
-        OV[Omniverse / Isaac Sim]
-        Render[Rendering]
-        Control[Robotics Control]
+        OV["Omniverse / Isaac Sim"]
+        Render["Rendering"]
+        Control["Robotics Control"]
     end
 
     %% Connections
@@ -416,14 +416,14 @@ flowchart TD
     Pub --> Render
     Pub --> Control
     
-    DB -.->|Live Data| OV
-    AAS -.->|Live Update| OV
+    DB -.->|"Live Data"| OV
+    AAS -.->|"Live Update"| OV
 
     %% Apply Styles
-    class PLM,AAS,DB governance;
-    class A_Source,A_Geom,A_Layers,A_Tex assets;
-    class Tools,CI,Pub pipeline;
-    class OV,Render,Control runtime;
+    class PLM,AAS,DB governance
+    class A_Source,A_Geom,A_Layers,A_Tex assets
+    class Tools,CI,Pub pipeline
+    class OV,Render,Control runtime
 ```
 
 
@@ -870,22 +870,24 @@ The USD GoodStart template provides a proven folder hierarchy that separates con
 
 ```
 USD_GoodStart/
-├── 000_SOURCE/          # Source files used in the project (CAD/DCC originals, configs)
-├── 010_ASS_USD/         # All USD geometry/payload assets (converted from source)
-├── 020_TEX/             # Global/shared texture files
-├── 030_USD_LYR/         # General USD layers (materials, opinions, layout, asset import)
-├── 040_SIM_LYR/         # Simulation/physics layers (collisions, joints, sensors, etc.)
-├── 050_VARIANTS_LYR/    # Variant/configuration layers / payload references
-├── 060_METADATA_LYR/    # Metadata & standards layers (PLM/ERP/CAD, AAS, OPC UA, etc.)
-├── GoodStart_ROOT.usda  # Master root file that references all layer stacks + assets
-├── GoodStart.hiplc      # Houdini file (or .ma/.mb/.max for other DCC tools)
-└── README.md            # This file
+├── 000_SOURCE/                    # Source files used in the project (CAD/DCC originals, configs)
+├── 010_ASS_USD/                   # USD assets folder
+│   ├── USD_Endpoint/              # Stable DCC endpoints (geometry exports from Blender/Rhino)
+│   ├── MatLib/                    # Material libraries
+│   └── tex/                       # Texture files
+├── 020_BASE_LYR/                  # Base layers (opinion, asset import, material import, variant, action, animation)
+├── 030_SIM_LYR/                    # Simulation/physics layers (collisions, joints, sensors, etc.)
+├── 040_DATA_LYRs/                  # Data & metadata layers (PLM/ERP/CAD, AAS, OPC UA, etc.) - plural for future expansion
+├── USD_GoodStart_ROOT.usda        # Master root file that references all layer stacks + assets (always this name)
+├── GoodStart.hiplc                # Houdini file (or .ma/.mb/.max for other DCC tools)
+└── README.md                       # This file
 ```
 
 #### Important Notes:
-- **Folder numbers do not indicate layer order** - Layer order is determined by the `subLayers` array in `GoodStart_ROOT.usda`, not folder names
+- **Folder numbers do not indicate layer order** - Layer order is determined by the `subLayers` array in `USD_GoodStart_ROOT.usda`, not folder names
 - **Numbers are organizational prefixes** for clarity and categorization only
 - **Relative paths are mandatory** - All USD references must use `@./folder/file.usd@` syntax
+- **Root file name is fixed** - The root file is always named `USD_GoodStart_ROOT.usda`; only the default prim name changes based on user input
 
 ### 1.5.2 Folder Purpose and Workflow
 
@@ -904,23 +906,32 @@ USD_GoodStart/
 3. Maintain version control for traceability
 4. Never modify files in this folder - they're the source of truth
 
-#### 010_ASS_USD/ - USD Geometry & Payload Assets
-**Purpose:** Store all converted USD geometry and payload assets.
+#### 010_ASS_USD/ - USD Assets Folder
+**Purpose:** Container folder for all USD assets organized by type.
 
-**Contents:**
-- Converted CAD models (`pump.usd`, `conveyor.usdc`)
-- DCC-created assets (`robot_arm.usd`)
-- Payload files with heavy geometry
-- Asset-specific textures (if not global)
+**Subfolders:**
+- **`USD_Endpoint/`** - Stable DCC endpoints (geometry exports from Blender/Rhino plugins)
+  - Purpose: Stable, unchanging paths where DCC tools export geometry assets
+  - Contents: Geometry assets exported from Blender/Rhino (e.g., `0_CUBE_GEO.usda`, `pump_GEO.usd`)
+  - Workflow: DCC tools export directly to this folder; assets are referenced from `ASS_LYR.usda`
+- **`MatLib/`** - Material libraries
+  - Purpose: Organized material definitions
+  - Contents: Material asset files (e.g., `MatLib_a_MAT.usda`)
+  - Workflow: Materials defined here are referenced by `MTL_LYR.usda`
+- **`tex/`** - Texture files
+  - Purpose: Centralized storage for textures used by materials
+  - Contents: Texture files (diffuse, normal, roughness maps, etc.)
+  - Workflow: Textures referenced by materials in `MatLib/` and `MTL_LYR.usda`
 
 **Workflow:**
-1. Convert CAD files from `000_SOURCE/` to USD format
+1. Convert CAD files from `000_SOURCE/` to USD format → place in `USD_Endpoint/`
 2. Validate assets with `python scripts/validate_asset.py`
-3. Store as either `.usda` (interface) or `.usdc` (heavy geometry)
-4. Reference from layer files in `030_USD_LYR/`
+3. Store geometry as either `.usda` (interface) or `.usdc` (heavy geometry) in `USD_Endpoint/`
+4. Reference geometry from layer files in `020_BASE_LYR/ASS_LYR.usda`
+5. Create materials in `MatLib/` and reference textures from `tex/`
 
-#### 020_TEX/ - Global/Shared Textures
-**Purpose:** Centralized storage for textures used across multiple assets.
+#### 010_ASS_USD/tex/ - Texture Files
+**Purpose:** Centralized storage for textures used by materials.
 
 **Contents:**
 - Shared material textures (diffuse, normal, roughness maps)
@@ -928,71 +939,68 @@ USD_GoodStart/
 - Procedural texture definitions
 
 **Workflow:**
-1. Store global textures here for reuse across assets
-2. Asset-specific textures can stay in asset folders
-3. Use relative paths in material definitions
+1. Store textures in `010_ASS_USD/tex/` for reuse across materials
+2. Reference textures from materials in `MatLib/` and `MTL_LYR.usda`
+3. Use relative paths in material definitions (e.g., `@../tex/diffuse.png@`)
 4. Optimize texture formats for target platform
 
-#### 030_USD_LYR/ - General USD Layers
-**Purpose:** Department-specific modifications, materials, layouts, and opinions.
+#### 020_BASE_LYR/ - Base Layers
+**Purpose:** Core composition layers for opinions, asset imports, material imports, variants, actions, and animations.
 
 **Contents:**
-- `Ass_import_LYR.usda` - References to assets from `010_ASS_USD/`
-- `Mtl_import_LYR.usda` - Material assignments and shading
-- `xyz_Opinion_LYR.usda` - Department-specific overrides and modifications
-- Layout and animation layers
+- `OPIN_LYR.usda` - Overrides & opinions (strongest layer)
+- `ASS_LYR.usda` - Asset import layer (references to `010_ASS_USD/USD_Endpoint/`)
+- `MTL_LYR.usda` - Material layer (material assignments and shading, references `MatLib/`)
+- `VAR_LYR.usda` - Variant & configuration layers
+- `ACTION_LYR.usda` - Action layers (placeholders)
+- `ANIM_LYR.usda` - Animation layers (placeholders)
 
-**Critical Layer Stack Order:**
+**Critical Layer Stack Order (in `USD_GoodStart_ROOT.usda`):**
 ```usda
 subLayers = [
-    @./030_USD_LYR/xyz_Opinion_LYR.usda@,    # First = strongest (applied last)
-    @./030_USD_LYR/Variant_LYR.usda@,        # Second
-    @./030_USD_LYR/Mtl_import_LYR.usda@,     # Third
-    @./030_USD_LYR/Ass_import_LYR.usda@     # Last = weakest (applied first)
+    @./020_BASE_LYR/OPIN_LYR.usda@,          # First = strongest (applied last)
+    @./030_SIM_LYR/SIM_LYR.usda@,            # Simulation layer
+    @./040_DATA_LYRs/DATA_LYRs.usda@,        # Data & metadata layer
+    @./020_BASE_LYR/ACTION_LYR.usda@,        # Action layer
+    @./020_BASE_LYR/ANIM_LYR.usda@,          # Animation layer
+    @./020_BASE_LYR/VAR_LYR.usda@,           # Variant layer
+    @./020_BASE_LYR/MTL_LYR.usda@,           # Material layer
+    @./020_BASE_LYR/ASS_LYR.usda@            # Last = weakest (applied first)
 ]
 ```
 
-#### 040_SIM_LYR/ - Simulation & Physics Layers
+#### 030_SIM_LYR/ - Simulation & Physics Layers
 **Purpose:** Physics properties, collision geometry, and simulation parameters.
 
 **Contents:**
-- Collision meshes and physics properties
-- Joint definitions and articulations
-- Sensor configurations
-- Simulation parameters
+- `SIM_LYR.usda` - Simulation layer containing:
+  - Collision meshes and physics properties
+  - Joint definitions and articulations
+  - Sensor configurations
+  - Simulation parameters
 
 **Workflow:**
 - Add physics properties to assets without modifying geometry
 - Define collision proxies separate from visual geometry
 - Configure simulation parameters (mass, friction, etc.)
 
-#### 050_VARIANTS_LYR/ - Variant & Configuration Layers
-**Purpose:** Manage different versions and configurations of assets.
+#### 040_DATA_LYRs/ - Data & Metadata Layers
+**Purpose:** Store PLM/PDM/ERP integration data and digital twin standards. Plural naming indicates multiple data layers can exist.
 
 **Contents:**
-- Variant sets for different asset configurations
-- LOD (Level of Detail) switching
-- Configuration options (colors, sizes, features)
-
-**Workflow:**
-- Define variant sets in asset interface layers
-- Use for product configurators and digital twin variations
-- Enable runtime switching between configurations
-
-#### 060_METADATA_LYR/ - Metadata & Standards Layers
-**Purpose:** Store PLM/PDM/ERP integration data and digital twin standards.
-
-**Contents:**
-- PLM system identifiers and revision information
-- AAS (Asset Administration Shell) mappings
-- OPC UA data connections
-- ERP system links
-- Digital product passport information
+- `DATA_LYRs.usda` - Data layer containing:
+  - PLM system identifiers and revision information
+  - AAS (Asset Administration Shell) mappings
+  - OPC UA data connections
+  - ERP system links
+  - Digital product passport information
+- Additional data layers can be added as needed (hence plural naming)
 
 **Workflow:**
 - Map CAD metadata to USD attributes during conversion
 - Connect to external systems for live data updates
 - Store standards-compliant metadata for interoperability
+- Add additional data layers for different data sources as needed
 
 ### 1.5.3 Layer Organization Philosophy
 
@@ -1095,7 +1103,7 @@ Store working DCC files alongside the USD structure:
 ### 1.5.7 Scaling Considerations
 
 #### Small Projects (POC/MVP)
-- Use minimal structure: `000_SOURCE/`, `010_ASS_USD/`, `030_USD_LYR/`, root file
+- Use minimal structure: `000_SOURCE/`, `010_ASS_USD/USD_Endpoint/`, `020_BASE_LYR/`, `USD_GoodStart_ROOT.usda`
 - Single opinion layer for all modifications
 - Focus on learning USD fundamentals
 
@@ -2145,10 +2153,14 @@ The `subLayers` array is ordered from **top (strongest)** to **bottom (weakest)*
 (
     defaultPrim = "World"
     subLayers = [
-        @./030_USD_LYR/Opinion_xyz_LYR.usda@,      # Top (strongest) - overrides everything
-        @./030_USD_LYR/VAR_LYR.usda@,          # Variants and configurations
-        @./030_USD_LYR/Mtl_import_LYR.usda@,         # Materials and shading
-        @./030_USD_LYR/Ass_import_LYR.usda@      # Bottom (weakest) - CRITICAL: loads assets
+        @./020_BASE_LYR/OPIN_LYR.usda@,          # Top (strongest) - overrides everything
+        @./030_SIM_LYR/SIM_LYR.usda@,             # Simulation layer
+        @./040_DATA_LYRs/DATA_LYRs.usda@,         # Data & metadata layer
+        @./020_BASE_LYR/ACTION_LYR.usda@,        # Action layer
+        @./020_BASE_LYR/ANIM_LYR.usda@,          # Animation layer
+        @./020_BASE_LYR/VAR_LYR.usda@,           # Variants and configurations
+        @./020_BASE_LYR/MTL_LYR.usda@,           # Materials and shading
+        @./020_BASE_LYR/ASS_LYR.usda@            # Bottom (weakest) - CRITICAL: loads assets
     ]
 )
 
@@ -2838,7 +2850,7 @@ This case study shows how a 3DEXPERIENCE (PLM) + CATIA configuration workflow ca
 - **Payload‑based architecture** (heavy geometry in `.usdc` payloads, not in the interface layer)
 - **Lofted variants** (variants authored above payloads, not inside them)
 - **Property declaration technique** (declare properties without values so variants can safely drive them)
-- **GoodStart folder structure** (`000_SOURCE`, `010_ASS_USD`, `020_TEX`, `030_USD_LYR`, `040_SIM_LYR`, `050_VAR_LYR`, `060_META_LYR`, `Asset_ROOT.usda`)
+- **GoodStart folder structure** (`000_SOURCE`, `010_ASS_USD/USD_Endpoint`, `010_ASS_USD/MatLib`, `010_ASS_USD/tex`, `020_BASE_LYR`, `030_SIM_LYR`, `040_DATA_LYRs`, `USD_GoodStart_ROOT.usda`)
 
 ### Context & Goals
 
@@ -3372,10 +3384,12 @@ For a small proof-of-concept, you can start with:
 
 ```
 POC_Project/
-├── Root.usda
-├── 010_ASS_USD/        # small reusable assets (or placeholders)
-├── 020_TEX/            # textures (optional)
-├── 030_USD_LYR/        # import/material/variant/opinion layers
+├── USD_GoodStart_ROOT.usda
+├── 010_ASS_USD/        # USD assets folder
+│   ├── USD_Endpoint/   # geometry assets
+│   ├── MatLib/         # material libraries (optional)
+│   └── tex/            # textures (optional)
+├── 020_BASE_LYR/       # base layers (import/material/variant/opinion)
 └── scripts/            # validation helpers
 ```
 
@@ -3387,68 +3401,69 @@ Then “graduate” into the full GoodStart structure once the team agrees on re
 
 ```mermaid
 flowchart TD
-    Root[USD_GoodStart/]:::root
-    Source[000_SOURCE/<br/>CAD, vendor files, raw data]:::folder
-    Assets[010_ASS_USD/<br/>Converted USD assets (geometry)]:::folder
-    Tex[020_TEX/<br/>Global textures]:::folder
-    Lyr[030_USD_LYR/<br/>General USD layers]:::folder
-    Sim[040_SIM_LYR/<br/>Physics, collision, sim metadata]:::folder
-    Vars[050_VAR_LYR/<br/>Variant & config layers]:::folder
-    Meta[060_META_LYR/<br/>Metadata & standards layers]:::folder
-    RootFile[GoodStart_ROOT.usda<br/>Entry point file]:::usd
+    Root["USD_GoodStart/"]:::root
+    Source["000_SOURCE/<br/>CAD, vendor files, raw data"]:::folder
+    Assets["010_ASS_USD/<br/>USD Assets container"]:::folder
+    Endpoint["USD_Endpoint/<br/>Stable DCC endpoints"]:::subfolder
+    MatLib["MatLib/<br/>Material libraries"]:::subfolder
+    Tex["tex/<br/>Texture files"]:::subfolder
+    BaseLyr["020_BASE_LYR/<br/>Base layers"]:::folder
+    Sim["030_SIM_LYR/<br/>Simulation layers"]:::folder
+    Data["040_DATA_LYRs/<br/>Data and metadata layers"]:::folder
+    RootFile["USD_GoodStart_ROOT.usda<br/>Entry point file"]:::usd
     
-    ImportLayer[Ass_import_LYR.usda]:::layer
-    MtlLayer[Mtl_import_LYR.usda]:::layer
-    VariantLayer[VAR_LYR.usda]:::layer
-    OpinionLayer[Opinion_LYR.usda]:::layer
+    SimLayer["SIM_LYR.usda"]:::simlayer
+    DataLayer["DATA_LYRs.usda"]:::datalayer
+    
+    OpinLayer["OPIN_LYR.usda<br/>Overrides and opinions"]:::layer
+    AssLayer["ASS_LYR.usda<br/>Asset import - lowest layer"]:::layer
+    MtlLayer["MTL_LYR.usda<br/>Materials and shading"]:::layer
+    VarLayer["VAR_LYR.usda<br/>Variants and configurations"]:::layer
+    ActionLayer["ACTION_LYR.usda<br/>Actions - placeholder"]:::layer
+    AnimLayer["ANIM_LYR.usda<br/>Animation - placeholder"]:::layer
     
     Root --> Source
     Root --> Assets
-    Root --> Tex
-    Root --> Lyr
+    Root --> BaseLyr
     Root --> Sim
-    Root --> Vars
-    Root --> Meta
+    Root --> Data
     Root --> RootFile
     
-    Lyr --> ImportLayer
-    Lyr --> MtlLayer
-    Lyr --> VariantLayer
-    Lyr --> OpinionLayer
+    Assets --> Endpoint
+    Assets --> MatLib
+    Assets --> Tex
     
-    classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
-    classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000;
-    classDef usd fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000;
-    classDef layer fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000;
+    Sim --> SimLayer
+    Data --> DataLayer
+    
+    BaseLyr --> OpinLayer
+    BaseLyr --> AssLayer
+    BaseLyr --> MtlLayer
+    BaseLyr --> VarLayer
+    BaseLyr --> ActionLayer
+    BaseLyr --> AnimLayer
+    
+    classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
+    classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:2px,color:#000
+    classDef subfolder fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef usd fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
+    classDef layer fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
+    classDef simlayer fill:#81c784,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef datalayer fill:#a1887f,stroke:#3e2723,stroke-width:2px,color:#000
 ```
 
-Each folder has a specific, well-defined role.
+Each folder has a specific, well-defined role:
+- **000_SOURCE/** - Original CAD/DCC source files (never modified)
+- **010_ASS_USD/** - USD assets container with subfolders:
+  - **USD_Endpoint/** - Stable geometry endpoints (exports from Blender/Rhino plugins)
+  - **MatLib/** - Material library definitions
+  - **tex/** - Texture files referenced by materials
+- **020_BASE_LYR/** - Base composition layers (opinion, asset, material, variant, action, animation)
+- **030_SIM_LYR/** - Simulation and physics layers
+- **040_DATA_LYRs/** - Data and metadata layers (plural for future expansion)
+- **USD_GoodStart_ROOT.usda** - Entry point file (always this name; only default prim changes)
 
-```mermaid
-flowchart TD
-    root[USD_GoodStart/]:::root
-    root --> S000[000_SOURCE/\nRaw CAD & DCC]
-    root --> S010[010_ASS_USD/\nUSD geometry & payloads]
-    root --> S020[020_TEX/\nGlobal textures]
-    root --> S030[030_USD_LYR/\nGeneral layers]
-    root --> S040[040_SIM_LYR/\nSimulation layers]
-    root --> S050[050_VAR_LYR/\nVariant layers]
-    root --> S060[060_META_LYR/\nMetadata & standards]
-    root --> RootUsd[GoodStart_ROOT.usda\nEntry point]
-    
-    S030 --> L_Import[Ass_import_LYR.usda]
-    S030 --> L_Mtl[Mtl_import_LYR.usda]
-    S030 --> L_Var[VAR_LYR.usda]
-    S030 --> L_Opinion[Opinion_LYR.usda]
-    
-    classDef root fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000;
-    classDef folder fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000;
-    
-    class root,RootUsd root;
-    class S000,S010,S020,S030,S040,S050,S060,L_Import,L_Mtl,L_Var,L_Opinion folder;
-```
-
-**Important Note:** Folder numbers (030, 040, 050, 060) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file (`GoodStart_ROOT.usda`), not by folder names. The folder numbers are simply organizational prefixes for clarity and categorization.
+**Important Note:** Folder numbers (020, 030, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file (`USD_GoodStart_ROOT.usda`), not by folder names. The folder numbers are simply organizational prefixes for clarity and categorization.
 
 ---
 

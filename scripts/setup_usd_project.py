@@ -33,13 +33,12 @@ except ImportError:
 
 FOLDER_STRUCTURE = [
     "000_SOURCE",
-    "010_ASS_USD/geo",
-    "010_ASS_USD/mat",
-    "020_TEX",
-    "030_USD_LYR",
-    "040_SIM_LYR",
-    "050_VAR_LYR",
-    "060_META_LYR"
+    "010_ASS_USD/USD_Endpoint",
+    "010_ASS_USD/MatLib",
+    "010_ASS_USD/tex",
+    "020_BASE_LYR",
+    "030_SIM_LYR",
+    "040_DATA_LYRs"
 ]
 
 
@@ -47,15 +46,12 @@ FOLDER_STRUCTURE = [
 # USD File Templates
 # ============================================================================
 
-def get_root_template(product_name: str, default_prim: str, include_samples: bool, sublayers: List[str]) -> str:
+def get_root_template(product_name: str, default_prim: str, include_samples: bool, sublayers: List[str], meters_per_unit: float = 1.0) -> str:
     """Generate root USD file template."""
     sublayers_str = ",\n        ".join([f"@{layer}@" for layer in sublayers])
     
-    # Default: Lock ALL persistent layers and use Session Layer as active authoring layer
-    # This is the "safe mode" pattern to prevent layer pollution
-    # Session layer is in-memory only and cannot be referenced by file path in metadata
-    
-    # Lock ALL persistent layers (all sublayers)
+    # Lock ALL layers by default (safe mode - prevents accidental edits to persistent layers)
+    # Users should use Session Layer for authoring
     locked_layers = []
     for layer in sublayers:
         locked_layers.append(f'                bool "{layer}" = 1')
@@ -64,30 +60,41 @@ def get_root_template(product_name: str, default_prim: str, include_samples: boo
     else:
         locked_str = ""
     
-    # Session layer is in-memory, so we omit authoring_layer entirely
-    # User should set Session Layer as active in Omniverse UI (safe mode default)
-    # Omit authoring_layer line - Session Layer should be set manually in Omniverse UI
+    # Omit authoring_layer - Session Layer should be set manually in Omniverse UI
     authoring_layer_line = ""
+    
+    # Calculate ground plane size: 10x10 meters
+    # Half-size in scene units: 5 meters / meters_per_unit
+    ground_half_size = 5.0 / meters_per_unit
+    
+    # Camera near clipping: 1 cm = 0.01 meters in scene units
+    camera_near = 0.01 / meters_per_unit
+    # Camera far clipping: reasonable for 10m scene, use 100 meters
+    camera_far = 100.0 / meters_per_unit
     
     return f'''#usda 1.0
 (
     customLayerData = {{
         dictionary cameraSettings = {{
             dictionary Front = {{
-                double3 position = (0, 0, 50000)
-                double radius = 500
+                double3 position = (0, 0, {ground_half_size * 2})
+                double radius = {ground_half_size * 1.5}
+                double2 clippingRange = ({camera_near}, {camera_far})
             }}
             dictionary Perspective = {{
-                double3 position = (0, 0, 1000)
+                double3 position = (0, {ground_half_size * 0.5}, {ground_half_size * 2})
                 double3 target = (0, 0, 0)
+                double2 clippingRange = ({camera_near}, {camera_far})
             }}
             dictionary Right = {{
-                double3 position = (-50000, 0, 0)
-                double radius = 500
+                double3 position = (-{ground_half_size * 2}, 0, 0)
+                double radius = {ground_half_size * 1.5}
+                double2 clippingRange = ({camera_near}, {camera_far})
             }}
             dictionary Top = {{
-                double3 position = (0, 50000, 0)
-                double radius = 500
+                double3 position = (0, {ground_half_size * 2}, 0)
+                double radius = {ground_half_size * 1.5}
+                double2 clippingRange = ({camera_near}, {camera_far})
             }}
             string boundCamera = "/OmniverseKit_Persp"
         }}
@@ -99,15 +106,12 @@ def get_root_template(product_name: str, default_prim: str, include_samples: boo
             dictionary muteness = {{
             }}
         }}
-        # Safe Mode Default: All persistent layers are locked by default.
-        # Set Session Layer as active authoring layer in Omniverse UI to prevent layer pollution.
-        # (Session Layer is in-memory only and cannot be referenced by file path in metadata)
         dictionary renderSettings = {{
         }}
     }}
     defaultPrim = "{default_prim}"
     endTimeCode = 100
-    metersPerUnit = 0.01
+    metersPerUnit = {meters_per_unit}
     startTimeCode = 0
     subLayers = [
         {sublayers_str}
@@ -118,7 +122,8 @@ def get_root_template(product_name: str, default_prim: str, include_samples: boo
 
 def Xform "Environment"
 {{
-    int ground:size = 1400
+    # Ground plane: 10x10 meters
+    int ground:size = {int(ground_half_size * 2)}
     string ground:type = "On"
     token visibility = "inherited"
     double3 xformOp:rotateXYZ = (0, 0, 0)
@@ -187,7 +192,7 @@ def Xform "Environment"
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {{
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        float3[] extent = [(-{ground_half_size}, -{ground_half_size}, 0), ({ground_half_size}, {ground_half_size}, 0)]
         int[] faceVertexCounts = [4]
         int[] faceVertexIndices = [0, 1, 3, 2]
         rel material:binding = </Environment/Looks/Grid> (
@@ -196,9 +201,9 @@ def Xform "Environment"
         normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
             interpolation = "faceVarying"
         )
-        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        point3f[] points = [(-{ground_half_size}, -{ground_half_size}, 0), ({ground_half_size}, -{ground_half_size}, 0), (-{ground_half_size}, {ground_half_size}, 0), ({ground_half_size}, {ground_half_size}, 0)]
         bool primvars:isMatteObject = 0
-        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
+        texCoord2f[] primvars:st = [(0, 0), (10, 0), (10, 10), (0, 10)] (
             interpolation = "faceVarying"
         )
         uniform token subdivisionScheme = "none"
@@ -263,13 +268,15 @@ def "Render" (
     }}
 }}
 
+over "OmniverseKit_Persp"
+{{
+    double2 clippingRange = ({camera_near}, {camera_far})
+}}
+
 def Xform "{default_prim}"
 {{
-    def Scope "Geo"
-    {{
-        # Add your product geometry here
-        # Example: def Xform "ProductName" (references = @../010_ASS_USD/geo/product_GEO.usda@) {{ }}
-    }}
+    # Add your product geometry here
+    # Example: def Xform "ProductName" (references = @../010_ASS_USD/USD_Endpoint/product_GEO.usda@) {{ }}
 
     def Scope "Looks"
     {{
@@ -291,145 +298,71 @@ def get_layer_template(layer_type: str, layer_name: str, default_prim: str = "Wo
     templates = {
         "opinion": f'''#usda 1.0
 (
-    doc = "Opinion/override layer for {layer_name}. This is the default authoring layer."
+    doc = "Opinion/override layer for Personal opinions / overides."
 )
 
-def "{default_prim}"
+over "{default_prim}"
 {{
-    # Add your opinions, overrides, and modifications here.
-    # This layer sits at the top (strongest) and can override anything from lower layers.
 }}
 ''',
         "abc_opinion": f'''#usda 1.0
 (
-    doc = "Opinion layer abc - overrides shader ball position for alternative layout."
+    doc = "Opinion layer abc for {layer_name}."
 )
 
 over "{default_prim}"
 {{
-    over "Geo"
-    {{
-        over "nvidia_shader_ball"
-        {{
-            double3 xformOp:rotateXYZ = (0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (17.46904850038133, 176.23009685101712, 126.57352712500494)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-        }}
-    }}
+    # Add opinions here
 }}
 ''',
         "xyz_opinion": f'''#usda 1.0
 (
-    doc = "Opinion layer xyz - overrides variant selection and environment."
+    doc = "Opinion layer xyz for {layer_name}."
 )
 
 over "{default_prim}"
 {{
-    over "Geo"
-    {{
-        # Shader ball - no variant set, just a simple reference
-        # (Variants removed due to compatibility issues)
-    }}
-}}
-
-over "Environment"
-{{
-    over "ground"
-    {{
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
-        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
-        bool primvars:isMatteObject = 0
-        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
-        token visibility = "inherited"
-    }}
+    # Add opinions here
 }}
 ''',
         "ass_import": f'''#usda 1.0
 (
-    doc = "Asset import layer for {layer_name}. References and payloads assets from 010_ASS_USD/."
+    doc = "Asset import layer for {layer_name}. References and payloads assets from 010_ASS_USD/USD_Endpoint/."
 )
 
 def "{default_prim}"
 {{
-    def Scope "Geo"
+    def Xform "Cube" (
+        references = @../010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda@
+    )
     {{
-        def Xform "Cube" (
-            references = @../010_ASS_USD/geo/0_CUBE_GEO.usda@
-        )
-        {{
-            double3 xformOp:rotateXYZ = (0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (447.30697944709954, 0, 0)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
 
-            over "Geo"
-            {{
-                over "Cube"
-                {{
-                    token visibility = "inherited"
-                }}
-            }}
-        }}
-
-        def Xform "nvidia_shader_ball" (
-            references = @../010_ASS_USD/geo/0_Shader_Ball_GEO.usda@
-        )
-        {{
-            double3 xformOp:rotateXYZ = (0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (0, 0, 0)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-        }}
+    def Xform "Ball" (
+        references = @../010_ASS_USD/USD_Endpoint/0_Shader_Ball_GEO.usda@
+    )
+    {{
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 }}
 ''',
         "mtl_import": f'''#usda 1.0
 (
-    doc = "Material import layer for {layer_name}. References material libraries from 010_ASS_USD/mat/."
+    doc = "Material import layer for {layer_name}. References material libraries from 010_ASS_USD/MatLib/."
 )
 
 def "{default_prim}"
 {{
     def Scope "Looks"
     {{
-        def Material "Material_Blue"
-        {{
-            token outputs:mdl:displacement.connect = </{default_prim}/Looks/Material_Blue/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </{default_prim}/Looks/Material_Blue/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </{default_prim}/Looks/Material_Blue/Shader.outputs:out>
-
-            def Shader "Shader"
-            {{
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_color_constant = (0.0, 0.2, 1.0)
-                float inputs:reflection_roughness_constant = 0.5
-                token outputs:out (
-                    renderType = "material"
-                )
-            }}
-        }}
-
-        def Material "Material_Red"
-        {{
-            token outputs:mdl:displacement.connect = </{default_prim}/Looks/Material_Red/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </{default_prim}/Looks/Material_Red/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </{default_prim}/Looks/Material_Red/Shader.outputs:out>
-
-            def Shader "Shader"
-            {{
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @OmniPBR.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "OmniPBR"
-                color3f inputs:diffuse_color_constant = (1.0, 0.0, 0.0)
-                float inputs:reflection_roughness_constant = 0.5
-                token outputs:out (
-                    renderType = "material"
-                )
-            }}
-        }}
+        # Add materials here
     }}
 }}
 ''',
@@ -440,51 +373,12 @@ def "{default_prim}"
 
 over "{default_prim}"
 {{
-    over "Geo"
-    {{
-        over "Cube" (
-            variants = {{
-                string MaterialVariant = "Blue"
-            }}
-            prepend variantSets = "MaterialVariant"
-        )
-        {{
-            variantSet "MaterialVariant" = {{
-                "Blue" {{
-                    over "Geo"
-                    {{
-                        over "Cube" (
-                            prepend apiSchemas = ["MaterialBindingAPI"]
-                        )
-                        {{
-                            rel material:binding = </{default_prim}/Looks/Material_Blue> (
-                                bindMaterialAs = "weakerThanDescendants"
-                            )
-                        }}
-                    }}
-                }}
-                "Red" {{
-                    over "Geo"
-                    {{
-                        over "Cube" (
-                            prepend apiSchemas = ["MaterialBindingAPI"]
-                        )
-                        {{
-                            rel material:binding = </{default_prim}/Looks/Material_Red> (
-                                bindMaterialAs = "weakerThanDescendants"
-                            )
-                        }}
-                    }}
-                }}
-            }}
-        }}
-
-    }}
+    # Add variants here
 }}
 ''',
         "sim": f'''#usda 1.0
 (
-    doc = "Simulation layer for {layer_name}. Physics, collisions, articulations, sensors."
+    doc = "Simulation layer for {layer_name}. Physics, collisions, articulations, Simulations."
 )
 
 def "{default_prim}"
@@ -496,9 +390,27 @@ def "{default_prim}"
     # - Sensor definitions
 }}
 ''',
-        "meta": f'''#usda 1.0
+        "action": f'''#usda 1.0
 (
-    doc = "Metadata layer for {layer_name}. PLM/ERP/AAS/OPC UA metadata."
+    doc = "Action layer for {layer_name}."
+)
+
+over "{default_prim}"
+{{
+}}
+''',
+        "anim": f'''#usda 1.0
+(
+    doc = "Animation layer for {layer_name}."
+)
+
+over "{default_prim}"
+{{
+}}
+''',
+        "data": f'''#usda 1.0
+(
+    doc = "Metadata layer for {layer_name}. PLM/ERP/AAS/OPC UA / sensor / data metadata."
 )
 
 over "{default_prim}"
@@ -545,41 +457,30 @@ Place your source files here (CAD files, DCC project files, etc.) before convert
 ''',
     "010_ASS_USD": '''# 010_ASS_USD
 
-**Purpose:** USD assets (converted from CAD or created in DCC).
+**Purpose:** USD assets (converted from CAD or created in DCC + Textures from 2D Apps)
 
 ## Folder Structure
-- `geo/` - Geometry assets
-- `mat/` - Material libraries
+- `USD_Endpoint/` - Geometry assets -> Exports from CAD / DCC as stable Endpoints, the name stays constant
+- `MatLib/` - Material libraries
+- `tex/` - Global textures shared across multiple assets. Place shared texture files here. Asset-specific textures can live with their assets in `USD_Endpoint/`
 
 See the main README.md for detailed usage instructions.
 ''',
-    "020_TEX": '''# 020_TEX
+    "020_BASE_LYR": '''# 020_BASE_LYR
 
-**Purpose:** Global textures shared across multiple assets.
-
-Place shared texture files here. Asset-specific textures can live with their assets in `010_ASS_USD/`.
-''',
-    "030_USD_LYR": '''# 030_USD_LYR
-
-**Purpose:** General USD layers (visual, layout, material, opinion layers).
+**Purpose:** Base USD layers (opinion, asset import, material import, variant, action, animation layers).
 
 See the main README.md for detailed usage instructions.
 ''',
-    "040_SIM_LYR": '''# 040_SIM_LYR
+    "030_SIM_LYR": '''# 030_SIM_LYR
 
 **Purpose:** Simulation layers (physics, collisions, articulations, sensors).
 
 See the main README.md for detailed usage instructions.
 ''',
-    "050_VAR_LYR": '''# 050_VAR_LYR
+    "040_DATA_LYRs": '''# 040_DATA_LYRs
 
-**Purpose:** Variant/configuration layers.
-
-See the main README.md for detailed usage instructions.
-''',
-    "060_META_LYR": '''# 060_META_LYR
-
-**Purpose:** Metadata and standards layers (PLM/ERP/AAS/OPC UA).
+**Purpose:** Data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA / sensor / data metadata).
 
 See the main README.md for detailed usage instructions.
 '''
@@ -598,20 +499,9 @@ def print_header():
     print()
 
 
-def ask_product_name() -> str:
-    """Ask for product name."""
-    while True:
-        name = input("Enter product name (used for root file and default prim): ").strip()
-        if name:
-            # Sanitize for filename
-            safe_name = "".join(c if c.isalnum() or c in (' ', '-', '_') else '_' for c in name)
-            return safe_name
-        print("Product name cannot be empty.")
-
-
-def ask_default_prim(product_name: str) -> str:
-    """Ask for default prim name, defaulting to product name or 'World'."""
-    default = product_name if product_name else "World"
+def ask_default_prim_name() -> str:
+    """Ask for default prim name, defaulting to 'World'."""
+    default = "World"
     response = input(f"Enter default prim name (default: '{default}'): ").strip()
     return response if response else default
 
@@ -625,6 +515,36 @@ def ask_include_samples() -> bool:
         elif response == 'n':
             return False
         print("Please enter 'y' or 'n'.")
+
+
+def ask_unit_system() -> float:
+    """Ask user to select unit system (mm/cm/m) and return metersPerUnit value."""
+    print("\nSelect unit system:")
+    print("  [1] Millimeters (mm)")
+    print("  [2] Centimeters (cm)")
+    print("  [3] Meters (m) - default")
+    
+    unit_map = {
+        "1": 0.001,  # millimeters
+        "2": 0.01,   # centimeters
+        "3": 1.0     # meters
+    }
+    
+    unit_names = {
+        "1": "millimeters",
+        "2": "centimeters", 
+        "3": "meters"
+    }
+    
+    while True:
+        choice = input("Enter choice (1-3, default: 3): ").strip()
+        if not choice:
+            choice = "3"
+        if choice in unit_map:
+            unit_name = unit_names[choice]
+            print(f"[OK] Selected: {unit_name}")
+            return unit_map[choice]
+        print("Invalid choice. Please enter 1, 2, or 3.")
 
 
 # ============================================================================
@@ -651,46 +571,38 @@ def create_readme_files(base_path: Path):
             print(f"  [OK] {folder_name}/README.md")
 
 
-def create_root_file(base_path: Path, product_name: str, default_prim: str, 
-                     include_samples: bool, sub_assemblies: List[str]):
+def create_root_file(base_path: Path, default_prim: str, 
+                     include_samples: bool, sub_assemblies: List[str], meters_per_unit: float):
     """Create the root USD file."""
     print("\nCreating root USD file...")
     
     # Build sublayers list (strongest first, weakest last)
     # In USD, first in array = strongest (applied last, overrides others)
     # Last in array = weakest (applied first, can be overridden)
-    # Note: This matches the order in GoodStart_ROOT.usda
+    # Match the order from user's new structure
     sublayers = []
     
     if include_samples:
-        # Match exact order from GoodStart_ROOT.usda
-        sublayers.extend([
-            "./040_SIM_LYR/sample_SIM_LYR.usda",  # First = strongest
-            "./060_META_LYR/sample_META_LYR.usda",
-            "./030_USD_LYR/sample_USD_LYR.usda",
-            "./050_VAR_LYR/sample_VAR_LYR.usda",
-            "./030_USD_LYR/your very Personal opinion_LYR.usda",  # Authoring layer (unlocked)
-            "./050_VAR_LYR/VAR_LYR.usda",
-            "./030_USD_LYR/abc_Opinion_LYR.usda",
-            "./030_USD_LYR/xyz_Opinion_LYR.usda",
-        ])
-    else:
-        # Production setup (no samples)
-        # Opinion layer first (strongest), then variant, then imports
-        sublayers.extend([
-            "./030_USD_LYR/Opinion_LYR.usda",  # Strongest
-            "./050_VAR_LYR/VAR_LYR.usda",
-        ])
+        # Sample layers (if needed in future)
+        # For now, use production structure
+        pass
     
-    # Material and asset import (always at bottom - weakest)
-    # These are applied first and can be overridden by layers above
+    # Production setup - match user's structure exactly
+    # Strongest to weakest order:
     sublayers.extend([
-        "./030_USD_LYR/Mtl_import_LYR.usda",
-        "./030_USD_LYR/Ass_import_LYR.usda"  # Weakest - must be last
+        "./020_BASE_LYR/OPIN_LYR.usda",      # Strongest - opinions/overrides
+        "./030_SIM_LYR/SIM_LYR.usda",        # Simulation
+        "./040_DATA_LYRs/DATA_LYRs.usda",    # Data/metadata
+        "./020_BASE_LYR/ACTION_LYR.usda",    # Actions (placeholder)
+        "./020_BASE_LYR/ANIM_LYR.usda",      # Animation (placeholder)
+        "./020_BASE_LYR/VAR_LYR.usda",       # Variants
+        "./020_BASE_LYR/MTL_LYR.usda",       # Materials
+        "./020_BASE_LYR/ASS_LYR.usda"        # Weakest - asset imports
     ])
     
-    root_content = get_root_template(product_name, default_prim, include_samples, sublayers)
-    root_filename = f"{product_name}_ROOT.usda"
+    # Root file is always named USD_GoodStart_ROOT.usda
+    root_content = get_root_template("USD_GoodStart", default_prim, include_samples, sublayers, meters_per_unit)
+    root_filename = "USD_GoodStart_ROOT.usda"
     root_path = base_path / root_filename
     root_path.write_text(root_content, encoding='utf-8')
     print(f"  [OK] {root_filename}")
@@ -701,42 +613,41 @@ def create_layer_files(base_path: Path, include_samples: bool, default_prim: str
     
     Args:
         base_path: Base path for the project
-        include_samples: Whether to include sample layers
+        include_samples: Whether to include sample layers (not used in new structure)
         default_prim: Default prim name to use in all layers (for consistency)
     """
     print("\nCreating layer files...")
     
     layers_to_create = []
     
-    if include_samples:
-        # Sample layers
-        layers_to_create.extend([
-            ("030_USD_LYR", "sample_USD_LYR.usda", "opinion"),
-            ("040_SIM_LYR", "sample_SIM_LYR.usda", "sim"),
-            ("050_VAR_LYR", "sample_VAR_LYR.usda", "var"),
-            ("060_META_LYR", "sample_META_LYR.usda", "meta"),
-            # User layers with specific opinions
-            ("030_USD_LYR", "your very Personal opinion_LYR.usda", "opinion"),
-            ("030_USD_LYR", "abc_Opinion_LYR.usda", "abc_opinion"),
-            ("030_USD_LYR", "xyz_Opinion_LYR.usda", "xyz_opinion"),
-        ])
-    
-    # Production layers (always created)
+    # Base layers (always created) - match user's new structure
     layers_to_create.extend([
-        ("030_USD_LYR", "Opinion_LYR.usda", "opinion"),
-        ("030_USD_LYR", "Ass_import_LYR.usda", "ass_import"),
-        ("030_USD_LYR", "Mtl_import_LYR.usda", "mtl_import"),
-        ("050_VAR_LYR", "VAR_LYR.usda", "var"),
+        ("020_BASE_LYR", "OPIN_LYR.usda", "opinion"),
+        ("020_BASE_LYR", "ASS_LYR.usda", "ass_import"),
+        ("020_BASE_LYR", "MTL_LYR.usda", "mtl_import"),
+        ("020_BASE_LYR", "VAR_LYR.usda", "var"),
+        ("020_BASE_LYR", "ACTION_LYR.usda", "action"),
+        ("020_BASE_LYR", "ANIM_LYR.usda", "anim"),
+    ])
+    
+    # Simulation layer
+    layers_to_create.extend([
+        ("030_SIM_LYR", "SIM_LYR.usda", "sim"),
+    ])
+    
+    # Data layers (plural folder name)
+    layers_to_create.extend([
+        ("040_DATA_LYRs", "DATA_LYRs.usda", "data"),
     ])
     
     for folder, filename, layer_type in layers_to_create:
         layer_path = base_path / folder / filename
-        content = get_layer_template(layer_type, filename.replace("_LYR.usda", ""), default_prim)
+        content = get_layer_template(layer_type, filename.replace("_LYR.usda", "").replace("_LYRs.usda", ""), default_prim)
         layer_path.write_text(content, encoding='utf-8')
         print(f"  [OK] {folder}/{filename}")
 
 
-def create_sub_assembly_files(base_path: Path, product_name: str, sub_assemblies: List[str]):
+def create_sub_assembly_files(base_path: Path, sub_assemblies: List[str]):
     """Create sub-assembly USD files for complex products."""
     if not sub_assemblies:
         return
@@ -746,12 +657,12 @@ def create_sub_assembly_files(base_path: Path, product_name: str, sub_assemblies
         safe_name = assembly.replace(" ", "_")
         filename = f"{safe_name}_ASSEMBLY.usda"
         file_path = base_path / "010_ASS_USD" / filename
-        content = get_sub_assembly_template(assembly, product_name)
+        content = get_sub_assembly_template(assembly, "USD_GoodStart")
         file_path.write_text(content, encoding='utf-8')
         print(f"  [OK] 010_ASS_USD/{filename}")
 
 
-def create_sample_assets(base_path: Path, include_samples: bool, default_prim: str):
+def create_sample_assets(base_path: Path, include_samples: bool, default_prim: str, meters_per_unit: float):
     """Create sample geometry assets programmatically.
     
     Generates all default assets (cube, shader ball) programmatically
@@ -765,109 +676,84 @@ def create_sample_assets(base_path: Path, include_samples: bool, default_prim: s
     # Always create default assets (cube and shader ball) for a working scene
     print("\nCreating default assets (programmatically generated)...")
     
-    # Cube geometry - matches the structure from 0_CUBE_GEO.usda
+    # Cube geometry - 1 meter edge length
+    # Calculate half-extent: 0.5 meters in scene units
+    # If metersPerUnit = 1.0, then 0.5 units = 0.5 meters
+    # If metersPerUnit = 0.01 (cm), then 50 units = 0.5 meters
+    # If metersPerUnit = 0.001 (mm), then 500 units = 0.5 meters
+    half_extent = 0.5 / meters_per_unit
+    
     cube_content = f'''#usda 1.0
 (
-    doc = "Sample cube geometry"
-    defaultPrim = "{default_prim}"
-    metersPerUnit = 0.01
+    doc = "Sample cube geometry - 1 meter edge length"
+    defaultPrim = "Geo"
+    metersPerUnit = {meters_per_unit}
     upAxis = "Y"
 )
 
-def Xform "Environment"
-{{
-    int ground:size = 1400
-    string ground:type = "On"
-    token visibility = "inherited"
-    double3 xformOp:rotateXYZ = (0, 0, 0)
-    double3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (0, 0, 0)
-    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-}}
-
-over "{default_prim}"
-{{
-    def Scope "Geo"
-    {{
-        def Mesh "Cube"
-        {{
-            float3[] extent = [(-50, -50, -50), (50, 50, 50)]
-            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
-            int[] faceVertexIndices = [0, 1, 3, 2, 4, 5, 7, 6, 0, 1, 5, 4, 2, 3, 7, 6, 0, 2, 6, 4, 1, 3, 7, 5]
-            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
-                interpolation = "faceVarying"
-            )
-            point3f[] points = [(-50, -50, 50), (50, -50, 50), (-50, 50, 50), (50, 50, 50), (-50, -50, -50), (50, -50, -50), (-50, 50, -50), (50, 50, -50)]
-            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
-                interpolation = "faceVarying"
-            )
-            uniform token subdivisionScheme = "none"
-            double3 xformOp:rotateXYZ = (0, 0, 0)
-            double3 xformOp:scale = (1, 1, 1)
-            double3 xformOp:translate = (0, 50, 0)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-        }}
+def Xform "Geo" (
+    assetInfo = {{
+        string version = "1.0.0"
     }}
-
-    def Scope "Looks"
+)
+{{
+    def Mesh "Cube"
     {{
+        float3[] extent = [(-{half_extent}, -{half_extent}, -{half_extent}), ({half_extent}, {half_extent}, {half_extent})]
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [0, 1, 3, 2, 4, 5, 7, 6, 0, 1, 5, 4, 2, 3, 7, 6, 0, 2, 6, 4, 1, 3, 7, 5]
+        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-{half_extent}, -{half_extent}, {half_extent}), ({half_extent}, -{half_extent}, {half_extent}), (-{half_extent}, {half_extent}, {half_extent}), ({half_extent}, {half_extent}, {half_extent}), (-{half_extent}, -{half_extent}, -{half_extent}), ({half_extent}, -{half_extent}, -{half_extent}), (-{half_extent}, {half_extent}, -{half_extent}), ({half_extent}, {half_extent}, -{half_extent})]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 }}
 '''
-    cube_path = base_path / "010_ASS_USD" / "geo" / "0_CUBE_GEO.usda"
+    cube_path = base_path / "010_ASS_USD" / "USD_Endpoint" / "0_CUBE_GEO.usda"
     cube_path.write_text(cube_content, encoding='utf-8')
-    print(f"  [OK] 010_ASS_USD/geo/0_CUBE_GEO.usda")
+    print(f"  [OK] 010_ASS_USD/USD_Endpoint/0_CUBE_GEO.usda")
     
-    # Shader ball geometry - programmatically generated sphere for material testing
-    # Uses USD Sphere primitive for clean, simple geometry
+    # Ball geometry - 1 meter diameter (radius 0.5 meters)
+    # Calculate radius: 0.5 meters in scene units
+    ball_radius = 0.5 / meters_per_unit
+    
     shader_ball_content = f'''#usda 1.0
 (
-    doc = "Shader ball geometry for material testing"
-    defaultPrim = "{default_prim}"
-    metersPerUnit = 0.01
+    doc = "Ball geometry - 1 meter diameter"
+    defaultPrim = "Geo"
+    metersPerUnit = {meters_per_unit}
     upAxis = "Y"
 )
 
-def Xform "Environment"
-{{
-    int ground:size = 1400
-    string ground:type = "On"
-    token visibility = "inherited"
-    double3 xformOp:rotateXYZ = (0, 0, 0)
-    double3 xformOp:scale = (1, 1, 1)
-    double3 xformOp:translate = (0, 0, 0)
-    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-}}
-
-over "{default_prim}"
-{{
-    def Scope "Geo"
-    {{
-        def Xform "nvidia_shader_ball_09"
-        {{
-            def Sphere "geo_shaderball_mat_01_All" (
-                prepend apiSchemas = ["MaterialBindingAPI"]
-            )
-            {{
-                float3[] extent = [(-50, -50, -50), (50, 50, 50)]
-                double radius = 50
-                token visibility = "inherited"
-                double3 xformOp:rotateXYZ = (0, 0, 0)
-                double3 xformOp:scale = (1, 1, 1)
-                double3 xformOp:translate = (0, 0, 0)
-                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-            }}
-        }}
+def Xform "Geo" (
+    assetInfo = {{
+        string version = "1.0.0"
     }}
-
-    def Scope "Looks"
+)
+{{
+    def Sphere "Ball"
     {{
+        float3[] extent = [(-{ball_radius}, -{ball_radius}, -{ball_radius}), ({ball_radius}, {ball_radius}, {ball_radius})]
+        double radius = {ball_radius}
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 }}
 '''
-    shader_ball_path = base_path / "010_ASS_USD" / "geo" / "0_Shader_Ball_GEO.usda"
+    shader_ball_path = base_path / "010_ASS_USD" / "USD_Endpoint" / "0_Shader_Ball_GEO.usda"
     shader_ball_path.write_text(shader_ball_content, encoding='utf-8')
-    print(f"  [OK] 010_ASS_USD/geo/0_Shader_Ball_GEO.usda")
+    print(f"  [OK] 010_ASS_USD/USD_Endpoint/0_Shader_Ball_GEO.usda")
 
 
 # ============================================================================
@@ -912,14 +798,13 @@ def setup_project(target_dir: Optional[Path] = None):
             return False
     
     # Interactive questions
-    product_name = ask_product_name()
-    print(f"[OK] Product name: {product_name}")
-    
-    default_prim = ask_default_prim(product_name)
+    default_prim = ask_default_prim_name()
     print(f"[OK] Default prim: {default_prim}")
     
     include_samples = ask_include_samples()
     print(f"[OK] Include samples: {'Yes' if include_samples else 'No'}")
+    
+    meters_per_unit = ask_unit_system()
     
     # Simple Product setup - no sub-assemblies
     sub_assemblies = []
@@ -932,17 +817,17 @@ def setup_project(target_dir: Optional[Path] = None):
     try:
         create_folder_structure(base_path)
         create_readme_files(base_path)
-        create_root_file(base_path, product_name, default_prim, include_samples, sub_assemblies)
+        create_root_file(base_path, default_prim, include_samples, sub_assemblies, meters_per_unit)
         create_layer_files(base_path, include_samples, default_prim)
-        create_sub_assembly_files(base_path, product_name, sub_assemblies)
-        create_sample_assets(base_path, include_samples, default_prim)
+        create_sub_assembly_files(base_path, sub_assemblies)
+        create_sample_assets(base_path, include_samples, default_prim, meters_per_unit)
         
         print("\n" + "=" * 70)
         print("  [OK] Project setup complete!")
         print("=" * 70)
-        print(f"\nRoot file: {base_path / f'{product_name}_ROOT.usda'}")
+        print(f"\nRoot file: {base_path / 'USD_GoodStart_ROOT.usda'}")
         print(f"\nNext steps:")
-        print(f"  1. Open {product_name}_ROOT.usda in Omniverse Composer")
+        print(f"  1. Open USD_GoodStart_ROOT.usda in Omniverse Composer")
         print(f"  2. Set Session Layer as active authoring layer (see README.md)")
         print(f"  3. Start adding your assets to 010_ASS_USD/")
         print()
