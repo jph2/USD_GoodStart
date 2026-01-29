@@ -1,5 +1,6 @@
-**Version:** 0.9.5-beta  
-**Last Updated:** 12.12.2025
+**Version:** 0.9.5-beta  (documentation for USD_GoodStart project scaffolding v0.8.1)  
+**Last Updated:** 29.01.2026
+**Project Scaffold Reference:** See main `USD_GoodStart/README.md` (version 0.8.1) for folder structure and setup script details.
 
 **Please NOTE this is a WIP document, some chapters only exist as headlines and bulletpoints**
 

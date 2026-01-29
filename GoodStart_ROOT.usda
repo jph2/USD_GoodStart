@@ -31,7 +31,8 @@
                 bool "./020_BASE_LYR/ACTION_LYR.usda" = 1
                 bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
                 bool "./020_BASE_LYR/ASS_LYR.usda" = 1
-                bool "./020_BASE_LYR/ENV_LYR.usda" = 0
+                bool "./020_BASE_LYR/CAM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
                 bool "./020_BASE_LYR/MTL_LYR.usda" = 1
                 bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
@@ -57,6 +58,7 @@
     startTimeCode = 0
     subLayers = [
         @./020_BASE_LYR/OPIN_LYR.usda@,
+        @./020_BASE_LYR/CAM_LYR.usda@,
         @./020_BASE_LYR/ENV_LYR.usda@,
         @./030_SIM_LYR/SIM_LYR.usda@,
         @./040_DATA_LYRs/DATA_LYRs.usda@,
@@ -263,7 +265,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (1630, 978)
+                uniform int2 resolution = (988, 1122)
             }
         }
     }
@@ -390,7 +392,10 @@ over "OmniverseKit_Top" (
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
 
-over "World"
+def Xform "World"
 {
+    double3 xformOp:rotateXYZ = (0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
-

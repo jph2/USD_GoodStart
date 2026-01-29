@@ -1,7 +1,7 @@
 # Scripts
 
-**Version:** 1.0.0
-**Last Updated:** 27.01.2026
+**Version:** 0.8.1 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
+**Last Updated:** 29.01.2026
 
 This directory contains utility scripts for USD GoodStart project management and validation.
 
@@ -45,6 +45,7 @@ scripts\setup_usd_project.bat [target_directory]
 1. **Default Prim Name**: Name for the default prim (defaults to "World")
    - Note: Root file is always named `USD_GoodStart_ROOT.usda`
    - Only the default prim name changes based on your input
+   - The default prim is **defined in the root layer** so references using "\<Default Prim\>" resolve correctly (e.g. Omniverse, usdview)
 
 2. **Include Samples**: Option to include sample scene files for learning
 

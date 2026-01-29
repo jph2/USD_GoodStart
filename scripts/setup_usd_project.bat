@@ -1,6 +1,7 @@
 @echo off
 REM USD GoodStart Project Setup - Windows Batch Wrapper
 REM Standalone launcher for setup_usd_project.py
+REM Version: see setup_usd_project.py --version or VERSION file
 
 setlocal
 

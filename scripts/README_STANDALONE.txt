@@ -3,11 +3,18 @@ USD GoodStart Project Setup - Standalone Package
 
 This package contains everything you need to set up a new USD_GoodStart project.
 
+VERSION:
+--------
+See VERSION file or run:  setup_usd_project.bat --version
+
+When creating a release zip, name it: USD_GoodStart_Setup_Standalone_vX.Y.Z.zip
+
 CONTENTS:
 ---------
 - setup_usd_project.py      - Main Python script
 - setup_usd_project.bat     - Windows batch file wrapper (double-click to run)
 - setup_usd_project.ps1     - PowerShell wrapper
+- VERSION                    - Single source of version (X.Y.Z)
 - SETUP_STANDALONE.md        - Detailed usage documentation
 - README.md                  - Full scripts documentation
 

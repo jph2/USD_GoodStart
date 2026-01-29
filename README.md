@@ -7,9 +7,9 @@
 > **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.  , but don't expect me to know everything, cause after all I am 'just' a ProductDesigner gone 3D artist, Realtime Guy, that decided to hop onto the omniverse...., and here I am ... learning,... learning,... learning,... OpenUSD and I wish you a good start!!!
 
 
-**Version:** 1.0.0  
-**Last Updated:** 28.01.2026
-> **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Matthias). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the [OpenUSD_Best_Practices_Guide (17).md](https://github.com/jph2/USD_GoodStart/blob/main/WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
+**Version:** 0.8.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
+**Last Updated:** 29.01.2026
+> **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Matthias). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
 ## Roadmap / Upcoming (keep an eye on these)
 These are **planned / in-progress ecosystem projects** that will likely feed back into this GoodStart as patterns, scripts, or optional tooling.
 
@@ -220,7 +220,7 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone.zip`](scripts/USD_GoodStart_Setup_Standalone.zip)), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.8.1.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.8.1.zip)), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Endpoint/`

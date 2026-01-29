@@ -6,9 +6,12 @@ Interactive script to generate a USD_GoodStart project structure with configurab
 
 Usage:
     python scripts/setup_usd_project.py [target_directory]
+    python scripts/setup_usd_project.py --version
 
 If no directory is provided, the script will run in the current directory.
 """
+
+__version__ = "0.8.1"
 
 import sys
 import os
@@ -48,7 +51,12 @@ FOLDER_STRUCTURE = [
 # ============================================================================
 
 def get_root_template(product_name: str, default_prim: str, include_samples: bool, sublayers: List[str], meters_per_unit: float = 1.0) -> str:
-    """Generate root USD file template."""
+    """Generate root USD file template.
+
+    The default prim is defined in the root layer (right after the preamble) so that
+    references using \"<Default Prim>\" resolve correctly in Omniverse and other consumers
+    that resolve default prim from the root layer only.
+    """
     sublayers_str = ",\n        ".join([f"@{layer}@" for layer in sublayers])
     
     # Calculate ground plane size: 10x10 meters
@@ -122,6 +130,16 @@ def get_root_template(product_name: str, default_prim: str, include_samples: boo
     timeCodesPerSecond = 60
     upAxis = "Y"
 )
+
+# Default prim MUST be defined in the root layer so references using "<Default Prim>"
+# resolve correctly (e.g. Omniverse, usdview). Sublayers add content via over/def.
+def Xform "{default_prim}"
+{{
+    double3 xformOp:rotateXYZ = (0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}}
 
 def Xform "Environment"
 {{
@@ -276,14 +294,12 @@ over "OmniverseKit_Persp"
     double2 clippingRange = ({camera_near}, {camera_far})
 }}
 
-def Xform "{default_prim}"
+# Product content: add geometry and materials under the default prim (sublayers override here)
+over "{default_prim}"
 {{
-    # Add your product geometry here
-    # Example: def Xform "ProductName" (references = @../010_ASS_USD/USD_Endpoint/product_GEO.usda@) {{ }}
-
     def Scope "Looks"
     {{
-        # Add materials here
+        # Add materials here (or in 020_BASE_LYR/MTL_LYR.usda)
         # Example: def Material "MaterialName" {{ ... }}
     }}
 }}
@@ -913,10 +929,11 @@ def setup_project(target_dir: Optional[Path] = None):
 
 def main():
     """Main entry point."""
-    target_dir = None
-    if len(sys.argv) > 1:
-        target_dir = sys.argv[1]
-    
+    args = sys.argv[1:]
+    if args and args[0] in ("--version", "-v"):
+        print(f"USD GoodStart Setup Script v{__version__}")
+        sys.exit(0)
+    target_dir = args[0] if args else None
     success = setup_project(target_dir)
     sys.exit(0 if success else 1)
 
