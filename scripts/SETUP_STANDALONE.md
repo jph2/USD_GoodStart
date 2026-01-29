@@ -1,6 +1,6 @@
 # Standalone Setup Script Usage
 
-**Version:** 0.9.0 | **Date:** 29.01.2026 16:00 (see `VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.3 | **Date:** 29.01.2026 19:00 (see `VERSION` or `setup_usd_project.bat --version`)
 
 ## Quick Start
 
@@ -46,7 +46,7 @@ python scripts\setup_usd_project.py "D:\MyProject"
 The setup script interactively generates a complete USD_GoodStart project structure:
 
 1. **Asks questions** about default prim name, unit system, and configuration
-2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Endpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs)
+2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Endpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs)
 3. **Generates USD files** programmatically:
    - Root file with proper layer ordering
    - All layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)

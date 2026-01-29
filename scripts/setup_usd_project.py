@@ -13,7 +13,7 @@ Usage:
 If no directory is provided, the script runs in the current directory.
 """
 
-__version__ = "0.9.0"
+__version__ = "0.9.3"
 
 import sys
 from pathlib import Path
@@ -27,6 +27,9 @@ FOLDER_STRUCTURE = [
     "000_SOURCE",
     "010_ASS_USD",
     "010_ASS_USD/USD_Endpoint",
+    "010_ASS_USD/MatLib",
+    "010_ASS_USD/tex",
+    "010_ASS_USD/Envs",
     "020_BASE_LYR",
     "030_SIM_LYR",
     "040_DATA_LYRs",
@@ -56,6 +59,7 @@ LAYERS_TO_CREATE = [
     ("020_BASE_LYR", "VAR_LYR.usda"),
     ("020_BASE_LYR", "ACTGR_LYR.usda"),
     ("020_BASE_LYR", "ANIM_LYR.usda"),
+    ("020_BASE_LYR", "PHY_LYR.usda"),
     ("030_SIM_LYR", "SIM_LYR.usda"),
     ("040_DATA_LYRs", "DATA_LYRs.usda"),
 ]
@@ -67,6 +71,54 @@ SCALE_OPTIONS = [
     ("mm", 0.001, "Millimeters"),
 ]
 
+# Layer templates for files that need more than just #usda 1.0
+# Use {default_prim} placeholder for the default prim name
+LAYER_TEMPLATES = {
+    "ASS_LYR.usda": '''#usda 1.0
+
+over "{default_prim}"
+{{
+    def Xform "A" (
+        references = <>
+    )
+    {{
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
+
+    def Xform "B" (
+        references = <>
+    )
+    {{
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
+}}
+
+''',
+    "CAM_LYR.usda": '''#usda 1.0
+
+over "{default_prim}"
+{{
+    def Camera "Camera"
+    {{
+        float2 clippingRange = (1, 10000000)
+        float focalLength = 18.147562
+        float focusDistance = 400
+        double3 xformOp:rotateYXZ = (0, -0, -0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 270, 360)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateYXZ", "xformOp:scale"]
+    }}
+}}
+
+''',
+}
+
 README_TEMPLATES = {
     "000_SOURCE": """# 000_SOURCE
 
@@ -76,34 +128,40 @@ Place your source files here (CAD files, DCC project files, etc.) before convert
 """,
     "010_ASS_USD": """# 010_ASS_USD
 
-**Purpose:** USD assets (converted from CAD or created in DCC + Textures from 2D Apps).
+**Purpose:** USD assets (converted from CAD or created in DCC + Textrurs from that were created in 2D Apps) | 
 
 ## Folder Structure
-- `USD_Endpoint/` - Geometry assets; exports from CAD/DCC as stable endpoints (name stays constant)
+- `USD_Endpoint/` - Geometry assets -> Exports froM CAD / DCC as stable Endpoints, the name Stays constant
 - `MatLib/` - Material libraries
-- `tex/` - Global textures shared across multiple assets
-- `Envs/` - Environments
+- `tex/` - Global textures shared across multiple assets Place shared texture files here. Asset-specific textures can live with their assets in `USD_Endpoint/`
+- `Envs/` -  Environments 
 
 See the main README.md for detailed usage instructions.
 """,
     "020_BASE_LYR": """# 020_BASE_LYR
 
-**Purpose:** Base USD layers (opinion, cameras, environment, assets, materials, variants, action, animation).
+**Purpose:** Base USD layers (opinion, asset import, material import, variant, action, animation layers).
+
+# 020_BASE_LYR
+
+**Purpose:** General USD layers (visual, layout, material, opinion layers).
+
 
 ACTGR_LYR.usda -> Action Graphs
 ANIM_LYR.usda -> Animation tracks
 ASS_LYR.usda -> Assets | Local | Reference | Payloads
 CAM_LYR.usda -> Cameras
 ENV_LYR.usda -> Environment
-MTL_LYR.usda -> Material libraries | Local materials
+MTL_LYR.usda -> Material Libaries | Local materials 
 OPIN_LYR.usda -> Opinions
+PHY_LYR.usda -> Physics simulation
 VAR_LYR.usda -> Variants
 
 See the main README.md for detailed usage instructions.
 """,
     "030_SIM_LYR": """# 030_SIM_LYR
 
-**Purpose:** Simulation layers (external simulations e.g. Ansys).
+**Purpose:** Simulation layers (external simulations e.g. ansys)
 
 See the main README.md for detailed usage instructions.
 """,
@@ -117,11 +175,11 @@ See the main README.md for detailed usage instructions.
 
 # ============================================================================
 # Root template: based on USD_GoodStart_m_ROOT.usda
-# Only {root_filename} and {mpu_str} are substituted (authoring_layer + metersPerUnit).
+# {root_filename}, {mpu_str}, and {default_prim} are substituted.
 # ============================================================================
 
-def _get_root_template_content(root_filename: str, mpu_str: str) -> str:
-    """Return root USDA content. Template uses root_filename and mpu_str."""
+def _get_root_template_content(root_filename: str, mpu_str: str, default_prim: str) -> str:
+    """Return root USDA content. Template uses root_filename, mpu_str, and default_prim."""
     sublayers_str = ",\n        ".join([f"@{p}@" for p in SUBLAYERS])
     return f'''#usda 1.0
 (
@@ -174,7 +232,7 @@ def _get_root_template_content(root_filename: str, mpu_str: str) -> str:
             double "rtx:translucency:maxRayUnexposedIntensity" = 19199.998046875
         }}
     }}
-    defaultPrim = "World"
+    defaultPrim = "{default_prim}"
     endTimeCode = 100
     metersPerUnit = {mpu_str}
     startTimeCode = 0
@@ -185,8 +243,26 @@ def _get_root_template_content(root_filename: str, mpu_str: str) -> str:
     upAxis = "Y"
 )
 
-def Xform "World"
+def Xform "{default_prim}"
 {{
+    def Mesh "Cube"
+    {{
+        float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
+        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-50, -50, 50), (50, -50, 50), (-50, 50, 50), (50, 50, 50), (-50, -50, -50), (50, -50, -50), (-50, 50, -50), (50, 50, -50)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
+        double3 xformOp:rotateXYZ = (0, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 267.6749425311719, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
 }}
 
 def Xform "Environment"
@@ -389,6 +465,26 @@ def ask_scale() -> int:
         print("Please enter 1, 2, or 3.")
 
 
+def ask_default_prim() -> str:
+    """Ask for the default prim name. Returns 'World' if empty."""
+    print("\nDefault prim name (the root Xform that holds your scene):")
+    print("  This name will be used in the root file and all layer files.")
+    print("  Examples: World, MyProduct, Scene, Assembly")
+    name = input("Enter default prim name (default: World): ").strip()
+    if not name:
+        return "World"
+    # Basic validation: must be a valid USD prim name (no spaces, starts with letter)
+    if not name[0].isalpha():
+        print("Warning: Prim name should start with a letter. Using 'World' instead.")
+        return "World"
+    # Replace spaces and invalid chars with underscores
+    import re
+    clean_name = re.sub(r'[^a-zA-Z0-9_]', '_', name)
+    if clean_name != name:
+        print(f"Note: Prim name adjusted to '{clean_name}' (removed invalid characters)")
+    return clean_name
+
+
 # ============================================================================
 # File generation
 # ============================================================================
@@ -411,47 +507,60 @@ def create_readme_files(base_path: Path):
             print(f"  [OK] {top}/README.md")
 
 
-def create_layer_files(base_path: Path):
-    """Create all sublayer USDA files with minimal content: #usda 1.0"""
+def create_layer_files(base_path: Path, default_prim: str):
+    """Create all sublayer USDA files. Uses templates for ASS_LYR and CAM_LYR, minimal for others."""
     print("\nCreating layer files...")
     minimal_content = "#usda 1.0\n"
     for folder, filename in LAYERS_TO_CREATE:
         path = base_path / folder / filename
-        path.write_text(minimal_content, encoding="utf-8")
+        # Use template if available, otherwise minimal
+        template = LAYER_TEMPLATES.get(filename)
+        if template:
+            content = template.format(default_prim=default_prim)
+        else:
+            content = minimal_content
+        path.write_text(content, encoding="utf-8")
         print(f"  [OK] {folder}/{filename}")
 
 
-def create_root_file(base_path: Path, scale_index: int):
+def create_root_file(base_path: Path, scale_index: int, default_prim: str) -> str:
     """Create root USDA. If this script lives in USD_GoodStart/scripts and the
     reference root exists in repo root, copy it; else generate from template.
+    Replaces 'World' with default_prim in all cases.
+    Returns the root filename.
     """
+    import re
     suffix, mpu_val, _ = SCALE_OPTIONS[scale_index]
-    root_filename = f"USD_GoodStart_{suffix}_ROOT.usda"
+    # Use default_prim in the filename instead of USD_GoodStart
+    root_filename = f"{default_prim}_{suffix}_ROOT.usda"
     path = base_path / root_filename
 
     # Prefer copying reference root from repo when available (same dir as script -> parent = repo root)
     script_dir = Path(__file__).resolve().parent
     repo_root = script_dir.parent
-    reference_root = repo_root / root_filename
+    # Reference roots in repo are named USD_GoodStart_*_ROOT.usda
+    reference_root = repo_root / f"USD_GoodStart_{suffix}_ROOT.usda"
     if reference_root.exists():
         content = reference_root.read_text(encoding="utf-8")
-        # Ensure authoring_layer in customLayerData points at our output filename (relative to new location)
-        if "authoring_layer" in content and "./" in content:
-            import re
-            content = re.sub(
-                r'(string authoring_layer = )"[^"]*"',
-                f'\\1"./{root_filename}"',
-                content,
-                count=1,
-            )
+        # Update authoring_layer to point at the new filename
+        content = re.sub(
+            r'(string authoring_layer = )"[^"]*"',
+            f'\\1"./{root_filename}"',
+            content,
+        )
+        # Replace default prim name if not "World"
+        if default_prim != "World":
+            content = re.sub(r'defaultPrim = "World"', f'defaultPrim = "{default_prim}"', content)
+            content = re.sub(r'def Xform "World"', f'def Xform "{default_prim}"', content)
         path.write_text(content, encoding="utf-8")
         print(f"  [OK] {root_filename} (copied from repo)")
-        return
+        return root_filename
 
     mpu_str = "1" if mpu_val == 1.0 else str(mpu_val)
-    content = _get_root_template_content(root_filename, mpu_str)
+    content = _get_root_template_content(root_filename, mpu_str, default_prim)
     path.write_text(content, encoding="utf-8")
     print(f"  [OK] {root_filename}")
+    return root_filename
 
 
 # ============================================================================
@@ -480,7 +589,10 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
 
     scale_index = ask_scale()
     suffix = SCALE_OPTIONS[scale_index][0]
-    print(f"[OK] Scale: {SCALE_OPTIONS[scale_index][2]} ({suffix})\n")
+    print(f"[OK] Scale: {SCALE_OPTIONS[scale_index][2]} ({suffix})")
+
+    default_prim = ask_default_prim()
+    print(f"[OK] Default prim: {default_prim}\n")
 
     print("=" * 70)
     print("  Generating project structure...")
@@ -489,14 +601,14 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
     try:
         create_folder_structure(base_path)
         create_readme_files(base_path)
-        create_layer_files(base_path)
-        create_root_file(base_path, scale_index)
+        create_layer_files(base_path, default_prim)
+        root_name = create_root_file(base_path, scale_index, default_prim)
 
         print("\n" + "=" * 70)
         print("  [OK] Project setup complete!")
         print("=" * 70)
-        root_name = f"USD_GoodStart_{suffix}_ROOT.usda"
         print(f"\nRoot file: {base_path / root_name}")
+        print(f"Default prim: {default_prim}")
         print("\nNext steps:")
         print("  1. Open the root file in Omniverse Composer")
         print("  2. Add assets under 010_ASS_USD/USD_Endpoint/")
