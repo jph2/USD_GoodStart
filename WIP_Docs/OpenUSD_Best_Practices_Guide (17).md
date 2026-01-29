@@ -1061,6 +1061,16 @@ Following the GoodStart standard:
 - `*_VAR_LYR.usda` → Variant layers
 - `*_[type]_SIM_LYR.usda` → Simulation layers
 
+#### Scale and units in this setup (GoodStart)
+
+In the GoodStart setup, **scale is chosen once** (meters, centimeters, or millimeters) and **written into the root file**. Sublayers are either empty or contain only `over` prims that inherit from the root; **unit scale is defined in the root** and applies across the composed stage.
+
+**Omniverse note:** In Omniverse, **unit scale** can be set **per layer** in the layer’s properties. The exact effect of that per-file override is not fully clear. In testing, **referenced objects kept the correct scale** even when the scene units were changed for the stage into which a referenced asset was imported, and when the root layer and other layers had different unit scales. So referenced content held scale correctly despite differing layer/scene unit settings—but be aware of the per-layer unit option when debugging scale issues.
+
+#### Session layer workflow
+
+**Good practice:** Work on the **session layer** for a while, then **move content to the appropriate persistent layers** when it’s stable. That tends to result in **less mess** than authoring directly into many layers from the start. Use the session layer as a scratch area, then promote changes to the right layer (e.g. `VAR_LYR`, `OPIN_LYR`, `ASS_LYR`) once you’re happy with them. See also the main README “Safe Mode” section and [VarianSets_In_SessionLyr_RESEARCH](VarianSets_In_SessionLyr_RESEARCH.md) (if present in the repo).
+
 ### 1.5.4 Root File Management
 
 #### GoodStart_ROOT.usda Purpose

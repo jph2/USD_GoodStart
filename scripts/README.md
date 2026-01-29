@@ -1,7 +1,7 @@
 # Scripts
 
-**Version:** 0.8.1 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
-**Last Updated:** 29.01.2026
+**Version:** 0.9.0 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
+**Last Updated:** 29.01.2026 16:00
 
 This directory contains utility scripts for USD GoodStart project management and validation.
 

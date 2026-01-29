@@ -212,6 +212,20 @@ The **setup script + standalone zip** generate new projects with this metadata p
 - A pre-configured, locked layer stack
 - Environment + lighting coming from `ENV_LYR.usda`
 
+### Scale and units in this setup
+
+In this setup, **scale is chosen once** (meters, centimeters, or millimeters) and **written into the root file**. The sublayers are either empty or contain only `over` prims that inherit structure from the root; the **unit scale is defined in the root** and effectively applies across the composed stage.
+
+**Omniverse note:** In Omniverse, the **unit scale** can also be set **per layer** in the layer’s properties. It’s not fully clear what that per-file override does in all cases. In testing, **referenced objects kept the correct scale** even when:
+- The scene units were changed for the stage into which a referenced asset was imported, and
+- The root layer and other layers had different unit scales.
+
+So referenced content appeared to hold scale correctly despite differing layer/scene unit settings—but be aware of the per-layer unit option when debugging scale issues.
+
+### Session layer workflow
+
+A good practice is to **work on the session layer for a while**, then **move content to the appropriate persistent layers** when it’s stable. That tends to result in **less mess** than authoring directly into many layers from the start. Use the session layer as a scratch area, then promote changes to the right layer (e.g. `VAR_LYR`, `OPIN_LYR`, `ASS_LYR`) once you’re happy with them. See also [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md) and the “Safe Mode” section below.
+
 ## Laziness is What Got Us Here
 
 You have three options to get started:
@@ -220,7 +234,7 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.8.1.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.8.1.zip)), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.0.zip`](USD_GoodStart_Setup_Standalone_v0.9.0.zip)), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Endpoint/`
@@ -237,6 +251,7 @@ If you don’t want **any** accidental file edits while exploring variants/mater
 
 - **Lock all persistent layers** (everything except the session layer)
 - **Set the Session Layer as the active authoring layer** (top green layer in the Layers panel)
+- **Work on the session layer for a while, then move content to the right persistent layers** — you’ll end up with less mess than authoring straight into many layers.
 
 ![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer03.png)
 
