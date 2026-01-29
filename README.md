@@ -234,7 +234,7 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.3.zip`]([USD_GoodStart_Setup_Standalone_v0.9.3.zip](https://github.com/jph2/USD_GoodStart/blob/main/scripts/USD_GoodStart_Setup_Standalone_v0.9.3.zip))), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.3.zip`]([USD_GoodStart_Setup_Standalone_v0.9.3.zip](https://github.com/jph2/USD_GoodStart/blob/main/scripts/USD_GoodStart_Setup_Standalone_v0.9.3.zip), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Endpoint/`
