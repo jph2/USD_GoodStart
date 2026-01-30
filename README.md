@@ -53,6 +53,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 ```mermaid
 graph TD
     Root[USD_GoodStart_ROOT.usda<br/>Main Container] --> Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
+    Root --> Camera[CAM_LYR.usda<br/>Cameras]
     Root --> Env[ENV_LYR.usda<br/>Environment & Lighting]
     Root --> Sim[SIM_LYR.usda<br/>Simulation & Physics]
     Root --> Data[DATA_LYRs.usda<br/>Data & Metadata]
@@ -60,6 +61,7 @@ graph TD
     Root --> Anim[ANIM_LYR.usda<br/>Animation]
     Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
     Root --> Material[MTL_LYR.usda<br/>Materials & Shading]
+    Root --> Physics[PHY_LYR.usda<br/>Physics Simulation]
     Root --> Asset[ASS_LYR.usda<br/>References & Payloads<br/>Asset Import<br/>Lowest Layer]
     
     Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
@@ -83,6 +85,8 @@ graph TD
     style Env fill:#c5e1a5,stroke:#558b2f,stroke-width:2px,color:#000
     style Actgr fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Anim fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
+    style Camera fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
+    style Physics fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
     style Composition fill:#78909c,stroke:#263238,stroke-width:4px,color:#000
     style Source fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
     style Assets fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
