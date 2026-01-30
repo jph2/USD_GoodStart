@@ -63,6 +63,7 @@
         @./020_BASE_LYR/ANIM_LYR.usda@,
         @./020_BASE_LYR/VAR_LYR.usda@,
         @./020_BASE_LYR/MTL_LYR.usda@,
+        @./020_BASE_LYR/PHY_LYR.usda@,
         @./020_BASE_LYR/ASS_LYR.usda@
     ]
     timeCodesPerSecond = 60
@@ -280,7 +281,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (2160, 1135)
+                uniform int2 resolution = (2019, 883)
             }
         }
     }

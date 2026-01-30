@@ -169,7 +169,8 @@ Array ordering: first = strongest, last = weakest:
 7. **ANIM_LYR.usda** – Animation
 8. **VAR_LYR.usda** – Variants & configurations
 9. **MTL_LYR.usda** – Materials & shading work
-10. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
+10. **PHY_LYR.usda** – Physics simulation
+11. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
 **Quick tidy rule:** if you want to keep things clean, Sometimes it is a good idea to work in the session layer and then move your changes from the session layer into the according layer. Variants into variants, materials into materials, and so on and so forth. [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)), so variant changes don’t “leak” into material/asset layers.
 

@@ -30,6 +30,7 @@
                 bool "./020_BASE_LYR/ENV_LYR.usda" = 1
                 bool "./020_BASE_LYR/MTL_LYR.usda" = 1
                 bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/PHY_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
                 bool "./030_SIM_LYR/SIM_LYR.usda" = 1
                 bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
@@ -63,6 +64,7 @@
         @./020_BASE_LYR/ANIM_LYR.usda@,
         @./020_BASE_LYR/VAR_LYR.usda@,
         @./020_BASE_LYR/MTL_LYR.usda@,
+        @./020_BASE_LYR/PHY_LYR.usda@,
         @./020_BASE_LYR/ASS_LYR.usda@
     ]
     timeCodesPerSecond = 60
@@ -280,7 +282,7 @@ def "Render" (
                 uint omni:rtx:viewTile:limit = 4294967295
                 rel orderedVars = </Render/Vars/LdrColor>
                 custom bool overrideClipRange = 0
-                uniform int2 resolution = (2160, 1135)
+                uniform int2 resolution = (2019, 883)
             }
         }
     }

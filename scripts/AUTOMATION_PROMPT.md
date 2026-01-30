@@ -181,7 +181,8 @@ Strongest to weakest (first in array = strongest):
 7. `./020_BASE_LYR/ANIM_LYR.usda` – Animation
 8. `./020_BASE_LYR/VAR_LYR.usda` – Variants
 9. `./020_BASE_LYR/MTL_LYR.usda` – Materials
-10. `./020_BASE_LYR/ASS_LYR.usda` – Assets (weakest)
+10. `./020_BASE_LYR/PHY_LYR.usda` – Physics simulation
+11. `./020_BASE_LYR/ASS_LYR.usda` – Assets (weakest)
 
 ---
 

@@ -955,9 +955,11 @@ USD_GoodStart/
 
 **Contents:**
 - `OPIN_LYR.usda`  - Overrides & opinions (strongest base layer)
+- `CAM_LYR.usda`   - Cameras
 - `ENV_LYR.usda`   - Environment & lighting (ground, dome light, distant light, render defaults)
-- `ASS_LYR.usda`   - Asset import layer (references to `010_ASS_USD/USD_Endpoint/`)
+- `ASS_LYR.usda`   - Asset import layer (references to `010_ASS_USD/USD_Startpoint/`)
 - `MTL_LYR.usda`   - Material layer (material assignments and shading, references `MatLib/`)
+- `PHY_LYR.usda`   - Physics simulation
 - `VAR_LYR.usda`   - Variant & configuration layers
 - `ACTGR_LYR.usda` - Action-graph / behavior logic
 - `ANIM_LYR.usda`  - Animation layers
@@ -966,6 +968,7 @@ USD_GoodStart/
 ```usda
 subLayers = [
     @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last)
+    @./020_BASE_LYR/CAM_LYR.usda@,       # Cameras
     @./020_BASE_LYR/ENV_LYR.usda@,       # Environment (ground, lighting, render defaults)
     @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation layer
     @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data & metadata layer
@@ -973,6 +976,7 @@ subLayers = [
     @./020_BASE_LYR/ANIM_LYR.usda@,      # Animation layer
     @./020_BASE_LYR/VAR_LYR.usda@,       # Variant layer
     @./020_BASE_LYR/MTL_LYR.usda@,       # Material layer
+    @./020_BASE_LYR/PHY_LYR.usda@,       # Physics simulation
     @./020_BASE_LYR/ASS_LYR.usda@        # Last = weakest (applied first)
 ]
 ```

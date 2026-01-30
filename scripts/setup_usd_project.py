@@ -46,6 +46,7 @@ SUBLAYERS = [
     "./020_BASE_LYR/ANIM_LYR.usda",
     "./020_BASE_LYR/VAR_LYR.usda",
     "./020_BASE_LYR/MTL_LYR.usda",
+    "./020_BASE_LYR/PHY_LYR.usda",
     "./020_BASE_LYR/ASS_LYR.usda",
 ]
 
@@ -213,6 +214,7 @@ def _get_root_template_content(root_filename: str, mpu_str: str, default_prim: s
                 bool "./020_BASE_LYR/ENV_LYR.usda" = 1
                 bool "./020_BASE_LYR/MTL_LYR.usda" = 1
                 bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/PHY_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
                 bool "./030_SIM_LYR/SIM_LYR.usda" = 1
                 bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
