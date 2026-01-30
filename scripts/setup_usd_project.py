@@ -13,7 +13,8 @@ Usage:
 If no directory is provided, the script runs in the current directory.
 """
 
-__version__ = "0.9.4"
+# Version: 0.9.5.1 | Date: 29.01.2026 | Time: 14:00 | GlobalID: 20260129_1400_USDGoodStart_Setup
+__version__ = "0.9.5.1"
 
 import sys
 from pathlib import Path
@@ -65,10 +66,10 @@ LAYERS_TO_CREATE = [
     ("040_DATA_LYRs", "DATA_LYRs.usda"),
 ]
 
-# Scale options: (suffix, metersPerUnit value, display)
+# Scale options: (suffix, metersPerUnit value, display). Order: cm first (default for Omniverse Composer).
 SCALE_OPTIONS = [
-    ("m", 1.0, "Meters"),
     ("cm", 0.01, "Centimeters"),
+    ("m", 1.0, "Meters"),
     ("mm", 0.001, "Millimeters"),
 ]
 
@@ -453,18 +454,60 @@ def print_header():
     print("  USD GoodStart Project Setup")
     print("=" * 70)
     print()
+    print("  *** IMPORTANT: Stage scale defaults differ by app ***")
+    print("  Isaac Sim and Isaac Lab use METERS as the default stage unit.")
+    print("  Omniverse Composer uses CENTIMETERS as the default.")
+    print("  Choose the scale that matches your target app.")
+    print()
 
 
 def ask_scale() -> int:
-    """Return 0=m, 1=cm, 2=mm."""
+    """Return 0=cm, 1=m, 2=mm. Default is 0 (Centimeters) for Omniverse Composer."""
     print("Select scale (root file metersPerUnit):")
-    for i, (suffix, _, label) in enumerate(SCALE_OPTIONS):
-        print(f"  [{i + 1}] {label} ({suffix}) – metersPerUnit = {SCALE_OPTIONS[i][1]}")
+    print()
+    print("Please note!")
+    print("- Isaac Sim and Isaac Lab have a default scene scale of 1 meter")
+    print("- Omniverse Composer has a default scale of 1 centimeter")
+    print()
+    print("  [1] (Composer default)\t\t  -> Centimeters (cm)\t– metersPerUnit = 0.01 [default]")
+    print()
+    print("  [2] (IsaacSim / Lab default)\t\t  -> Meters (m)\t– metersPerUnit = 1.0")
+    print()
+    print("  [3] (are you nuts? / special interest!) -> Millimeters (mm)\t– metersPerUnit = 0.001")
+    print()
+    print("Special Note:")
+    print("For some strange reason, when you create a default cube, it's always on scale 1, even if")
+    print("you change the properties of your root layer to adjust the scale, either from 1 to 0.01,")
+    print("so from meter to centimeter.... The cube that you will generate, in both scene scales, will")
+    print("differ in size. So, in 1, it's 1 meter, and in 0.01, it's 1 centimeter.")
+    print()
+    print("Nevertheless, the scale will show 1. Which is wicked. And if somebody can explain that")
+    print("to me, please DM me.")
+    print()
+    print("Hence, never trust the scale. Especially if you have a team where somebody is working")
+    print("with centimeters and the other one is working with meters. So a team of mixed Composer")
+    print("and Isaac Sim and Isaac Lab.")
+    print()
     while True:
-        choice = input("Enter choice (1–3, default: 1): ").strip() or "1"
+        choice = input("Enter choice (1–3, default: 1 = Centimeters): ").strip() or "1"
         if choice in ("1", "2", "3"):
             return int(choice) - 1
         print("Please enter 1, 2, or 3.")
+
+
+def ask_scale_confirm(scale_index: int) -> bool:
+    """Require user to type the unit suffix (cm, m, mm) to confirm. Returns True if confirmed."""
+    suffix, _, label = SCALE_OPTIONS[scale_index]
+    print()
+    print("  Referring to Isaac Sim and Isaac Lab: choose the scale that matches your target app.")
+    prompt = f"Are you sure you want to use {label}? Type '{suffix}' to confirm (or 'q' to choose again): "
+    while True:
+        typed = input(prompt).strip().lower()
+        if typed == "q":
+            return False
+        if typed == suffix:
+            return True
+        print(f"  You typed '{typed}'. Please type exactly '{suffix}' to confirm, or 'q' to pick another scale.")
 
 
 def ask_default_prim() -> str:
@@ -589,7 +632,12 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
             print("Setup cancelled.")
             return False
 
-    scale_index = ask_scale()
+    while True:
+        scale_index = ask_scale()
+        if ask_scale_confirm(scale_index):
+            break
+        print("  Scale not confirmed. Please choose again.\n")
+
     suffix = SCALE_OPTIONS[scale_index][0]
     print(f"[OK] Scale: {SCALE_OPTIONS[scale_index][2]} ({suffix})")
 
@@ -615,6 +663,11 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
         print("  1. Open the root file in Omniverse Composer")
         print("  2. Add assets under 010_ASS_USD/USD_Startpoint/")
         print("  3. Author content in 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
+        print()
+        print("  --- Note: Stage scale (metersPerUnit) ---")
+        print("  Isaac Sim and Isaac Lab handle stage scale in METERS by default.")
+        print("  Omniverse Composer uses CENTIMETERS by default.")
+        print("  When sharing USD between these apps, use the same scale or convert.")
         print()
         return True
     except Exception as e:

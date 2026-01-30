@@ -1,6 +1,6 @@
 # Standalone Setup Script Usage
 
-**Version:** 0.9.4 | **Date:** 29.01.2026 (see `VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.5.1 | **Date:** 29.01.2026 | **Time:** 14:00 (see `VERSION` or `setup_usd_project.bat --version`)
 
 ## Quick Start
 

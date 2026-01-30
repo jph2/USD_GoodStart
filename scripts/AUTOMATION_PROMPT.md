@@ -70,13 +70,41 @@ The script generates this folder/file hierarchy:
 ## Interactive Prompts
 
 ### 1. Scale Selection
+
+Default is **Centimeters** (option 1), matching Omniverse Composer. Isaac Sim / Isaac Lab use meters.
+
+The dialog must show:
+
 ```
 Select scale (root file metersPerUnit):
-  [1] Meters (m) – metersPerUnit = 1
-  [2] Centimeters (cm) – metersPerUnit = 0.01
-  [3] Millimeters (mm) – metersPerUnit = 0.001
-Enter choice (1–3, default: 1): 
+
+Please note!
+- Isaac Sim and Isaac Lab have a default scene scale of 1 meter
+- Omniverse Composer has a default scale of 1 centimeter
+
+  [1] (Composer default)		  -> Centimeters (cm)	– metersPerUnit = 0.01 [default]
+
+  [2] (IsaacSim / Lab default)		  -> Meters (m)	– metersPerUnit = 1.0
+
+  [3] (are you nuts? / special interest!) -> Millimeters (mm)	– metersPerUnit = 0.001
+
+Special Note:
+For some strange reason, when you create a default cube, it's always on scale 1, even if
+you change the properties of your root layer to adjust the scale, either from 1 to 0.01,
+so from meter to centimeter.... The cube that you will generate, in both scene scales, will
+differ in size. So, in 1, it's 1 meter, and in 0.01, it's 1 centimeter.
+
+Nevertheless, the scale will show 1. Which is wicked. And if somebody can explain that
+to me, please DM me.
+
+Hence, never trust the scale. Especially if you have a team where somebody is working
+with centimeters and the other one is working with meters. So a team of mixed Composer
+and Isaac Sim and Isaac Lab.
+
+Enter choice (1–3, default: 1 = Centimeters):
 ```
+
+**Confirmation:** After the user enters 1, 2, or 3, require them to type the unit suffix (`cm`, `m`, or `mm`) to confirm, or `q` to choose again. This ensures deliberate scale choice (important for Composer vs Isaac Sim/Lab).
 
 ### 2. Default Prim Name
 ```
@@ -208,7 +236,9 @@ Create standalone ZIP containing:
 - `README.md`
 - `README_STANDALONE.txt`
 
-ZIP naming: `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip`
+**ZIP naming:** `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip` (e.g. `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`)
+
+**When to regenerate:** After any change to the setup script or the files above, regenerate the zip and update the version in `VERSION` and `setup_usd_project.py` (`__version__`). Update the README link to the new zip (e.g. `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`).
 
 ---
 
@@ -232,6 +262,8 @@ setup_usd_project.bat "D:\MyProject"
 
 ## Version History
 
+- **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, Special Note (default cube scale 1 vs metersPerUnit), double-confirm (type cm/m/mm). Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`
+- **0.9.4** – (previous)
 - **0.9.3** – Custom default prim name, root file renamed to `{DefaultPrim}_{scale}_ROOT.usda`
 - **0.9.2** – Added PHY_LYR.usda, fixed README templates
 - **0.9.1** – Added missing subfolders (MatLib, tex, Envs)

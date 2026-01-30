@@ -7,7 +7,7 @@
 > **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.  , I have a proven trackrecord of finding solutions in uncharted territorry, so let's invent solutions together with OpenUSD and I wish you a good start!!!
 
 
-**Version:** 0.9.4 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
+**Version:** 0.9.5.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
 **Last Updated:** 29.01.2026
 > **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Mattias [Awesome USD](https://github.com/matiascodesal/awesome-openusd)). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
 ## Roadmap / Upcoming (keep an eye on these)
@@ -176,7 +176,59 @@ Array ordering: first = strongest, last = weakest:
 10. **PHY_LYR.usda** – Physics simulation
 11. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
-**Quick tidy rule:** if you want to keep things clean, Sometimes it is a good idea to work in the session layer and then move your changes from the session layer into the according layer. Variants into variants, materials into materials, and so on and so forth. [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)), so variant changes don’t “leak” into material/asset layers.
+### Working with Session Layers
+
+**Session layers** are in-memory, anonymous layers in OpenUSD that provide a powerful workflow for authoring and collaborative editing. Understanding and using session layers effectively is a key best practice for maintaining clean, organized USD projects.
+
+#### What Are Session Layers?
+
+Session layers are **temporary, in-memory containers** for scene description that exist separately from persistent file-based layers. They are created using `SdfLayer.CreateInMemory()` and can be managed through the `UsdStage` API. Unlike persistent layers, session layers:
+
+- **Exist only in memory** - No disk I/O during active editing
+- **Are per-session** - Each user/application session has its own session layer
+- **Compose on top** - Session layers have the highest composition strength (stronger than Local)
+- **Can be saved separately** - Use `UsdStage.SaveSessionLayers()` to persist changes when ready
+
+#### Why Use Session Layers?
+
+**1. Performance Benefits**
+- **In-memory operations** - All edits happen in RAM, avoiding disk I/O overhead
+- **Faster iteration** - No file system writes during active editing sessions
+- **Reduced latency** - Immediate feedback when making changes
+
+**2. Collaborative Workflow Benefits**
+- **Per-user isolation** - Each team member works in their own session layer without conflicts
+- **No file locking** - Multiple users can work on the same stage simultaneously
+- **Clean separation** - Session changes don't affect persistent layers until explicitly saved
+- **Conflict prevention** - Avoids merge conflicts and accidental overwrites
+
+**3. Organizational Benefits**
+- **Scratch space** - Use session layer as a temporary workspace for experimentation
+- **Clean promotion** - Work in session layer, then move stable changes to appropriate persistent layers
+- **Layer organization** - Prevents "leakage" of changes into wrong layers (e.g., variant changes ending up in material layers)
+
+#### Best Practice Workflow
+
+**Recommended approach:**
+1. **Work in the session layer** - Make all your edits in the session layer first
+2. **Iterate and refine** - Test changes, experiment, and refine your work
+3. **Promote to persistent layers** - Once stable, move changes to the appropriate layer:
+   - Variants → `VAR_LYR.usda`
+   - Materials → `MTL_LYR.usda`
+   - Assets → `ASS_LYR.usda`
+   - Overrides → `OPIN_LYR.usda`
+   - And so on...
+
+This workflow results in **less mess** than authoring directly into many layers from the start. It also helps maintain clean layer organization and prevents accidental edits in the wrong layer.
+
+**Technical Note:** The session layer has the **strongest composition strength** in USD's LIV(E)RPS system (Local > Inherits > Variants > (r)Elocates > References > Payloads > Specializes). This means session layer edits will override all other layers, making it perfect for temporary overrides and testing.
+
+**Official Documentation:**
+- **OpenUSD API Reference:** [UsdStage Session Layers](https://openusd.org/release/api/class_usd_stage.html) - Official Pixar/OpenUSD documentation on `SaveSessionLayers()` and session layer management
+- **NVIDIA Omniverse Layers Extension:** [Layers Extension Documentation](https://docs.omniverse.nvidia.com/extensions/latest/ext_core/ext_layers.html) - Omniverse's implementation of session layers and live editing workflows
+- **Omniverse Layer APIs:** [omni.kit.usd.layers](https://docs.omniverse.nvidia.com/kit/docs/omni.kit.usd.layers/latest/omni.kit.usd.layers.html) - Python APIs for layer operations including session layer management
+
+**See also:** [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md) for detailed research on variant sets in session layers. [VarianSets_In_SessionLyr_RESEARCH](WIP_Docs/VarianSets_In_SessionLyr_RESEARCH.md)), so variant changes don’t “leak” into material/asset layers.
 
 **Note:** The `subLayers` array is ordered from strongest (first) to weakest (last). First in array = strongest (applied last, overrides others). Last in array = weakest (applied first, can be overridden). See [Composition Strength: LIV(E)RPS](#composition-strength-liverps) for details on how composition strength works.
 
@@ -240,7 +292,7 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.4.zip`](USD_GoodStart_Setup_Standalone_v0.9.4.zip)), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip)), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Startpoint/`
