@@ -42,7 +42,7 @@ The script generates this folder/file hierarchy:
 │   └── README.md
 ├── 010_ASS_USD/
 │   ├── README.md
-│   ├── USD_Endpoint/                  ← Geometry assets from CAD/DCC exports
+│   ├── USD_Startpoint/                ← Geometry assets from CAD/DCC exports
 │   ├── MatLib/                        ← Material libraries
 │   ├── tex/                           ← Textures
 │   └── Envs/                          ← Environments

@@ -13,7 +13,7 @@ Usage:
 If no directory is provided, the script runs in the current directory.
 """
 
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 
 import sys
 from pathlib import Path
@@ -26,7 +26,7 @@ from typing import List, Optional
 FOLDER_STRUCTURE = [
     "000_SOURCE",
     "010_ASS_USD",
-    "010_ASS_USD/USD_Endpoint",
+    "010_ASS_USD/USD_Startpoint",
     "010_ASS_USD/MatLib",
     "010_ASS_USD/tex",
     "010_ASS_USD/Envs",
@@ -131,9 +131,9 @@ Place your source files here (CAD files, DCC project files, etc.) before convert
 **Purpose:** USD assets (converted from CAD or created in DCC + Textrurs from that were created in 2D Apps) | 
 
 ## Folder Structure
-- `USD_Endpoint/` - Geometry assets -> Exports froM CAD / DCC as stable Endpoints, the name Stays constant
+- `USD_Startpoint/` - Geometry assets -> Exports froM CAD / DCC as stable Startpoints, the name Stays constant
 - `MatLib/` - Material libraries
-- `tex/` - Global textures shared across multiple assets Place shared texture files here. Asset-specific textures can live with their assets in `USD_Endpoint/`
+- `tex/` - Global textures shared across multiple assets Place shared texture files here. Asset-specific textures can live with their assets in `USD_Startpoint/`
 - `Envs/` -  Environments 
 
 See the main README.md for detailed usage instructions.
@@ -611,7 +611,7 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
         print(f"Default prim: {default_prim}")
         print("\nNext steps:")
         print("  1. Open the root file in Omniverse Composer")
-        print("  2. Add assets under 010_ASS_USD/USD_Endpoint/")
+        print("  2. Add assets under 010_ASS_USD/USD_Startpoint/")
         print("  3. Author content in 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
         print()
         return True

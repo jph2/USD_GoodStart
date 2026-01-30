@@ -873,7 +873,7 @@ The USD GoodStart template provides a proven folder hierarchy that separates con
 USD_GoodStart/
 ├── 000_SOURCE/                    # Source files used in the project (CAD/DCC originals, configs)
 ├── 010_ASS_USD/                   # USD assets folder
-│   ├── USD_Endpoint/              # Stable DCC endpoints (geometry exports from Blender/Rhino)
+│   ├── USD_Startpoint/            # Stable DCC startpoints (geometry exports from Blender/Rhino)
 │   ├── MatLib/                    # Material libraries
 │   ├── tex/                       # Texture files
 │   └── Envs/                      # Environment library (dummy + future environment stages, wired via ENV_LYR.usda)
@@ -912,8 +912,8 @@ USD_GoodStart/
 **Purpose:** Container folder for all USD assets organized by type.
 
 **Subfolders:**
-- **`USD_Endpoint/`** - Stable DCC endpoints (geometry exports from Blender/Rhino plugins)
-  - Purpose: Stable, unchanging paths where DCC tools export geometry assets
+- **`USD_Startpoint/`** - Stable DCC startpoints (geometry exports from Blender/Rhino plugins)
+  - Purpose: Stable, unchanging paths where DCC tools export geometry assets - this is where USD assets begin in the pipeline
   - Contents: Geometry assets exported from Blender/Rhino (e.g., `0_CUBE_GEO.usda`, `pump_GEO.usd`)
   - Workflow: DCC tools export directly to this folder; assets are referenced from `ASS_LYR.usda`
 - **`MatLib/`** - Material libraries
@@ -930,9 +930,9 @@ USD_GoodStart/
    - Workflow: Environment stages from `Envs/` are wired into the layer stack via `020_BASE_LYR/ENV_LYR.usda`.
 
 **Workflow:**
-1. Convert CAD files from `000_SOURCE/` to USD format → place in `USD_Endpoint/`
+1. Convert CAD files from `000_SOURCE/` to USD format → place in `USD_Startpoint/`
 2. Validate assets with `python scripts/validate_asset.py`
-3. Store geometry as either `.usda` (interface) or `.usdc` (heavy geometry) in `USD_Endpoint/`
+3. Store geometry as either `.usda` (interface) or `.usdc` (heavy geometry) in `USD_Startpoint/`
 4. Reference geometry from layer files in `020_BASE_LYR/ASS_LYR.usda`
 5. Create materials in `MatLib/` and reference textures from `tex/`
 
