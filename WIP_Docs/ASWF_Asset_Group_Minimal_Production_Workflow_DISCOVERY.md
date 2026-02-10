@@ -1,7 +1,7 @@
 # ASWF Asset Group - Minimal/Production Example Workflow
 
-**Version**: 1.9.0 | **Date**: 10.02.2026 | **Time**: 15:45 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
-**Last Updated:** 10.02.2026 15:45
+**Version**: 1.9.2 | **Date**: 10.02.2026 | **Time**: 16:10 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
+**Last Updated:** 10.02.2026 16:10
 **Framework:** General_Research (Discovery Phase)
 **Status:** Discovery - Active
 **Context:** AOUSD IEDT Interest Group task assignment
@@ -67,6 +67,8 @@ This discovery analyzes four complementary approaches to structuring and produci
 | 5 | **Fill the IEDT-specific gaps none of them cover** | CAD metadata mapping, IoT/sensor binding, regulatory versioning, cross-domain data referencing |
 
 A phased **GoodStart Evolution Plan** (6 phases) is included at the end of this document, detailing concrete script-driven improvements to bridge the identified gaps.
+
+**Quick path:** Jump to the [Resume: Key Takeaways](#resume-key-takeaways-for-the-aousd-iedt-interest-group) for the consolidated recommendation with one-sentence-per-approach summaries.
 
 ---
 
@@ -290,6 +292,11 @@ For engineering digital twins, this sublayer order could be adapted:
 2. `simulation/index.usda` - Simulation overlays (FEA results, CFD visualization)
 3. `metadata/index.usda` - Engineering metadata (part numbers, tolerances, BOM data)
 4. `model/index.usda` - Base CAD geometry
+
+> **Related research — Semantic Governance and Data Integration:**
+> The fragment/sublayer model addresses *structural* composition of USD data, but IEDT also needs a *semantic* layer — how do you give engineering meaning to prims, bind them to live data sources (PLM, ERP, IoT), and govern those connections as systems evolve? This is the domain of **Composable Bindings**, a design pattern introduced by Aaron Luk (NVIDIA) and Christoph Berlin (Microsoft) in their joint whitepaper [*Composable Bindings: Simplified System Integration*](https://aka.ms/ComposableBindings) (November 2025). Composable Bindings replace brittle point-to-point integrations with flexible, context-aware connections between data lakes, visualization engines (OpenUSD/Omniverse), and operational systems — using open standards (OpenTelemetry, CloudEvents) as the transport layer.
+>
+> A companion research paper, [`AAS_OPC_OpenUSD_RESEARCH_v12.md`](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v12.md), investigates how to combine this Composable Bindings approach with the German engineering tradition of the **Asset Administration Shell (AAS)** and **OPC UA** — creating a layered architecture where OpenUSD provides the deterministic composition substrate, AAS/ISO 81346 provides identity and governance semantics, and Composable Bindings provide the flexible integration layer that connects them to live industrial systems. This is directly relevant to how the sublayer fragments described above would connect to real-world engineering data.
 
 ---
 
@@ -1394,6 +1401,8 @@ These are complementary, not competing approaches:
 
 ## Resume: Key Takeaways for the AOUSD IEDT Interest Group
 
+> **Quick path:** For the short version, see the [Executive Summary](#executive-summary) at the top of this document.
+
 ### The Big Picture
 
 All four approaches implement or feed into the same fundamental OpenUSD composition mechanics (sublayers, references, payloads, kinds). They diverge in **scope** (conversion vs. asset vs. scene vs. project), **audience** (engineers vs. artists vs. pipeline developers), and **philosophy** (convert first vs. start simple vs. start complete vs. start correct).
@@ -1415,6 +1424,7 @@ For the IEDT Interest Group's goal of creating a focal use case and minimal prod
    - IoT/sensor data binding to USD prims
    - Regulatory compliance versioning (as-designed vs. as-built vs. as-maintained)
    - Cross-domain data referencing (USD metadata pointing to external BOM/PLM systems)
+   - Semantic governance and data integration — how to give USD prims engineering meaning and connect them to live systems. The [Composable Bindings whitepaper](https://aka.ms/ComposableBindings) (NVIDIA/Microsoft, 2025) defines the integration pattern; the companion research [`AAS_OPC_OpenUSD_RESEARCH_v12.md`](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v12.md) investigates how to combine it with AAS (Asset Administration Shell) and OPC UA for a full governance-to-visualization architecture
 
 ### One-Sentence Per Approach
 
@@ -1733,6 +1743,8 @@ Rationale: Phase 1 is a quick win that fixes the principle-practice gap. Phase 2
 | nAurava CAD-to-OpenUSD | https://github.com/nAurava-Technologies/CAD-to-OpenUSD | STEP→USD conversion pipeline (Kit headless + HOOPS) |
 | OpenUSD GoodStart ComfyUI Nodes | https://github.com/jph2/OpenUSD_GoodStart_ComfyUI_nodes | Visual node-based USD workflows (82+ nodes, DCC import, composition) |
 | Anchorpoint | https://www.anchorpoint.app/ | Git-based version control for artists/engineers (binary handling, file locking, visual review) |
+| Composable Bindings Whitepaper (NVIDIA/Microsoft) | https://aka.ms/ComposableBindings | Integration pattern for connecting data lakes, visualization engines, and operational systems (Aaron Luk, Christoph Berlin, Nov 2025) |
+| AAS/OPC UA/OpenUSD Research (v12) | [AAS_OPC_OpenUSD_RESEARCH_v12.md](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v12.md) | Layered architecture combining Composable Bindings with AAS governance and OpenUSD composition for living digital twins |
 
 ---
 
