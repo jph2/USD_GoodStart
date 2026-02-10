@@ -10,6 +10,9 @@
 **Version:** 0.9.5.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
 **Last Updated:** 29.01.2026
 > **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Mattias [Awesome USD](https://github.com/matiascodesal/awesome-openusd)). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
+
+> **Research for the AOUSD IEDT IG:** A comparative analysis of three OpenUSD asset structuring approaches — ASWF collectiveproject001, NVIDIA Learn OpenUSD principles, and USD GoodStart — was conducted for the [Alliance for OpenUSD](https://aousd.org/) Industrial & Engineering Digital Twin Interest Group. The study identifies convergences, divergences, and an evolution plan for GoodStart. See the full discovery: [`ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md`](WIP_Docs/ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md).
+
 ## Roadmap / Upcoming (keep an eye on these)
 These are **planned / in-progress ecosystem projects** that will likely feed back into this GoodStart as patterns, scripts, or optional tooling.
 
