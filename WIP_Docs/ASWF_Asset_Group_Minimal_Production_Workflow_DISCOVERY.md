@@ -1,7 +1,7 @@
 # ASWF Asset Group - Minimal/Production Example Workflow
 
-**Version**: 1.6.0 | **Date**: 10.02.2026 | **Time**: 14:45 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
-**Last Updated:** 10.02.2026 14:45
+**Version**: 1.9.0 | **Date**: 10.02.2026 | **Time**: 15:45 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
+**Last Updated:** 10.02.2026 15:45
 **Framework:** General_Research (Discovery Phase)
 **Status:** Discovery - Active
 **Context:** AOUSD IEDT Interest Group task assignment
@@ -14,7 +14,7 @@
 | Category | Tags |
 |----------|------|
 | environment | `standalone`, `outside_omniverse`, `hybrid` |
-| functionality | `analysis`, `validation`, `automation`, `rendering`, `packaging` |
+| functionality | `analysis`, `validation`, `automation`, `rendering`, `packaging`, `conversion`, `export` |
 | use_case | `digital_twin_creation`, `industrial_integration`, `workflow_automation`, `best_practices` |
 | complexity | `advanced` |
 | dependencies | `usd_core`, `omniverse` |
@@ -22,14 +22,15 @@
 | usd_specific | `openusd`, `composition`, `layers`, `references`, `payloads`, `variants`, `instancing`, `layered_architecture` |
 | industry | `digital_twin`, `manufacturing`, `visual_effects` |
 | performance | `scalable`, `performance` |
+| integration | `version_control`, `ci_cd` |
 
-**Flat tags**: USD, OpenUSD, AOUSD, ASWF, IEDT, Digital Twin, Composition, Layer, LayerStack, Sublayer, Reference, Payload, LOD, Variant, VariantSet, Pipeline, ProjectStructure, NamingConventions, Instancing, LIVRPS, CAD, Manufacturing, Omniverse, Validation, CI/CD, Automation, Alliance for OpenUSD, Industrial Digital Twin Association
+**Flat tags**: USD, OpenUSD, AOUSD, ASWF, IEDT, Digital Twin, Composition, Layer, LayerStack, Sublayer, Reference, Payload, LOD, Variant, VariantSet, Pipeline, ProjectStructure, NamingConventions, Instancing, LIVRPS, CAD, Manufacturing, Omniverse, Validation, CI/CD, Automation, Alliance for OpenUSD, Industrial Digital Twin Association, STEP, HOOPS, KitExtension, Connectors, Geometry, Robotics, VersionControl, GitLFS, Anchorpoint, Nucleus
 
 **Quick Navigation**:
 
 **Discovery & Findings**: [Executive Summary](#executive-summary) | [Discovery Overview](#discovery-overview) | [Key Questions](#key-questions-explored) | [Repository Overview](#repository-overview) | [Finding 1: Fragment Architecture](#finding-1-fragment-based-asset-architecture) | [Finding 2: Purpose-Based LOD](#finding-2-purpose-based-lod-separation-proxy--render) | [Finding 3: Sublayer Composition](#finding-3-purpose-level-composition-via-sublayers) | [Finding 4: Payload Pattern](#finding-4-payload-pattern-for-heavy-geometry) | [Finding 5: Shot Assembly](#finding-5-shot-assembly-architecture) | [Finding 6: Pipeline-as-Code](#finding-6-pipeline-as-code---automated-structure-generation) | [Finding 7: Version Control](#finding-7-version-control-strategy) | [Finding 8: Rendering](#finding-8-rendering-pipeline)
 
-**Comparative Analysis**: [Finding 9: ASWF vs Learn OpenUSD](#finding-9-comparative-analysis---aswf-collectiveproject001-vs-nvidia-learn-openusd-principles) | [Finding 10: Three-Way Comparison](#finding-10-three-way-comparison---goodstart-vs-aswf-collectiveproject001-vs-learn-openusd) | [IEDT Nuances: Shots & LOD](#iedt-specific-nuances-shot-assembly-and-proxyrender-in-a-digital-twin-context)
+**Comparative Analysis**: [Finding 9: ASWF vs Learn OpenUSD](#finding-9-comparative-analysis---aswf-collectiveproject001-vs-nvidia-learn-openusd-principles) | [Finding 10: Three-Way Comparison](#finding-10-three-way-comparison---goodstart-vs-aswf-collectiveproject001-vs-learn-openusd) | [Finding 11: CAD-to-OpenUSD](#finding-11-cad-to-openusd--the-missing-first-mile-naurava-technologies--openusd-study-group) | [IEDT Nuances: Shots & LOD](#iedt-specific-nuances-shot-assembly-and-proxyrender-in-a-digital-twin-context)
 
 **Summary & Action**: [Summary: Minimal vs Production](#summary-minimal-vs-production-ready-asset-definition) | [IEDT Recommendations](#iedt-specific-recommendations) | [Resume: Key Takeaways](#resume-key-takeaways-for-the-aousd-iedt-interest-group) | [GoodStart Evolution Plan](#goodstart-evolution-plan---closing-the-gaps)
 
@@ -39,7 +40,7 @@
 
 ## Executive Summary
 
-This discovery analyzes three complementary approaches to structuring OpenUSD assets — the **ASWF collectiveproject001** (VFX production template), **NVIDIA Learn OpenUSD** (canonical principles curriculum), and **USD GoodStart** (rapid onboarding for Omniverse) — to inform the AOUSD IEDT Interest Group's work on minimal production assets for industrial and engineering digital twins.
+This discovery analyzes four complementary approaches to structuring and producing OpenUSD assets — the **ASWF collectiveproject001** (VFX production template), **NVIDIA Learn OpenUSD** (canonical principles curriculum), **USD GoodStart** (rapid onboarding for Omniverse), and **nAurava CAD-to-OpenUSD** (STEP→USD conversion pipeline) — to inform the AOUSD IEDT Interest Group's work on minimal production assets for industrial and engineering digital twins.
 
 ### Key Findings
 
@@ -47,20 +48,23 @@ This discovery analyzes three complementary approaches to structuring OpenUSD as
 
 2. **A "minimal production asset" is structurally complete but content-sparse.** It carries all composition arcs, payload boundaries, kind metadata, and directory conventions of a production asset — but with placeholder or minimal geometry. This makes it simultaneously a learning example, a production template, and a CI/CD validation target. (Finding 5-6, Summary)
 
-3. **All three approaches converge on the same USD composition fundamentals** — sublayers for non-destructive overrides, references/payloads for asset instantiation with deferred loading, and kind metadata for model hierarchy traversal. They diverge in scope (asset vs. scene vs. project), audience (pipeline TDs vs. educators vs. beginners), and philosophy (start complete vs. start correct vs. start simple). (Findings 9-10)
+3. **All four approaches converge on the same USD composition fundamentals** — sublayers for non-destructive overrides, references/payloads for asset instantiation with deferred loading, and kind metadata for model hierarchy traversal. They diverge in scope (conversion vs. asset vs. scene vs. project), audience (engineers vs. pipeline TDs vs. educators vs. beginners), and philosophy (convert first vs. start complete vs. start correct vs. start simple). (Findings 9-11)
 
 4. **For IEDT, LOD via variant sets with payloads is preferred over purpose-based proxy/render.** The VFX `purpose` mechanism loads both proxy and render geometry into memory; a variant-set approach with payloads loads only the requested LOD, which is critical for memory-constrained industrial scenarios with thousands of parts. (IEDT Nuances)
 
 5. **VFX "shot assembly" maps to IEDT "scenario/configuration assembly."** The same per-element override architecture (animation/lighting/fx per instance) translates directly to digital twin scenarios (state/telemetry/simulation per instance). (IEDT Nuances, Recommendations)
 
+6. **The "first mile" — CAD to USD — is the critical gap for IEDT.** The three structuring approaches all assume USD files already exist. CAD-to-OpenUSD (nAurava / OpenUSD Study Group) provides a concrete STEP→USD pipeline using Kit SDK headlessly, with automatic instancing, deduplication, and configurable tessellation. CAD metadata conversion is the next frontier. (Finding 11)
+
 ### Practical Recommendation for the IEDT IG
 
 | Step | What to do | Why |
 |------|-----------|-----|
-| 1 | **Start with GoodStart's philosophy** | Get a working scene fast; the "just start" mentality puts prototypes into stakeholders' hands early |
-| 2 | **Structure assets per Learn OpenUSD principles** | Reference/payload pattern with lofting, proper `kind` metadata, parameterization via variant sets, instancing for repeated parts |
-| 3 | **Adopt collectiveproject001's assembly pattern for multi-scenario twins** | Per-element overrides scale to inspection, operational, and maintenance scenarios |
-| 4 | **Fill the IEDT-specific gaps none of them cover** | CAD hierarchy mapping, engineering metadata schemas, IoT/sensor binding, regulatory versioning, cross-domain data referencing |
+| 1 | **Convert CAD data with CAD-to-OpenUSD** | Get geometry from STEP into USD with proper instancing and tessellation — the first mile for engineering workflows |
+| 2 | **Start with GoodStart's philosophy** | Get a working scene fast; place converted assets into a scaffold with proper references |
+| 3 | **Structure assets per Learn OpenUSD principles** | Reference/payload pattern with lofting, proper `kind` metadata, parameterization via variant sets, instancing for repeated parts |
+| 4 | **Adopt collectiveproject001's assembly pattern for multi-scenario twins** | Per-element overrides scale to inspection, operational, and maintenance scenarios |
+| 5 | **Fill the IEDT-specific gaps none of them cover** | CAD metadata mapping, IoT/sensor binding, regulatory versioning, cross-domain data referencing |
 
 A phased **GoodStart Evolution Plan** (6 phases) is included at the end of this document, detailing concrete script-driven improvements to bridge the identified gaps.
 
@@ -529,6 +533,32 @@ For digital twins, this simplicity is attractive but may need augmentation:
 - Engineering data often requires explicit version tracking (revision numbers, ECN/ECO references)
 - Regulatory compliance may require versioned snapshots (e.g., as-built vs. as-designed)
 - Consider hybrid approach: git for file versioning + USD metadata for engineering revision IDs
+
+### Beyond Standard Git: Anchorpoint as a Git-Based Alternative for Engineers and Artists
+
+Standard git works well for text-based USD files (`.usda`) and small projects, but **binary assets** (`.usdc`, `.usd`, textures, CAD source files) and **non-technical team members** (engineers, designers) quickly hit git's usability and scalability limits. [Anchorpoint](https://www.anchorpoint.app/) is a git-based version control solution that addresses these gaps:
+
+| Challenge | Standard Git | Anchorpoint |
+|-----------|-------------|-------------|
+| **Binary file handling** | Requires manual Git LFS configuration | Automatic LFS handling, no configuration needed |
+| **TB-scale repositories** | Slow clones, full history download | Sparse checkout + shallow clone — download only what you need |
+| **Non-technical users** | Command-line or complex GUI clients | Two-button UX designed for artists and engineers |
+| **File locking** | Not natively supported | Built-in file locking (prevents overwrite conflicts on binary assets) |
+| **Visual review** | External tools needed | Inline review, annotation, and approval for images, 3D, video, audio |
+| **Asset management** | Separate tooling | Integrated tagging, search, and organization |
+| **DCC integration** | Manual workflows | Unreal, Unity, Blender plugins; thumbnail previews for DCC files |
+
+**Why this matters for IEDT and Omniverse workflows:**
+
+1. **Post-Nucleus world.** With NVIDIA opening Omniverse beyond Nucleus-only workflows, teams need alternative collaboration backends. A git-based approach (with Anchorpoint's binary handling) could serve as a viable file management layer for USD projects that don't use Nucleus — especially in engineering environments where IT infrastructure favors standard git servers (GitHub, GitLab, Azure DevOps) over proprietary solutions.
+
+2. **Engineering team adoption.** The collectiveproject001 pattern (dozens of files per asset, fragment-per-artist) only works if every contributor can version-control reliably. For mixed teams of engineers, CAD specialists, and visualization artists, Anchorpoint's simplified UX and file locking remove the "git is too hard" barrier.
+
+3. **Audit trail for regulated industries.** IEDT scenarios in manufacturing, aerospace, and construction often require provenance tracking. Git provides commit history; Anchorpoint adds visual review/approval workflows on top — approaching the auditability that PLM systems offer, but with git's openness and ecosystem.
+
+4. **Python API for pipeline integration.** Anchorpoint exposes a Python API, enabling automated workflows — for example, triggering a `cad2usd` conversion on commit, running USD validation on push, or auto-tagging converted assets.
+
+> **Note:** Anchorpoint is a commercial product (German company, Anchorpoint Software GmbH). It is not open-source, but builds on open-source git. Evaluate it alongside alternatives like GitHub Desktop, SourceTree, or GitKraken — but its binary-first, artist/engineer-friendly design makes it particularly relevant for USD/IEDT workflows where large files and non-developer users are the norm.
 
 ---
 
@@ -1164,31 +1194,231 @@ def Xform "RobotArm" (
 
 ---
 
+## Finding 11: CAD-to-OpenUSD — The Missing First Mile (nAurava Technologies / OpenUSD Study Group)
+
+> **Repository:** https://github.com/nAurava-Technologies/CAD-to-OpenUSD
+> **Authors:** Matias Codesal (NVIDIA), Nandu (nAurava Technologies), OpenUSD Study Group contributors
+> **License:** Apache-2.0
+> **Context:** This repo emerged from the same AOUSD / OpenUSD study group ecosystem that the IEDT IG participates in. Nandu (a fellow IEDT IG member) is directly involved.
+
+### What It Is
+
+CAD-to-OpenUSD is a **STEP-to-USD conversion pipeline** that wraps the NVIDIA HOOPS-based CAD converter (`omni.services.convert.cad`) inside a standalone Kit application. It takes a STEP file (the lingua franca of CAD interchange) and produces a `.usd` file via an automated, scriptable process.
+
+### Architecture Overview
+
+```
+CAD-to-OpenUSD/
+├── src/cad2usd/
+│   └── __init__.py          # Python CLI entry point (uv run cad2usd)
+├── kit/
+│   ├── source/apps/
+│   │   └── ovcommunity.converter.kit  # Kit app definition (loads omni.kit.converter.cad)
+│   ├── premake5.lua         # Build system (defines "ovcommunity.converter.kit")
+│   ├── repo.toml            # Kit SDK build configuration (v108.1.0)
+│   ├── repo.bat / repo.sh   # Build scripts
+│   └── templates/           # Kit template scaffolding
+├── prod/lib/actors/
+│   └── nova_carter/         # Production asset library (STEP source)
+├── config.json              # HOOPS converter configuration
+├── nova_carter_full.step    # Sample input (NVIDIA Nova Carter robot)
+├── pyproject.toml           # Python project (uv, usd-core>=25.8)
+└── docs/                    # Sphinx documentation skeleton
+```
+
+### Technical Analysis
+
+#### The Conversion Pipeline
+
+The converter follows a straightforward chain:
+
+1. **Input:** `.step` file (CAD assembly)
+2. **Engine:** HOOPS Exchange via `omni.services.convert.cad` Kit extension
+3. **Orchestration:** `cad2usd` Python CLI wraps Kit headless execution
+4. **Configuration:** `config.json` controls tessellation, instancing, materials, and axis
+5. **Output:** Single `.usd` file
+
+**Key `config.json` parameters and what they mean for IEDT:**
+
+| Parameter | Value | IEDT Significance |
+|-----------|-------|-------------------|
+| `tessLOD` | `2` | Tessellation detail level — controls mesh density from CAD NURBS |
+| `instancingStyle` | `2` | Enables USD instancing for repeated parts (critical for assemblies) |
+| `dedup` | `true` | Deduplicates identical geometry (reduces file size) |
+| `useMaterials` | `true` | Preserves CAD material assignments |
+| `useNormals` | `true` | Preserves surface normals |
+| `convertMetadata` | `false` | **Currently off** — CAD metadata (part names, properties) not carried over |
+| `convertHidden` | `false` | Hidden parts skipped |
+| `dMetersPerUnit` | `0.0` | Auto-detect units from CAD |
+| `bOptimize` | `true` | Mesh optimization enabled |
+
+#### The Kit Application Pattern
+
+The `.kit` file (`ovcommunity.converter.kit`) defines a **full headless Kit application** based on Kit SDK 108.1.0. It pulls in:
+- `omni.kit.converter.cad` — the core CAD conversion extension (HOOPS-based)
+- A full set of Omniverse extensions (hydra, RTX, physics, materials, viewport)
+- Version-locked dependencies for reproducibility
+
+This is a **Kit-as-a-tool** pattern — using the Kit SDK not as a visual application but as a headless conversion engine. The CLI entry point (`src/cad2usd/__init__.py`) finds the built Kit executable, locates the HOOPS conversion script dynamically, and invokes it with the STEP input.
+
+#### The Production Library Pattern
+
+The `prod/lib/actors/nova_carter/` directory hints at a production asset library structure:
+```
+prod/
+└── lib/
+    └── actors/
+        └── nova_carter/
+            └── nova_carter_full.step
+```
+This is an early-stage library structure where source CAD files are organized by type (`actors` = movable/robotic assets) — a pattern that could grow into a full asset library with categories like `structures/`, `equipment/`, `sensors/`.
+
+### What This Adds to the Four-Way Comparison
+
+The three approaches analyzed so far (GoodStart, collectiveproject001, Learn OpenUSD) all **start with USD files already existing**. None of them address the critical question: **how does geometry get from CAD into USD in the first place?**
+
+CAD-to-OpenUSD fills this gap — it is the **"first mile"** of the IEDT pipeline.
+
+| Dimension | GoodStart | collectiveproject001 | Learn OpenUSD | **CAD-to-OpenUSD** |
+|-----------|-----------|---------------------|---------------|-------------------|
+| **Starting point** | Empty USD scene | DCC exports (Blender/Maya) | Conceptual asset | **STEP file (CAD)** |
+| **Primary concern** | Scene composition & layers | Multi-asset production workflow | Asset structure principles | **Geometry conversion** |
+| **Automation** | `setup_usd_project.py` | `pipe_genesis.py` | (conceptual) | **`uv run cad2usd`** |
+| **Runtime** | Omniverse | Any USD viewer | Any USD viewer | **Kit SDK (headless)** |
+| **Instancing** | Not addressed | Manual (in fragments) | Documented principle | **Automatic (`instancingStyle=2`)** |
+| **Metadata preservation** | Omniverse-native metadata | Asset-level `assetInfo` | Principle-level guidance | **Configurable (currently off)** |
+| **Output** | Project scaffold | Per-asset layer tree | N/A (educational) | **Single .usd file** |
+
+### Key Insights for the IEDT IG
+
+#### 1. The CAD→USD Gap Is Real and Critical
+
+For the IEDT IG's "focal use case" goal, the pipeline must start from CAD data (OnShape, SolidWorks, CATIA, etc.), not from artist-created meshes. CAD-to-OpenUSD provides a concrete, working solution for STEP→USD conversion. This is the piece that makes the entire GoodStart → Learn OpenUSD → collectiveproject001 chain practical for engineering workflows.
+
+#### 2. Metadata Conversion Is the Next Frontier
+
+The `convertMetadata: false` setting is telling. Today, the converter focuses on geometry fidelity — getting the meshes right with proper tessellation, instancing, and deduplication. But for IEDT, **CAD metadata is as valuable as geometry**: part numbers, assembly hierarchy names, material certifications, tolerance annotations, and custom properties. Turning this on and mapping it to USD `customData` or `assetInfo` would be a significant IEDT advancement.
+
+#### 3. Tessellation LOD Creates a Natural Entry Point for LOD Variant Sets
+
+The `tessLOD` parameter (currently `2`) controls mesh density. Running the converter at multiple tessLOD settings and packaging the results as variant sets would directly implement the LOD-via-variant-sets pattern recommended in Finding 2 and the IEDT Nuances section:
+
+```
+# Hypothetical multi-LOD pipeline
+uv run cad2usd --tess-lod 3 --output robot_arm_lod_high.usd
+uv run cad2usd --tess-lod 2 --output robot_arm_lod_medium.usd
+uv run cad2usd --tess-lod 1 --output robot_arm_lod_low.usd
+# → Package into variant set with payloads per LOD
+```
+
+#### 4. The Kit-as-a-Tool Pattern Is Reusable
+
+Using Kit SDK headlessly as a conversion engine (not a visual app) is a powerful pattern for IEDT automation. The same approach could power:
+- Automated validation pipelines (load USD, run checks, report)
+- Batch rendering (load scene, render product shots, export EXR)
+- Metrics collection (load assembly, measure poly count / composition depth)
+
+#### 5. The Production Library Structure Needs Growth
+
+The `prod/lib/actors/` structure is embryonic but directional. For IEDT, this could evolve into:
+
+```
+prod/
+└── lib/
+    ├── actors/          # Robots, AGVs, moving equipment
+    ├── structures/      # Buildings, cells, workstations
+    ├── equipment/       # Conveyors, presses, CNC machines
+    ├── sensors/         # Cameras, LiDAR, IoT devices
+    └── environments/    # Factory floors, warehouses
+```
+
+### IEDT Relevance
+
+**Direct relevance: HIGH.** This is the only repo in the comparison that addresses the CAD→USD conversion problem, which is the first step in every engineering digital twin pipeline. For the IEDT IG's work:
+
+- **Nandu's involvement** means direct feedback loop between IEDT IG requirements and converter development
+- The **STEP→USD** path covers the most common CAD interchange format
+- The **Kit-headless pattern** enables CI/CD integration (convert on commit, validate on merge)
+- The **`config.json`** approach makes conversion reproducible and auditable
+
+### What CAD-to-OpenUSD Can Learn from the Others
+
+1. **From GoodStart:** Post-conversion, the output USD needs to land inside a proper scene structure. A pipeline that runs `cad2usd` → then places the output into a GoodStart scaffold (with proper references/payloads) would be the ideal end-to-end flow.
+2. **From collectiveproject001:** The output could be decomposed into fragments (model, surface, binding) rather than a single monolithic USD file — enabling parallel refinement of materials vs. geometry.
+3. **From Learn OpenUSD:** The converted assets should have proper `kind` metadata, `assetInfo`, and `extentsHint` lofted above payloads. Currently, the converter likely doesn't add these.
+
+### What the Others Can Learn from CAD-to-OpenUSD
+
+1. **GoodStart:** Should document (or script) a recommended CAD import workflow — "run cad2usd, place output in `010_ASS_USD/`, reference from `ASS_LYR.usda`".
+2. **collectiveproject001:** The `host_wip/` → `host_usd_export/` pattern could be extended with a `cad_source/` + `cad_converted/` convention for engineering assets.
+3. **Learn OpenUSD:** The curriculum should include a "CAD to USD" section addressing tessellation quality, metadata preservation, and assembly hierarchy mapping.
+
+### Forward Reference: OpenUSD GoodStart ComfyUI Nodes — A Visual "First Mile" Alternative
+
+> **Repository:** https://github.com/jph2/OpenUSD_GoodStart_ComfyUI_nodes (by Jan Haluszka, AOUSD IEDT IG member)
+> **Status:** v1.0.4, implemented but **not yet tested end-to-end** — planned for integration into the USD GoodStart ecosystem.
+
+While CAD-to-OpenUSD provides a **CLI-driven STEP→USD pipeline**, the OpenUSD GoodStart ComfyUI Nodes project takes a fundamentally different approach: **visual, node-based USD workflows** built on top of [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
+
+**What it provides:**
+
+- **82-83 ComfyUI nodes** for USD operations, organized into 19 categories covering the full USD lifecycle:
+  - Core: Stage management, prim operations, transforms, materials, variants, metadata
+  - Advanced: Composition arcs, LOD management, asset pipeline, geometry operations, scene decomposition, animation, lighting, physics, batch processing
+  - Import/Conversion: Direct DCC import nodes for **Blender, Maya, 3ds Max, Rhino, Cinema 4D** (headless background conversion)
+  - Multi-Export integration: Dedicated loader nodes for the **Blender USD MultiExport** and **Rhino USD MultiExport** addons (push-model with full traceability)
+
+**Two conversion models for the "first mile":**
+
+| Approach | How It Works | Best For |
+|----------|-------------|----------|
+| **Direct conversion** (nodes `19_01`-`19_06`) | Launches DCC tool headlessly, runs USD export operator, loads result | Quick one-off conversions from native DCC formats |
+| **Multi-Export loader** (nodes `19_01b`, `19_05b`) | Reads export endpoint definitions from CAD file, loads pre-exported USD files with origin metadata | Production pipelines where the DCC addon defines what gets exported and where |
+
+**Why this matters for IEDT:**
+
+1. **Visual pipeline building** — Non-programmers (engineers, designers) can construct CAD→USD→scene workflows by connecting nodes, lowering the barrier to entry dramatically
+2. **Multi-DCC coverage** — While CAD-to-OpenUSD focuses on STEP (via HOOPS), ComfyUI nodes cover Blender, Maya, Max, Rhino, and Cinema 4D directly, catching the DCC tools commonly used for CAD visualization
+3. **Post-conversion operations in the same workflow** — After import, the same visual pipeline can apply materials (OpenPBR/MaterialX), set up composition arcs, manage LODs, add metadata — all without scripting
+4. **Traceability** — The Multi-Export loader nodes preserve full provenance (source file, timestamp, user, export endpoint ID) — critical for engineering audit trails
+5. **ComfyUI as workflow engine** — ComfyUI is data-agnostic; it's effectively a visual scripting environment. Using it for USD means the same tool that drives AI/generative workflows can also drive engineering USD pipelines
+
+**Relationship to CAD-to-OpenUSD:**
+
+These are complementary, not competing approaches:
+- **CAD-to-OpenUSD** = headless CLI for automated STEP→USD in CI/CD pipelines
+- **ComfyUI Nodes** = visual node graph for interactive, multi-step DCC→USD→scene workflows
+- A future integration could have a ComfyUI node that wraps `cad2usd` as a step in a visual pipeline
+
+---
+
 ## Resume: Key Takeaways for the AOUSD IEDT Interest Group
 
 ### The Big Picture
 
-All three approaches implement the same fundamental OpenUSD composition mechanics (sublayers, references, payloads, kinds). They diverge in **scope** (asset vs. scene vs. project), **audience** (engineers vs. artists vs. pipeline developers), and **philosophy** (start simple vs. start complete vs. start correct).
+All four approaches implement or feed into the same fundamental OpenUSD composition mechanics (sublayers, references, payloads, kinds). They diverge in **scope** (conversion vs. asset vs. scene vs. project), **audience** (engineers vs. artists vs. pipeline developers), and **philosophy** (convert first vs. start simple vs. start complete vs. start correct).
 
 ### The Practical Recommendation
 
 For the IEDT Interest Group's goal of creating a focal use case and minimal production asset:
 
-1. **Start with GoodStart's philosophy** — Get a working scene fast. The digital twin data layer integration (`040_DATA_LYRs/`) is directly relevant to IEDT. The "just start" mentality gets prototypes into stakeholders' hands early.
+1. **Convert CAD data with CAD-to-OpenUSD** — Get geometry from STEP into USD with proper instancing and tessellation. This is the first mile that makes everything else possible for engineering workflows. Enable metadata conversion when available.
 
-2. **Structure assets per Learn OpenUSD principles** — Each engineering asset should follow the reference/payload pattern with lofting. Use `kind` metadata properly. Implement parameterization for configuration variants. Plan instancing for repeated parts.
+2. **Start with GoodStart's philosophy** — Get a working scene fast. Place converted assets into a GoodStart scaffold with proper references. The digital twin data layer integration (`040_DATA_LYRs/`) is directly relevant to IEDT. The "just start" mentality gets prototypes into stakeholders' hands early.
 
-3. **Adopt collectiveproject001's assembly pattern for scenarios** — When the IEDT group moves from a single use case to multi-scenario digital twins (inspection scenario, operational scenario, maintenance scenario), the shot-assembly pattern with per-element overrides is the right architecture.
+3. **Structure assets per Learn OpenUSD principles** — Each engineering asset should follow the reference/payload pattern with lofting. Use `kind` metadata properly. Implement parameterization for configuration variants. Plan instancing for repeated parts.
 
-4. **Fill the gaps none of them cover** — IEDT needs engineering-specific patterns not addressed by any of the three:
-   - CAD assembly hierarchy mapping to USD model hierarchy
-   - Engineering metadata schemas (part numbers, tolerances, material certifications)
+4. **Adopt collectiveproject001's assembly pattern for scenarios** — When the IEDT group moves from a single use case to multi-scenario digital twins (inspection scenario, operational scenario, maintenance scenario), the shot-assembly pattern with per-element overrides is the right architecture.
+
+5. **Fill the gaps none of them cover** — IEDT needs engineering-specific patterns not addressed by any of the four:
+   - CAD metadata mapping to USD properties (part numbers, tolerances, material certifications)
    - IoT/sensor data binding to USD prims
    - Regulatory compliance versioning (as-designed vs. as-built vs. as-maintained)
    - Cross-domain data referencing (USD metadata pointing to external BOM/PLM systems)
 
 ### One-Sentence Per Approach
 
+- **CAD-to-OpenUSD**: "The first mile — get geometry from CAD into USD with proper tessellation, instancing, and (soon) metadata."
 - **GoodStart**: "The fastest path from zero to a working digital twin scene in Omniverse — start here, grow beyond it."
 - **collectiveproject001**: "The VFX production pattern that proves multi-asset, multi-scenario USD workflows work — adopt its assembly architecture."
 - **Learn OpenUSD**: "The canonical principles that ensure your asset structure scales, performs, and interoperates — let it be your quality standard."
@@ -1500,6 +1730,9 @@ Rationale: Phase 1 is a quick win that fixes the principle-practice gap. Phase 2
 | O3DE Odie Assets | https://github.com/o3de/odie-3d-assets | Source character asset |
 | AOUSD Interest Groups | https://aousd.org/community/interest-groups/ | IEDT IG home |
 | DPEL Library (ASWF) | https://dpel.aswf.io/ | Target distribution platform |
+| nAurava CAD-to-OpenUSD | https://github.com/nAurava-Technologies/CAD-to-OpenUSD | STEP→USD conversion pipeline (Kit headless + HOOPS) |
+| OpenUSD GoodStart ComfyUI Nodes | https://github.com/jph2/OpenUSD_GoodStart_ComfyUI_nodes | Visual node-based USD workflows (82+ nodes, DCC import, composition) |
+| Anchorpoint | https://www.anchorpoint.app/ | Git-based version control for artists/engineers (binary handling, file locking, visual review) |
 
 ---
 
