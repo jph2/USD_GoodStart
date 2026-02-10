@@ -302,6 +302,7 @@ The script asks you a few simple questions (default prim name, unit system, whet
 
 > **Note:** The script generates a slightly simplified scene compared to the full Copy-paste from GitHub, but it follows all the same best practices and layer structure patterns described in this README.
 
+![Zip Download](WIP_Docs/Pics/Zip%20Download.png)
 
 ## Quick Tip (Core Rule): “Safe Mode” — Don’t Pollute Your Layers
 
@@ -310,6 +311,7 @@ If you don’t want **any** accidental file edits while exploring variants/mater
 - **Lock all persistent layers** (everything except the session layer)
 - **Set the Session Layer as the active authoring layer** (top green layer in the Layers panel)
 - **Work on the session layer for a while, then move content to the right persistent layers** — you’ll end up with less mess than authoring straight into many layers.
+- **...be assured that this structure will not be the structure that you or your team will be using in the end...**, your team will have to go through the classical phases of [Tuckman's Model](https://en.wikipedia.org/wiki/Tuckman%27s_stages_of_group_development): Forming | Storming | Norming | Performing ...
 
 ![Session Layer set as Authoring Layer](WIP_Docs/Pics/Session%20Layer03.png)
 
