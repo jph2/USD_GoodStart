@@ -76,7 +76,7 @@ graph TD
     MatLib --> Material
     Tex --> Material
     
-    Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>rElocates<br/>References Payloads<br/>Specializes]
+    Source -.-|enhanced with| Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>Relocates<br/>References Payloads<br/>Specializes]
     
     style Root fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000
     style Asset fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
