@@ -5,6 +5,8 @@
 **Tag block:**
 #openusd #usd_core #schemas #asset_resolver #variants #workflow_optimization #best_practices #framework_integration #workflow_automation #deterministic_workflows #analysis #omniverse
 
+[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_0A_.png)](https://www.youtube.com/watch?v=d4qChB291ow)
+
 **Canonical Video Source:** https://www.youtube.com/watch?v=d4qChB291ow
 **Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)
 **Scope Anchor:** from `00:05:50` to approximately `01:11:00`
