@@ -5,12 +5,14 @@
 **Tag block:**
 #openusd #usd_core #schemas #asset_resolver #variants #workflow_optimization #best_practices #framework_integration #workflow_automation #deterministic_workflows #analysis #omniverse
 
-[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_0A_.png)](https://www.youtube.com/watch?v=d4qChB291ow)
+[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_0A_.png)](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1)
 
-**Canonical Video Source:** https://www.youtube.com/watch?v=d4qChB291ow <br>
+**Canonical Video Source:** [YouTube — Customizing OpenUSD for Your Pipeline](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1) <br>
 **Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)<br>
 **Scope Anchor:** from `00:05:50` to approximately `01:11:00`<br>
-**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html)<br> **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd)
+**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)<br>
+**Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [[3]](#link-3)<br>
+**Certification Series:** [The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)](https://www.youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb) — this tutorial covers 3rd session in the series
 
 ---
 
@@ -40,7 +42,7 @@ This is a two-layer document:
 
 Both layers use the same running example: **a "creature" data type** that starts as a simple schema and gradually acquires metadata, variant behavior, resolver-friendly paths, and a custom file format.
 
-**Navigation spine:** Each chapter links to the relevant section in [Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html), the [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd) ecosystem index, and [USD GoodStart](https://github.com/jph2/USD_GoodStart) integration points.
+**Navigation spine:** Each chapter links to the relevant section in [Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2), the [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd) [[3]](#link-3) ecosystem index, and [USD GoodStart](https://github.com/jph2/USD_GoodStart) [[4]](#link-4) integration points.
 
 ---
 
@@ -67,7 +69,7 @@ Here is a simple decision rule:
 
 The video's closing message is worth internalizing upfront: **every plugin you build makes your USD files slightly less portable.** Someone who receives your files needs your plugins too. So the discipline is: exhaust composition and convention first, and reach for plugins only when you must.
 
-> **Learn OpenUSD anchor:** [What is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html) — establishes the interoperability context that makes this tradeoff meaningful.
+> **Learn OpenUSD anchor:** [What is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html) [[5]](#link-5) — establishes the interoperability context that makes this tradeoff meaningful.
 
 ---
 
@@ -114,6 +116,20 @@ class Creature "Creature" (
 }
 ```
 
+> **Industrial translation (same pattern):** Replace `Creature` with `WeldingRobot` (or `ConveyorSection`) and those demo fields with domain fields like `plmPartNumber`, `kinematicChainId`, `safetyClass`, and `commissioningState`.
+>
+> ```usda
+> class WeldingRobot "WeldingRobot" (
+>     inherits = </Xformable>
+> )
+> {
+>     string plmPartNumber = "7A3-WR-0042"
+>     string kinematicChainId = "KR16_CHAIN_A"
+>     token safetyClass = "SIL2"
+>     token commissioningState = "commissioned"
+> }
+> ```
+
 That's it. A schema definition in USD is a `.usda` file. The `inherits = </Xformable>` line means a creature can be positioned in 3D space (it gets all the transform properties from `Xformable` for free). The three properties define the data contract. The default values are fallbacks — "if you don't tell me, I'll assume you're an unnamed, thousand-year-old entity with no hobbies."
 
 ![The full creature schema definition in Divy's text editor — schema.usda with codeful configuration](Pics/Custo_OpenUSD_Pipel_F_.png)
@@ -124,7 +140,7 @@ That's it. A schema definition in USD is a `.usda` file. The `inherits = </Xform
 
 ![Schema code overlaid on Houdini — the creature definition visible alongside the live stage](Pics/Custo_OpenUSD_Pipel_H_.png)
 
-> **Houdini context:** These demos are in **Solaris (LOPs)**, Houdini's USD-native context. Reference: [SideFX Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/).
+> **Houdini context:** These demos are in **Solaris (LOPs)**, Houdini's USD-native context. Reference: [SideFX Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/) [[6]](#link-6).
 
 ### Two kinds of schema: "what are you?" and "what can you do?"
 
@@ -136,7 +152,7 @@ USD has two categories of schema, and the distinction matters:
 
 ![UsdGeomXformable class reference — the inheritance chain that Creature taps into](Pics/Custo_OpenUSD_Pipel_I_.png)
 
-> **Reference:** [OpenUSD API - `UsdGeomXformable` class reference](https://openusd.org/release/api/class_usd_geom_xformable.html).
+> **Reference:** [OpenUSD API - `UsdGeomXformable` class reference](https://openusd.org/release/api/class_usd_geom_xformable.html) [[7]](#link-7).
 
 ![The full USD schema inheritance tree — from UsdSchemaBase through UsdTyped, UsdGeomImageable, UsdGeomXformable, and into all the concrete geometry types](Pics/Custo_OpenUSD_Pipel_J_.png)
 
@@ -309,6 +325,8 @@ Less elegant. String-based, typo-prone. But **portable across every DCC and runt
 >
 > **The decision in plain language:** If you're a solo creator or small studio using multiple DCC apps (Blender, Houdini, Kit, Unreal), go codeless. You'll type a few more characters, but you'll never fight a build system. If you're at a studio with dedicated pipeline engineers who already maintain C++ infrastructure, codeful gives them a nicer developer experience — and since they're already paying the build cost for other plugins, the marginal cost of adding schema bindings is low.
 >
+> **Industrial gate (OT/enterprise):** If your environment is regulated, vendor-USD-version-locked, or validated through long release cycles, **default to codeless unless codeful bindings deliver a measurable operational benefit you cannot get otherwise.**
+>
 > **The "I just want it to work" rule:** If the phrase "compile against the USD SDK" makes you uneasy, that's your answer. Codeless. You lose nothing in terms of what your schema *does* — the data contract is identical. You only lose convenience in how you *talk to it* from code.
 
 ---
@@ -334,8 +352,8 @@ Plug.Registry().RegisterPlugins(
 )
 ```
 
-> **Learn OpenUSD:** [Schemas](https://docs.nvidia.com/learn-openusd/latest/scene-description-blueprints/schemas.html)<br>
-> **Awesome OpenUSD:** [USD Survival Guide — Schemas](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/schemas.html), [NVIDIA Plugin Samples](https://github.com/NVIDIA-Omniverse/usd-plugin-samples), [Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples)<br>
+> **Learn OpenUSD:** [Schemas](https://docs.nvidia.com/learn-openusd/latest/scene-description-blueprints/schemas.html) [[8]](#link-8)<br>
+> **Awesome OpenUSD:** [USD Survival Guide — Schemas](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/schemas.html) [[9]](#link-9), [NVIDIA Plugin Samples](https://github.com/NVIDIA-Omniverse/usd-plugin-samples) [[10]](#link-10), [Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples) [[11]](#link-11)<br>
 > **USD GoodStart:** Schema policy and validation scripts belong in `scripts/`, with domain data schemas relevant to `040_DATA_LYRs/`.
 
 ---
@@ -515,8 +533,18 @@ For a clean metadata strategy, think in three categories:
 2. **Operational metadata**: ingestion timestamps, build versions, runtime control flags
 3. **Governance metadata**: review status, validation results, policy compliance
 
-> **Learn OpenUSD:** [Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html)<br>
-> **Awesome OpenUSD:** [USD Survival Guide — Metadata Plugins](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/metadata.html)<br>
+For industrial twins, define a minimum metadata contract early and validate it in CI:
+
+- `assetId`: stable twin-internal ID used across layers
+- `aasIdentifier`: external Industry 4.0 identity anchor
+- `plmPartNumber`: engineering/BOM key
+- `lifecycleState`: design, commissioning, operation, decommission
+- `sourceSystem`: PLM, MES, SCADA, AAS, simulation, or manual
+- `lastSyncUtc`: provenance timestamp for ingestion/update
+- `unitSystem`: explicit units context for downstream calculations
+
+> **Learn OpenUSD:** [Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html) [[12]](#link-12)<br>
+> **Awesome OpenUSD:** [USD Survival Guide — Metadata Plugins](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/metadata.html) [[13]](#link-13)<br>
 > **USD GoodStart:** Metadata conventions belong in `040_DATA_LYRs/DATA_LYRs.usda`. Validation scripts in `scripts/` should check for required metadata keys.
 
 ---
@@ -658,7 +686,7 @@ flowchart TB
 >
 > #### Separation of concerns through USD layers
 >
-> In the [AAS + OpenUSD integration architecture](../../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) (Haluszka, 2026), this maps to a layered approach where USD composition keeps each data source isolated:
+> In the [AAS + OpenUSD integration architecture](../../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) [[14]](#link-14) (Haluszka, 2026), this maps to a layered approach where USD composition keeps each data source isolated:
 >
 > - **Base layer** (`010_ASS_USD`): geometry, kinematics, materials — the physical representation. This is where **schemas and attributes** live. Your `WeldingRobotSchema` defines the shape of this data.
 > - **Data layers** (`040_DATA_LYRs`): telemetry overlays, simulation results, IoT feeds — time-varying scene data arriving via OPC UA or MQTT. These are **time-sampled attributes** on dedicated layers, so a broken sensor feed never corrupts your geometry.
@@ -732,7 +760,7 @@ flowchart TB
     class SRC_ART,SRC_SIM,SRC_PLM,SRC_OPC,SRC_MAT,SRC_PHY,SRC_CAD sourceStyle
 ```
 
-> *The GoodStart layer stack for a digital twin, read bottom-to-top. Green (bottom): geometry arrives once from CAD — the weakest layer, the foundation. Blue: physics setup — collision shapes and rigid body flags applied via `over`. Pink: materials bind on top. Purple: variants. Dark purple: the DATA layers carry all enterprise data — PLM metadata, AAS identifiers, and live OPC UA telemetry arrive here as `over` opinions. Yellow: external simulation results (Ansys, Isaac Sim, CFD) override the scene with computed outputs. Orange (top): artist/TD overrides — the strongest opinion, the final word. External systems each write exclusively to their own layer. Based on the [USD GoodStart](https://github.com/jph2/USD_GoodStart) minimal production structure.*
+> *The GoodStart layer stack for a digital twin, read bottom-to-top. Green (bottom): geometry arrives once from CAD — the weakest layer, the foundation. Blue: physics setup — collision shapes and rigid body flags applied via `over`. Pink: materials bind on top. Purple: variants. Dark purple: the DATA layers carry all enterprise data — PLM metadata, AAS identifiers, and live OPC UA telemetry arrive here as `over` opinions. Yellow: external simulation results (Ansys, Isaac Sim, CFD) override the scene with computed outputs. Orange (top): artist/TD overrides — the strongest opinion, the final word. External systems each write exclusively to their own layer. Based on the [USD GoodStart](https://github.com/jph2/USD_GoodStart) [[4]](#link-4) minimal production structure.*
 >
 > *Layers not shown for clarity: CAM_LYR (2), ENV_LYR (3), ACTGR_LYR (6), ANIM_LYR (7). These follow the same pattern — each owns its concern, each uses `over`, none touches geometry.*
 >
@@ -823,7 +851,7 @@ flowchart TB
 >
 > Stronger layers (listed first) win. Artist overrides beat simulation results. Simulation results beat data/metadata. Everything overrides the base geometry's initial values. But the base geometry *defines* the prims — the others only *opine* on them.
 >
-> **The rule:** Nothing from PLM, ERP, MES, or SCADA ever touches the geometry file. Every external system writes to its own layer using `over`. Composition does the rest. If a data feed dies, you remove or disable that layer — the rest of the twin keeps working. And when a *new* system comes online — a quality sensor, an energy monitor, a new AAS submodel — you add a layer. No existing files change. This is how you get a system that degrades gracefully *and* evolves incrementally through composable bindings (see [AAS + OpenUSD Composable Bindings Evaluation](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md)).
+> **The rule:** Nothing from PLM, ERP, MES, or SCADA ever touches the geometry file. Every external system writes to its own layer using `over`. Composition does the rest. If a data feed dies, you remove or disable that layer — the rest of the twin keeps working. And when a *new* system comes online — a quality sensor, an energy monitor, a new AAS submodel — you add a layer. No existing files change. This is how you get a system that degrades gracefully *and* evolves incrementally through composable bindings (see [AAS + OpenUSD Composable Bindings Evaluation](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) [[15]](#link-15)).
 >
 > #### The practical decision framework
 >
@@ -835,7 +863,7 @@ flowchart TB
 >
 > Don't mix the layers. That's how you end up with geometry prims carrying SAP cost codes as custom attributes that break every time someone opens the file without the SAP plugin loaded. Metadata travels with the prim silently. Attributes demand to be understood.
 >
-> **Reference:** For the full layered architecture — including the V-Model governance backbone, the Digital Engineering Loop, and how Composable Bindings enable iterative hardening of these data flows — see [AAS_OPC_OpenUSD_RESEARCH_v13, Section 6.3: Layered Contract Model](../../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md).
+> **Reference:** For the full layered architecture — including the V-Model governance backbone, the Digital Engineering Loop, and how Composable Bindings enable iterative hardening of these data flows — see [AAS_OPC_OpenUSD_RESEARCH_v13, Section 6.3: Layered Contract Model](../../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) [[14]](#link-14).
 
 ---
 
@@ -904,22 +932,7 @@ UsdStage::SetGlobalVariantFallbacks(fallbacks);
 ```
 
 - As Mati noted during the session: to really take advantage of variant fallbacks, **you need a structured ontology for your assets**. If variant set names are inconsistent across assets, fallback plugins can't help. This is a governance problem first, a plugin problem second.
-
-### Taxonomy, Semantics, Ontology — The Three Layers of Meaning in OpenUSD
-
-Three layers of meaning exist in any structured data system — and USD maps to all three:
-
-**Taxonomy** — *Where does this belong?*
-In USD: prim hierarchy (`/World/Props/Chair_01`), model kinds (`component`, `assembly`), naming conventions.
-
-**Semantics** — *What does this label mean?*
-In USD: schema definitions (a mesh schema defines what `faceVertexIndices` means), metadata field definitions, token vocabularies.
-
-**Ontology** — *How do things relate, and what can we infer?*
-In USD: relationships (material bindings link prims to materials), composition arcs (references, payloads, inherits, specializes define how models are assembled), semantic labels.
-
-The practical insight: **don't solve taxonomy problems with ontology tools, and don't solve ontology problems with taxonomy patches.** If your problem is "things are in the wrong folders," restructure your prim hierarchy. If your problem is "tools don't understand what this data means," define a schema. If your problem is "we can't express how entities relate to each other," use relationships and composition.
-
+  
 > #### Breakout: Variants in Digital Twins — When the Factory Floor Has Options
 >
 > In VFX and animation, variant sets are about LOD, color, and look-dev passes. In a digital twin, they map to **real-world configuration choices** — and the stakes are higher because these choices drive simulation, procurement, and maintenance.
@@ -968,6 +981,8 @@ The practical insight: **don't solve taxonomy problems with ontology tools, and 
 >
 > **The fallback plugin becomes a plant configuration tool.** Instead of "layout department sees low LOD," you get: "the German plant defaults to `safetyZone = "EU_CE"` while the US plant defaults to `safetyZone = "US_OSHA"`." Same digital twin. Different regulatory contexts. No file changes.
 >
+> **Safety-critical caveat:** For variants that impact compliance or safety behavior, do not rely on fallback defaults alone. Require an explicit authored selection and add a validation check that fails builds when these variant sets are unset.
+>
 > **Variants compose with `over` layers.** A shift-specific data layer can author a variant selection:
 >
 > ```usda
@@ -988,12 +1003,228 @@ The practical insight: **don't solve taxonomy problems with ontology tools, and 
 >
 > This lives in `040_DATA_LYRs/` — the production planning system writes it. The geometry snaps to the 800mm belt. The physics layer picks up the corresponding collision shapes. The material layer shows the night-shift lighting. Nobody edited a geometry file.
 >
-> **The governance link:** Each variant selection maps back to an AAS submodel or a PLM configuration. When someone selects `conveyorWidth = "600mm"`, the digital twin isn't just showing a different mesh — it's reflecting a specific BOM configuration, a specific set of spare parts, a specific maintenance schedule. The variant set is the bridge between the 3D representation and the enterprise data behind it (see [AAS + OpenUSD Integration](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md), Section 5: Layered Contract Model).
+> **The governance link:** Each variant selection maps back to an AAS submodel or a PLM configuration. When someone selects `conveyorWidth = "600mm"`, the digital twin isn't just showing a different mesh — it's reflecting a specific BOM configuration, a specific set of spare parts, a specific maintenance schedule. The variant set is the bridge between the 3D representation and the enterprise data behind it (see [AAS + OpenUSD Integration](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) [[15]](#link-15), Section 5: Layered Contract Model).
 >
 > **The rule for digital twin variants:** Name your variant sets after what the *plant operator* would call the choice, not what the *3D artist* would call it. `conveyorWidth` beats `geo_swap_v2`. `safetyZone` beats `region_variant`. If your variant set names don't make sense on a factory floor whiteboard, they won't survive contact with the production planning team.
 
+  <br>
+  
 ---
-> **Learn OpenUSD:** [What Are Variant Sets?](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html)<br>
+<br>
+
+## Going Beyond This Video: Offloading Variant Logic for Performance
+
+Imagine a realistic morning on a factory twin: planning switches Line A from product family X to Y, maintenance marks one robot as limited-capacity, and compliance requires the EU safety profile for this site. Three choices arrive at once, all tied to business rules, not graphics rules.
+
+Many teams first try to evaluate all of that logic inside the rendering runtime. It works for a demo, then performance drops and governance gets blurry. A better production pattern is to keep decision logic in backend services and let USD express the resolved decision as composable data.
+
+A practical flow looks like this:
+
+1. Web/HMI sends configuration intent (`productFamily=Y`, `site=EU`, `maintenanceMode=partial`).
+2. Backend configurator solves constraints against ERP/PLM/CPQ policies.
+3. Backend emits a resolved variant map (`conveyorWidth=800mm`, `endEffector=spotWeldGun`, `safetyZone=EU_CE`).
+4. Backend writes a USD config layer (`over` + authored variant selections + provenance metadata).
+5. Kit/Omniverse consumes that layer and composes the stage.
+6. Runtime renders/simulates the result; it does not own the enterprise rule engine.
+
+Reference set for this runtime pattern: [Learn OpenUSD — What Are Variant Sets?](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html) [[16]](#link-16), [NVIDIA Workflows — Variant Workflows](https://docs.nvidia.com/workflows/latest/variant-workflows.html) [[17]](#link-17), [Learn OpenUSD — Scenegraph Variant Set Refinement](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-variant-set-refinement.html) [[18]](#link-18), [OpenUSD API — UsdStage](https://openusd.org/docs/api/class_usd_stage.html) [[19]](#link-19), [OpenUSD API — Asset Resolution](https://openusd.org/docs/api/ar_page_front.html) [[20]](#link-20), and [Omniverse Kit WebRTC Overview](https://docs.omniverse.nvidia.com/kit/docs/omni.services.livestream.webrtc/latest/Overview.html) [[21]](#link-21).
+
+> #### Breakout: Who Writes the USD Config Layer at Runtime?
+>
+> Two valid patterns exist:
+> - **Backend-authored layer (governed/default):** backend writes a real `.usda` config layer to storage (for example Nucleus), then runtime composes/reloads it.
+> - **Runtime-authored session layer (interactive):** backend sends only the resolved variant map; runtime authors those opinions into a session/transient layer.
+>
+> Recommended for industrial twins:
+> - Use **runtime-authored session layers** for fast preview/interaction.
+> - Use **backend-authored persistent layers** for approved or auditable states.
+> - Keep one authority per state transition to avoid drift (do not let both sides independently mutate the same canonical state).
+
+Ownership split:
+
+- **ERP/PLM/CPQ**: source of truth for allowed combinations and governance.
+- **Configurator service**: runtime solver and policy gatekeeper.
+- **USD layers**: deterministic expression of the chosen configuration.
+- **Omniverse/Kit runtime**: assembly, simulation, rendering, interaction.
+
+Fallback plugins remain valuable as **safety defaults** when nothing is authored, but they should not be your primary business-logic system.
+
+#### Lofting to Production: Minimal Pattern
+
+- Keep combinatorial logic out of the renderer process.
+- Author explicit variant selections for safety/compliance-relevant sets.
+- Store `configId`, `sourceSystem`, and `timestamp` metadata with every configuration layer.
+- Make resolver context/version pinning part of each published configuration.
+- Treat session-layer selections as temporary; persist approved configurations to governed data layers.
+
+### Taxonomy, Semantics, Ontology — The Three Layers of Meaning in OpenUSD
+
+Three layers of meaning exist in any structured data system — and USD maps to all three:
+
+**Taxonomy** — *Where does this belong?*
+In USD: prim hierarchy (`/World/Props/Chair_01`), model kinds (`component`, `assembly`), naming conventions.
+
+**Semantics** — *What does this label mean?*
+In USD: schema definitions (a mesh schema defines what `faceVertexIndices` means), metadata field definitions, token vocabularies.
+
+**Ontology** — *How do things relate, and what can we infer?*
+In USD: relationships (material bindings link prims to materials), composition arcs (references, payloads, inherits, specializes define how models are assembled), semantic labels.
+
+The practical insight: **don't solve taxonomy problems with ontology tools, and don't solve ontology problems with taxonomy patches.** If your problem is "things are in the wrong folders," restructure your prim hierarchy. If your problem is "tools don't understand what this data means," define a schema. If your problem is "we can't express how entities relate to each other," use relationships and composition.
+
+### Proxy, Payload, LOD — Loading Only What You Need
+
+A factory floor has 2,000 pieces of equipment. A full digital twin carries the detailed geometry for all of them — geometry that might total hundreds of gigabytes. If every application that touches the twin has to load all of it, your monitoring dashboard takes eight minutes to open and your AR tablet on the shop floor never finishes loading at all.
+
+VFX pipelines solved this decades ago with a layered loading strategy. USD bakes that strategy directly into the scene description through three interlocking mechanisms: **purpose**, **payloads**, and **LOD variant sets**.
+
+#### Purpose: the built-in proxy/render switch
+
+Every `UsdGeomImageable` prim carries a `purpose` attribute with four possible values:
+
+| Purpose | What it means | Typical use |
+|---|---|---|
+| `default` | Always visible, always loaded | Standard geometry |
+| `render` | Only drawn in final/high-quality renders | Detailed mesh, subdivision surfaces |
+| `proxy` | Lightweight stand-in for interactive work | Bounding box, simplified hull, wireframe cage |
+| `guide` | Visible only when explicitly enabled | Rig controls, construction lines, debug overlays |
+
+A single asset can carry both a `proxy` representation (a bounding box or simplified hull) and a `render` representation (the full detailed mesh). The viewer decides which purpose to draw based on the current task:
+
+```usda
+def Xform "WeldingRobot_07" (
+    kind = "component"
+) {
+    def Mesh "proxy" (
+        purpose = "proxy"
+    ) {
+        # Six-face bounding box: 1.2 × 0.8 × 2.1 m
+        # Represents the space the robot occupies — nothing more
+        point3f[] points = [(-0.6,-0.4,0), (0.6,-0.4,0), ...]
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [...]
+    }
+
+    def Mesh "render" (
+        purpose = "render"
+    ) {
+        # Full kinematic chain: 47,000 faces, joint hierarchies, weld torch
+        point3f[] points = [...]
+        int[] faceVertexCounts = [...]
+        int[] faceVertexIndices = [...]
+    }
+}
+```
+
+The monitoring dashboard draws `proxy` — it shows bounding boxes for every robot, every conveyor, every barrier. You see the factory layout instantly, and you see the *space each piece of equipment occupies*. That alone is valuable: collision envelopes, clearance checks, layout planning, path verification for AGVs. No detailed geometry needed.
+
+When an operator taps on a specific robot to inspect its weld torch alignment, the viewer switches to `render` for that one asset. The rest of the factory stays as boxes.
+
+#### Payloads: deferred loading for heavy geometry
+
+Purpose controls what gets *drawn*. Payloads control what gets *loaded into memory* in the first place. A payload is a composition arc — like a reference — but with one critical difference: it can be **unloaded**.
+
+```usda
+def Xform "WeldingRobot_07" (
+    kind = "component"
+    payload = @010_ASS_USD/USD_Startpoint/robots/kuka_kr16_detailed.usda@
+) {
+    # The proxy lives inline — always available, always cheap
+    def Mesh "proxy" (
+        purpose = "proxy"
+    ) {
+        point3f[] points = [(-0.6,-0.4,0), (0.6,-0.4,0), ...]
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [...]
+    }
+}
+```
+
+When the stage opens, you can choose to **not load payloads** for distant or irrelevant assets. The proxy mesh is defined inline (not behind a payload), so it's always available. The detailed mesh is behind the payload — it only loads when explicitly requested. For a 2,000-asset factory, this is the difference between loading 50 MB of bounding boxes and loading 200 GB of detailed meshes.
+
+The loading decision is made by the application, not the content:
+
+```python
+# Load the stage with no payloads — just proxies
+stage = Usd.Stage.Open("factory_root.usda", Usd.Stage.LoadNone)
+
+# Load specific assets on demand
+stage.Load("/Factory/Line_A/Station_03/WeldingRobot_07")
+```
+
+#### LOD variant sets on the geometry layer
+
+Purpose gives you two levels: proxy and render. But what about intermediate detail? In a digital twin, you might need:
+
+- **LOD 0 (blocker):** Bounding box only. Used for plant-wide overview, AGV path planning, spatial queries.
+- **LOD 1 (low):** Simplified shell. Major shapes visible, no small parts. Used for layout review, VR walkthroughs.
+- **LOD 2 (medium):** Production-quality mesh. All parts visible, moderate polygon count. Used for training, documentation, AR overlays.
+- **LOD 3 (high):** Full engineering detail. Thread holes, weld seams, cable routing. Used for inspection, metrology, simulation input.
+
+This maps directly to LOD variant sets with payloads:
+
+```usda
+def Xform "WeldingRobot_07" (
+    kind = "component"
+    variants = {
+        string lod = "low"
+    }
+    variantSets = ["lod"]
+) {
+    # Blocker is always inline — no variant, no payload, always present
+    def Mesh "proxy" (
+        purpose = "proxy"
+    ) {
+        point3f[] points = [(-0.6,-0.4,0), (0.6,-0.4,0), ...]
+    }
+
+    variantSet "lod" = {
+        "low" {
+            def Xform "render" (
+                purpose = "render"
+                payload = @010_ASS_USD/USD_Startpoint/robots/kuka_kr16_low.usda@
+            ) {}
+        }
+        "medium" {
+            def Xform "render" (
+                purpose = "render"
+                payload = @010_ASS_USD/USD_Startpoint/robots/kuka_kr16_medium.usda@
+            ) {}
+        }
+        "high" {
+            def Xform "render" (
+                purpose = "render"
+                payload = @010_ASS_USD/USD_Startpoint/robots/kuka_kr16_high.usda@
+            ) {}
+        }
+    }
+}
+```
+
+Each LOD variant points to a different payload — a different geometry file with a different polygon budget. The variant fallback plugin from earlier in this chapter kicks in: if no LOD is explicitly selected, the fallback decides. The layout team's fallback says `["low", "medium", "high"]`. The simulation team's says `["high", "medium", "low"]`. Same scene, different default detail.
+
+#### Pipeline logic: who decides what loads?
+
+In a production pipeline, you don't leave loading decisions to individual artists clicking buttons. You define rules:
+
+| Context | Proxy/blocker | LOD level | Payload policy |
+|---|---|---|---|
+| Plant-wide monitoring dashboard | All proxy | N/A (proxies only) | `LoadNone` — payloads not loaded |
+| Department-level review | Proxy for distant, render for focus area | `low` fallback | Load payloads for focus area only |
+| Station-level simulation | Render for station, proxy for neighbors | `high` for station, `low` for neighbors | Selective loading by prim path |
+| AR maintenance overlay | Render for target asset only | `medium` | Load single payload on demand |
+| Offline render / documentation | All render | `high` | `LoadAll` |
+
+The application sets the variant fallbacks and payload loading policy at startup. A monitoring dashboard opens the stage with `LoadNone` and draws only `proxy` purpose. A simulation tool opens the same stage, loads payloads for its target station, selects `lod = "high"` on the relevant assets, and draws `render` purpose. No file changes. No export steps. Same USD files, different consumption strategies.
+
+**The blocker is always there.** That's the key design principle. The inline proxy mesh — the bounding box — costs almost nothing and is never behind a payload. It defines the space the equipment occupies regardless of what else is loaded. Every application sees the spatial footprint of every asset, even if it never loads a single polygon of detailed geometry.
+
+> **USD GoodStart:** Proxy geometry and LOD variant sets are authored in `010_ASS_USD/`. The `ASS_LYR.usda` in `020_BASE_LYR/` references them with payloads. LOD fallback policy is documented alongside the variant fallback plugin in `020_BASE_LYR/VAR_LYR.usda`.
+
+
+
+---
+> **Learn OpenUSD:** [What Are Variant Sets?](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html) [[16]](#link-16)<br>
 > **USD GoodStart:** Variant fallback strategy belongs in `020_BASE_LYR/VAR_LYR.usda` documentation. Define which variant set names are canonical for the project.
 
 ---
@@ -1155,6 +1386,8 @@ This means compilation per USD version, per platform. It's infrastructure work. 
 >
 > Stuttgart, Shanghai, and Detroit each set their own values. The USD files are identical everywhere. Move the simulation results to a new HPC cluster? Change one environment variable. Migrate PLM from Teamcenter to Windchill? The resolver adapts — the USD files don't know and don't care.
 >
+> **Industrial IT/OT constraints to plan for up front:** authentication/audit on resolver-backed endpoints, offline/air-gapped cache behavior for plant networks, and deterministic replay of resolved versions for incident/root-cause analysis.
+>
 > **Step 4: Version pinning via resolver context.** This is the feature that separates "nice demo" from "production-safe infrastructure." A resolver context lets you lock asset versions per stage:
 >
 > ```json
@@ -1176,8 +1409,8 @@ This means compilation per USD version, per platform. It's infrastructure work. 
 >
 > **The GoodStart principle:** Everything *inside* the GoodStart folder stays relative. Everything *outside* — CAD libraries, material repos, PLM packages, AAS registries — gets a URI scheme. The resolver is the membrane between your portable, self-contained twin and the enterprise systems that feed it. If that membrane is clean, you can move the twin to any infrastructure without rewriting a single path.
 ---
-> **Learn OpenUSD:** [Glossary — Asset Resolution](https://docs.nvidia.com/learn-openusd/latest/glossary.html#asset-resolution)<br>
-> **Awesome OpenUSD:** [USD Survival Guide — Asset Resolvers](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/assetresolver.html), [Luma URI Resolver](https://github.com/LumaPictures/usd-uri-resolver)<br>
+> **Learn OpenUSD:** [Glossary — Asset Resolution](https://docs.nvidia.com/learn-openusd/latest/glossary.html#asset-resolution) [[22]](#link-22)<br>
+> **Awesome OpenUSD:** [USD Survival Guide — Asset Resolvers](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/assetresolver.html) [[23]](#link-23), [Luma URI Resolver](https://github.com/LumaPictures/usd-uri-resolver) [[24]](#link-24)<br>
 > **USD GoodStart:** Default relative-path workflow should remain the baseline. Resolver profiles for enterprise/multi-site setups should be documented as optional environment configurations.
 
 
@@ -1253,9 +1486,9 @@ The optional `WriteToString` / `WriteToFile` function enables bidirectional conv
 
 The `.divy` example is toy-sized, but the pattern is production-real. Studios migrating to OpenUSD often have thousands of assets in proprietary formats. Converting everything upfront is a massive resource investment. File format plugins let you reference legacy formats directly from USD scenes while you migrate incrementally.
 
-Adobe's [USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) package is a practical example: it provides format plugins for OBJ, FBX, glTF, and other common formats, so USD can reference them natively.
+Adobe's [USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) [[25]](#link-25) package is a practical example: it provides format plugins for OBJ, FBX, glTF, and other common formats, so USD can reference them natively.
 
-DreamWorks' [`usdat`](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat) is another: it enables a templating workflow where USD files can be parameterized and generated on-the-fly.
+DreamWorks' [`usdat`](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat) [[26]](#link-26) is another: it enables a templating workflow where USD files can be parameterized and generated on-the-fly.
 
 ### The exit criteria question
 
@@ -1273,7 +1506,7 @@ The wrong answer is "we'll figure it out later." That's how you end up with a pl
 
 > #### Breakout: You Can Already Read More Than You Think — And NURBS Are Coming
 >
-> Before you start writing your own file format plugin, take stock of what USD can already consume today. Thanks to Adobe's [USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) and built-in support, the most common meshed polygon formats are already covered:
+> Before you start writing your own file format plugin, take stock of what USD can already consume today. Thanks to Adobe's [USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) [[25]](#link-25) and built-in support, the most common meshed polygon formats are already covered:
 >
 > | Format | Extension | Status | Notes |
 > |---|---|---|---|
@@ -1311,10 +1544,12 @@ The wrong answer is "we'll figure it out later." That's how you end up with a pl
 >
 > **The practical takeaway:** Converting to native USD is the safe default. It gives you full access to overs, variants, composition arcs, and everything else in the layer stack. If — and only if — a piece of geometry is purely referential and you will never need to write opinions against it (no overs, no variant selections, no metadata layering), you can keep the original file and let USD act as a container that reads it through a format plugin. Think of it as a convenience for static, read-only source data — not as a replacement for proper conversion in a production pipeline.
 >
+> **Migration acceptance gates (industrial):** define geometric tolerance thresholds, required attribute/metadata parity, provenance/hash traceability, and a rollback path before switching a source format from plugin-bridged to native USD.
+>
 > If your source data is NURBS from CAD, keep an eye on the AOUSD roadmap — and in the meantime, tessellate at the highest fidelity you can afford, or prototype a STEP file format plugin if your accuracy requirements demand it.
 
-> **Learn OpenUSD:** [What Is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html)
-> **Awesome OpenUSD:** [Adobe USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins), [Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples), [DreamWorks usdat](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat)
+> **Learn OpenUSD:** [What Is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html) [[5]](#link-5)
+> **Awesome OpenUSD:** [Adobe USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) [[25]](#link-25), [Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples) [[11]](#link-11), [DreamWorks usdat](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat) [[26]](#link-26)
 ---
 
 ## Chapter 6 — The Universality Warning (Video: ~01:11:00)
@@ -1352,11 +1587,11 @@ The goal is to **keep USD universal** while still getting the pipeline efficienc
 
 > #### Breakout: The Alliance for OpenUSD — Where Your Extensions Become Everyone's Standard
 >
-> [![Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](Pics/Custo_OpenUSD_Pipel_Z_%2018%20AOUSD.png)](https://aousd.org/)
+> [![Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](Pics/Custo_OpenUSD_Pipel_Z_%2018%20AOUSD.png)](https://aousd.org/) [[27]](#link-27)
 >
-> **Watch:** [A Future of 3D Interoperability With OpenUSD — Alliance for OpenUSD](https://www.youtube.com/watch?v=4lTuZ6dPcnw)
+> **Watch:** [A Future of 3D Interoperability With OpenUSD — Alliance for OpenUSD](https://www.youtube.com/watch?v=4lTuZ6dPcnw) [[28]](#link-28)
 >
-> This is the single most important thing you can do after building a pipeline extension: **bring it to [AOUSD](https://aousd.org/).**
+> This is the single most important thing you can do after building a pipeline extension: **bring it to [AOUSD](https://aousd.org/) [[27]](#link-27).**
 >
 > The Alliance for OpenUSD is not a mailing list. It's the governing body — a Joint Development Foundation project under the Linux Foundation, with founding members Pixar, Adobe, Apple, Autodesk, and NVIDIA — that decides what becomes part of the OpenUSD standard. They have active Working Groups for exactly the domains this tutorial covers:
 >
@@ -1383,7 +1618,7 @@ The goal is to **keep USD universal** while still getting the pipeline efficienc
 >
 > - **General Membership** (comes with an annual fee) — full participation in Working Groups, vote on specifications
 > - **Contributor** (free) — participate in Interest Groups, join the Community Forum, propose ideas
-> - **Community Forum** — [aousd.org](https://aousd.org/) — open discussion, even without membership
+> - **Community Forum** — [aousd.org](https://aousd.org/) [[27]](#link-27) — open discussion, even without membership
 >
 > The OpenUSD Core Spec 1.0 was released in December 2025. The standard is being written *right now*. If you've built schemas for industrial digital twins, file format plugins for CAD data, or resolver strategies for multi-site manufacturing — this is the moment to contribute them. The Working Groups are actively looking for real-world use cases beyond VFX and animation. **Your factory floor experience is exactly what they need.**
 >
@@ -1406,7 +1641,7 @@ One thing that simplifies all of this: **every plugin type uses the same discove
 
 The environment variable `PXR_PLUGINPATH_NAME` tells USD where to look. Set it, and all registered plugins become available to any USD-aware application that launches in that environment.
 
-> **Deep reference:** [Plug: Plugin Framework](https://openusd.org/docs/api/plug_page_front.html)
+> **Deep reference:** [Plug: Plugin Framework](https://openusd.org/docs/api/plug_page_front.html) [[29]](#link-29)
 
 ---
 
@@ -1467,34 +1702,32 @@ A dedicated debugging session was planned for a future livestream in the series.
 
 ## Links
 
-1. [Video: Customizing OpenUSD for Your Pipeline](https://www.youtube.com/watch?v=d4qChB291ow) — Canonical video source. Presented by Divy with Mati (NVIDIA) and community contributor Richard.
-2. [Learn OpenUSD — Index](https://docs.nvidia.com/learn-openusd/latest/index.html) — Primary learning backbone for all chapter references.
-3. [Learn OpenUSD — Schemas](https://docs.nvidia.com/learn-openusd/latest/scene-description-blueprints/schemas.html) — Core schema concepts (Chapter 1).
-4. [Learn OpenUSD — Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html) — Metadata fundamentals (Chapter 2).
-5. [Learn OpenUSD — What Are Variant Sets?](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html) — Variant set grounding (Chapter 3).
-6. [Learn OpenUSD — What Is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html) — Interoperability context (Chapters 0 and 5).
-7. [Learn OpenUSD — Asset Interface Pt 1](https://docs.nvidia.com/learn-openusd/latest/asset-structure/asset-structure-principles/asset-interface-pt1.html) — Interface-oriented asset structuring (Chapter 4).
-8. [Learn OpenUSD — Glossary (Asset Resolution)](https://docs.nvidia.com/learn-openusd/latest/glossary.html#asset-resolution) — Resolver terminology (Chapter 4).
-9. [OpenUSD API — Generating Schemas](https://openusd.org/release/api/_usd__page__generating_schemas.html) — Official `usdGenSchema` mechanics.
-10. [OpenUSD API — Sdf Plugin Metadata](https://openusd.org/release/api/sdf_page_front.html) — Custom metadata field registration.
-11. [OpenUSD API — UsdStage (Variant Fallbacks)](https://openusd.org/release/api/class_usd_stage.html) — Fallback behavior and `SetGlobalVariantFallbacks`.
-12. [OpenUSD API — Ar Asset Resolution](https://openusd.org/release/api/ar_page_front.html) — Core resolver architecture.
-13. [OpenUSD API — ArDefaultResolver](https://openusd.org/release/api/class_ar_default_resolver.html) — Default resolver capabilities and search paths.
-14. [OpenUSD API — Sdf File Format Plugin](https://openusd.org/release/api/_sdf__page__file_format_plugin.html) — Canonical file format plugin docs.
-15. [OpenUSD API — Plug Framework](https://openusd.org/docs/api/plug_page_front.html) — How USD discovers and loads plugins.
-16. [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd) — Curated ecosystem index.
-17. [USD Survival Guide — Schemas](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/schemas.html) — Practical schema generation walkthrough.
-18. [USD Survival Guide — Metadata Plugins](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/metadata.html) — Metadata plugin hands-on guide.
-19. [USD Survival Guide — Asset Resolvers](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/assetresolver.html) — Resolver overview and production notes.
-20. [NVIDIA OpenUSD Plugin Samples](https://github.com/NVIDIA-Omniverse/usd-plugin-samples) — Schema extension samples and Kit integration guidance.
-21. [Weta USD Plugin Examples](https://github.com/wetadigital/USDPluginExamples) — Minimal C++ plugin examples including file format patterns.
-22. [Luma URI Resolver](https://github.com/LumaPictures/usd-uri-resolver) — Public URI resolver implementation.
-23. [Adobe USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) — Production file format plugins for OBJ, FBX, glTF.
-24. [DreamWorks usdat Plugin](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat) — Templating-based file format plugin example.
-25. [USD GoodStart](https://github.com/jph2/USD_GoodStart) — Target project for operationalizing tutorial learnings.
-26. [Alliance for OpenUSD (AOUSD)](https://aousd.org/) — The governing body for OpenUSD standardization. Working Groups for Core Specification, Geometry, Materials, and Physics.
-27. [AAS + OpenUSD Composable Bindings Evaluation](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) — Layered Contract Model for industrial digital twin data integration.
-28. [A Future of 3D Interoperability With OpenUSD (YouTube)](https://www.youtube.com/watch?v=4lTuZ6dPcnw) — AOUSD mission video on 3D interoperability through OpenUSD standardization.
-29. [OpenUSD API — `UsdGeomXformable` Class Reference](https://openusd.org/release/api/class_usd_geom_xformable.html) — API reference used in schema inheritance screenshots.
-30. [SideFX Houdini Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/) — Houdini's USD-native context (LOPs) used in multiple demos.
-31. [USD Survival Guide — Overview](https://lucascheller.github.io/VFX-UsdSurvivalGuide/index.html) — Entry point to the guide referenced throughout this tutorial.
+1. <a id="link-1"></a>[Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](https://www.youtube.com/watch?v=d4qChB291ow) - Canonical video source for the tutorial timeline and demos. Use this to align each chapter with the original walkthrough.
+2. <a id="link-2"></a>[NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) - Primary learning backbone for concepts, composition, and pipeline patterns. This is the first reference path for deeper reading.
+3. <a id="link-3"></a>[Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) - Curated ecosystem index of tools, repos, talks, and docs. Useful when you want alternatives and practical implementations beyond one vendor page.
+4. <a id="link-4"></a>[USD GoodStart](https://github.com/jph2/USD_GoodStart) - Target project structure used throughout the tutorial for layer and pipeline examples. Read this to map concepts into your repo layout.
+5. <a id="link-5"></a>[What is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html) - Explains why interoperability is the central goal behind USD decisions. This supports the customize-without-breaking-universality argument.
+6. <a id="link-6"></a>[SideFX Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/) - Solaris is Houdini's USD-native context used in screenshots and demos. Use this to understand node context and stage authoring behavior.
+7. <a id="link-7"></a>[OpenUSD API - `UsdGeomXformable` class reference](https://openusd.org/release/api/class_usd_geom_xformable.html) - API details for transformable typed schemas and inheritance context. Important for understanding why custom schemas often inherit from Xformable.
+8. <a id="link-8"></a>[Schemas](https://docs.nvidia.com/learn-openusd/latest/scene-description-blueprints/schemas.html) - Learn OpenUSD introduction to schema design and usage. This grounds Chapter 1 decisions on typed contracts.
+9. <a id="link-9"></a>[USD Survival Guide — Schemas](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/schemas.html) - Practical, implementation-oriented schema guidance with examples. Helpful after understanding baseline theory.
+10. <a id="link-10"></a>[NVIDIA Plugin Samples](https://github.com/NVIDIA-Omniverse/usd-plugin-samples) - Reference implementations for multiple USD plugin types. Use this for concrete project scaffolding and build patterns.
+11. <a id="link-11"></a>[Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples) - Minimal C++ samples for core plugin mechanisms. Useful for understanding low-level structure with less framework overhead.
+12. <a id="link-12"></a>[Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html) - Learn OpenUSD overview of metadata authoring and semantics. Supports the metadata-vs-attributes decision framework.
+13. <a id="link-13"></a>[USD Survival Guide — Metadata Plugins](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/metadata.html) - Hands-on metadata plugin examples and caveats. Good follow-up for implementing custom fields and kinds.
+14. <a id="link-14"></a>[AAS + OpenUSD integration architecture](../../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) - Local deep-dive research framing enterprise data layering and composable bindings. Use this for industrial digital twin architecture context.
+15. <a id="link-15"></a>[AAS + OpenUSD Composable Bindings Evaluation](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) - Same core research from an alternate relative path used in other sections. Kept for in-document link consistency.
+16. <a id="link-16"></a>[Learn OpenUSD — What Are Variant Sets?](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html) - Core variant-set behavior and composition semantics. Baseline source for Chapter 3.
+17. <a id="link-17"></a>[NVIDIA Workflows — Variant Workflows](https://docs.nvidia.com/workflows/latest/variant-workflows.html) - Practical workflow guidance for authoring and managing variants in production. Supports the runtime configurator discussion.
+18. <a id="link-18"></a>[Learn OpenUSD — Scenegraph Variant Set Refinement](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/refining-scenegraph-instances/scenegraph-variant-set-refinement.html) - Explains refinement patterns for variants in larger composed scenes. Useful for scalable configurator design.
+19. <a id="link-19"></a>[OpenUSD API — UsdStage](https://openusd.org/docs/api/class_usd_stage.html) - API surface for stage behavior, including variant fallback controls and stage-level operations. Reference for runtime override details.
+20. <a id="link-20"></a>[OpenUSD API — Asset Resolution](https://openusd.org/docs/api/ar_page_front.html) - Canonical entry for resolver architecture and behavior. Foundation for custom scheme and resolver ownership decisions.
+21. <a id="link-21"></a>[Omniverse Kit WebRTC Overview](https://docs.omniverse.nvidia.com/kit/docs/omni.services.livestream.webrtc/latest/Overview.html) - WebRTC streaming model for Kit-based runtimes. Relevant when separating backend config logic from rendering runtime.
+22. <a id="link-22"></a>[Glossary — Asset Resolution](https://docs.nvidia.com/learn-openusd/latest/glossary.html#asset-resolution) - Concise terminology reference for resolver concepts. Useful when onboarding teams to URI/resolver vocabulary.
+23. <a id="link-23"></a>[USD Survival Guide — Asset Resolvers](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/plugins/assetresolver.html) - Resolver-focused practical notes and examples. Good complement to the official API docs.
+24. <a id="link-24"></a>[Luma URI Resolver](https://github.com/LumaPictures/usd-uri-resolver) - Public resolver implementation showing URI-scheme patterns in code. Helpful reference for production resolver structure.
+25. <a id="link-25"></a>[USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins) - Real-world file format plugins for common formats (OBJ, FBX, glTF, etc.). Useful for bridge-vs-convert decisions.
+26. <a id="link-26"></a>[`usdat`](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat) - DreamWorks file format plugin example centered on templating workflows. Shows a specialized production use case.
+27. <a id="link-27"></a>[Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](https://aousd.org/) - Governing body for OpenUSD standardization and working groups. Use this when planning to upstream widely useful extensions.
+28. <a id="link-28"></a>[A Future of 3D Interoperability With OpenUSD — Alliance for OpenUSD](https://www.youtube.com/watch?v=4lTuZ6dPcnw) - Overview talk on AOUSD mission and interoperability direction. Good context for Chapter 6 governance discussion.
+29. <a id="link-29"></a>[Plug: Plugin Framework](https://openusd.org/docs/api/plug_page_front.html) - Core plugin discovery and registration architecture in OpenUSD. This is the anchor for understanding plugInfo.json and loader behavior.
