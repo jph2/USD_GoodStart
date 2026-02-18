@@ -7,10 +7,10 @@
 
 [![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_0A_.png)](https://www.youtube.com/watch?v=d4qChB291ow)
 
-**Canonical Video Source:** https://www.youtube.com/watch?v=d4qChB291ow
-**Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)
-**Scope Anchor:** from `00:05:50` to approximately `01:11:00`
-**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html)
+**Canonical Video Source:** https://www.youtube.com/watch?v=d4qChB291ow <br>
+**Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)<br>
+**Scope Anchor:** from `00:05:50` to approximately `01:11:00`<br>
+**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html)<br> **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd)
 
 ---
 
@@ -124,6 +124,8 @@ That's it. A schema definition in USD is a `.usda` file. The `inherits = </Xform
 
 ![Schema code overlaid on Houdini — the creature definition visible alongside the live stage](Pics/Custo_OpenUSD_Pipel_H_.png)
 
+> **Houdini context:** These demos are in **Solaris (LOPs)**, Houdini's USD-native context. Reference: [SideFX Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/).
+
 ### Two kinds of schema: "what are you?" and "what can you do?"
 
 USD has two categories of schema, and the distinction matters:
@@ -133,6 +135,8 @@ USD has two categories of schema, and the distinction matters:
 
 
 ![UsdGeomXformable class reference — the inheritance chain that Creature taps into](Pics/Custo_OpenUSD_Pipel_I_.png)
+
+> **Reference:** [OpenUSD API - `UsdGeomXformable` class reference](https://openusd.org/release/api/class_usd_geom_xformable.html).
 
 ![The full USD schema inheritance tree — from UsdSchemaBase through UsdTyped, UsdGeomImageable, UsdGeomXformable, and into all the concrete geometry types](Pics/Custo_OpenUSD_Pipel_J_.png)
 
@@ -251,6 +255,8 @@ creature.GetAgeAttr().Set(100)
 Clean imports, autocompletion, type safety. But there's a cost: you need to compile those C++ bindings for every USD version in your pipeline. If you're running Houdini, Isaac Sim, and Unreal Engine — and they each ship different USD versions — you're maintaining three separate builds.
 
 ![Houdini live demo — codeful schema import: `from CreatureSchema import Creature` then `Creature.Define(stage, "/Divy")`](Pics/Custo_OpenUSD_Pipel_Q_.png)
+
+> **Screenshot readout:** `Creature.Define(stage, "/Divy")` is a typed-schema convenience wrapper; it still authors standard USD opinions on the current stage/layer.
 ---
 **Codeless schemas** skip code generation entirely. The only difference in the schema definition is one metadata flag:
 
@@ -275,8 +281,11 @@ prim = stage.DefinePrim("/World/Divy", "Creature")
 prim.GetAttribute("age").Set(100)
 ```
 
-Less elegant. String-based, typo-prone. But **portable across every DCC and runtime without recompilation**.
+
 ![Metadata Plugins — the second extension point](Pics/Custo_OpenUSD_Pipel_R_.png)
+Less elegant. String-based, typo-prone. But **portable across every DCC and runtime without recompilation**.
+
+> **Codeless readout:** `skipCodeGeneration = true` removes generated bindings, not schema behavior. `DefinePrim(..., "Creature")` still creates a typed `Creature` prim; you just access its properties through generic attribute names.
 
 ---
 
@@ -370,7 +379,9 @@ Save that as `plugInfo.json`, point the `PXR_PLUGINPATH_NAME` environment variab
 
 ![Divy's plugInfo.json for custom kinds — creature, hero, npc, monster all inheriting from model](Pics/Custo_OpenUSD_Pipel_U_.png)
 
-![File structure — the plugin folder with plugInfo.json and supporting scripts](Pics/Custo_OpenUSD_Pipel_V_.png)
+> **Screenshot readout:** The key fields are `Info.Kinds` and each `baseKind`. `Type: "resource"` is why this plugin loads without compilation.
+
+![File structure — the plugin folder with plugInfo.json and supporting scripts](Pics/Custo_OpenUSD_Pipel_V.png)
 
 ---
 
@@ -868,6 +879,8 @@ After loading this plugin, Divy opened the same asset again. This time: blue sph
 
 ![Result: the blue sphere — variant fallback automatically selected "blue" with no authored selection](Pics/Custo_OpenUSD_Pipel_Z_%2011.png)
 
+> **Screenshot readout:** Fallback arrays are priority-ordered. USD tries values left-to-right (`blue`, then `green`, then `red`) only when no authored variant selection exists.
+
 ### The department workflow pattern
 
 This is where variant fallbacks get genuinely powerful. Imagine:
@@ -892,6 +905,20 @@ UsdStage::SetGlobalVariantFallbacks(fallbacks);
 
 - As Mati noted during the session: to really take advantage of variant fallbacks, **you need a structured ontology for your assets**. If variant set names are inconsistent across assets, fallback plugins can't help. This is a governance problem first, a plugin problem second.
 
+### Taxonomy, Semantics, Ontology — The Three Layers of Meaning in OpenUSD
+
+Three layers of meaning exist in any structured data system — and USD maps to all three:
+
+**Taxonomy** — *Where does this belong?*
+In USD: prim hierarchy (`/World/Props/Chair_01`), model kinds (`component`, `assembly`), naming conventions.
+
+**Semantics** — *What does this label mean?*
+In USD: schema definitions (a mesh schema defines what `faceVertexIndices` means), metadata field definitions, token vocabularies.
+
+**Ontology** — *How do things relate, and what can we infer?*
+In USD: relationships (material bindings link prims to materials), composition arcs (references, payloads, inherits, specializes define how models are assembled), semantic labels.
+
+The practical insight: **don't solve taxonomy problems with ontology tools, and don't solve ontology problems with taxonomy patches.** If your problem is "things are in the wrong folders," restructure your prim hierarchy. If your problem is "tools don't understand what this data means," define a schema. If your problem is "we can't express how entities relate to each other," use relationships and composition.
 
 > #### Breakout: Variants in Digital Twins — When the Factory Floor Has Options
 >
@@ -1000,26 +1027,28 @@ This works fine — until he moves the `assets` folder from `Documents` to `Desk
 
 An asset resolver is a plugin that intercepts USD's path resolution and translates logical identifiers into actual file locations. Instead of hardcoding where assets live, you author a **scheme** — a custom URL prefix — and let the resolver figure out the rest.
 
-Divy defined his own scheme: `divi-asset://`. His scene files now look like:
+Divy defined his own scheme: `divy-asset://`. His scene files now look like:
 
 ```usda
 def Xform "World" {
     def "Fluffy" (
-        payload = @divi-asset://fluffy.usda@
+        payload = @divy-asset://fluffy.usda@
     ) {}
     def "Spike" (
-        payload = @divi-asset://spike.usda@
+        payload = @divy-asset://spike.usda@
     ) {}
 }
 ```
 
 ![Same scene — now with omniverse:// prefix, pointing to Nucleus-hosted assets](Pics/Custo_OpenUSD_Pipel_Z_%2014.png)
 
-![Same scene — now with divi-asset:// prefix, Divy's personal URI scheme](Pics/Custo_OpenUSD_Pipel_Z_%2015.png)
+![Same scene — now with divy-asset:// prefix, Divy's personal URI scheme](Pics/Custo_OpenUSD_Pipel_Z_%2015.png)
 
-His resolver reads a single environment variable — `DIVI_ASSET_LIBRARY_PATH` — and replaces `divi-asset://` with whatever that variable points to. Move the library? Update one environment variable. Every scene resolves correctly without touching a single USD file.
+His resolver reads a single environment variable — `DIVY_ASSET_LIBRARY_PATH` — and replaces `divy-asset://` with whatever that variable points to. Move the library? Update one environment variable. Every scene resolves correctly without touching a single USD file.
 
-![divi-asset:// paths with the file browser showing the moved assets folder on Desktop](Pics/Custo_OpenUSD_Pipel_Z_%2016.png)
+![divy-asset:// paths with the file browser showing the moved assets folder on Desktop](Pics/Custo_OpenUSD_Pipel_Z_%2016.png)
+
+> **Screenshot readout:** The asset files moved, but the USDA payload paths did not change. Only resolver mapping (via environment variable) changed.
 
 NVIDIA does the same thing at a much larger scale: the `omniverse://` scheme resolves to Nucleus servers, downloads assets to a local cache, and swaps the URL to the cached file path. Same pattern, enterprise infrastructure.
 
@@ -1258,7 +1287,9 @@ The wrong answer is "we'll figure it out later." That's how you end up with a pl
 > | STL | `.stl` | Adobe plugin | 3D printing and CAD tessellation output. |
 > | PLY | `.ply` | Adobe plugin | Point clouds, 3D scans. |
 >
-> This means your `ASS_LYR.usda` can already reference an FBX from your animation team, an OBJ from a 3D scan, or a glTF from a web configurator — and USD reads them as if they were native layers. No conversion step required.
+> This means your `ASS_LYR.usda` can already reference an FBX from your animation team, an OBJ from a 3D scan, or a glTF from a web configurator — and USD reads them as if they were native prims.
+>
+> **A word of caution, though:** "reads them" is not the same as "full native-USD authoring." Many file format plugins are read-only and have limited round-trip semantics. You can often compose stronger USD layers on top, but behavior is plugin-specific and usually less robust than native `.usd`/`.usdc` workflows for overs, variants, and layering.
 >
 > **But the bigger story is what's on the roadmap.** NURBS support in OpenUSD has been a long-standing request from the CAD and industrial design community. The Alliance for OpenUSD (AOUSD) has NURBS representation on its roadmap, which would allow USD to carry the actual mathematical surface descriptions — not just tessellated triangles — from tools like CATIA, Creo, Rhino, and Siemens NX.
 >
@@ -1278,7 +1309,9 @@ The wrong answer is "we'll figure it out later." That's how you end up with a pl
 >
 > **And here's where file format plugins meet the future.** Even before native NURBS lands in USD core, you could build a file format plugin that reads STEP or IGES files and maps B-Rep data to USD prims using custom schemas. When NURBS support arrives in USD proper, you migrate from the plugin to native representation — the same "bridge, not destination" pattern from the main chapter. Your USD references don't change. Only the plugin retires.
 >
-> **The practical takeaway:** Don't convert what you don't have to. If your source data is FBX, OBJ, or glTF, USD can already read it directly via format plugins. If your source data is NURBS from CAD, keep an eye on the AOUSD roadmap — and in the meantime, tessellate at the highest fidelity you can afford, or prototype a STEP file format plugin if your accuracy requirements demand it.
+> **The practical takeaway:** Converting to native USD is the safe default. It gives you full access to overs, variants, composition arcs, and everything else in the layer stack. If — and only if — a piece of geometry is purely referential and you will never need to write opinions against it (no overs, no variant selections, no metadata layering), you can keep the original file and let USD act as a container that reads it through a format plugin. Think of it as a convenience for static, read-only source data — not as a replacement for proper conversion in a production pipeline.
+>
+> If your source data is NURBS from CAD, keep an eye on the AOUSD roadmap — and in the meantime, tessellate at the highest fidelity you can afford, or prototype a STEP file format plugin if your accuracy requirements demand it.
 
 > **Learn OpenUSD:** [What Is Data Exchange?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-exchange/what-is-data-exchange.html)
 > **Awesome OpenUSD:** [Adobe USD File Format Plugins](https://github.com/adobe/USD-Fileformat-plugins), [Weta Plugin Examples](https://github.com/wetadigital/USDPluginExamples), [DreamWorks usdat](https://github.com/dreamworksanimation/dwa_usd_plugins/tree/master/pxr/usd/plugin/usdat)
@@ -1292,7 +1325,7 @@ At the end of the session, Divy was direct:
 
 > "Every time some studio or company goes and builds a lot of their plugins, it actually comes with a big risk. We are making USD a little less universal."
 
-If Mati asks Divy for his demo files, he gets `.usda` files that reference `divi-asset://` paths and `.divy` formats. Without Divy's resolver and file format plugin — plus the compiled binaries for Mati's specific platform — those files are useless. And sharing C++ plugin source code from a company context raises IP concerns.
+If Mati asks Divy for his demo files, he gets `.usda` files that reference `divy-asset://` paths and `.divy` formats. Without Divy's resolver and file format plugin — plus the compiled binaries for Mati's specific platform — those files are useless. And sharing C++ plugin source code from a company context raises IP concerns.
 
 This is not a theoretical risk. It is the central tension of pipeline customization: **the more you extend, the more you depend on your extensions.**
 
@@ -1319,7 +1352,7 @@ The goal is to **keep USD universal** while still getting the pipeline efficienc
 
 > #### Breakout: The Alliance for OpenUSD — Where Your Extensions Become Everyone's Standard
 >
-> ![Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](Pics/Custo_OpenUSD_Pipel_Z_%2018%20AOUSD.png)
+> [![Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](Pics/Custo_OpenUSD_Pipel_Z_%2018%20AOUSD.png)](https://aousd.org/)
 >
 > **Watch:** [A Future of 3D Interoperability With OpenUSD — Alliance for OpenUSD](https://www.youtube.com/watch?v=4lTuZ6dPcnw)
 >
@@ -1348,7 +1381,7 @@ The goal is to **keep USD universal** while still getting the pipeline efficienc
 >
 > **How to get involved:**
 >
-> - **General Membership** ($10,000/year) — full participation in Working Groups, vote on specifications
+> - **General Membership** (comes with an annual fee) — full participation in Working Groups, vote on specifications
 > - **Contributor** (free) — participate in Interest Groups, join the Community Forum, propose ideas
 > - **Community Forum** — [aousd.org](https://aousd.org/) — open discussion, even without membership
 >
@@ -1420,26 +1453,7 @@ The left column is always cheaper, more portable, and easier to maintain. The ri
 
 ---
 
-## Appendix A — Taxonomy, Semantics, Ontology in OpenUSD
-
-> This appendix provides the conceptual framework that underlies all five plugin types. If you want to understand *why* the plugin system is structured the way it is, read this. If you just need to *use* it, the chapters above are self-contained.
-
-Three layers of meaning exist in any structured data system:
-
-**Taxonomy** — *Where does this belong?*
-In USD: prim hierarchy (`/World/Props/Chair_01`), model kinds (`component`, `assembly`), naming conventions.
-
-**Semantics** — *What does this label mean?*
-In USD: schema definitions (a mesh schema defines what `faceVertexIndices` means), metadata field definitions, token vocabularies.
-
-**Ontology** — *How do things relate, and what can we infer?*
-In USD: relationships (material bindings link prims to materials), composition arcs (references, payloads, inherits, specializes define how models are assembled), semantic labels.
-
-The practical insight: **don't solve taxonomy problems with ontology tools, and don't solve ontology problems with taxonomy patches.** If your problem is "things are in the wrong folders," restructure your prim hierarchy. If your problem is "tools don't understand what this data means," define a schema. If your problem is "we can't express how entities relate to each other," use relationships and composition.
-
----
-
-## Appendix B — Debugging Plugins
+## Appendix A — Debugging Plugins
 
 Divy mentioned the `TF_DEBUG` environment variables as essential for plugin development. When your plugin isn't loading or registering correctly, these are your first diagnostic tool:
 
@@ -1481,3 +1495,6 @@ A dedicated debugging session was planned for a future livestream in the series.
 26. [Alliance for OpenUSD (AOUSD)](https://aousd.org/) — The governing body for OpenUSD standardization. Working Groups for Core Specification, Geometry, Materials, and Physics.
 27. [AAS + OpenUSD Composable Bindings Evaluation](../../AAS_OPC_OpenUSD_INTEGRATION/docs/AAS_OPC_OpenUSD_RESEARCH_v13.md) — Layered Contract Model for industrial digital twin data integration.
 28. [A Future of 3D Interoperability With OpenUSD (YouTube)](https://www.youtube.com/watch?v=4lTuZ6dPcnw) — AOUSD mission video on 3D interoperability through OpenUSD standardization.
+29. [OpenUSD API — `UsdGeomXformable` Class Reference](https://openusd.org/release/api/class_usd_geom_xformable.html) — API reference used in schema inheritance screenshots.
+30. [SideFX Houdini Solaris Documentation](https://www.sidefx.com/docs/houdini/solaris/) — Houdini's USD-native context (LOPs) used in multiple demos.
+31. [USD Survival Guide — Overview](https://lucascheller.github.io/VFX-UsdSurvivalGuide/index.html) — Entry point to the guide referenced throughout this tutorial.
