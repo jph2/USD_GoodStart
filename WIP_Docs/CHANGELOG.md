@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#semantic_id #stage #troubleshooting #validation #aas_integration #syntheticdata #physical_ai #references #openusd #workflow_automation #best_practices #usd_core #digital_twin #digital_twin_creation #semantic_governance #blender #conversion #c4d #analysis #layers
+
 # Changelog
 
 All notable changes to the USD GoodStart project template will be documented in this file.

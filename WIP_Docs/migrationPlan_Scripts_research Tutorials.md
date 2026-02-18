@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#gaming #livrps #layers #variants #debugging #validation #reference #vscode #import #variant #material #opinions #openusd #workflow_automation #best_practices #usd_core #references #analysis #composition #conversion
+
 
 ### Summary  Migrating Tutorials
 I went through the **highest‑leverage** tutorials in `OV_USD_Tutorials` (project structure/naming, LIVRPS+layers+variants, IDE debugging, data prep/validation, plus the “Unified Naming” reference). There’s a lot of good *workflow guidance* we can reuse in `USD_GoodStart` — but also a few **technically wrong / misleading** claims + code snippets that we should **not** import.

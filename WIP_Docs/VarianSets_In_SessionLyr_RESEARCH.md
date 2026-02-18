@@ -12,7 +12,8 @@
 > **Technical Review**: (pending)
 > **Stakeholders**: USD pipeline / tools / TDs
 
-**Tags (Keywords)**: hybrid | variants | variant_control | layers | stage | composition | troubleshooting | workflow_optimization | version_control | usd_core | omniverse
+**Tag block:**
+#hybrid #variants #variant_control #layers #stage #composition #troubleshooting #workflow_optimization #version_control #usd_core #omniverse #openusd #workflow_automation #best_practices #conversion #analysis #case_study #deterministic_workflows #usd_goodstart #framework_integration #isaac_sim
 
 > **Quality Note (Scope/Frame)**: This research was generated even though the discovery’s Initial Observations / Preliminary Findings and/or Research Scope still contain placeholders (`FRAME_STATUS: UNSET`, `SCOPE_STATUS: UNSET`). Some drift may have occurred. If you’re unhappy with the results, fill those discovery sections and re-run research generation.
 

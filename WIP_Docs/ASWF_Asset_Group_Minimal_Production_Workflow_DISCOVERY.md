@@ -1,15 +1,17 @@
 # ASWF Asset Group - Minimal/Production Example Workflow
 
-**Version**: 1.9.2 | **Date**: 10.02.2026 | **Time**: 16:10 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
+**Version**: 1.9.2 | **Date**: 16.02.2026 | **Time**: 16:10 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
 **Last Updated:** 10.02.2026 16:10
 **Framework:** General_Research (Discovery Phase)
 **Status:** Discovery - Active
 **Context:** AOUSD IEDT Interest Group task assignment
+**Tag block:**
+#post_production #conversion #aousd #over_engineering #standalone #outside_omniverse #hybrid #analysis #openusd #workflow_automation #best_practices #usd_core #omniverse #digital_twin #digital_twin_creation #references #variants #layers #composition #export #omniverse_nucleus
 
 > **Task Origin**: AOUSD IEDT IG (Industrial and Engineering Digital Twin Interest Group)
 > **Assignment**: Investigate and share insights from the ASWF asset group's minimal/production example workflow, particularly around their process for structuring minimal and production-ready assets.
 
-**Tags (Keywords)**: — Reference `Master_Rules/master_tag_system.yml` for available tags.
+#reference_master_rulesmaster_t
 
 | Category | Tags |
 |----------|------|

@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#framework_integration #creative #geometry #export #material #stage #construction #openusd #workflow_automation #best_practices #usd_core #deterministic_workflows #usd_start_point #usd_goodstart
+
 # 010_ASS_USD
 
 **Purpose:** USD assets (converted from CAD or created in DCC + Textrurs from that were created in 2D Apps) | 

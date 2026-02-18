@@ -8,6 +8,8 @@
 **Framework:** General_Research (Discovery Phase)
 **Status:** Solution Identified - Ready for Implementation
 **Domain:** USD/Omniverse (Domain_OmniUSD_Guardrails)
+**Tag block:**
+#variant #layer #conversion #omniverse #openusd #material #variants #opinions #workflow_automation #best_practices #usd_core #hybrid #layers #composition #quality_assurance #validation #analysis #case_study #workflow_optimization #deterministic_workflows
 
 ---
 

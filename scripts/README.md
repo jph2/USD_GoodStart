@@ -2,6 +2,8 @@
 
 **Version:** 0.9.0 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
 **Last Updated:** 29.01.2026 16:00
+**Tag block:**
+#framework_integration #api_integration #conversion #directrl #validation #post_production #ide #automation #layers #stage #openusd #workflow_automation #best_practices #usd_core #omniverse #hybrid #references #analysis #variants #composition
 
 This directory contains utility scripts for USD GoodStart project management and validation.
 
@@ -188,4 +190,3 @@ def validate_digital_twin_metadata(prim):
             missing.append(attr)
     return missing
 ```
-

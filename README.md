@@ -10,6 +10,8 @@
 **Version:** 0.9.5.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
 **Last Updated:** 29.01.2026
 > **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Mattias [Awesome USD](https://github.com/matiascodesal/awesome-openusd)). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
+**Tag block:**
+#framework_integration #openusd #omniverse #composition #pipeline #validation #aas_integration #architecture #conversion #workflow_automation #best_practices #usd_core #hybrid #digital_twin #digital_twin_creation #semantic_governance #layers #mcp_protocol #ai_coding_agents #quality_assurance
 
 > **Research for the AOUSD IEDT IG:** A comparative analysis of three OpenUSD asset structuring approaches — ASWF collectiveproject001, NVIDIA Learn OpenUSD principles, and USD GoodStart — was conducted for the [Alliance for OpenUSD](https://aousd.org/) Industrial & Engineering Digital Twin Interest Group. The study identifies convergences, divergences, and an evolution plan for GoodStart. See the full discovery: [`ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md`](WIP_Docs/ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md).
 
@@ -58,13 +60,13 @@ graph TD
     Root[USD_GoodStart_ROOT.usda<br/>Main Container] --> Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
     Root --> Camera[CAM_LYR.usda<br/>Cameras]
     Root --> Env[ENV_LYR.usda<br/>Environment & Lighting]
-    Root --> Sim[SIM_LYR.usda<br/>Simulation & Physics]
+    Root --> Sim[SIM_LYR.usda<br/>External Simulation Results]
     Root --> Data[DATA_LYRs.usda<br/>Data & Metadata]
     Root --> Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
     Root --> Anim[ANIM_LYR.usda<br/>Animation]
     Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
     Root --> Material[MTL_LYR.usda<br/>Materials & Shading]
-    Root --> Physics[PHY_LYR.usda<br/>Physics Simulation]
+    Root --> Physics[PHY_LYR.usda<br/>Physics Setup &<br/>Collision Shapes]
     Root --> Asset[ASS_LYR.usda<br/>References & Payloads<br/>Asset Import<br/>Lowest Layer]
     
     Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
@@ -110,7 +112,7 @@ graph TD
 - `010_ASS_USD/tex/` - Textures (global and asset-specific)
 - `010_ASS_USD/Envs/` - Environment library; contains a dummy `Environment.usda` stage as a placeholder, assuming that different environments will be created and loaded/used separately. `ENV_LYR.usda` is responsible for wiring an environment from here into the layer stack.
 - `020_BASE_LYR/` - **Base layers** (opinion, environment, asset import, material import, variants, action-graph, animation)
-- `030_SIM_LYR/` - Simulation layers (physics, collisions, articulations, sensors)
+- `030_SIM_LYR/` - Simulation result layers (external sim overlays: CFD, FEA, Isaac Sim, Ansys)
 - `040_DATA_LYRs/` - **Data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA)
 
 **Why This Structure?**
@@ -170,13 +172,13 @@ Array ordering: first = strongest, last = weakest:
 1. **OPIN_LYR.usda** – Overrides & opinions (strongest)
 2. **CAM_LYR.usda** – Cameras
 3. **ENV_LYR.usda** – Environment, ground, lighting, render defaults
-4. **SIM_LYR.usda** – Simulation & physics
+4. **SIM_LYR.usda** – External simulation results & overlays (Ansys, Isaac Sim, CFD, FEA)
 5. **DATA_LYRs.usda** – Data & metadata (PLM/ERP/AAS/OPC UA, sensor data)
 6. **ACTGR_LYR.usda** – Action graph / behavior logic
 7. **ANIM_LYR.usda** – Animation
 8. **VAR_LYR.usda** – Variants & configurations
 9. **MTL_LYR.usda** – Materials & shading work
-10. **PHY_LYR.usda** – Physics simulation
+10. **PHY_LYR.usda** – Physics setup (collision shapes, rigid body flags, mass properties)
 11. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
 ### Working with Session Layers
@@ -1888,5 +1890,4 @@ See "Houdini: The Powerhouse for USD Pipeline Automation" section above for deta
 - Asset-specific textures can be stored within asset folders, while global textures go in `010_ASS_USD/tex/`
 - Root file is always named `USD_GoodStart_ROOT.usda` - only the default prim name changes
 - Geometry assets go in `010_ASS_USD/USD_Startpoint/` as stable endpoints for DCC exports
-
 

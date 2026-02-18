@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#openusd #usdskel #joints #mes #workflow_automation #best_practices #usd_core #export #deterministic_workflows #usd_start_point #usd_goodstart #framework_integration
+
 # UsdSkel Joint Index Remapping: Mesh-Local to Skeleton Space
 
 **Problem:** Joint indices returned from `UsdSkelSkinningQuery::ComputeJointInfluences()` map to the mesh's `skel:joints` array, but you need indices into the skeleton's `joints` array. The mesh may only store a subset of joints from the full skeleton.

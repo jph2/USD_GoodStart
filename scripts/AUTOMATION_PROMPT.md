@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#automation #specialization #creative #prim #reference #usda #openusd #workflow_automation #best_practices #usd_core #references #analysis #layers #composition #export #framework_integration #ai_coding_agents #deterministic_workflows #usd_start_point #usd_goodstart #isaac_sim
+
 # USD GoodStart Setup Script - Automation Prompt
 
 **Purpose:** This document describes the complete specification for generating the `setup_usd_project.py` script. Use this prompt to recreate, modify, or extend the script.

@@ -1,3 +1,8 @@
+**Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
+
+**Tag block:**
+#framework_integration #layers #aas_integration #stage #construction #openusd #workflow_automation #best_practices #usd_core #digital_twin #digital_twin_creation #semantic_governance #opc_ua #industrial_integration #composition #deterministic_workflows #usd_start_point #usd_goodstart
+
 # 040_DATA_LYRs
 
 **Purpose:** Data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA / sensor / data metadata).

@@ -1,6 +1,8 @@
 **Version:** 0.9.5-beta  (documentation for USD_GoodStart project scaffolding v0.8.1)  
 **Last Updated:** 29.01.2026
 **Project Scaffold Reference:** See main `USD_GoodStart/README.md` (version 0.8.1) for folder structure and setup script details.
+**Tag block:**
+#best_practices #framework_integration #openusd #conversion #reference #sme #omniverse #workflow_automation #usd_core #hybrid #digital_twin #digital_twin_creation #blender #rhino #references #analysis #validation #quality_assurance #deterministic_workflows #usd_start_point
 
 **Please NOTE this is a WIP document, some chapters only exist as headlines and bulletpoints**
 
@@ -7957,7 +7959,6 @@ usdcat GoodStart_ROOT.usda -o production/GoodStart_ROOT.usdc
 
 
 ---
-
 
 
 
