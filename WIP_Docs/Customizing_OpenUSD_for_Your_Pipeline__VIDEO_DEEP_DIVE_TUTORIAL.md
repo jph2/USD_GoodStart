@@ -1,6 +1,6 @@
 # Customizing OpenUSD for Your Pipeline — Video Deep-Dive Tutorial
 
-**Version**: 2.0.0 | **Date**: 18.02.2026 | **Time**: 16:30 | **GlobalID**: 20260218_1630_USD_GoodStart_001
+**Version**: 2.1.0 | **Date**: 18.02.2026 | **Time**: 22:20 | **GlobalID**: 20260218_2220_USD_GoodStart_001
 
 **Tag block:**
 #openusd #usd_core #schemas #asset_resolver #variants #workflow_optimization #best_practices #framework_integration #workflow_automation #deterministic_workflows #analysis #omniverse
@@ -13,6 +13,10 @@
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)<br>
 **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [[3]](#link-3)<br>
 **Certification Series:** [The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)](https://www.youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb) — this tutorial covers 3rd session in the series
+
+---
+
+> **Part of [USD GoodStart](https://github.com/jph2/USD_GoodStart)** — an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, **[start with the README](https://github.com/jph2/USD_GoodStart#readme)**.
 
 ---
 
@@ -1686,6 +1690,14 @@ The left column is always cheaper, more portable, and easier to maintain. The ri
    - Local relative-path profile (default)
    - Resolver-enabled profile (optional, for enterprise/multi-site)
 
+### Agent Mode Gate for Implementation and QA
+
+For follow-up implementation work from this tutorial, start each session with a mandatory persona selector:
+- `TARS` for building and integration [[30]](#link-30)
+- `MARVIN` for adversarial QA/security review [[31]](#link-31)
+
+Routing is controlled in the framework entrypoint policy [[32]](#link-32). Counterpart internals stay isolated while both roles still cooperate through handoff artifacts for better outcomes [[33]](#link-33).
+
 ---
 
 ## Appendix A — Debugging Plugins
@@ -1731,3 +1743,7 @@ A dedicated debugging session was planned for a future livestream in the series.
 27. <a id="link-27"></a>[Alliance for OpenUSD (AOUSD) — the organization driving OpenUSD standardization](https://aousd.org/) - Governing body for OpenUSD standardization and working groups. Use this when planning to upstream widely useful extensions.
 28. <a id="link-28"></a>[A Future of 3D Interoperability With OpenUSD — Alliance for OpenUSD](https://www.youtube.com/watch?v=4lTuZ6dPcnw) - Overview talk on AOUSD mission and interoperability direction. Good context for Chapter 6 governance discussion.
 29. <a id="link-29"></a>[Plug: Plugin Framework](https://openusd.org/docs/api/plug_page_front.html) - Core plugin discovery and registration architecture in OpenUSD. This is the anchor for understanding plugInfo.json and loader behavior.
+30. <a id="link-30"></a>[TARS Soul (`.cursor/rules/soul.mdc`)](../../General_Dev/.cursor/rules/soul.mdc) - Builder persona contract used for implementation and integration tasks.
+31. <a id="link-31"></a>[MARVIN Soul (`Domain_QA_Security_Guardrails/MARVIN_soul.md`)](../../General_Dev/Domain_QA_Security_Guardrails/MARVIN_soul.md) - Adversarial QA/security persona contract used for failure-first validation.
+32. <a id="link-32"></a>[Master Framework Entrypoint (`Master_Rules/AGENTS.md`)](../../General_Dev/Master_Rules/AGENTS.md) - Defines the mandatory session-start persona gate (TARS vs MARVIN) and routing.
+33. <a id="link-33"></a>[A043 Persona Routing and Counterpart Isolation HANDOVER](../../General_Dev/Master_Rules/060_Framework_HANDOVERS/A043_Persona_Routing_and_Counterpart_Isolation_HANDOVER.md) - Traceability record for concealed counterpart isolation and persona routing policy.
