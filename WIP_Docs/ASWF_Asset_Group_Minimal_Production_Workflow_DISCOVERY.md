@@ -1,7 +1,7 @@
 # ASWF Asset Group - Minimal/Production Example Workflow
 
-**Version**: 1.9.2 | **Date**: 16.02.2026 | **Time**: 16:10 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
-**Last Updated:** 10.02.2026 16:10
+**Version**: 1.9.3 | **Date**: 24.02.2026 | **Time**: 19:37 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001
+**Last Updated:** 24.02.2026 19:37
 **Framework:** General_Research (Discovery Phase)
 **Status:** Discovery - Active
 **Context:** AOUSD IEDT Interest Group task assignment
@@ -1724,6 +1724,66 @@ token primvars:asset_state = "default" (
 **Recommended order:** Phase 1 → Phase 2 → Phase 4 → Phase 6 → Phase 3 → Phase 5
 
 Rationale: Phase 1 is a quick win that fixes the principle-practice gap. Phase 2 unlocks the reference/payload pattern. Phase 4 adds parameterization (critical for IEDT use cases). Phase 6 ensures quality as complexity grows. Phase 3 and 5 are higher-effort features needed only when projects scale.
+
+---
+
+## IEDT Use Case Input Template - Draft Answers (ASWF-Centered)
+
+The following answers are prepared for the AOUSD IEDT Google Form and intentionally focus on ASWF collectiveproject001 as the primary best-practice reference.
+
+### Use Case Title
+
+ASWF Asset Group Minimal Production Workflow for IEDT Digital Twin Teams
+
+### User / Persona
+
+Pipeline TDs, technical artists, simulation engineers, and digital twin integrators who need a shared, automated OpenUSD structure that many contributors can use safely in parallel.
+
+### Problem / Need
+
+Teams often start from inconsistent folder/layer setups, so structure quality drifts as more people contribute. The ASWF Asset Group approach shows that structure must be generated first, then filled by domain specialists. We need this "structure-first, content-second" model so teams can scale without breaking composition, naming, and ownership boundaries.
+
+### What Needs to Happen (Workflow Summary)
+
+- Use a script-generated scaffold (ASWF-style pipeline genesis) to create the project structure up front.
+- Generate per-asset fragments/layers with clear ownership boundaries (model, surface, binding, skeleton, etc.).
+- Keep source-authoring files and exported USD in predictable locations so contributors can work independently.
+- Compose assets and scenarios through standardized composition arcs (sublayers/references/payloads), not ad-hoc file edits.
+- Let teams populate the generated structure with real content while preserving the original architecture contract.
+- Validate structure automatically so every team follows the same conventions over time.
+
+### What Information Must Be Represented?
+
+- Asset identity and version metadata
+- Standardized fragment/layer roles per asset
+- Composition relationships (sublayers, references, payload boundaries)
+- LOD/purpose strategy and load boundaries
+- Per-instance scenario overrides
+- Naming and path conventions for team-safe collaboration
+- Source-to-export lineage (host work files -> USD outputs)
+
+### Why Is This Valuable?
+
+ASWF demonstrates a production-proven pattern: automate the structure once, then let many contributors build into it without collapsing consistency. This reduces merge friction, keeps assets composable, and preserves interoperability across tools and teams. For IEDT, it provides a repeatable way to scale from minimal examples to production scenarios while keeping governance and quality intact.
+
+### What Makes This Hard Today?
+
+- Many teams treat structure as optional documentation instead of executable scaffolding.
+- Manual setup causes naming and layering drift between contributors.
+- Content creators and pipeline owners often mix responsibilities in the same files.
+- Without script-generated conventions, each project reinvents architecture and accumulates technical debt.
+- Validation usually comes too late, after inconsistent structures are already widespread.
+
+### Potential USD Implications (Optional)
+
+- Promote script-generated "minimal production" templates as a first-class USD onboarding pattern.
+- Encourage explicit fragment-based asset architecture for parallel authoring.
+- Strengthen guidance on composition contracts that survive multi-team contribution.
+- Standardize validation rules for structure integrity (layer roles, arc usage, metadata presence).
+
+### Related Standards, Tools, or Systems (Optional)
+
+ASWF USD WG collectiveproject001, OpenUSD composition model (sublayers/references/payloads), script-based scaffold generation (pipeline genesis pattern), CI validation workflows, and team-oriented version control practices for structured USD projects.
 
 ---
 
