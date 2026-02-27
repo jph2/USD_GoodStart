@@ -1,6 +1,6 @@
 # Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
 
-**Version**: 1.1.3 | **Date**: 27.02.2026 | **Time**: 13:30 | **GlobalID**: 20260226_2143_USD_GoodStart_002
+**Version**: 1.1.4 | **Date**: 27.02.2026 | **Time**: 13:54 | **GlobalID**: 20260226_2143_USD_GoodStart_002
 
 **Tag block:**
 #openusd #usd_core #data_modeling #data_exchange #prim_properties #attributes #relationships #metadata #primvars #pointinstancer #validation #usd_exchange_sdk #digital_twin #best_practices #framework_integration
@@ -173,6 +173,10 @@ flowchart TB
   - **Station 7 object integration** [Chapter 1](#chapter-1), [Chapter 2](#chapter-2), [Chapter 3](#chapter-3), [Chapter 4](#chapter-4), [Chapter 5](#chapter-5) -> Script Labs for attributes, relationships, value types, metadata, and primvars/instancing.
 
 - **Recommended run path:** merged into the chapter table below so each chapter has one primary Python touchpoint.
+
+> **Breakout — Not sure how to structure your first scene?**  
+> USD can be structured in many valid ways. If you are unsure where to begin, use the USD GoodStart baseline as a practical starting point and adapt from there: [USD GoodStart README — TLDR](../README.md#tldr-too-long-didnt-read).  
+> It is not the only way, but it is a good start for many teams. Give it a shot.
 
 ---
 
