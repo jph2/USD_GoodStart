@@ -169,7 +169,7 @@ flowchart TB
   - **Transform** [Chapter 6](#chapter-6) -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) (`transform`, `set_default_prim`, `set_up_axis`) ·  
   - **Destination USD** [Chapter 6](#chapter-6) -> generated stage files under `_assets/*.usda` from the chapter labs ·  
   - **Validate / publish-readiness** [Chapter 8](#chapter-8) -> [`additional-examples/property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py), [`additional-examples/metadata_set_and_list_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/metadata_set_and_list_example.py).  
-  - **Station 7 object integration** [Chapter 1](#chapter-1) to [Chapter 5](#chapter-5) -> Script Labs for attributes, relationships, value types, metadata, and primvars/instancing.
+  - **Station 7 object integration** [Chapter 1](#chapter-1), [Chapter 2](#chapter-2), [Chapter 3](#chapter-3), [Chapter 4](#chapter-4), [Chapter 5](#chapter-5) -> Script Labs for attributes, relationships, value types, metadata, and primvars/instancing.
 
 - **Recommended run path:** merged into the chapter table below so each chapter has one primary Python touchpoint.
 
