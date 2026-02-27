@@ -5,7 +5,7 @@
 **Tag block:**
 #openusd #usd_core #schemas #asset_resolver #variants #workflow_optimization #best_practices #framework_integration #workflow_automation #deterministic_workflows #analysis #omniverse
 
-[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_0A_.png)](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1)
+[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](USD_GoodStart/WIP_Docs/ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md )](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1)
 
 **Canonical Video Source:** [YouTube — Customizing OpenUSD for Your Pipeline](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1) <br>
 **Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)<br>

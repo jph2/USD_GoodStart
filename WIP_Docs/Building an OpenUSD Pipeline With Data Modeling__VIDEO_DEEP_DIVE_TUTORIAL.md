@@ -134,7 +134,7 @@ flowchart TB
 
 ### Mental model support notes (same chart, clearer mapping)
 
-- **Step -> script legend:**  
+- **Source systems (different_formats+cadences)** <br> Conversion / Data enrichment Steps -> script legend:
   - **Extract** -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) (`extract`) ·  
   - **Transient USD** -> [`basic/root_layer_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example.py), [`basic/root_layer_example2.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example2.py), [`basic/root_layer_example3.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example3.py) ·  
   - **Transform** -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) (`transform`, `set_default_prim`, `set_up_axis`) ·  
