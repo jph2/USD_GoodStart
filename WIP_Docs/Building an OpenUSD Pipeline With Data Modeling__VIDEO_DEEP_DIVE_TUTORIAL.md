@@ -25,6 +25,7 @@ Use the curriculum as the “hands-on drill” companion to this watch-along tut
 
 ## The Story (Station 7)
 
+For this little tutorial deep dive, we added a little plot line and added the idea of the 'station number 7': <br>
 You have a 3D asset — a **welding station** on a factory floor. Call it **Station 7**.
 
 It has CAD geometry, but that’s not what your client is paying for. They want a **digital twin component**:
@@ -50,16 +51,35 @@ This tutorial rebuilds the video around that idea — and uses **Station 7** as 
 
 Station 7 becomes real when you can answer five questions in order:
 
-1. **What can a prim actually hold?** Exactly two things: **attributes** (typed values) and **relationships** (typed pointers). That’s the whole vocabulary. ([Chapter 1](#chapter-1))
-2. **What do relationships *do*?** Nothing by themselves. They’re data links; behavior lives in runtimes (Hydra, a validator, your app). ([Chapter 2](#chapter-2))
-3. **How do you keep data type-safe?** Use `Sdf.ValueTypeNames` deliberately: tokens for enums, assets for external references, role types for semantic meaning, arrays for scale. ([Chapter 3](#chapter-3))
-4. **Where does governance live?** In **metadata**, scoped correctly (layer vs prim vs attribute) so it survives composition and exchange. ([Chapter 4](#chapter-4))
-5. **How do you exchange reliably?** Use the two-phase pattern: **extract everything faithfully**, then **transform for each consumer**, then **validate**. ([Chapter 6](#chapter-6))
+1. **What can a prim actually hold?** ([Chapter 1](#chapter-1)) Exactly two things: 
+   - *attributes* (typed values) and 
+   - *relationships* (typed pointers). That’s the whole vocabulary. 
+2. **What do relationships *do*?** ([Chapter 2](#chapter-2)) Nothing by themselves.
+   - They’re data links; 
+   - behavior lives in runtimes (Hydra, a validator, your app). 
+3. **How do you keep data type-safe?** ([Chapter 3](#chapter-3)) Use `Sdf.ValueTypeNames` deliberately: 
+   - *tokens* for enums, 
+   - *assets* for external references, 
+   - *role types* for semantic meaning, 
+   - *arrays* for scale. 
+4. **Where does governance live?** ([Chapter 4](#chapter-4)) In **metadata**, 
+  scoped correctly 
+   - *layer* <br> vs. 
+   - *prim* <br> vs. 
+   - *attribute* <br>
+   -> so it survives composition and exchange. 
 
-**The missing “framework glue” (the Station 7 welding station idea):** you then wrap these patterns in a small **convenience layer** so every team authors data the same way. ([Chapter 7](#chapter-7))
+5. **How do you exchange reliably?** ([Chapter 6](#chapter-6)) Use the two-phase pattern: 
+   - *extract everything faithfully*,  -> then 
+   - *transform for each consumer*, -> then 
+   - *validate*. 
+
+6. **The missing “framework glue” (the Station 7 welding station idea):** ([Chapter 7](#chapter-7)) you then 
+   - wrap these patterns in a small *convenience layer* ->  so every team authors data the same way. 
 
 Each chapter link jumps you directly to the detailed section where Station 7 evolves from “geometry” into a governed, exchangeable data object.
 
+---
 Here is the “one picture” version of how the mental model concepts connect when Station 7 becomes a real pipeline artifact:
 
 ```mermaid
@@ -75,16 +95,16 @@ flowchart TB
     SIM["Simulation\n(CFD/FEA overlays)"]
   end
 
-  CAD --> EX["Extract\n(read everything faithfully from each source)"]
+  CAD --> EX["Extract\n(read everything faithfully from each source)\n[script: obj2usd.py::extract]"]
   PLM --> EX
   MES --> EX
   IOT --> EX
   SIM --> EX
 
-  EX --> TRANSIENT["Transient USD\n(source-mapped, minimal loss)"]
-  TRANSIENT --> TF["Transform\n(consumer-specific outputs)"]
+  EX --> TRANSIENT["Transient USD\n(source-mapped, minimal loss)\n[scripts: root_layer_example*.py]"]
+  TRANSIENT --> TF["Transform\n(consumer-specific outputs)\n[script: obj2usd.py::transform]"]
 
-  TF --> DEST["Destination USD\n(exchange-ready package)"]
+  TF --> DEST["Destination USD\n(exchange-ready package)\n[output: _assets/*.usda]"]
 
   subgraph Station7[" Station 7 as a governed USD data object "]
     PRIM["Prim: Station 7\n(identity + namespace)"]
@@ -107,9 +127,29 @@ flowchart TB
   REL -. "interpreted by" .-> RT["Runtimes / tools\n(Hydra, validators, apps)"]
   SENSVIS -. "rendered by" .-> RT
 
-  PRIM --> VAL["Validate\n(usdchecker + domain rules)"]
+  PRIM --> VAL["Validate\n(usdchecker + domain rules)\n[scripts: property_example.py + metadata_set_and_list_example.py]"]
   VAL --> PUB["Publish / Exchange\n(view, sim, web, analytics)"]
 ```
+---
+
+### Mental model support notes (same chart, clearer mapping)
+
+- **Step -> script legend:**  
+  - **Extract** -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) (`extract`) ·  
+  - **Transient USD** -> [`basic/root_layer_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example.py), [`basic/root_layer_example2.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example2.py), [`basic/root_layer_example3.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example3.py) ·  
+  - **Transform** -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) (`transform`, `set_default_prim`, `set_up_axis`) ·  
+  - **Destination USD** -> generated stage files under `_assets/*.usda` from the chapter labs ·  
+  - **Station 7 object integration** -> [Chapter 1](#chapter-1) to [Chapter 5](#chapter-5) Script Labs.
+
+- **Recommended run path (chapter-aligned):**  
+  [Chapter 0](#chapter-0) -> [`basic/create_stage.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/create_stage.py) <br>
+  [Chapter 1](#chapter-1) -> [`data-types/6a_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6a_property_example.py) <br>
+  [Chapter 2](#chapter-2) -> [`data-types/6c_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6c_property_example.py) <br>
+  [Chapter 3](#chapter-3) -> [`data-types/7a_value_types.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) <br>
+  [Chapter 4](#chapter-4) -> [`data-types/7c_metadata_examples.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7c_metadata_examples.py) <br>
+  [Chapter 5](#chapter-5) -> [`data-types/8a_primvars_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8a_primvars_example.py) -> [`data-types/8b_primvars_pointcloud_cloth.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8b_primvars_pointcloud_cloth.py) <br>
+  [Chapter 6](#chapter-6) -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) <br>
+  [Chapter 8](#chapter-8) -> [`additional-examples/property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py)
 
 ---
 
