@@ -22,7 +22,35 @@ Use the curriculum as the “hands-on drill” companion to this watch-along tut
 > **Part of USD GoodStart** — for repo structure and conventions, start with [README.md](../README.md) (it explains the repository layout and how the docs are meant to be used). This tutorial lives in `WIP_Docs`. If you want the “plugin/customization” counterpart session, see: [Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) (it covers schemas/resolvers/file-format plugins — the extensibility layer around the core concepts here).
 
 ---
+## Before You Start (Quick Setup)
 
+You want:
+
+- A working USD + Python environment
+- `usdview` for inspecting results visually
+
+Follow the official setup guide:
+- [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [[3]](#link-3) — use this when you need a reliable `usdview` + Python setup so you can run the API exercises locally.
+
+---
+## How This Tutorial Works
+
+This is a two-layer document:
+
+1. **Story layer** — Station 7 evolves chapter by chapter (from “geometry” to “queryable digital twin component”).
+2. **Production layer** — adds pipeline decisions, team patterns, and “what to standardize” guidance.
+
+Every chapter ends with a **Learn OpenUSD →** pointer, so you can jump from video concepts to hands-on practice.
+
+### Code companion for this tutorial
+
+All runnable scripts referenced below are in:
+
+- [Building an OpenUSD Pipeline With Data Modeling__usd_cert](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/)
+
+When a chapter has a **Script Lab** block, run those files directly and inspect the generated USD files in `usdview`.
+
+---
 ## The Story (Station 7)
 
 For this little tutorial deep dive, we added a little plot line and added the idea of the 'station number 7': <br>
@@ -141,64 +169,7 @@ flowchart TB
   - **Destination USD** -> generated stage files under `_assets/*.usda` from the chapter labs ·  
   - **Station 7 object integration** -> [Chapter 1](#chapter-1) to [Chapter 5](#chapter-5) Script Labs.
 
-- **Recommended run path (chapter-aligned):**  
-  [Chapter 0](#chapter-0) -> [`basic/create_stage.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/create_stage.py) <br>
-  [Chapter 1](#chapter-1) -> [`data-types/6a_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6a_property_example.py) <br>
-  [Chapter 2](#chapter-2) -> [`data-types/6c_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6c_property_example.py) <br>
-  [Chapter 3](#chapter-3) -> [`data-types/7a_value_types.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) <br>
-  [Chapter 4](#chapter-4) -> [`data-types/7c_metadata_examples.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7c_metadata_examples.py) <br>
-  [Chapter 5](#chapter-5) -> [`data-types/8a_primvars_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8a_primvars_example.py) -> [`data-types/8b_primvars_pointcloud_cloth.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8b_primvars_pointcloud_cloth.py) <br>
-  [Chapter 6](#chapter-6) -> [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) <br>
-  [Chapter 8](#chapter-8) -> [`additional-examples/property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py)
-
----
-
-## Before You Start (Quick Setup)
-
-You want:
-
-- A working USD + Python environment
-- `usdview` for inspecting results visually
-
-Follow the official setup guide:
-- [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [[3]](#link-3) — use this when you need a reliable `usdview` + Python setup so you can run the API exercises locally.
-
----
-
-## How This Tutorial Works
-
-This is a two-layer document:
-
-1. **Story layer** — Station 7 evolves chapter by chapter (from “geometry” to “queryable digital twin component”).
-2. **Production layer** — adds pipeline decisions, team patterns, and “what to standardize” guidance.
-
-Every chapter ends with a **Learn OpenUSD →** pointer, so you can jump from video concepts to hands-on practice.
-
-### Code companion for this tutorial
-
-All runnable scripts referenced below are in:
-
-- [Building an OpenUSD Pipeline With Data Modeling__usd_cert](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/)
-
-When a chapter has a **Script Lab** block, run those files directly and inspect the generated USD files in `usdview`.
-
----
-
-## Slide Index (Screenshots Used)
-
-This is the index for the screenshots used in this tutorial. Each link opens the full-size slide so you can read the details clearly, then return to the chapter where it is discussed.
-
-- [Session overview / agenda](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h09_36.png) — Used in: tutorial header. Expect a quick map of the five topics the talk covers, in the order they appear.
-- [Certification context + why this matters](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h08_59.png) — Used in: [Chapter 0](#chapter-0). Expect the framing that connects this session to certification prep and the broader “pipeline” problem.
-- [Prim properties API (attributes + relationships)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h11_06.png) — Used in: [Chapter 1](#chapter-1). Expect the core API surface you’ll use constantly when reading/writing prim data.
-- [Attribute value types + role types](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h28_31.png) — Used in: [Chapter 3](#chapter-3). Expect the “type safety” vocabulary: tokens, assets, role-based types, and arrays.
-- [Primvars definition + interpolation](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h43_52.png) — Used in: [Chapter 5](#chapter-5). Expect the conceptual definition of primvars and how interpolation changes meaning.
-- [Primvars authoring pattern (Create/Set/Get)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h53_48.png) — Used in: [Chapter 5](#chapter-5). Expect the practical “how to author primvars” API flow you can copy into your own pipeline helpers.
-- [usdview / instancer visualization screenshot](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h47_32.png) — Used in: [Chapter 5](#chapter-5). Expect a real inspection view that shows why instancing + primvars scales for sensor clouds.
-- [Data exchange challenges](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h56_37.png) — Used in: [Chapter 6](#chapter-6). Expect the “why conversion is hard” list: lossy mappings, differing customer needs, and runtime constraints.
-- [Two-phase approach (extract → transient → transform)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_19h01_10.png) — Used in: [Chapter 6](#chapter-6). Expect the architecture diagram that keeps your pipeline flexible as requirements change.
-- [USD Exchange SDK overview](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_19h02_33.png) — Used in: [Chapter 7](#chapter-7). Expect a summary of “convenience layer” helpers and what they typically wrap.
-- [Conceptual mapping + validation toolchain](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_19h05_34.png) — Used in: [Chapter 8](#chapter-8). Expect the bridge between “mapping doc” thinking and “validator” thinking.
+- **Recommended run path:** merged into the chapter table below so each chapter has one primary Python touchpoint.
 
 ---
 
@@ -206,31 +177,17 @@ This is the index for the screenshots used in this tutorial. Each link opens the
 
 The chapter labels are clickable; use them as quick navigation while watching the video.
 
-| Chapter | Core question | Station 7 outcome |
-|---|---|---|
-| [Chapter 0](#chapter-0) | Why is geometry export not enough? | The problem frame: data modeling + data exchange. |
-| [Chapter 1](#chapter-1) | What can a prim hold? | A precise mental model: attributes vs relationships. |
-| [Chapter 2](#chapter-2) | What do relationships actually do? | Correct runtime boundary: “links are data, behavior is external.” |
-| [Chapter 3](#chapter-3) | How do we keep data type-safe? | Robust typing strategy with `Sdf.ValueTypeNames`. |
-| [Chapter 4](#chapter-4) | Where does governance belong? | Metadata placement rules at layer/prim/attribute scope. |
-| [Chapter 5](#chapter-5) | How do we visualize field data? | Primvars + PointInstancer pattern for sensor heatmaps. |
-| [Chapter 6](#chapter-6) | How does data exchange scale? | Two-phase design: extract → transform → validate. |
-| [Chapter 7](#chapter-7) | How do teams stay consistent? | “Convenience layer” principle for reusable pipeline helpers. |
-| [Chapter 8](#chapter-8) | What breaks in production? | Edge cases: `over`, validation, instancing limits, naming. |
-
----
-
-## Learn OpenUSD Crosswalk (What to Read While Watching)
-
-Use this table as your “video → curriculum” spine while watching.
-
-| Video segment | What the session covers | Learn OpenUSD curriculum |
-|---|---|---|
-| `00:10:16 → 00:21:04` | Prim properties: attributes vs relationships; authored vs default | [Attributes](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/attributes.html) [[4]](#link-4) — author and query typed values on prims. [Relationships](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/relationships.html) [[5]](#link-5) — author and query typed pointers between prims. |
-| `00:27:34 → 00:36:43` | Value types: `Sdf.ValueTypeNames`, tokens, assets, role types | [Custom Properties](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/custom-properties.html) [[6]](#link-6) — create your own typed fields safely. [Glossary](https://docs.nvidia.com/learn-openusd/latest/glossary.html) [[7]](#link-7) — quick definitions for USD vocabulary used in the session. |
-| `00:38:59 → 00:44:43` | Metadata at layer / prim / attribute levels | [Value Resolution](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html) [[8]](#link-8) — explains how opinions compose and why metadata placement matters. |
-| `00:44:43 → 00:56:25` | Primvars + PointInstancer; debugging with usdview | [Primvars](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/primvars.html) [[9]](#link-9) — data that renderers and shaders can interpolate. [Point Instancing (Intro)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-point-instancing/point-instancing-intro.html) [[10]](#link-10) — scale to hundreds/thousands of instances efficiently. |
-| `00:56:47 → 01:06:25` | Data exchange challenges; two-phase approach; validation | [Data Exchange (Module)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/index.html) [[11]](#link-11) — the end-to-end exchange mindset. [Data Extraction](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/what-is-data-extraction.html) [[12]](#link-12) — why “extract everything first” is a winning pattern. [Asset Validation](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) [[13]](#link-13) — how to prove your exchange outputs are trustworthy. |
+| Chapter | Core question | Station 7 outcome | Video segment (jump link) | Learn OpenUSD curriculum | Primary Python run path |
+|---|---|---|---|---|---|
+| [Chapter 0](#chapter-0) | Why is geometry export not enough? | The problem frame: data modeling + data exchange. | [`00:00:02 -> 00:10:16`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=2s) | [NVIDIA Learn OpenUSD - Curriculum Index](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2) — orientation map for the concepts used in this tutorial. | [`basic/create_stage.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/create_stage.py) |
+| [Chapter 1](#chapter-1) | What can a prim hold? | A precise mental model: attributes vs relationships. | [`00:10:16 -> 00:21:04`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=616s) | [Attributes](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/attributes.html) [[4]](#link-4) — author and query typed values on prims. | [`data-types/6a_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6a_property_example.py) |
+| [Chapter 2](#chapter-2) | What do relationships actually do? | Correct runtime boundary: “links are data, behavior is external.” | [`00:21:04 -> 00:27:34`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=1264s) | [Relationships](https://docs.nvidia.com/learn-openusd/latest/stage-setting/properties/relationships.html) [[5]](#link-5) — author/query typed pointers and targets. | [`data-types/6c_property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6c_property_example.py) |
+| [Chapter 3](#chapter-3) | How do we keep data type-safe? | Robust typing strategy with `Sdf.ValueTypeNames`. | [`00:27:34 -> 00:36:43`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=1654s) | [Custom Properties](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/custom-properties.html) [[6]](#link-6) — create typed custom fields safely. [Glossary](https://docs.nvidia.com/learn-openusd/latest/glossary.html) [[7]](#link-7) — role/type vocabulary reference. | [`data-types/7a_value_types.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) |
+| [Chapter 4](#chapter-4) | Where does governance belong? | Metadata placement rules at layer/prim/attribute scope. | [`00:38:59 -> 00:44:43`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=2339s) | [Value Resolution](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html) [[8]](#link-8) — how composition affects where governance should be authored. [Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html) [[14]](#link-14) — metadata scope and authoring. | [`data-types/7c_metadata_examples.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7c_metadata_examples.py) |
+| [Chapter 5](#chapter-5) | How do we visualize field data? | Primvars + PointInstancer pattern for sensor heatmaps. | [`00:44:43 -> 00:56:25`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=2683s) | [Primvars](https://docs.nvidia.com/learn-openusd/latest/beyond-basics/primvars.html) [[9]](#link-9) — interpolated render/analysis data. [Point Instancing (Intro)](https://docs.nvidia.com/learn-openusd/latest/asset-modularity-instancing/authoring-point-instancing/point-instancing-intro.html) [[10]](#link-10) — scalable repeated-instance pattern. | [`data-types/8a_primvars_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8a_primvars_example.py), [`data-types/8b_primvars_pointcloud_cloth.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8b_primvars_pointcloud_cloth.py) |
+| [Chapter 6](#chapter-6) | How does data exchange scale? | Two-phase design: extract -> transform -> validate. | [`00:56:47 -> 01:06:25`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=3407s) | [Data Exchange (Module)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/index.html) [[11]](#link-11) — end-to-end exchange framing. [Data Extraction](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/what-is-data-extraction.html) [[12]](#link-12) — preserve source fidelity first. [Asset Validation](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) [[13]](#link-13) — define exchange trust checks. | [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) |
+| [Chapter 7](#chapter-7) | How do teams stay consistent? | “Convenience layer” principle for reusable pipeline helpers. | [`01:06:25 -> 01:10:51`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=3985s) | [Data Exchange (Module)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/index.html) [[11]](#link-11) — production pattern references for reusable helpers. | [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py), [`data-types/7a_value_types.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) |
+| [Chapter 8](#chapter-8) | What breaks in production? | Edge cases: `over`, validation, instancing limits, naming. | [`01:10:51 -> 01:14:35`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=4251s) | [Asset Validation](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) [[13]](#link-13) — practical validation gates for handoff safety. | [`additional-examples/property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py) |
 
 ---
 
