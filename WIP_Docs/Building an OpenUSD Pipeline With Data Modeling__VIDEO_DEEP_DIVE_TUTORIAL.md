@@ -1,6 +1,6 @@
 # Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
 
-**Version**: 1.1.0 | **Date**: 27.02.2026 | **Time**: 08:11 | **GlobalID**: 20260226_2143_USD_GoodStart_002
+**Version**: 1.1.3 | **Date**: 27.02.2026 | **Time**: 13:30 | **GlobalID**: 20260226_2143_USD_GoodStart_002
 
 **Tag block:**
 #openusd #usd_core #data_modeling #data_exchange #prim_properties #attributes #relationships #metadata #primvars #pointinstancer #validation #usd_exchange_sdk #digital_twin #best_practices #framework_integration
@@ -12,6 +12,7 @@ Click the image to open it full-size; it’s the agenda overview that frames the
 **Canonical Video Source:** [YouTube — Building an OpenUSD Pipeline With Data Modeling](https://www.youtube.com/watch?v=LchXZAsjKiU) [[1]](#link-1) — the full session recording; use it for timestamps and to follow the live code demonstrations. <br>
 **Presenter:** Nandu Vellal (with Ashley + Mati from NVIDIA) <br>
 **Speakers (LinkedIn):** [Nandu Vellal](https://www.linkedin.com/in/nandu-vellal/) [[15]](#link-15) · [Ashley Goldstein](https://www.linkedin.com/in/ashleyr-goldstein/) [[16]](#link-16) · [Matias "Mati" Codesal](https://www.linkedin.com/in/matiascodesal/) [[17]](#link-17) <br>
+**Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) <br>
 **Session context:** Week 4 of the OpenUSD certification office hours series (data modeling + data exchange) <br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)
 
@@ -194,7 +195,7 @@ The chapter labels are clickable; use them as quick navigation while watching th
 ---
 
 <a id="chapter-0"></a>
-## Chapter 0 — Why Data Modeling + Data Exchange Exists (and Why You Care)
+## Chapter 0 — Why Data Modeling + Data Exchange Exists (and Why You Care) <br> -> Source systems framing | *Conversion/Data Enrichment*
 
 Station 7 starts life as “just geometry.” This chapter frames why that is not enough — and why data modeling and data exchange are the two forces that turn a welding station export into a durable digital twin component. You’re setting the problem boundary before you touch any APIs.
 
@@ -226,7 +227,7 @@ USD gives you composition, namespacing, typing, and tooling — but the pipeline
 ---
 
 <a id="chapter-1"></a>
-## Chapter 1 — Prim Properties: Attributes vs Relationships (The Only Vocabulary You Get)
+## Chapter 1 — Prim Properties: Attributes vs Relationships (The Only Vocabulary You Get) <br> -> Station7Object integration (attributes) | *Conversion/Data Enrichment*
 
 Now Station 7 becomes more than geometry: it becomes a prim you can interrogate. This chapter gives you the only two “containers of meaning” you have in USD — and shows how every modeling decision reduces to one of them. Once this is internalized, most data-modeling questions stop being vague.
 
@@ -278,7 +279,7 @@ Key API ideas:
 ---
 
 <a id="chapter-2"></a>
-## Chapter 2 — Relationships Don’t *Do* Anything (and That’s the Point)
+## Chapter 2 — Relationships Don’t *Do* Anything (and That’s the Point) <br> -> Station7Object integration (relationships) | *Conversion/Data Enrichment*
 
 Station 7 now has links — but links are not behavior. This chapter locks in the runtime boundary: USD stores intent and connectivity, while renderers/validators/apps decide what those links *mean* operationally. This is the difference between a stable data model and accidental “magic.”
 
@@ -311,7 +312,7 @@ So “grouping” prims via a relationship does nothing unless:
 ---
 
 <a id="chapter-3"></a>
-## Chapter 3 — Attribute Value Types (Type-Safety Is a Pipeline Feature)
+## Chapter 3 — Attribute Value Types (Type-Safety Is a Pipeline Feature) <br> -> Station7Object integration (typed values) | *Conversion/Data Enrichment*
 
 Station 7 gains its first “real” business meaning here: status fields, IDs, and references you can trust. This chapter is about choosing types deliberately so downstream tools don’t drown in string chaos. If you get this wrong, data exchange fails quietly and expensively.
 
@@ -346,7 +347,7 @@ This chapter’s core discipline is: **choose the correct `Sdf.ValueTypeNames`**
 ---
 
 <a id="chapter-4"></a>
-## Chapter 4 — Metadata: Where Governance Actually Belongs
+## Chapter 4 — Metadata: Where Governance Actually Belongs <br> -> Station7Object integration (metadata governance) | *Conversion/Data Enrichment*
 
 Station 7 is now typed — but not yet governed. This chapter is where you decide what must persist through composition and exchange (ownership, lifecycle, provenance), and where to author it so it doesn’t get lost. It’s how you stop “pipeline meaning” from evaporating when layers compose.
 
@@ -384,7 +385,7 @@ For Station 7, governance questions include:
 ---
 
 <a id="chapter-5"></a>
-## Chapter 5 — Primvars + PointInstancer (How You Visualize 500 Sensors Without 500 Prims)
+## Chapter 5 — Primvars + PointInstancer (How You Visualize 500 Sensors Without 500 Prims) <br> -> Station7Object integration (primvars + visualization) | *Conversion/Data Enrichment*
 
 Station 7 is now a data object — but you still need to *see* field data without exploding your scenegraph. This chapter introduces the “sensor heatmap” pattern: primvars carry the values, and point instancing gives you scale. It’s the bridge from “data model” to “visual insight.”
 
@@ -427,7 +428,7 @@ Click the screenshot to open it full-size; it shows a real `usdview` inspection 
 ---
 
 <a id="chapter-6"></a>
-## Chapter 6 — Data Exchange: Extract → Transform → Validate (The Only Scalable Pattern)
+## Chapter 6 — Data Exchange: Extract → Transform → Validate (The Only Scalable Pattern) <br> -> Extract -> transient -> transform -> destination | *Conversion/Data Enrichment*
 
 Station 7 is now richly modeled — but it is still useless if you can’t produce it reliably from your real systems. This chapter turns the story into a pipeline: extract faithfully, transform per consumer, validate every output. It’s where industrial reality (multiple source systems) meets USD discipline.
 
@@ -463,7 +464,7 @@ Click the slide to open it full-size; it visualizes the extract → transient �
 ---
 
 <a id="chapter-7"></a>
-## Chapter 7 — The “Convenience Layer” (Why Station 7 Was Invented)
+## Chapter 7 — The “Convenience Layer” (Why Station 7 Was Invented) <br> -> Convenience-layer standardization | *Conversion/Data Enrichment*
 
 Station 7 exists because teams forget abstractions but remember workflows. This chapter explains how you turn the chapter concepts into a small, reusable authoring layer so every asset is authored consistently without re-learning the full USD API every time. Consistency is the product feature here.
 
@@ -513,7 +514,7 @@ To ground that mental model in the curriculum, review the data exchange lessons 
 ---
 
 <a id="chapter-8"></a>
-## Chapter 8 — Production Edge Cases (What Breaks First)
+## Chapter 8 — Production Edge Cases (What Breaks First) <br> -> Validate and publish-readiness | *Conversion/Data Enrichment*
 
 Station 7 is now pipeline-shaped — so this chapter stress-tests it. These are the failure modes you hit first in real exchange workflows: units, naming, authored vs default values, and when to use `over` instead of redefining. This is where you turn “it works on my machine” into “it survives handoff.”
 
