@@ -1,6 +1,6 @@
 # Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
 
-**Version**: 1.0.0 | **Date**: 26.02.2026 | **Time**: 21:43 | **GlobalID**: 20260226_2143_USD_GoodStart_002
+**Version**: 1.1.0 | **Date**: 27.02.2026 | **Time**: 08:11 | **GlobalID**: 20260226_2143_USD_GoodStart_002
 
 **Tag block:**
 #openusd #usd_core #data_modeling #data_exchange #prim_properties #attributes #relationships #metadata #primvars #pointinstancer #validation #usd_exchange_sdk #digital_twin #best_practices #framework_integration
@@ -11,6 +11,7 @@ Click the image to open it full-size; it’s the agenda overview that frames the
 
 **Canonical Video Source:** [YouTube — Building an OpenUSD Pipeline With Data Modeling](https://www.youtube.com/watch?v=LchXZAsjKiU) [[1]](#link-1) — the full session recording; use it for timestamps and to follow the live code demonstrations. <br>
 **Presenter:** Nandu Vellal (with Ashley + Mati from NVIDIA) <br>
+**Speakers (LinkedIn):** [Nandu Vellal](https://www.linkedin.com/in/nandu-vellal/) [[15]](#link-15) · [Ashley Goldstein](https://www.linkedin.com/in/ashleyr-goldstein/) [[16]](#link-16) · [Matias "Mati" Codesal](https://www.linkedin.com/in/matiascodesal/) [[17]](#link-17) <br>
 **Session context:** Week 4 of the OpenUSD certification office hours series (data modeling + data exchange) <br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)
 
@@ -66,7 +67,7 @@ Here is the “one picture” version of how the mental model concepts connect w
 flowchart TB
   %% Mental model: data modeling (inside USD) + data exchange (how it gets there reliably)
 
-  subgraph Sources[" Source systems<br/>(different formats + cadences) "]
+  subgraph Sources[" Source systems<br/>(different_formats+cadences) "]
     CAD["CAD\n(geometry + structure)"]
     PLM["PLM\n(part number + BOM)"]
     MES["MES / Ops\n(status + lifecycle)"]
@@ -85,7 +86,7 @@ flowchart TB
 
   TF --> DEST["Destination USD\n(exchange-ready package)"]
 
-  subgraph Station7[" Station 7 as a governed<br/>USD data object "]
+  subgraph Station7[" Station 7 as a governed USD data object "]
     PRIM["Prim: Station 7\n(identity + namespace)"]
     ATTR["Attributes\n(typed values:\n- token (enums)\n- asset (refs)\n- role types (meaning)\n- arrays (scale))"]
     REL["Relationships\n(typed pointers to other prims)"]
@@ -132,6 +133,14 @@ This is a two-layer document:
 2. **Production layer** — adds pipeline decisions, team patterns, and “what to standardize” guidance.
 
 Every chapter ends with a **Learn OpenUSD →** pointer, so you can jump from video concepts to hands-on practice.
+
+### Code companion for this tutorial
+
+All runnable scripts referenced below are in:
+
+- [Building an OpenUSD Pipeline With Data Modeling__usd_cert](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/)
+
+When a chapter has a **Script Lab** block, run those files directly and inspect the generated USD files in `usdview`.
 
 ---
 
@@ -208,6 +217,13 @@ USD gives you composition, namespacing, typing, and tooling — but the pipeline
 
 **Learn OpenUSD →** Start with the basics of properties first: **Attributes** (typed values you can author/query) [[4]](#link-4) and **Relationships** (typed pointers between prims) [[5]](#link-5).
 
+### Script Lab (Chapter 0)
+
+- [basic/create_stage.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/create_stage.py) — create and inspect a first stage file.
+- [basic/open_stage.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/open_stage.py) — open, edit, and resave a stage.
+- [basic/in_mem_stage.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/in_mem_stage.py) — practice in-memory authoring then export.
+- [basic/root_layer_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example.py) — inspect root layer and add sublayers.
+
 ---
 
 <a id="chapter-1"></a>
@@ -255,6 +271,11 @@ Key API ideas:
 
 **Learn OpenUSD →** Use **Attributes** for “what values does Station 7 hold?” [[4]](#link-4) and **Relationships** for “what does Station 7 point to?” [[5]](#link-5).
 
+### Script Lab (Chapter 1)
+
+- [data-types/6a_property_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6a_property_example.py) — list all prim properties and distinguish attribute vs relationship.
+- [data-types/6b_property_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6b_property_example.py) — inspect authored attributes and compare raw vs schema-based access.
+
 ---
 
 <a id="chapter-2"></a>
@@ -284,6 +305,10 @@ So “grouping” prims via a relationship does nothing unless:
 
 **Learn OpenUSD →** Re-read the relationships doc as “data graph edges” (links you can validate and query), not “features that execute by themselves.” [[5]](#link-5)
 
+### Script Lab (Chapter 2)
+
+- [data-types/6c_property_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/6c_property_example.py) — create, edit, and query relationship targets (`SetTargets`, `AddTarget`, `RemoveTarget`).
+
 ---
 
 <a id="chapter-3"></a>
@@ -312,6 +337,12 @@ This chapter’s core discipline is: **choose the correct `Sdf.ValueTypeNames`**
 **Design rule:** if downstream tools must reason about a value (filter, validate, visualize, search), give it a stable type and a stable namespace.
 
 **Learn OpenUSD →** If you want to practice authoring typed, custom fields, use the **Custom Properties** module — it focuses on the exact “add domain fields safely” problem this chapter is about. [[6]](#link-6)
+
+### Script Lab (Chapter 3)
+
+- [data-types/7a_value_types.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) — author scalar, token, asset, role, matrix, and array value types.
+- [basic/vtarray_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/vtarray_example.py) — convert between Python/Numpy buffers and USD `Vt` arrays.
+- [additional-examples/attributes_example_lowlevel.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/attributes_example_lowlevel.py) — low-level `Sdf` attribute authoring and metadata assignment.
 
 ---
 
@@ -343,6 +374,13 @@ For Station 7, governance questions include:
 - If it is intrinsic to one field (like an accuracy tolerance), attribute metadata fits.
 
 **Learn OpenUSD →** If metadata placement still feels abstract, the **Value Resolution** module explains how opinions compose through layers and why authored values can appear to “change” depending on the stack. [[8]](#link-8)
+
+### Script Lab (Chapter 4)
+
+- [data-types/7c_metadata_examples.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7c_metadata_examples.py) — compare metadata patterns across layer, prim, and attribute scopes.
+- [additional-examples/custom_metadata_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/custom_metadata_example.py) — inspect authored metadata and nested `customData`.
+- [additional-examples/customdata_layer_prim_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/customdata_layer_prim_example.py) — side-by-side layer/prim/attribute custom data usage.
+- [additional-examples/metadata_vs_customdata_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/metadata_vs_customdata_example.py) — clarify `SetMetadata(...)` vs `SetCustomData(...)`.
 
 ---
 
@@ -380,6 +418,13 @@ Click the screenshot to open it full-size; it shows a real `usdview` inspection 
 
 **Learn OpenUSD →** Use **Primvars** for authoring interpolated per-primitive data [[9]](#link-9), and **Point Instancing (Intro)** for the prototype/instance model that makes large sensor clouds practical. [[10]](#link-10)
 
+### Script Lab (Chapter 5)
+
+- [data-types/8a_primvars_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8a_primvars_example.py) — create mesh primvars with explicit interpolation.
+- [additional-examples/primvars_pointcloud.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/primvars_pointcloud.py) — build a point-instanced cloud with per-instance primvar color.
+- [data-types/8b_primvars_pointcloud_cloth.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/8b_primvars_pointcloud_cloth.py) — scale to a dense instancer grid with varying primvars.
+- [data-types/9a_primvars_multi_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/9a_primvars_multi_example.py) — combine primvars with time-sampled mesh deformation.
+
 ---
 
 <a id="chapter-6"></a>
@@ -409,6 +454,12 @@ Click the slide to open it full-size; it visualizes the extract → transient �
 **Station 7 implication:** CAD, PLM, and MES can all feed the same Station 7 *identity*, but you should still keep extraction faithful and transformations consumer-specific.
 
 **Learn OpenUSD →** Use the Data Exchange module as your reference backbone [[11]](#link-11), then read **Data Extraction** for the “extract everything first” mindset [[12]](#link-12) and **Asset Validation** for the “prove correctness” mindset. [[13]](#link-13)
+
+### Script Lab (Chapter 6)
+
+- [additional-examples/obj2usd.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) — concrete extract/transform pipeline skeleton (advanced setup required).
+- [basic/root_layer_example2.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example2.py) — author into layered outputs and inspect composition boundaries.
+- [basic/root_layer_example3.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example3.py) — remove a sublayer to observe impact and validate assumptions.
 
 ---
 
@@ -455,6 +506,11 @@ To ground that mental model in the curriculum, review the data exchange lessons 
 - [Learn OpenUSD — What Is Data Extraction?](#link-12) — expect the rationale for “extract everything faithfully” before you specialize outputs; use it to justify your transient layer design.
 - [Learn OpenUSD — What Is Asset Validation?](#link-13) — expect a definition of what “valid” means in exchange, and how checks (like `usdchecker`) fit into CI and handoff gates.
 
+### Script Lab (Chapter 7)
+
+- [additional-examples/obj2usd.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) — review helper functions (`set_default_prim`, `set_up_axis`) as convenience-layer patterns.
+- [data-types/7a_value_types.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) + [data-types/7c_metadata_examples.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7c_metadata_examples.py) — source examples to wrap into your own standardized authoring helper.
+
 ---
 
 <a id="chapter-8"></a>
@@ -480,6 +536,12 @@ Click the slide to open it full-size; it ties conceptual data mapping to validat
 **Practical takeaway:** treat validation as part of exchange, not a “nice to have.”
 
 **Learn OpenUSD →** Use the Asset Validation module to understand what “valid” means for exchange workflows (beyond “it opens in usdview”). [[13]](#link-13)
+
+### Script Lab (Chapter 8)
+
+- [additional-examples/property_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py) — inspect authored state and property stack behavior for debugging.
+- [basic/root_layer_example3.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/basic/root_layer_example3.py) — rehearse composition edits and check downstream effects.
+- [additional-examples/metadata_set_and_list_example.py](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/metadata_set_and_list_example.py) — audit authored metadata for exchange-governance checks.
 
 ---
 
@@ -582,6 +644,9 @@ Six concrete scenarios that map directly onto the patterns in this tutorial. Eac
 12. <a id="link-12"></a>[Learn OpenUSD — What Is Data Extraction?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/what-is-data-extraction.html) — explains the extraction phase and why you should capture source fidelity first. Use it to justify the “extract everything” step in your pipeline design.
 13. <a id="link-13"></a>[Learn OpenUSD — What Is Asset Validation?](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) — explains what validation means in USD exchange workflows. Use it to define checks that make your outputs trustworthy for downstream teams.
 14. <a id="link-14"></a>[Learn OpenUSD — Metadata](https://docs.nvidia.com/learn-openusd/latest/stage-setting/metadata.html) — explains how metadata is authored and scoped (layer/prim/property) so governance data survives composition and exchange.
+15. <a id="link-15"></a>[LinkedIn — Nandu Vellal](https://www.linkedin.com/in/nandu-vellal/) — presenter profile for deeper context on data modeling and exchange topics from the session.
+16. <a id="link-16"></a>[LinkedIn — Ashley Goldstein](https://www.linkedin.com/in/ashleyr-goldstein/) — speaker profile referenced in the office hours context for this tutorial.
+17. <a id="link-17"></a>[LinkedIn — Matias "Mati" Codesal](https://www.linkedin.com/in/matiascodesal/) — speaker profile referenced in the office hours context for this tutorial.
 
 ---
 
