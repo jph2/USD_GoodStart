@@ -1,6 +1,6 @@
 # Understanding Composition Arcs — Video Deep-Dive Tutorial
 
-**Version**: 0.1.9 | **Date**: 03.03.2026 | **Time**: 18:30 | **GlobalID**: 20260303_1830_USD_GoodStart_025
+**Version**: 0.2.0 | **Date**: 03.03.2026 | **Time**: 19:00 | **GlobalID**: 20260303_1900_USD_GoodStart_026
 
 **Tag block:**
 #openusd #composition_arcs #livrps #layers #references #payloads #inherits #specializes #variants #digital_twin #certification #best_practices
@@ -545,7 +545,7 @@ def add_payload(
 
 *References vs payloads: the key distinction is when data loads. References load eagerly; payloads defer until requested.*
 
-[![Key moment — Specializes @ 22:44](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)
+
 
 *Specializes: a "broadcaster operator" for templates. Use when you want to apply a base set of values on many prims. Inverse of inherits — Specializes guarantees lowest opinion strength; Inherits gives highest.*
 
@@ -630,12 +630,17 @@ The acronym **LIVERPS** extends LIVRPS with **Relocates** (the “E”). Relocat
 
 *Relocates: change/move a prim path to a new path in the local namespace. Constraints: cannot relocate a root prim; after relocation the original path is no longer valid; cannot relocate to something that would create a namespace conflict.*
 
+**Why Relocates matters (and why it’s separate from LIVRPS):** Relocates answers "where does this prim live in the stage’s namespace?" — not "which value wins?" It’s useful when you need to repackage assets under different paths (e.g. combining references from multiple sources without path clashes), or when a layer overrides where a subtree appears. When tracing property values, you ignore Relocates and walk LIVRPS only. Think of it as a path alias or symlink: it changes *where* you find the prim, not *what* opinion wins.
+
 [![Key moment — Mental model for composition arcs @ 26:36](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_44_09.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_44_09.png)
 
 *Remembering composition arcs with programming terms: Local = local variables/scope; Inherits = class inheritance; Variants = enums; References = imports; Payloads = lazy imports; Specializes = fallback values.*
 
 
 *Strength Ordering Flowchart (LIVRPS): Request value → Local/Sublayer → Inherits → Variants → References → Payload → Specializes → Default. At each step: opinion found? Use it. No? Proceed to next. Relocates is not in this chain — it resolves paths, not property values.*
+
+
+[![Key moment — Specializes @ 22:44](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)
 
 **The exam-style multi-file setup**
 
