@@ -1,6 +1,6 @@
 # Rendering and Visualizing OpenUSD Scenes — Video Deep-Dive Tutorial
 
-**Version**: 0.3.2 | **Date**: 03.03.2026 | **Time**: 01:52 | **GlobalID**: 20260303_0152_USD_GoodStart_015
+**Version**: 0.3.3 | **Date**: 03.03.2026 | **Time**: 02:12 | **GlobalID**: 20260303_0212_USD_GoodStart_016
 
 **Tag block:**
 #openusd #usd_visualization #usdgeom #imageable #primvars #materials #usdlux #timesamples #composition #certification #digital_twin #best_practices
@@ -106,16 +106,18 @@ That’s the difference between a twin that merely *looks plausible* and one you
 
 ## Chapter Outcomes at a Glance
 
-| Chapter | Exam-relevant topic | What you will be able to do after | Learn OpenUSD → quick jump |
-|---|---|---|---|
-| [Chapter 0](#chapter-0) | Visualization mindset | Explain why “rendering” is a trust problem for digital twins. | [2 — Curriculum](#link-2), [4 — Glossary](#link-4) |
-| [Chapter 1](#chapter-1) | Stage configuration | Avoid unit/axis pitfalls; understand reference/payload vs sublayer behavior. | [5 — Metadata](#link-5), [6 — Units](#link-6) |
-| [Chapter 2](#chapter-2) | Mesh rendering basics | Read USDA mesh snippets and reason about what *must* exist to render. | [20 — Schemas](#link-20), [21 — Xform](#link-21) |
-| [Chapter 3](#chapter-3) | `UsdGeomImageable` | Predict effective visibility/purpose and why content “disappears”. | [10 — Purpose and visibility](#link-10) |
-| [Chapter 4](#chapter-4) | `UsdLux` | Choose the right light type; understand typed lights vs `LightAPI`. | [20 — Schemas](#link-20) |
-| [Chapter 5](#chapter-5) | Materials | Predict binding inheritance, collections, and common override pitfalls. | [13 — Shading & materials](#link-13), [22 — Materials and Shaders](#link-22) |
-| [Chapter 6](#chapter-6) | Primvars | Author displayColor correctly for each interpolation; debug value counts. | [15 — Primvars](#link-15) |
-| [Chapter 7](#chapter-7) | TimeSamples | Author/query time samples; reason about timeCode/FPS precedence. | [17 — TimeSamples](#link-17) |
+| Chapter | Video section (approx) | Exam-relevant topic | What you will be able to do after | Learn OpenUSD → quick jump |
+|---|---|---|---|---|
+| [Chapter 0](#chapter-0) | [00:00](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=0s) | Visualization mindset | Explain why “rendering” is a trust problem for digital twins. | [2 — Curriculum](#link-2), [4 — Glossary](#link-4) |
+| [Chapter 1](#chapter-1) | [03:53](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=233s) | Stage configuration | Avoid unit/axis pitfalls; understand reference/payload vs sublayer behavior. | [5 — Metadata](#link-5), [6 — Units](#link-6) |
+| [Chapter 2](#chapter-2) | [20:36](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=1236s) | Mesh rendering basics | Read USDA mesh snippets and reason about what *must* exist to render. | [20 — Schemas](#link-20), [21 — Xform](#link-21) |
+| [Chapter 3](#chapter-3) | [33:14](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=1994s) | `UsdGeomImageable` | Predict effective visibility/purpose and why content “disappears”. | [10 — Purpose and visibility](#link-10) |
+| [Chapter 4](#chapter-4) | [48:19](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=2899s) | `UsdLux` | Choose the right light type; understand typed lights vs `LightAPI`. | [20 — Schemas](#link-20) |
+| [Chapter 5](#chapter-5) | [55:23](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=3323s) | Materials | Predict binding inheritance, collections, and common override pitfalls. | [13 — Materials and Shaders](#link-13), [22 — Materials and Shaders](#link-22) |
+| [Chapter 6](#chapter-6) | [1:02:53](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=3773s) | Primvars | Author displayColor correctly for each interpolation; debug value counts. | [15 — Primvars](#link-15) |
+| [Chapter 7](#chapter-7) | [1:10:25](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=4225s) | TimeSamples | Author/query time samples; reason about timeCode/FPS precedence. | [17 — TimeCodes and TimeSamples](#link-17) |
+
+*Timestamp note: chapter jumps are approximate and aligned to slide sequence anchors; YouTube chapter drift of a few seconds is normal.*
 
 ---
 
@@ -180,6 +182,8 @@ Use this as a “before you trust the viewport” checklist.
 <a id="chapter-0"></a>
 ## Chapter 0 — Visualization is a Trust Problem (Not a Beauty Problem) <br> -> Digital twin rendering mindset | *Production safety*
 
+**Watch this section first:** [Video jump ~00:00](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=0s)
+
 The session is framed around the **OpenUSD Developer Certification**: visualization is a smaller slice of the exam, but it is a *high-leverage slice* because visualization bugs tend to look like “pipeline bugs”.
 
 In Packaging Cell 3, “pipeline bug” usually means “trust bug”: something *looks* right, but your team is about to make a decision based on pixels that no longer correspond to physical reality. This chapter sets the mindset you’ll reuse throughout the deep dive: every time you look at a viewport, you are implicitly accepting a contract (units, up-axis, included purposes, shading mode, time evaluation).
@@ -226,6 +230,8 @@ Packaging Cell 3 is a good example because it forces *physical correctness*:
 
 <a id="chapter-1"></a>
 ## Chapter 1 — Setting the Stage (Units, Axis, and Composition Pitfalls) <br> -> Referencing vs sublayers | *Interoperability*
+
+**Watch this section first:** [Video jump ~03:53](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=233s)
 
 Chapter 1 is the moment Packaging Cell 3 becomes real: you create a stage that will host robot, conveyor, sensors, and overlays — and you decide what “one unit” and “up” actually mean for the project.
 
@@ -343,6 +349,8 @@ Planned scripts (not yet committed):
 
 <a id="chapter-2"></a>
 ## Chapter 2 — Rendering Geometries: Meshes (What’s Required, What’s Not) <br> -> Mesh minimums | *Debug literacy*
+
+**Watch this section first:** [Video jump ~20:36](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=1236s)
 
 Now that the stage contract is declared, you start bringing in Packaging Cell 3 geometry: robot base, gripper, conveyor rails, fixtures. The next failure mode is sneaky: something renders, but not in the way you think — because the geometry data is incomplete, mis-authored, or “looks OK” only under one renderer’s forgiving defaults.
 
@@ -510,6 +518,8 @@ Planned scripts (not yet committed):
 <a id="chapter-3"></a>
 ## Chapter 3 — `UsdGeomImageable`: Visibility + Purpose (Render-Control Layer) <br> -> What renders and why | *Viewport correctness*
 
+**Watch this section first:** [Video jump ~33:14](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=1994s)
+
 Once Packaging Cell 3 geometry is structurally sound, the next question is operational: **what should the viewer draw right now?** In production you rarely want “everything, full-res, always.” You want proxies for the whole plant (fast), final render geometry for the station under review (credible), and guide geometry for debugging rigs, measurements, and safety overlays.
 
 This chapter is the part that turns “I have geometry” into “I control what is drawn”.
@@ -581,6 +591,8 @@ Planned scripts (not yet committed):
 
 <a id="chapter-4"></a>
 ## Chapter 4 — Lights (`UsdLux`): Typed Lights vs `LightAPI` <br> -> Hydra semantics | *Lighting correctness*
+
+**Watch this section first:** [Video jump ~48:19](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=2899s)
 
 With purpose and visibility under control, you can finally make Packaging Cell 3 *legible*. Lighting is not only about beauty; it changes what stakeholders believe: whether surfaces read as metal vs plastic, whether edges are visible for clearance checks, and whether your “review render” has stable exposure week to week.
 
@@ -693,6 +705,8 @@ Planned scripts (not yet committed):
 <a id="chapter-5"></a>
 ## Chapter 5 — Materials: Binding, Purpose, Collections, and Strength <br> -> What wins | *Lookdev correctness*
 
+**Watch this section first:** [Video jump ~55:23](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=3323s)
+
 At this point Packaging Cell 3 can be staged, seen, filtered, and lit. Chapter 5 is where “it renders” turns into “it has a stable look.” Materials are also where pipelines accidentally create chaos: bindings scattered everywhere, overrides hiding missing authoring, and “one-off fixes” that don’t survive the next import.
 
 Materials show up in certification questions because they are a perfect test of composition:
@@ -718,7 +732,7 @@ Collection bindings are a scalability tool: in Packaging Cell 3, you might bind 
 
 ### Code Breakout — Collection-based material binding
 
-```usda
+```py
 def Scope "World"
 {
     # Apply CollectionAPI namespace on a REAL prim.
@@ -776,7 +790,7 @@ def Scope "World"
 
 ### Code Breakout — Inheritance + local override (why B works)
 
-```usda
+```py
 def Xform "World"
 {
     def Xform "Group"
@@ -845,6 +859,8 @@ Planned scripts (not yet committed):
 <a id="chapter-6"></a>
 ## Chapter 6 — Primvars: `displayColor` + Interpolation (Data Visualization) <br> -> Field overlays | *Digital twin observability*
 
+**Watch this section first:** [Video jump ~1:02:53](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=3773s)
+
 Materials give Packaging Cell 3 a believable physical look. Primvars are what make it a **digital twin**: speed heatmaps, jam zones, OK/WARN/FAULT overlays, and “show me what the sensors think is happening.”
 
 This chapter gives you the mental model for authoring overlays that don’t break the moment the scene becomes “real”: you’ll learn the interpolation modes, the value-count rules, and the practical boundary between **diagnostic overlays** (fast, explicit) and **final look** shading (credible, stable). It’s also where you learn to recognize a classic digital-twin lie: the data is correct, but it’s mapped onto the wrong vertices/faces, so the picture is wrong.
@@ -889,7 +905,7 @@ Treat this as your “primvar value-count cheat sheet”:
 
 All these slides use the same mesh topology and only change the primvar payload + interpolation token.
 
-```usda
+```py
 def Mesh "AnyMesh"
 {
     int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]   # six quad faces (cube)
@@ -932,7 +948,7 @@ On simple polygon meshes (like a cube), **`vertex` and `varying` often look the 
 
 Base mesh from the slide:
 
-```usda
+```py
 def Mesh "Quad"
 {
     int[] faceVertexCounts = [4]               # one face
@@ -943,7 +959,7 @@ def Mesh "Quad"
 
 Option breakdown:
 
-```usda
+```py
 # A) Fails
 texCoord2f[] primvars:st = [(0,0), (1,0), (1,1), (0,1)]
 (
@@ -1002,6 +1018,8 @@ Planned scripts (not yet committed):
 <a id="chapter-7"></a>
 ## Chapter 7 — TimeSamples & Animation (TimeCodes, FPS, and Querying) <br> -> When did it happen? | *Temporal correctness*
 
+**Watch this section first:** [Video jump ~1:10:25](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=4225s)
+
 Now we make the twin operational for investigation. In Packaging Cell 3, “what happened?” is almost always a time question: *When did the jam start? Where was the gripper at that moment? Did the sensor go WARN before FAULT?*
 
 If Chapter 6 made your overlays reliable, Chapter 7 makes your playback and queries reliable. The target outcome is simple: when someone says “check timeCode 35,” your pipeline produces the same state in every tool, and your scripts read the same values every time.
@@ -1035,7 +1053,7 @@ The takeaway for production: if you rely on real-time playback speed (for motion
 
 Snippet core from the slide:
 
-```usda
+```py
 #usda 1.0
 (
     # Timeline range for this stage (authoring metadata, not a query by itself).
