@@ -11,6 +11,7 @@ Click the image to open it full-size; it’s the title slide that frames the ses
 
 **Canonical Video Source:** [YouTube — Rendering and Visualizing OpenUSD Scenes | OpenUSD Community Office Hours](https://www.youtube.com/watch?v=-6x8fuYVBPk) [1 — YouTube video](#link-1) <br>
 **Presenter:** Borja Mayoral Arauz (with Ashley + Mati from NVIDIA) <br>
+**Video DEEP DIVE** Genertaed by Jan Haluszka and his Agent <br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 — Learn OpenUSD curriculum](#link-2)
 
 **Most important resources (keep these open):** [2 — Learn OpenUSD curriculum](#link-2) and [19 — Awesome OpenUSD](#link-19)
