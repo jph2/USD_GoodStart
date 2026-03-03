@@ -1,11 +1,10 @@
 # Understanding Composition Arcs — Video Deep-Dive Tutorial
 
-**Version**: 0.1.6 | **Date**: 03.03.2026 | **Time**: 16:45 | **GlobalID**: 20260303_1645_USD_GoodStart_022
+**Version**: 0.1.9 | **Date**: 03.03.2026 | **Time**: 18:30 | **GlobalID**: 20260303_1830_USD_GoodStart_025
 
 **Tag block:**
 #openusd #composition_arcs #livrps #layers #references #payloads #inherits #specializes #variants #digital_twin #certification #best_practices
 
-[![Title slide — Understanding Composition Arcs](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)
 
 **Canonical Video Source:** [YouTube — Understanding Composition Arcs | OpenUSD Community Office Hours](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=12s) [1 — YouTube video](#link-1)  
 **Presenter:** Austin Hwang (with Edmar + Madi from NVIDIA)  
@@ -305,6 +304,10 @@ Chapter 3 sharpens two concepts that people mix up. After sublayers (stack opini
 
 The speaker also flags a useful nuance: OOP inheritance is only a partial analogy for USD inherits. Treat the analogy as a mnemonic, not as a strict equivalence model.
 
+[![Key moment — Inherits explained @ 14:35](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_42_37.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_42_37.png)
+
+*Inherits: a "broadcaster operator" for overrides. Create a class prim with child prims you want to modify; add an inherits arc on all prims that should receive the edit. Instanceable prims cannot have local opinions — inherited values are always authored on the prim.*
+
 ### Code Breakout — Add inherits arc (Python API)
 
 **Raw snippet:**
@@ -349,6 +352,55 @@ def add_and_get_inherits(stage: Usd.Stage):
 - When editing instance proxies or descendants of instanceable prims, inheritance and local overrides behave differently — the instance prototype controls what can be overridden per-instance. This often trips up users who expect to author local opinions on instance proxies.
 - Directly edits list-ops; ordering matters when multiple inherits exist (strongest first).
 
+[![Key moment — Variants and variant sets @ 18:07](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_42_55.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_42_55.png)
+
+*Variants: a single variation of a VariantSet. VariantSet: a package of discrete alternatives that a user downstream can select from. If a VariantSet exists, a Variant does not necessarily have to be selected.*
+
+### Code Breakout — Create variant set (Python API)
+
+**Raw snippet:**
+
+```py
+from pxr import Usd
+
+def create_variant_set(
+    prim: Usd.Prim,
+    variant_set_name: str,
+    variants: list
+) -> Usd.VariantSet:
+    variant_set = prim.GetVariantSets().AddVariantSet(variant_set_name)
+    for variant in variants:
+        variant_set.AddVariant(variant)
+    return variant_set
+```
+
+**Commented walkthrough:**
+
+```py
+from pxr import Usd
+
+def create_variant_set(
+    prim: Usd.Prim,
+    variant_set_name: str,
+    variants: list
+) -> Usd.VariantSet:
+    # Get the prim's VariantSets, then add a new VariantSet by name
+    variant_set = prim.GetVariantSets().AddVariantSet(variant_set_name)
+    # Add each variant name to the set (e.g. ["suction", "parallel_jaw"])
+    for variant in variants:
+        variant_set.AddVariant(variant)
+    return variant_set
+```
+
+**Why this works**
+- VariantSet packages discrete alternatives; downstream users select one.
+- In LIVRPS, **V (Variants)** sits between Inherits and References — strong enough to override Specializes/References/Payloads when selected.
+- A VariantSet can exist without a selection authored; the composed result then falls through to weaker arcs.
+
+**Why this fails**
+- Don't confuse variant *selection* (which variant is active) with variant *authoring* (adding variants to the set). Both are separate list-ops.
+- If no variant is selected, USD walks to the next arc in LIVRPS. Plan for that case.
+
 In Packaging Cell 3 terms, variants are perfect for controlled alternates like:
 
 - `gripper = suction` / `gripper = parallel_jaw`
@@ -385,6 +437,10 @@ This is where composition stops being theory and becomes runtime behavior. After
 - **Payload**: like reference but with deferred loading control.
 - **Specializes**: template-like base behavior with easy override by stronger arcs/opinions.
 
+[![Key moment — References @ 19:39](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_02.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_02.png)
+
+*References: compose prims from external layers; reuse and instancing by pulling data from a shared source file. Encapsulation: once referenced, the result is immutable by stronger layers. Best for light data (metadata, references/payloads). Supports time offsetting for shot variations.*
+
 ### Code Breakout — Add reference arc (Python API)
 
 **Raw snippet:**
@@ -414,12 +470,13 @@ def add_reference(
     ref_asset_path: str,
     ref_target_path: Sdf.Path
 ) -> None:
-    # Get the References API (list-ops on the prim)
+    # Get the References API — list-ops on the prim that manage external layer composition
     references: Usd.References = prim.GetReferences()
-    # Add a reference — pulls prims from external layer into this prim's namespace
+    # Add a reference: pulls prims from the external layer into this prim's namespace.
+    # The referenced prims are composed in; stronger layers can override, weaker cannot (encapsulation).
     references.AddReference(
-        assetPath=ref_asset_path,   # Path to .usda/.usdc/.usdz
-        primPath=ref_target_path   # Prim path inside that asset (or defaultPrim if omitted)
+        assetPath=ref_asset_path,   # Path to .usda/.usdc/.usdz (resolved by asset resolver)
+        primPath=ref_target_path   # Prim path inside that asset; omit to use defaultPrim
     )
 ```
 
@@ -431,6 +488,66 @@ def add_reference(
 **Why this fails**
 - If `primPath` is unspecified, the referenced prim is the defaultPrim at `assetPath` — can surprise you if the asset's defaultPrim changes.
 - Heavy geometry in every reference loads eagerly; use payloads for deferred loading when you need selective load.
+
+[![Key moment — Payloads @ 21:05](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_09.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_09.png)
+
+*Payloads: deferred loading of heavy assets. Some practitioners recommend putting all geometry/renderable data behind a payload. Similar to references: default prim used when prim path unspecified; consider encapsulation and time offsetting.*
+
+### Code Breakout — Add payload arc (Python API)
+
+**Raw snippet:**
+
+```py
+from pxr import Usd, Sdf
+
+def add_payload(
+    prim: Usd.Prim,
+    payload_asset_path: str,
+    payload_target_path: Sdf.Path
+) -> None:
+    payloads: Usd.Payloads = prim.GetPayloads()
+    payloads.AddPayload(
+        assetPath=payload_asset_path,
+        primPath=payload_target_path
+    )
+```
+
+**Commented walkthrough:**
+
+```py
+from pxr import Usd, Sdf
+
+def add_payload(
+    prim: Usd.Prim,
+    payload_asset_path: str,
+    payload_target_path: Sdf.Path
+) -> None:
+    # Get the Payloads API — list-ops on the prim, same shape as References
+    payloads: Usd.Payloads = prim.GetPayloads()
+    # Add a payload: same composition as reference, but loading is deferred until requested.
+    # Use Load/Unload to control when heavy geometry enters the stage.
+    payloads.AddPayload(
+        assetPath=payload_asset_path,   # Path to .usda/.usdc/.usdz
+        primPath=payload_target_path   # Prim path inside that asset; omit to use defaultPrim
+    )
+```
+
+**Why this works**
+- Payloads compose like references but load lazily — critical for heavy scenes.
+- In LIVRPS, **P (Payloads)** sits between References and Specializes.
+- Best for geometry/renderable data; practitioners often put all heavy content behind payloads.
+
+**Why this fails**
+- If you never load the payload, the prim exists but has no geometry. Downstream code must call `Usd.Stage.Load()` / `Unload()`.
+- Same encapsulation rules as references; omit `primPath` to use defaultPrim — same surprise risk if the asset changes.
+
+[![Key moment — References vs payloads @ 21:05](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_18.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_18.png)
+
+*References vs payloads: the key distinction is when data loads. References load eagerly; payloads defer until requested.*
+
+[![Key moment — Specializes @ 22:44](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_26.png)
+
+*Specializes: a "broadcaster operator" for templates. Use when you want to apply a base set of values on many prims. Inverse of inherits — Specializes guarantees lowest opinion strength; Inherits gives highest.*
 
 ### Code Breakout — Add specializes arc (Python API)
 
@@ -489,6 +606,7 @@ References/payloads aren’t academic. They’re your runtime performance dial �
 
 Planned scripts (not yet committed):
 - `composition_arcs/30_reference_vs_payload_runtime_load.py`
+- `composition_arcs/30b_add_payload_arc.py`
 - `composition_arcs/31_specializes_template_override.py`
 
 ---
@@ -503,6 +621,21 @@ This is the core competency chapter. You get a practical mental model and walkth
 - Layer stack context
 - Arc precedence
 - Opinion strength and local overrides
+
+**LIVRPS and Relocates — the full picture**
+
+The acronym **LIVERPS** extends LIVRPS with **Relocates** (the “E”). Relocates is a composition arc, but it does *not* participate in the same strength-ordering flowchart: it affects *namespace/path resolution* (where a prim lives), not *opinion strength* (which value wins). For trace questions like “which value wins?”, use **LIVRPS** only.
+
+[![Key moment — Relocates (rElocates) @ 23:34](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_38.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_43_38.png)
+
+*Relocates: change/move a prim path to a new path in the local namespace. Constraints: cannot relocate a root prim; after relocation the original path is no longer valid; cannot relocate to something that would create a namespace conflict.*
+
+[![Key moment — Mental model for composition arcs @ 26:36](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_44_09.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_44_09.png)
+
+*Remembering composition arcs with programming terms: Local = local variables/scope; Inherits = class inheritance; Variants = enums; References = imports; Payloads = lazy imports; Specializes = fallback values.*
+
+
+*Strength Ordering Flowchart (LIVRPS): Request value → Local/Sublayer → Inherits → Variants → References → Payload → Specializes → Default. At each step: opinion found? Use it. No? Proceed to next. Relocates is not in this chain — it resolves paths, not property values.*
 
 **The exam-style multi-file setup**
 
@@ -567,6 +700,8 @@ Austin then demonstrates what happens when you remove the local opinion: the nex
 The slides show a common exam pattern: **a small composed stage** built from several files, each adding opinions via different arcs.
 
 Even if the exact filenames/paths differ in the exam, the *trace method* is the same. Below is a faithful reconstruction of the structure shown in the slide. Three files compose; the fourth (`ball.usda`) is an exam distractor not in the composition.
+
+*Formatting note:* For readability in this Markdown setup, some **USDA snippets below use `py` fences** even though the content is USDA text.
 
 #### `root.usda` (sublayers, inherits, references, local opinion)
 
@@ -892,7 +1027,7 @@ Residual gap:
 17. **Learn OpenUSD — Value Resolution** — https://docs.nvidia.com/learn-openusd/latest/beyond-basics/value-resolution.html
 
 <a id="link-18"></a>
-18. **OpenUSD API — Composition (Sdf/Usd docs index)** — https://openusd.org/release/usdfaq.html
+18. **OpenUSD FAQ** — https://openusd.org/release/usdfaq.html
 
 <a id="link-19"></a>
 19. **Awesome OpenUSD (curated ecosystem index)** — https://github.com/matiascodesal/awesome-openusd
