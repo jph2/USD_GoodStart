@@ -1,6 +1,6 @@
 # Understanding Composition Arcs — Video Deep-Dive Tutorial
 
-**Version**: 0.2.0 | **Date**: 03.03.2026 | **Time**: 19:00 | **GlobalID**: 20260303_1900_USD_GoodStart_026
+**Version**: 0.2.1 | **Date**: 03.03.2026 | **Time**: 21:05 | **GlobalID**: 20260303_1900_USD_GoodStart_026
 
 **Tag block:**
 #openusd #composition_arcs #livrps #layers #references #payloads #inherits #specializes #variants #digital_twin #certification #best_practices
@@ -9,9 +9,12 @@
 **Canonical Video Source:** [YouTube — Understanding Composition Arcs | OpenUSD Community Office Hours](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=12s) [1 — YouTube video](#link-1)  
 **Presenter:** Austin Hwang (with Edmar + Madi from NVIDIA)  
 **Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/)  
-**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 — Learn OpenUSD curriculum](#link-2)
+**Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 — Learn OpenUSD curriculum](#link-2)  
+**Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [3 — Awesome OpenUSD](#link-3)  
+**Certification Series:** [The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)](https://youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb&si=JXpXQbFD7-snbq84) [23 — Certification series playlist](#link-23)  
+**Part of USD GoodStart:** an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, start with the [USD GoodStart README](https://github.com/jph2/USD_GoodStart/blob/main/README.md) [24 — USD GoodStart README](#link-24)
 
-**Most important resources (keep these open):** [19 — Awesome OpenUSD](#link-19), [2 — Learn OpenUSD curriculum](#link-2)
+**Most important resources (keep these open):** [3 — Awesome OpenUSD](#link-3), [2 — Learn OpenUSD curriculum](#link-2), [23 — Certification series playlist](#link-23)
 
 ---
 
@@ -22,7 +25,7 @@
 - This deep-dive file + key-moment screenshot folder open side-by-side
 
 Setup reference:
-- [Learn OpenUSD — usdview + Python setup](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [3 — setup](#link-3)
+- [Learn OpenUSD — usdview + Python setup](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [25 — setup](#link-25)
 
 
 [![Key moment — certification context](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)
@@ -987,7 +990,7 @@ Residual gap:
 2. **Learn OpenUSD Curriculum** — https://docs.nvidia.com/learn-openusd/latest/index.html
 
 <a id="link-3"></a>
-3. **usdview + Python Setup** — https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html
+3. **Awesome OpenUSD Learning Resource (Mati AWESOME - OpenUSD)** — https://github.com/matiascodesal/awesome-openusd
 
 <a id="link-4"></a>
 4. **Learn OpenUSD Glossary** — https://docs.nvidia.com/learn-openusd/latest/glossary.html
@@ -1046,7 +1049,16 @@ Residual gap:
 <a id="link-22"></a>
 22. **Why OpenUSD Developer Certification matters** — https://docs.nvidia.com/learn-openusd/latest/why-openusd-developer-certification.html
 
-**Most important wrap-up:** keep [19 — Awesome OpenUSD](#link-19) and [2 — Learn OpenUSD curriculum](#link-2) open while studying or implementing.
+<a id="link-23"></a>
+23. **The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)** — https://youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb&si=JXpXQbFD7-snbq84
+
+<a id="link-24"></a>
+24. **USD GoodStart README (project structure + setup scripts)** — https://github.com/jph2/USD_GoodStart/blob/main/README.md
+
+<a id="link-25"></a>
+25. **usdview + Python Setup** — https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html
+
+**Most important wrap-up:** keep [3 — Awesome OpenUSD](#link-3) and [2 — Learn OpenUSD curriculum](#link-2) open while studying or implementing.
 
 ---
 
