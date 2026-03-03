@@ -1,0 +1,26 @@
+timestamp_sec,filename,cue
+0.0,UCA_01_000002_introduction_to_openusd_certification_series.png,Introduction to OpenUSD Certification Series
+74.0,UCA_02_000116_what_is_the_openusd_certification.png,What is the OpenUSD Certification?
+181.0,UCA_03_000303_exam_structure_and_candidate_profile.png,Exam structure and candidate profile
+278.0,UCA_04_000440_why_start_with_composition_arcs.png,Why start with composition arcs
+386.0,UCA_05_000628_composition_exam_breakdown.png,Composition exam breakdown
+546.0,UCA_06_000908_what_is_composition_and_what_are_opinions.png,What is composition and what are opinions?
+746.0,UCA_07_001228_layers_and_sublayers.png,Layers and sublayers
+872.0,UCA_08_001434_inherits_explained.png,Inherits explained
+1062.0,UCA_09_001744_variants_and_variant_sets.png,Variants and variant sets
+1192.0,UCA_10_001954_references_vs_payloads.png,References vs payloads
+1361.0,UCA_11_002243_specializes.png,Specializes
+1594.0,UCA_12_002636_mental_model_for_composition_arcs.png,Mental model for composition arcs
+1671.0,UCA_13_002753_livrps_strength_ordering_walkthrough.png,LIVRPS strength ordering walkthrough
+1750.0,UCA_14_002912_exam_style_usd_trace_example.png,Exam-style USD trace example
+2005.0,UCA_15_003327_identifying_composition_arcs_in_multi_file_setup.png,Identifying composition arcs in multi-file setup
+2236.0,UCA_16_003718_resolving_displaycolor_step_by_step.png,Resolving displayColor step-by-step
+2399.0,UCA_17_004001_types_of_composition_exam_questions.png,Types of composition exam questions
+2480.0,UCA_18_004122_common_misuse_patterns.png,Common misuse patterns
+2568.0,UCA_19_004250_collaboration_and_layering_best_practices.png,Collaboration and layering best practices
+2673.0,UCA_20_004435_how_to_practice_effectively.png,How to practice effectively
+2932.0,UCA_21_004854_study_resources.png,Study resources
+3073.0,UCA_22_005115_live_q_a.png,Live Q&A
+3597.0,UCA_23_005959_debugging_inherited_opinions_demo.png,Debugging inherited opinions demo
+4008.0,UCA_24_010650_glossary_clarification_on_opinion.png,Glossary clarification on “opinion”
+4760.0,UCA_25_011922_series_wrap_up_and_next_session_preview.png,Series wrap-up and next session preview
