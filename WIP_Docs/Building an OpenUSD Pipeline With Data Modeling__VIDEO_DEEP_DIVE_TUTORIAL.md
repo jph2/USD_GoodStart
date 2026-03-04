@@ -1,37 +1,78 @@
 # Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
 
-**Version**: 1.1.4 | **Date**: 27.02.2026 | **Time**: 13:54 | **GlobalID**: 20260226_2143_USD_GoodStart_002
+**Version**: 1.2.2 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260226_2143_USD_GoodStart_002
 
 **Tag block:**
 #openusd #usd_core #data_modeling #data_exchange #prim_properties #attributes #relationships #metadata #primvars #pointinstancer #validation #usd_exchange_sdk #digital_twin #best_practices #framework_integration
 
-[![Slide — OpenUSD Data Modeling & Data Exchange (Week 4 session overview)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h09_36.png)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h09_36.png)
-
-Click the image to open it full-size; it’s the agenda overview that frames the session topics. Use the YouTube link below to watch the full recording.
-
 **Canonical Video Source:** [YouTube — Building an OpenUSD Pipeline With Data Modeling](https://www.youtube.com/watch?v=LchXZAsjKiU) [[1]](#link-1) — the full session recording; use it for timestamps and to follow the live code demonstrations. <br>
-**Presenter:** Nandu Vellal (with Ashley + Mati from NVIDIA) <br>
+**Presenter:** Nandu Vellal <br>
+**NVIDIA Session Hosts / Contributors:** Ashley Goldstein and Matias "Mati" Codesal <br>
 **Speakers (LinkedIn):** [Nandu Vellal](https://www.linkedin.com/in/nandu-vellal/) [[15]](#link-15) · [Ashley Goldstein](https://www.linkedin.com/in/ashleyr-goldstein/) [[16]](#link-16) · [Matias "Mati" Codesal](https://www.linkedin.com/in/matiascodesal/) [[17]](#link-17) <br>
 **Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) <br>
 **Session context:** Week 4 of the OpenUSD certification office hours series (data modeling + data exchange) <br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)
+**Additional Composition References:** [USD WG — Composition Puzzles](#link-18) and [Composition / aggregation reference deck](#link-19)
 
 Use the curriculum as the “hands-on drill” companion to this watch-along tutorial; it is where you practice the exact APIs and concepts shown in the livestream.
+
+---
+
+## Series Position
+
+This tutorial is part of the OpenUSD certification deep-dive series.
+
+1. [Understanding Composition Arcs](./Understanding%20Composition%20Arcs__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+2. [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+3. [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - current tutorial
+5. Rendering and Visualizing OpenUSD Scenes - coming soon
+6. Session 6 - coming soon
 
 ---
 
 > **Part of USD GoodStart** — for repo structure and conventions, start with [README.md](../README.md) (it explains the repository layout and how the docs are meant to be used). This tutorial lives in `WIP_Docs`. If you want the “plugin/customization” counterpart session, see: [Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) (it covers schemas/resolvers/file-format plugins — the extensibility layer around the core concepts here).
 
 ---
+
+## The Five-Minute Version
+
+In industrial terms: USD is not “a 3D file format.” It is a **typed, queryable data container**. Station 7 becomes real when you can answer these questions without guesswork:
+
+- **What is the thing?** (prim identity + namespace)
+- **What properties does it have?** (typed attributes)
+- **How is it related to other things?** (relationships)
+- **What rules govern it across composition and exchange?** (metadata at the correct scope)
+- **How do we validate that the exported package is consistent and usable downstream?** (repeatable checks)
+
+This tutorial turns those questions into a workflow that holds up under change: CAD updates, sensor growth, new downstream consumers, and multi-team ownership.
+
+### Mental model map (quick view)
+
+```mermaid
+flowchart LR
+    Sources["CAD + PLM + IoT + simulation"] --> Model["Typed USD model"]
+    Model --> Govern["Metadata + policy at correct scope"]
+    Govern --> Exchange["Extract -> transform -> validate"]
+    Exchange --> Twin["Trustable Station 7 digital twin component"]
+```
+
+If you want the longer “mental model + diagram” version, keep going — the expanded section later in this document connects the full Station 7 storyline to the chapter-by-chapter drills.
+
+---
 ## Before You Start (Quick Setup)
 
 You want:
 
-- A working USD + Python environment
-- `usdview` for inspecting results visually
+- A working USD + Python environment (`pxr`)
+- `usdview` installed for visual inspection
+- This deep-dive file open alongside the companion video timestamps
 
 Follow the official setup guide:
 - [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [[3]](#link-3) — use this when you need a reliable `usdview` + Python setup so you can run the API exercises locally.
+- [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim)
+- [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab)
+- [Omniverse Kit App Template (GitHub, Composer -> Kit App path)](https://github.com/NVIDIA-Omniverse/kit-app-template)
 
 ---
 ## How This Tutorial Works
@@ -43,16 +84,12 @@ This is a two-layer document:
 
 Every chapter ends with a **Learn OpenUSD →** pointer, so you can jump from video concepts to hands-on practice.
 
-### Code companion for this tutorial
-
-All runnable scripts referenced below are in:
-
-- [Building an OpenUSD Pipeline With Data Modeling__usd_cert](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/)
-
-When a chapter has a **Script Lab** block, run those files directly and inspect the generated USD files in `usdview`.
-
 ---
 ## The Story (Station 7)
+
+[![Slide — OpenUSD Data Modeling & Data Exchange (Week 4 session overview)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h09_36.png)](Pics/Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling/BuildingOpenUSD_Pipeline%20With%20Data%20Modeling2026-02-23_18h09_36.png)
+
+Click the image to open it full-size; it’s the agenda overview that anchors the Station 7 storyline below.
 
 For this little tutorial deep dive, we added a little plot line and added the idea of the 'station number 7': <br>
 You have a 3D asset — a **welding station** on a factory floor. Call it **Station 7**.
@@ -76,7 +113,7 @@ This tutorial rebuilds the video around that idea — and uses **Station 7** as 
 
 ---
 
-## The Five-Minute Version (Your Mental Model)
+## Station 7 Mental Model (Detailed)
 
 Station 7 becomes real when you can answer five questions in order:
 
@@ -195,6 +232,16 @@ The chapter labels are clickable; use them as quick navigation while watching th
 | [Chapter 6](#chapter-6) | Extract -> transient -> transform -> destination | How does data exchange scale? | Two-phase design: extract -> transform -> validate. | [`00:56:47 -> 01:06:25`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=3407s) | [Data Exchange (Module)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/index.html) [[11]](#link-11) — end-to-end exchange framing. [Data Extraction](https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-extraction/what-is-data-extraction.html) [[12]](#link-12) — preserve source fidelity first. [Asset Validation](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) [[13]](#link-13) — define exchange trust checks. | [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py) |
 | [Chapter 7](#chapter-7) | Convenience-layer standardization | How do teams stay consistent? | “Convenience layer” principle for reusable pipeline helpers. | [`01:06:25 -> 01:10:51`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=3985s) | [Data Exchange (Module)](https://docs.nvidia.com/learn-openusd/latest/data-exchange/index.html) [[11]](#link-11) — production pattern references for reusable helpers. | [`additional-examples/obj2usd.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/obj2usd.py), [`data-types/7a_value_types.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/data-types/7a_value_types.py) |
 | [Chapter 8](#chapter-8) | Validate and publish-readiness | What breaks in production? | Edge cases: `over`, validation, instancing limits, naming. | [`01:10:51 -> 01:14:35`](https://www.youtube.com/watch?v=LchXZAsjKiU&t=4251s) | [Asset Validation](https://docs.nvidia.com/learn-openusd/latest/data-exchange/asset-validation/what-is-asset-validation.html) [[13]](#link-13) — practical validation gates for handoff safety. | [`additional-examples/property_example.py`](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__usd_cert/additional-examples/property_example.py) |
+
+---
+
+## Key Moments Index
+
+| Timestamp | Transcript cue | Why this moment matters |
+|---|---|---|
+| [00:10:16](https://www.youtube.com/watch?v=LchXZAsjKiU&t=616s) | Prim properties explained | Establishes attributes vs relationships as the core modeling vocabulary. |
+| [00:44:43](https://www.youtube.com/watch?v=LchXZAsjKiU&t=2683s) | Primvars and instancing segment | Shows scalable sensor/overlay representation for digital twins. |
+| [00:56:47](https://www.youtube.com/watch?v=LchXZAsjKiU&t=3407s) | Data exchange phase transition | Locks in extract-transform-validate as the repeatable pipeline pattern. |
 
 ---
 
@@ -626,6 +673,14 @@ Six concrete scenarios that map directly onto the patterns in this tutorial. Eac
 - **Pipeline note:** treat the point cloud as a data product (overlay layer), not a manually-edited asset
 - **Small story:** A retrofit team loads last week’s LiDAR capture as an overlay layer and immediately sees where “as-designed” and “as-built” diverge around a conduit run. They adjust the install plan on-site, without ever touching the authoritative building geometry layer.
 
+---
+
+## Appendix - Debug Playbook (Data Modeling + Exchange)
+
+- Symptom: field exists but cannot be queried reliably -> Likely cause: wrong value type or default/authored confusion -> Quick check: inspect `Sdf.ValueTypeNames` and authored opinions.
+- Symptom: relationships look valid but downstream behavior is wrong -> Likely cause: expecting behavior from links alone -> Quick check: verify consuming runtime/tool logic and target paths.
+- Symptom: exchange output opens but breaks downstream -> Likely cause: missing contract metadata/validation checks -> Quick check: run validation gate (`usdchecker` + domain checks) before publish.
+
 ## See Also
 
 - [Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) — the companion deep-dive on schemas, resolvers, and file format plugins. Use it when you’re ready to extend USD itself rather than just author data into stages.
@@ -651,6 +706,8 @@ Six concrete scenarios that map directly onto the patterns in this tutorial. Eac
 15. <a id="link-15"></a>[LinkedIn — Nandu Vellal](https://www.linkedin.com/in/nandu-vellal/) — presenter profile for deeper context on data modeling and exchange topics from the session.
 16. <a id="link-16"></a>[LinkedIn — Ashley Goldstein](https://www.linkedin.com/in/ashleyr-goldstein/) — speaker profile referenced in the office hours context for this tutorial.
 17. <a id="link-17"></a>[LinkedIn — Matias "Mati" Codesal](https://www.linkedin.com/in/matiascodesal/) — speaker profile referenced in the office hours context for this tutorial.
+18. <a id="link-18"></a>[USD WG — Composition Puzzles](https://github.com/usd-wg/assets/tree/main/docs/CompositionPuzzles) — exam-style composition puzzle set for practicing opinion-strength and composition reasoning.
+19. <a id="link-19"></a>[Composition / aggregation reference deck (Aaron Luk recommendation)](https://drive.google.com/file/d/1lh-28b4mN37WrH2zVM5d0YQ2gZtS8wNO/view?usp=drive_link) — supplemental deck for aggregation/composition walkthrough and review.
 
 ---
 

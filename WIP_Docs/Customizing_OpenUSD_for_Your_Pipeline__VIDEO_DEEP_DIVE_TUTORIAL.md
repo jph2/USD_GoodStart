@@ -1,22 +1,39 @@
 # Customizing OpenUSD for Your Pipeline — Video Deep-Dive Tutorial
 
-**Version**: 2.1.0 | **Date**: 18.02.2026 | **Time**: 22:20 | **GlobalID**: 20260218_2220_USD_GoodStart_001
+**Version**: 2.1.7 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260218_2220_USD_GoodStart_001
 
 **Tag block:**
 #openusd #usd_core #schemas #asset_resolver #variants #workflow_optimization #best_practices #framework_integration #workflow_automation #deterministic_workflows #analysis #omniverse
 
-[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](USD_GoodStart/WIP_Docs/ASWF_Asset_Group_Minimal_Production_Workflow_DISCOVERY.md )](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1)
+[![Title slide — Customizing OpenUSD for Your Pipeline, presented by Divyansh Mishra](Pics/Custo_OpenUSD_Pipel_A_.png)](Pics/Custo_OpenUSD_Pipel_A_.png) [[1]](#link-1)
 
 **Canonical Video Source:** [YouTube — Customizing OpenUSD for Your Pipeline](https://www.youtube.com/watch?v=d4qChB291ow) [[1]](#link-1) <br>
-**Presenter:** Divy (with Mati + Edmar from NVIDIA and community contributor Richard)<br>
+**Presenter:** Divyansh Mishra ("Divy")<br>
+**NVIDIA Session Hosts / Contributors:** Matias "Mati" Codesal and Edmar Candelario<br>
+**Community Contributor:** Richard<br>
+**Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/)<br>
 **Scope Anchor:** from `00:05:50` to approximately `01:11:00`<br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2)<br>
 **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [[3]](#link-3)<br>
 **Certification Series:** [The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)](https://www.youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb) — this tutorial covers 3rd session in the series
+**Additional Composition References:** [USD WG — Composition Puzzles](#link-34) and [Composition / aggregation reference deck](#link-35)
 
 ---
 
-> **Part of [USD GoodStart](https://github.com/jph2/USD_GoodStart)** — an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, **[start with the README](https://github.com/jph2/USD_GoodStart#readme)**.
+## Series Position
+
+This tutorial is part of the OpenUSD certification deep-dive series.
+
+1. [Understanding Composition Arcs](./Understanding%20Composition%20Arcs__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+2. [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+3. [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) - current tutorial
+4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+5. Rendering and Visualizing OpenUSD Scenes - coming soon
+6. Session 6 - coming soon
+
+---
+
+> **Part of USD GoodStart** — this deep dive is designed to be used inside the `USD_GoodStart` repository, not as a standalone blog post. For repo structure, conventions, and hands-on setup scripts, start with [README.md](../README.md). (Optional: upstream repo overview at [USD GoodStart on GitHub](https://github.com/jph2/USD_GoodStart).)
 
 ---
 
@@ -33,11 +50,39 @@ These are not exotic problems. They are the everyday friction of production pipe
 
 By the end, you will understand **schemas**, **metadata plugins**, **variant fallback plugins**, **asset resolvers**, and **file format plugins** — not as abstract concepts, but as specific tools for specific problems. You will also understand when *not* to use them, because every plugin you add makes your USD files a little less universal.
 
+### Mental model map (quick view)
+
+```mermaid
+flowchart LR
+    Friction["Pipeline friction"] --> Decide{"Convention enough?"}
+    Decide -->|Yes| KeepCore["Use core USD + team conventions"]
+    Decide -->|No| Extension["Pick extension point"]
+    Extension --> Schema["Schema / metadata / variant / resolver / file format"]
+    Schema --> Portability["Check portability and dependency cost"]
+    Portability --> Ship["Ship minimal plugin surface"]
+```
+
 > **Companion video:** This tutorial follows Divy's NVIDIA Community Office Hour session. Timestamps are provided so you can watch the relevant section, then come back here for the deeper production context. You do not need to watch the video first — but it's excellent, and this tutorial will make more sense if you do.
 
 ---
 
-## Before We Start: How This Tutorial Works
+## Before You Start (Quick Setup)
+
+You want:
+
+- A working USD + Python environment (`pxr`)
+- `usdview` installed for visual inspection
+- This deep-dive file open alongside the companion video timestamps
+
+Setup reference:
+- [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html)
+- [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim)
+- [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab)
+- [Omniverse Kit App Template (GitHub, Composer -> Kit App path)](https://github.com/NVIDIA-Omniverse/kit-app-template)
+
+---
+
+## How This Tutorial Works
 
 This is a two-layer document:
 
@@ -47,6 +92,29 @@ This is a two-layer document:
 Both layers use the same running example: **a "creature" data type** that starts as a simple schema and gradually acquires metadata, variant behavior, resolver-friendly paths, and a custom file format.
 
 **Navigation spine:** Each chapter links to the relevant section in [Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [[2]](#link-2), the [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd) [[3]](#link-3) ecosystem index, and [USD GoodStart](https://github.com/jph2/USD_GoodStart) [[4]](#link-4) integration points.
+
+---
+
+## Chapter Outcomes at a Glance
+
+| Chapter | Video section (approx) | Exam topic | Outcome | Learn OpenUSD quick jump |
+|---|---|---|---|---|
+| [Chapter 0](#chapter-0) | [00:05:50](https://www.youtube.com/watch?v=d4qChB291ow&t=350s) | Why customize | Decide when built-ins are enough and when plugins are justified. | [2 — Curriculum](#link-2), [4 — Glossary](#link-4) |
+| [Chapter 1](#chapter-1) | [00:07:16](https://www.youtube.com/watch?v=d4qChB291ow&t=436s) | Schemas | Design typed contracts for domain-specific data. | [6 — Schemas](#link-6), [7 — Typed schema](#link-7) |
+| [Chapter 2](#chapter-2) | [00:18:30](https://www.youtube.com/watch?v=d4qChB291ow&t=1110s) | Metadata plugins | Keep governance/discovery metadata consistent across tools. | [8 — Metadata](#link-8), [9 — API schema](#link-9) |
+| [Chapter 3](#chapter-3) | [00:28:40](https://www.youtube.com/watch?v=d4qChB291ow&t=1720s) | Variant fallbacks | Define safe defaults for unresolved variant selections. | [10 — Variants](#link-10), [11 — Asset structure](#link-11) |
+| [Chapter 4](#chapter-4) | [00:40:00](https://www.youtube.com/watch?v=d4qChB291ow&t=2400s) | Asset resolvers | Preserve path stability across environments. | [12 — Stage API](#link-12), [13 — Path handling](#link-13) |
+| [Chapter 5](#chapter-5) | [00:52:30](https://www.youtube.com/watch?v=d4qChB291ow&t=3150s) | File format plugins | Decide convert-vs-plugin for non-USD sources. | [14 — Best practices](#link-14), [15 — Certification path](#link-15) |
+
+---
+
+## Key Moments Index
+
+| Timestamp | Transcript cue | Why this moment matters |
+|---|---|---|
+| [00:05:50](https://www.youtube.com/watch?v=d4qChB291ow&t=350s) | Why customize at all | Frames plugin work as an interoperability tradeoff, not a feature race. |
+| [00:07:16](https://www.youtube.com/watch?v=d4qChB291ow&t=436s) | Schema contract analogy | Makes typed schema design operational and testable. |
+| [00:40:00](https://www.youtube.com/watch?v=d4qChB291ow&t=2400s) | Resolver/file-format discussion | Clarifies when to extend USD versus fixing pipeline conventions first. |
 
 ---
 
@@ -1700,7 +1768,32 @@ Routing is controlled in the framework entrypoint policy [[32]](#link-32). Count
 
 ---
 
-## Appendix A — Debugging Plugins
+## If You Remember Only 10 Things
+
+1. Use built-in composition and conventions before plugins.
+2. A schema is a data contract, not decoration.
+3. Typed identity and API capabilities solve different problems.
+4. Metadata scope mistakes become governance drift.
+5. Variant fallbacks are safety nets, not design substitutes.
+6. Resolver complexity must be earned by real constraints.
+7. File format plugins trade convenience for portability cost.
+8. Document plugin ownership and deployment requirements early.
+9. Validate plugin behavior across at least two runtimes.
+10. Keep extension decisions reversible where possible.
+
+---
+
+## Industrial Digital Twin Continuity (Series Crosswalk)
+
+| Scenario | Why this tutorial matters there | Where to continue |
+|---|---|---|
+| Station 7 data contracts | Domain schemas keep downstream automation stable. | [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Aggregation-heavy project handoffs | Resolver/path policy prevents broken references across teams. | [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Visualization/QA delivery | Plugin choices must preserve render and inspection interoperability. | [Rendering and Visualizing OpenUSD Scenes](./Rendering%20and%20Visualizing%20OpenUSD%20Scenes__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+
+---
+
+## Appendix - Debug Playbook (Plugins)
 
 Divy mentioned the `TF_DEBUG` environment variables as essential for plugin development. When your plugin isn't loading or registering correctly, these are your first diagnostic tool:
 
@@ -1747,3 +1840,5 @@ A dedicated debugging session was planned for a future livestream in the series.
 31. <a id="link-31"></a>[MARVIN Soul (`Domain_QA_Security_Guardrails/MARVIN_soul.md`)](../../General_Dev/Domain_QA_Security_Guardrails/MARVIN_soul.md) - Adversarial QA/security persona contract used for failure-first validation.
 32. <a id="link-32"></a>[Master Framework Entrypoint (`Master_Rules/AGENTS.md`)](../../General_Dev/Master_Rules/AGENTS.md) - Defines the mandatory session-start persona gate (TARS vs MARVIN) and routing.
 33. <a id="link-33"></a>[A043 Persona Routing and Counterpart Isolation HANDOVER](../../General_Dev/Master_Rules/060_Framework_HANDOVERS/A043_Persona_Routing_and_Counterpart_Isolation_HANDOVER.md) - Traceability record for concealed counterpart isolation and persona routing policy.
+34. <a id="link-34"></a>[USD WG — Composition Puzzles](https://github.com/usd-wg/assets/tree/main/docs/CompositionPuzzles) - Exam-style composition puzzle set for practicing opinion-strength reasoning.
+35. <a id="link-35"></a>[Composition / aggregation reference deck (Aaron Luk recommendation)](https://drive.google.com/file/d/1lh-28b4mN37WrH2zVM5d0YQ2gZtS8wNO/view?usp=drive_link) - Supplemental deck for composition/aggregation study and review sessions.

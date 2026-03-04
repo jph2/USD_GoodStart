@@ -1,6 +1,6 @@
 # Rendering and Visualizing OpenUSD Scenes — Video Deep-Dive Tutorial
 
-**Version**: 0.3.3 | **Date**: 03.03.2026 | **Time**: 02:12 | **GlobalID**: 20260303_0212_USD_GoodStart_016
+**Version**: 0.3.10 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260303_0212_USD_GoodStart_016
 
 **Tag block:**
 #openusd #usd_visualization #usdgeom #imageable #primvars #materials #usdlux #timesamples #composition #certification #digital_twin #best_practices
@@ -10,13 +10,27 @@
 Click the image to open it full-size; it’s the title slide that frames the session.
 
 **Canonical Video Source:** [YouTube — Rendering and Visualizing OpenUSD Scenes | OpenUSD Community Office Hours](https://www.youtube.com/watch?v=-6x8fuYVBPk) [1 — YouTube video](#link-1) <br>
-**Presenter:** Borja Mayoral Arauz (with Ashley + Mati from NVIDIA) <br>
-**Video DEEP DIVE** Genertaed by Jan Haluszka and his Agent <br>
+**Presenter:** Borja Mayoral Arauz <br>
+**NVIDIA Session Hosts / Contributors:** Ashley Goldstein and Matias "Mati" Codesal <br>
+**Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) <br>
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 — Learn OpenUSD curriculum](#link-2)
 
-**Most important resources (keep these open):** [2 — Learn OpenUSD curriculum](#link-2) and [19 — Awesome OpenUSD](#link-19)
+**Most important resources (keep these open):** [2 — Learn OpenUSD curriculum](#link-2), [19 — Awesome OpenUSD](#link-19), [35 — USD WG Composition Puzzles](#link-35), and [36 — Composition / aggregation reference deck](#link-36)
 
 Use the Learn OpenUSD curriculum as the “hands-on drill” companion to this tutorial; it is where you practice the exact APIs and concepts discussed in the livestream.
+
+---
+
+## Series Position
+
+This tutorial is a companion deep-dive that supports the OpenUSD certification series progression.
+
+1. [Understanding Composition Arcs](./Understanding%20Composition%20Arcs__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+2. [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+3. [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+5. Rendering and Visualizing OpenUSD Scenes - coming soon
+6. Session 6 - coming soon
 
 ---
 
@@ -26,15 +40,51 @@ Use the Learn OpenUSD curriculum as the “hands-on drill” companion to this t
 
 ---
 
+## The Five-Minute Version
+
+Rendering is where digital twins start lying to you first — because different tools have different defaults, and those defaults change what you see.
+
+The recurring failure pattern looks like this:
+
+- The robot “fits” in the cell because someone’s viewer silently scaled it (units mismatch hidden).
+- The cell is rotated or gravity looks wrong because axis conventions were never normalized (upAxis mismatch).
+- Safety geometry disappears because it was authored as `guide`, and the renderer excludes `guide` by default (purpose mismatch).
+- A QA overlay vanishes when final materials are bound (material wins over `displayColor`).
+- Someone queries a time-sampled attribute without a `Usd.TimeCode` and gets the wrong answer (time sampling misread).
+
+This deep dive turns those into a repeatable trust procedure:
+
+- Make stage contracts explicit (units, axis, defaultPrim, purposes, time settings).
+- Predict visibility/purpose/material binding behavior instead of “checking the viewport and hoping.”
+- Validate what you see by tracing back to authored sources and timeCode context.
+
+### Mental model map (quick view)
+
+```mermaid
+flowchart LR
+    Contract["Stage contract\n(units, axis, defaultPrim, time)"] --> Interpret["Visibility + purpose + materials"]
+    Interpret --> Sample["TimeCode-aware queries"]
+    Sample --> Verify["Cross-check authored source"]
+    Verify --> Trusted["Trusted render/review output"]
+```
+
+> **Companion video:** Use the timestamps to watch a short segment, then come back here for the “why it broke” and “how to standardize it” layer.
+
+---
+
 ## Before You Start (Quick Setup)
 
 You want:
 
-- A working USD + Python environment (so you can run `pxr` scripts)
-- `usdview` to inspect results visually
+- A working USD + Python environment (`pxr`)
+- `usdview` installed for visual inspection
+- This deep-dive file open alongside the companion video timestamps
 
 Follow the official setup guide:
 - [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [3 — usdview + Python setup](#link-3)
+- [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim)
+- [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab)
+- [Omniverse Kit App Template (GitHub, Composer -> Kit App path)](https://github.com/NVIDIA-Omniverse/kit-app-template)
 
 ---
 
@@ -48,14 +98,6 @@ This is a two-layer document:
 Every chapter ends with a **Learn OpenUSD →** pointer, so you can jump from video concepts to hands-on practice.
 
 Between chapters you’ll see a short **Packaging Cell 3 checkpoint** that connects the technical topic back to the commissioning story.
-
-### Code companion for this tutorial
-
-The script pack is planned at:
-
-- `Rendering and Visualizing OpenUSD Scenes__usd_cert/`
-
-Status: script files are **not yet committed** in this repo snapshot. In each chapter, treat Script Lab filenames as implementation targets/placeholders.
 
 ---
 
@@ -119,6 +161,16 @@ That’s the difference between a twin that merely *looks plausible* and one you
 | [Chapter 7](#chapter-7) | [1:10:25](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=4225s) | TimeSamples | Author/query time samples; reason about timeCode/FPS precedence. | [17 — TimeCodes and TimeSamples](#link-17) |
 
 *Timestamp note: chapter jumps are approximate and aligned to slide sequence anchors; YouTube chapter drift of a few seconds is normal.*
+
+---
+
+## Key Moments Index
+
+| Timestamp | Transcript cue | Why this moment matters |
+|---|---|---|
+| [03:53](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=233s) | Stage setup starts | Most trust failures begin with unit/axis/entry-contract mistakes. |
+| [33:14](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=1994s) | Imageable visibility/purpose | Explains why valid data can disappear in render/review outputs. |
+| [1:10:25](https://www.youtube.com/watch?v=-6x8fuYVBPk&t=4225s) | TimeSamples and queries | Separates default-value reads from explicit timeCode debugging. |
 
 ---
 
@@ -391,7 +443,7 @@ The takeaway: you don’t need physics, materials, or even transforms to *render
 
 Below is the same logic from the slide, rewritten with comments so a beginner can reason about it line by line.
 
-```py
+```usda
 # A) CubeA
 def Cube "CubeA"
 {
@@ -461,7 +513,7 @@ Key reasoning patterns:
 
 The point of this question is: **what exactly should be instanced** so per-instance placement stays clean and predictable.
 
-```py
+```usda
 # Recommended pattern (works well):
 def Xform "PrototypeRoot" (
     instanceable = true
@@ -733,7 +785,7 @@ Collection bindings are a scalability tool: in Packaging Cell 3, you might bind 
 
 ### Code Breakout — Collection-based material binding
 
-```py
+```usda
 def Scope "World"
 {
     # Apply CollectionAPI namespace on a REAL prim.
@@ -791,7 +843,7 @@ def Scope "World"
 
 ### Code Breakout — Inheritance + local override (why B works)
 
-```py
+```usda
 def Xform "World"
 {
     def Xform "Group"
@@ -906,7 +958,7 @@ Treat this as your “primvar value-count cheat sheet”:
 
 All these slides use the same mesh topology and only change the primvar payload + interpolation token.
 
-```py
+```usda
 def Mesh "AnyMesh"
 {
     int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]   # six quad faces (cube)
@@ -949,7 +1001,7 @@ On simple polygon meshes (like a cube), **`vertex` and `varying` often look the 
 
 Base mesh from the slide:
 
-```py
+```usda
 def Mesh "Quad"
 {
     int[] faceVertexCounts = [4]               # one face
@@ -960,7 +1012,7 @@ def Mesh "Quad"
 
 Option breakdown:
 
-```py
+```usda
 # A) Fails
 texCoord2f[] primvars:st = [(0,0), (1,0), (1,1), (0,1)]
 (
@@ -1054,7 +1106,7 @@ The takeaway for production: if you rely on real-time playback speed (for motion
 
 Snippet core from the slide:
 
-```py
+```usda
 #usda 1.0
 (
     # Timeline range for this stage (authoring metadata, not a query by itself).
@@ -1155,6 +1207,31 @@ Planned scripts (not yet committed):
 
 ---
 
+## If You Remember Only 10 Things
+
+1. Pixels are evidence only when stage contracts are explicit.
+2. `metersPerUnit` and `upAxis` must be validated before review.
+3. Composition entry choice controls correction and ownership boundaries.
+4. Purpose/visibility filters hide data more often than people expect.
+5. `displayColor` overlays and material bindings serve different intents.
+6. Query time-varying attributes with explicit `Usd.TimeCode(t)`.
+7. Keep debug overlays and final look layers deliberately separated.
+8. Test in multiple viewers/runtimes before trusting conclusions.
+9. Track render settings alongside validation snapshots.
+10. Treat visualization checks as release gates, not optional polish.
+
+---
+
+## Industrial Digital Twin Continuity (Series Crosswalk)
+
+| Scenario | Why this tutorial matters there | Where to continue |
+|---|---|---|
+| Aggregation-heavy factory reviews | Visualization reveals composition and ownership mistakes early. | [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Station 7 data-rich operations | Render and overlay correctness depends on typed data + metadata contracts. | [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Custom runtime deployment | Viewer behavior depends on extension choices and runtime integration policy. | [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+
+---
+
 ## Links
 
 1. <a id="link-1"></a>[YouTube — Rendering and Visualizing OpenUSD Scenes](https://www.youtube.com/watch?v=-6x8fuYVBPk) — canonical video source.
@@ -1191,6 +1268,8 @@ Planned scripts (not yet committed):
 32. <a id="link-32"></a>[SideFX forum — upAxis/metersPerUnit import behavior discussion](https://www.sidefx.com/forum/topic/71925/) — practical example of host-tool auto-correction behavior.
 33. <a id="link-33"></a>[Awesome OpenUSD — Integrations](https://github.com/matiascodesal/awesome-openusd#integrations) — host app and runtime ecosystem map.
 34. <a id="link-34"></a>[mxpv/openusd](https://github.com/mxpv/openusd) — example of an alternate OpenUSD runtime/library implementation.
+35. <a id="link-35"></a>[USD WG — Composition Puzzles](https://github.com/usd-wg/assets/tree/main/docs/CompositionPuzzles) — exam-style composition puzzle set for practicing value resolution and arc interactions.
+36. <a id="link-36"></a>[Composition / aggregation reference deck (Aaron Luk recommendation)](https://drive.google.com/file/d/1lh-28b4mN37WrH2zVM5d0YQ2gZtS8wNO/view?usp=drive_link) — supplemental visual walkthrough for aggregation and composition reasoning.
 
 **Most important wrap-up:** if you want one “ecosystem map” bookmark beyond Learn OpenUSD, use [19 — Awesome OpenUSD](#link-19) (tools, sample assets, Pixar resources, and practical community links).
 
@@ -1271,78 +1350,6 @@ Cross-runtime differences can appear due to render delegates, purpose filters, p
 
 - Helpful resources: [33 — Awesome OpenUSD Integrations section](#link-33), [34 — mxpv/openusd (alternate runtime implementation)](#link-34)
 
-
----
-
-## Appendix — Slide Index (Images ↔ Sections ↔ Transcript cues)
-
-The table below is the pass-1 and pass-2 mapping record for screenshot placement in this tutorial.
-
-| Image filename | Slide/topic label | Tutorial section anchor | Transcript cue phrase (placement trigger) | Placement status |
-|---|---|---|---|---|
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h04_30.png` | Title slide | Cover / intro | “OpenUSD Developer Certification… what this is all about today” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h04_43.png` | Key concepts agenda | `#chapter-0` | “I started by dividing this topic in different subtopics…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h03_05.png` | Certification context | `#chapter-0` | “Do you know in two weeks we have GTC…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h03_19.png` | Physical AI Day / context | `#chapter-0` | Session opening and certification framing | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h03_56.png` | Presenter intro (Borja) | `#chapter-0` | “Here you can reach out to me through LinkedIn…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h06_58.png` | Stage defaults metadata | `#chapter-1` | “The first thing when you are creating a new stage…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h19_04.png` | Stage metadata (alt capture) | `#chapter-1` | Return to stage config before composition demo | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h09_39.png` | Units/axis composition question | `#chapter-1` | “What happens when referencing Stage B into Stage A?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h13_21.png` | Units/axis answer marks | `#chapter-1` | “The correct answers are 4 and 5” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h20_56.png` | Units/axis answer (alt) | `#chapter-1` | Repeated answer confirmation with checkmarks | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h21_22.png` | “Bug or feature?” stage vs layer | `#chapter-1` | Q&A: reference/payload vs sublayer behavior | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h11_57.png` | Live stage baseline view | `#chapter-1` | Start of cube scale live demonstration | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h17_35.png` | Two cubes baseline | `#chapter-1` | “I have these two cubes… one in cm, one in m” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h17_56.png` | Massive cube via sublayer | `#chapter-1` | “As sublayer… opposite to what you expect… massive!” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h18_28.png` | Cone orientation setup | `#chapter-1` | Start of orientation mismatch demo | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h18_54.png` | Single cone view | `#chapter-1` | Transition to blue cone comparison | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h19_38.png` | Corrected vs uncorrected cones | `#chapter-1` | “Omniverse recognizes orientation difference” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h19_45.png` | Rotation value (-90 deg) | `#chapter-1` | “You can see -90 degrees applied” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h23_41.png` | Mesh anatomy fields | `#chapter-2` | “When creating a mesh, these are out-of-box properties” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h27_01.png` | Minimum render elements question | `#chapter-2` | “Which is minimum required for viewport rendering?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h29_05.png` | USDA snippet question | `#chapter-2` | “Considering the following USDA, select statements…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h32_39.png` | USDA snippet answer | `#chapter-2` | “Option C renders but not as a valid cube…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h33_09.png` | Correct USD structure question | `#chapter-2` | “Which USDA has a quality/correct structure?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h36_10.png` | Correct structure highlight | `#chapter-2` | “C is correct” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h36_19.png` | `UsdGeomImageable` context | `#chapter-3` | “Anything visualizable inherits from UsdGeomImageable” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h39_30.png` | Inheritance map | `#chapter-3` | “Here you can see what inherits from this class” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h40_50.png` | Visibility + purpose controls | `#chapter-3` | “Two ways to control what is visualized” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h42_49.png` | Effective purpose question | `#chapter-3` | “What list gives effective purpose…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h46_34.png` | Effective purpose answer | `#chapter-3` | Walkthrough of root/xform purpose resolution | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h47_50.png` | Included purposes question | `#chapter-3` | “Given this stage and renderer settings, what renders?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h50_56.png` | Included purposes answer | `#chapter-3` | “Current answer is B” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h51_24.png` | Light type matching question | `#chapter-4` | “For each light kind, which use case?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h51_17.png` | Light type matching answer | `#chapter-4` | Dome/sphere/cylinder/distant/rect mapping | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h53_26.png` | Typed vs API schema question | `#chapter-4` | “Which prims created by this script…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h55_16.png` | Typed vs API answer | `#chapter-4` | “Only world B…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h55_37.png` | Hydra real-light question | `#chapter-4` | “Which prim is treated as real light by Hydra?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h57_03.png` | Hydra real-light answer | `#chapter-4` | “B is correct” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h57_17.png` | LightAPI semantics question | `#chapter-4` | “What is `UsdLux.LightAPI`?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h57_43.png` | LightAPI semantics answer | `#chapter-4` | “Adds light-related properties without changing type” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h58_08.png` | LightAPI consequence question | `#chapter-4` | “After finding LightAPI, which is possible?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h58_25.png` | Visibility control question/answer | `#chapter-4` | “Which trait controls visibility via `UsdGeomImageable`?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_20h58_28.png` | Material binding naming | `#chapter-5` | “Naming convention for materials and primvars…” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h00_37.png` | Collection binding example | `#chapter-5` | “Example: bind to collection of prims” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h01_40.png` | Binding inheritance question | `#chapter-5` | “Which material is applied to each mesh?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h04_29.png` | Binding inheritance answer (alt) | `#chapter-5` | Clarification on inheritance + local override | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h12_00.png` | Primvar interpolation overview | `#chapter-6` | “You need to know the 5 interpolation modes” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h05_58.png` | Constant interpolation | `#chapter-6` | “Constant: one value for whole mesh” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h06_42.png` | Uniform interpolation | `#chapter-6` | “Uniform: one value per face” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h07_04.png` | Vertex interpolation | `#chapter-6` | “Vertex: one value per point” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h07_25.png` | Varying interpolation | `#chapter-6` | “Varying is close to vertex on simple meshes” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h08_11.png` | FaceVarying interpolation | `#chapter-6` | “FaceVarying: one value per face corner” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h09_23.png` | Primvar authored question | `#chapter-6` | “Given this mesh, which primvars are correctly authored?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h10_47.png` | Primvar authored answer | `#chapter-6` | “B and D are correct” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h11_02.png` | Primvar follow-up (alt) | `#chapter-6` | Follow-up explanation with same dataset | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h13_13.png` | Primvar Q&A follow-up | `#chapter-6` | “Constant always needs one value” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h13_30.png` | TimeCodes/FPS precedence | `#chapter-7` | “You can have different timeCode/FPS configs” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h14_43.png` | Time precedence (alt capture) | `#chapter-7` | Same slide, second capture | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h14_35.png` | Time sample query question | `#chapter-7` | “Which option checks sphere position at time 35?” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h16_00.png` | Time sample question (duplicate capture) | `#chapter-7` | Duplicate of same question state | Not embedded inline (indexed duplicate) |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h18_03.png` | Time sample question (duplicate capture) | `#chapter-7` | Duplicate of same question state | Not embedded inline (indexed duplicate) |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h23_06.png` | Time sample question (duplicate capture) | `#chapter-7` | Duplicate of same question state | Not embedded inline (indexed duplicate) |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h17_15.png` | Live time-sample demo attempt | `#chapter-7` | “I wanted to show this in VS Code… screen-share attempt” | Used |
-| `Rendering_VisualizingOpenUSD_Scenes_2026-03-02_21h11_19.png` | Primvar follow-up (chat overlay capture) | `#chapter-6` | Same follow-up moment as 21h11_02 and 21h13_13 | Not embedded inline (indexed duplicate) |
 
 ---
 

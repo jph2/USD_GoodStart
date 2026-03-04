@@ -1,32 +1,85 @@
 # Understanding Composition Arcs — Video Deep-Dive Tutorial
 
-**Version**: 0.2.1 | **Date**: 03.03.2026 | **Time**: 21:05 | **GlobalID**: 20260303_1900_USD_GoodStart_026
+**Version**: 0.2.8 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260303_1900_USD_GoodStart_026
 
 **Tag block:**
 #openusd #composition_arcs #livrps #layers #references #payloads #inherits #specializes #variants #digital_twin #certification #best_practices
 
 
 **Canonical Video Source:** [YouTube — Understanding Composition Arcs | OpenUSD Community Office Hours](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=12s) [1 — YouTube video](#link-1)  
-**Presenter:** Austin Hwang (with Edmar + Madi from NVIDIA)  
+**Presenter:** Austin Hwang  
+**NVIDIA Session Hosts / Contributors:** Edmar Candelario, Matias "Mati" Codesal, and Ashley Goldstein  
 **Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/)  
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 — Learn OpenUSD curriculum](#link-2)  
 **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [3 — Awesome OpenUSD](#link-3)  
 **Certification Series:** [The Path to OpenUSD Certification — Community Office Hours (YouTube Playlist)](https://youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb&si=JXpXQbFD7-snbq84) [23 — Certification series playlist](#link-23)  
 **Part of USD GoodStart:** an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, start with the [USD GoodStart README](https://github.com/jph2/USD_GoodStart/blob/main/README.md) [24 — USD GoodStart README](#link-24)
 
-**Most important resources (keep these open):** [3 — Awesome OpenUSD](#link-3), [2 — Learn OpenUSD curriculum](#link-2), [23 — Certification series playlist](#link-23)
+**Most important resources (keep these open):** [3 — Awesome OpenUSD](#link-3), [2 — Learn OpenUSD curriculum](#link-2), [23 — Certification series playlist](#link-23), [26 — USD WG Composition Puzzles](#link-26), [27 — Composition / aggregation reference deck](#link-27)
+
+## Series Position
+
+This tutorial is part of the OpenUSD certification deep-dive series.
+
+1. [Understanding Composition Arcs](./Understanding%20Composition%20Arcs__VIDEO_DEEP_DIVE_TUTORIAL.md) - current tutorial
+2. [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+3. [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
+5. Rendering and Visualizing OpenUSD Scenes - coming soon
+6. Session 6 - coming soon
+
+---
+
+> **Part of USD GoodStart** — this deep dive is designed to be used inside the `USD_GoodStart` repository, not as a standalone blog post. For repo structure, conventions, and hands-on setup scripts, start with [README.md](../README.md). This tutorial lives in `WIP_Docs`.
+
+---
+
+## The Five-Minute Version
+
+You can memorize every composition arc and still get blindsided in production. What actually hurts is this:
+
+- Someone asks “where did that value come from?” and nobody can answer.
+- Two teams authored “the same” prim from different files — and the winner changed when the layer stack order changed.
+- A variant selection looks correct in one tool and wrong in another because the selection was never authored where you think it was.
+- You reference an asset and the edit you expected to override it doesn’t — because you were reasoning about the wrong arc strength.
+
+This tutorial gives you one reliable mental model: **LIVRPS** as a trace procedure.
+
+By the end, you’ll be able to:
+
+- Predict which opinion wins for a property and explain why in one sentence.
+- Trace a composed value back to its authored source (fast, under review pressure).
+- Choose the right arc for the job (and recognize the failure mode when you chose wrong).
+
+### Mental model map (quick view)
+
+```mermaid
+flowchart LR
+    Authored["Authored opinions"] --> Trace["Trace in LIVRPS order"]
+    Trace --> Winner["Find winning opinion"]
+    Winner --> Explain["Explain source + strength"]
+    Explain --> Fix["Apply minimal fix at correct layer/arc"]
+```
+
+> **Companion video:** Timestamps are provided so you can watch a short segment, then return here to connect the concept to a production debugging procedure.
 
 ---
 
 ## Before You Start (Quick Setup)
 
-- USD Python environment with `pxr`
-- `usdview` installed
-- This deep-dive file + key-moment screenshot folder open side-by-side
+You want:
+
+- A working USD + Python environment (`pxr`)
+- `usdview` installed for visual inspection
+- This deep-dive file open alongside the companion video timestamps
 
 Setup reference:
-- [Learn OpenUSD — usdview + Python setup](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [25 — setup](#link-25)
+- [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [25 — setup](#link-25)
+- [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim)
+- [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab)
+- [Omniverse Kit App Template (GitHub, Composer -> Kit App path)](https://github.com/NVIDIA-Omniverse/kit-app-template)
 
+### Optional exam context assets
 
 [![Key moment — certification context](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)](Pics/UnderstandingCompositionArcs/UCA1__2026-03-03_40_55.png)
 
@@ -141,6 +194,16 @@ flowchart TD
 | [Chapter 5](#chapter-5) | [27:53](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=1673s) | LIVRPS tracing | Trace opinion resolution in exam-style multi-file setups. | [12 — LIVRPS](#link-12), [13 — Stage API](#link-13) |
 | [Chapter 6](#chapter-6) | [40:01](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=2401s) | Practical exam strategy | Recognize question patterns and avoid common traps. | [14 — Certification page](#link-14), [15 — Pixar tutorials](#link-15) |
 | [Chapter 7](#chapter-7) | [51:13](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=3073s) | Debug / production behavior | Build a repeatable debug checklist for composition issues. | [16 — Asset structure](#link-16), [17 — Value resolution](#link-17) |
+
+---
+
+## Key Moments Index
+
+| Timestamp | Transcript cue | Why this moment matters |
+|---|---|---|
+| [09:08](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=548s) | Composition arcs introduction | Establishes the practical decision model for arc selection under production pressure. |
+| [27:53](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=1673s) | LIVRPS tracing begins | Shows how to resolve "which opinion wins?" without guesswork. |
+| [40:01](https://www.youtube.com/watch?v=85gC4Vja5Uo&t=2401s) | Exam strategy and failure patterns | Maps composition mistakes to repeatable debug procedure and certification framing. |
 
 ---
 
@@ -709,11 +772,11 @@ The slides show a common exam pattern: **a small composed stage** built from sev
 
 Even if the exact filenames/paths differ in the exam, the *trace method* is the same. Below is a faithful reconstruction of the structure shown in the slide. Three files compose; the fourth (`ball.usda`) is an exam distractor not in the composition.
 
-*Formatting note:* For readability in this Markdown setup, some **USDA snippets below use `py` fences** even though the content is USDA text.
+*Formatting note:* USDA snippets below use `usda` fences (the content is scene description text, not Python).
 
 #### `root.usda` (sublayers, inherits, references, local opinion)
 
-```py
+```usda
 #usda 1.0
 (
     defaultPrim = "root"
@@ -737,7 +800,7 @@ def Sphere "root" (
 
 #### `ball.usda` (exam distractor — not in this composition)
 
-```py
+```usda
 #usda 1.0
 
 def Sphere "Ball"
@@ -752,7 +815,7 @@ def Sphere "Ball"
 
 #### `shading.usda` (references asset, variant set)
 
-```py
+```usda
 #usda 1.0
 
 def "Ball" (
@@ -782,7 +845,7 @@ def "Ball" (
 
 *Pedagogic note:* `asset.usda` enters the composition via two paths — **sublayered** into `root.usda` (so `/ball_asset` is available for inherits) and **referenced** from `shading.usda`'s `/Ball`. When tracing, ask: "Which path brought this opinion?" The inherits arc pulls from the sublayered class; the reference arc brings shading's variant set. Local on `root` wins over both.
 
-```py
+```usda
 #usda 1.0
 (
     defaultPrim = "ball_asset"
@@ -981,6 +1044,38 @@ Residual gap:
 
 ---
 
+## If You Remember Only 8 Things
+
+1. Choose arcs by collaboration intent, not syntax preference.
+2. Treat LIVRPS as a trace procedure, not a memorization game.
+3. Keep ownership boundaries explicit across layers.
+4. Verify winner opinions before making pipeline decisions.
+5. Use payloads intentionally for runtime scale and review speed.
+6. Separate visualization symptoms from composition root causes.
+7. Preserve deterministic paths and stage contracts.
+8. Document debug results so the next person can reproduce them.
+
+---
+
+## Industrial Digital Twin Continuity (Series Crosswalk)
+
+| Scenario | Why this tutorial matters there | Where to continue |
+|---|---|---|
+| Packaging Cell 3 commissioning | Composition arcs govern who wins and why in cross-team authoring. | [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Data-model-driven Station 7 | Arc choices must preserve stable typed data and query paths. | [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+| Visualization review pipelines | Wrong composition decisions often surface first as render/visibility trust failures. | [Rendering and Visualizing OpenUSD Scenes](./Rendering%20and%20Visualizing%20OpenUSD%20Scenes__VIDEO_DEEP_DIVE_TUTORIAL.md) |
+
+---
+
+## Appendix - Debug Playbook (Composition)
+
+- Symptom: unexpected color/value on prim -> Likely cause: stronger opinion in another arc/layer -> Quick check: inspect composition stack and trace LIVRPS order.
+- Symptom: duplicate or missing asset -> Likely cause: wrong reference/sublayer entry path or duplicate insertion -> Quick check: audit all contributors and verify `defaultPrim`/paths.
+- Symptom: slow stage open -> Likely cause: heavy assets not payloaded -> Quick check: convert heavy branches to payload strategy and test load behavior.
+- Symptom: works in one tool but not another -> Likely cause: tool defaults hide composition issue -> Quick check: validate in `usdview` + inspect authored data, not viewport alone.
+
+---
+
 ## Links
 
 <a id="link-1"></a>
@@ -1057,6 +1152,12 @@ Residual gap:
 
 <a id="link-25"></a>
 25. **usdview + Python Setup** — https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html
+
+<a id="link-26"></a>
+26. **USD WG — Composition Puzzles** — https://github.com/usd-wg/assets/tree/main/docs/CompositionPuzzles
+
+<a id="link-27"></a>
+27. **Composition / aggregation reference deck (Aaron Luk recommendation)** — https://drive.google.com/file/d/1lh-28b4mN37WrH2zVM5d0YQ2gZtS8wNO/view?usp=drive_link
 
 **Most important wrap-up:** keep [3 — Awesome OpenUSD](#link-3) and [2 — Learn OpenUSD curriculum](#link-2) open while studying or implementing.
 
