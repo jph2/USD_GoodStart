@@ -1,32 +1,49 @@
 # What You Should Know About Content Aggregation — Video Deep-Dive Tutorial
 
-**Version**: 0.1.17 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260302_2310_USD_GoodStart_027
+**Version**: 0.3.6 | **Date**: 05.03.2026 | **Time**: 01:45 | **GlobalID**: 20260305_0145_USD_GoodStart_036
 
 **Tag block:**
 #openusd #content_aggregation #composition #layers #references #payloads #digital_twin #best_practices #certification #video_deep_dive
 
 **Canonical Video Source:** [YouTube - What You Should Know About Content Aggregation](https://www.youtube.com/watch?v=LFCauWTNBM4&list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb&index=2) [1 - YouTube video](#link-1)  
-**Presenter:** Hailey Ahn  
+**Presenter:** [Hailey Ahn](https://www.linkedin.com/in/hailey-ahn/)  
 **NVIDIA Session Hosts / Contributors:** Matias "Mati" Codesal, Ashley Goldstein, and rotating NVIDIA hosts including Edmar  
-**Video Deep-Dive Tutorial** build post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/)  
+**Video Deep-Dive Tutorial** built post factum by [Jan Haluszka](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/)  
 **Primary Learning Backbone:** [NVIDIA Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) [2 - Learn OpenUSD curriculum](#link-2)  
 **Awesome OpenUSD Learning Resource:** [Mati AWESOME - OpenUSD](https://github.com/matiascodesal/awesome-openusd) [3 - Awesome OpenUSD](#link-3)  
 **Certification Series:** [The Path to OpenUSD Certification - Community Office Hours (YouTube Playlist)](https://youtube.com/playlist?list=PL3jK4xNnlCVf3HuZD4qOWlKlouJyh6Prb&si=JXpXQbFD7-snbq84) [4 - Certification series playlist](#link-4)  <br>
 
-**Part of USD GoodStart:** an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, start with the [USD GoodStart README](https://github.com/jph2/USD_GoodStart/blob/main/README.md) [5 - USD GoodStart README](#link-5)
+**Part of USD GoodStart:** an open-source project template and learning path for getting started with OpenUSD composition, layering, and digital twin workflows. This tutorial lives inside that repository. For the full project structure, layer-stacking conventions, and hands-on setup scripts, start with [README.md](../README.md) [5 - USD GoodStart README](#link-5) (optional upstream overview: [USD GoodStart on GitHub](https://github.com/jph2/USD_GoodStart)).
 
 **Most important resources (keep these in mind):** [3 - Awesome OpenUSD](#link-3), [2 - Learn OpenUSD curriculum](#link-2), [4 - Certification series playlist](#link-4), [17 - Week 2 slides](#link-17), [19 - Kitchen Set](#link-19), [66 - Composition Puzzles](#link-66), [67 - Composition / aggregation reference deck](#link-67)
+
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_09.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_09.png" alt="Key moment - 7:08" width="900" /></a>
 
 ## Series Position
 
 This tutorial is part of the OpenUSD certification deep-dive series.
 
 1. [Understanding Composition Arcs](./Understanding%20Composition%20Arcs__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
-2. [What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - current tutorial
+2. **[What You Should Know About Content Aggregation](./WhatYouShouldKnowAboutContentAggregation__VIDEO_DEEP_DIVE_TUTORIAL.md) - current tutorial**
 3. [Customizing OpenUSD for Your Pipeline](./Customizing_OpenUSD_for_Your_Pipeline__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
 4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
 5. Rendering and Visualizing OpenUSD Scenes - coming soon
 6. Session 6 - coming soon
+
+<a href="file:///C:/Users/jan/.cursor/projects/e-SynologyDrive-9999-LocalRepo-General-Dev-cursor/assets/c__Users_jan_AppData_Roaming_Cursor_User_workspaceStorage_30c8c09296254163444169cbe632dd1b_images_ContentAggregation_8h21_09-a68e668a-3b9f-47e1-b62a-bdad0e8f15ed.png"><img src="file:///C:/Users/jan/.cursor/projects/e-SynologyDrive-9999-LocalRepo-General-Dev-cursor/assets/c__Users_jan_AppData_Roaming_Cursor_User_workspaceStorage_30c8c09296254163444169cbe632dd1b_images_ContentAggregation_8h21_09-a68e668a-3b9f-47e1-b62a-bdad0e8f15ed.png" alt="Opening slide - Content Aggregation" width="900" /></a>
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png" alt="Key moment - 3:13" width="900" /></a>
+
+**Certification + livestream structure**: the series is designed to make you exam-ready and production-ready, not just “USD-aware”.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png" alt="Slide - Weekly topics (Week 2: Content Aggregation)" width="900" /></a>
+
+
+**Week 2 focus**: content aggregation is where “I can author USD” turns into “I can ship a stable, debuggable, multi-file scene”.
+
+If you want the canonical slide deck for cross-checking (and for your own notes), keep this open: [17 - Week 2 slides](#link-17).
+
 
 ---
 
@@ -35,6 +52,17 @@ This tutorial is part of the OpenUSD certification deep-dive series.
 ---
 
 ## The Five-Minute Version
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png" alt="Slide - About presenter: Hailey Ahn" width="900" /></a>
+
+This session is presented by **Hailey Ahn** (OpenUSD certified) and is intentionally shaped like an exam-study lesson: slides + example questions + a Houdini/Solaris walk-through using the Kitchen Set.
+
+What matters for this deep dive: we are not just learning terminology. We are learning how to make an **aggregate stage** that stays stable across:
+- different contributors,
+- different tools,
+- and different load/debug contexts.
+
+
+---
 
 You can “make a stage open” and still ship something nobody can trust. Aggregation problems usually show up like this:
 
@@ -81,17 +109,15 @@ You want:
 
 Setup reference:
 - [Learn OpenUSD — Installing usdview and Setting Up Python](https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html) [6 - setup](#link-6)
-- [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim)
-- [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab)
-- [Omniverse Kit App Template (GitHub, Composer -> Kit App path)](https://github.com/NVIDIA-Omniverse/kit-app-template)
 
 ### Optional session-specific prep
 
-- Transcript file available
-- Screenshot folder ready for key moments
+- Transcript is included at the end of this document (see [Appendix - Full Transcript](#appendix---full-transcript-verbatim-paste-zone)).
+- Screenshots are in [Pics/WhatYouShouldKnowAboutContentAggregation/](Pics/WhatYouShouldKnowAboutContentAggregation/).
 - [NVIDIA Omniverse Discord](https://discord.gg/nvidiaomniverse) [18 - community Discord](#link-18)
 - [OpenUSD Kitchen Set sample asset](https://openusd.org/release/dl_kitchen_set.html) [19 - Kitchen Set](#link-19)
 - [OpenUSD downloads and videos](https://openusd.org/dev/dl_downloads.html) [20 - Downloads](#link-20)
+- (Optional) Industrial runtime context: [Isaac Sim (GitHub)](https://github.com/isaac-sim/IsaacSim), [Isaac Lab (GitHub)](https://github.com/isaac-sim/IsaacLab), [Omniverse Kit App Template (GitHub)](https://github.com/NVIDIA-Omniverse/kit-app-template)
 
 ---
 
@@ -101,6 +127,15 @@ Two-layer structure:
 
 1. **Story layer** - one narrative thread across all chapters.
 2. **Production layer** - practical pipeline behavior, checks, and pitfalls.
+
+### Repeating chapter pattern (so the tutorial stays “round”)
+
+Each chapter intentionally follows the same shape:
+
+- **Video frames (chronological)**: the key slides / Houdini screenshots in order (click-to-open).
+- **Frame notes**: what you’re seeing, why it matters, and where it connects to the kitchen story and the digital-twin story.
+- **Key moment and interpretation**: the decision you should remember for the exam *and* for real pipelines.
+- **Breakout**: a small, runnable (or pseudocode) snippet that turns the idea into something you can test.
 
 ### Story anchor for this session: Kitchen Set (Hailey’s kitchen scene)
 
@@ -127,31 +162,34 @@ Content aggregation mistakes can silently produce:
 
 ## Chapter Outcomes at a Glance
 
-| Chapter | Video section (approx) | Exam topic | Outcome | Learn OpenUSD quick jump |
-|---|---|---|---|---|
-| [Chapter 0](#chapter-0) | [`03:13`](https://www.youtube.com/live/LFCauWTNBM4?t=193)-[`08:40`](https://www.youtube.com/live/LFCauWTNBM4?t=520) | Why aggregation matters | Explain aggregation as a production reliability problem. | [2 - Curriculum](#link-2), [7 - Glossary](#link-7) |
-| [Chapter 1](#chapter-1) | [`08:40`](https://www.youtube.com/live/LFCauWTNBM4?t=520)-[`16:30`](https://www.youtube.com/live/LFCauWTNBM4?t=990) | Aggregation primitives | Distinguish sublayers, references, payloads, and composition intent. | [8 - Introduction to composition](#link-8) |
-| [Chapter 2](#chapter-2) | [`16:30`](https://www.youtube.com/live/LFCauWTNBM4?t=990)-[`27:30`](https://www.youtube.com/live/LFCauWTNBM4?t=1650) | Sublayer strategy | Use sublayers for same-namespace collaboration with predictable strength. | [9 - Layers and sublayers](#link-9) |
-| [Chapter 3](#chapter-3) | [`27:30`](https://www.youtube.com/live/LFCauWTNBM4?t=1650)-[`37:30`](https://www.youtube.com/live/LFCauWTNBM4?t=2250) | Reference strategy | Use references for reusable assets and namespace isolation. | [10 - References](#link-10) |
-| [Chapter 4](#chapter-4) | [`37:30`](https://www.youtube.com/live/LFCauWTNBM4?t=2250)-[`46:30`](https://www.youtube.com/live/LFCauWTNBM4?t=2790) | Payload strategy | Use payloads for scalable deferred loading workflows. | [11 - Payloads](#link-11) |
-| [Chapter 5](#chapter-5) | [`46:30`](https://www.youtube.com/live/LFCauWTNBM4?t=2790)-[`52:30`](https://www.youtube.com/live/LFCauWTNBM4?t=3150) | Overrides and conflict tracing | Trace winning opinions in aggregated scenes. | [12 - LIVRPS](#link-12), [13 - Value resolution](#link-13) |
-| [Chapter 6](#chapter-6) | [`52:30`](https://www.youtube.com/live/LFCauWTNBM4?t=3150)-[`56:00`](https://www.youtube.com/live/LFCauWTNBM4?t=3360) | Pipeline anti-patterns | Identify common aggregation failures and safer authoring patterns. | [14 - Asset structure](#link-14), [15 - Stage API](#link-15) |
-| [Chapter 7](#chapter-7) | [`56:00`](https://www.youtube.com/live/LFCauWTNBM4?t=3360)-end | Production checklist | Apply a repeatable validation checklist for aggregation readiness. | [16 - Best practices index](#link-16) |
+| Chapter | Video section (approx) | Pillar | Outcome |
+|---|---|---|---|
+| [Chapter 1](#chapter-1) | [`03:13`](https://www.youtube.com/live/LFCauWTNBM4?t=193)-[`12:57`](https://www.youtube.com/live/LFCauWTNBM4?t=777) | Asset Structure Principles | Explain aggregation and the four pillars. |
+| [Chapter 2](#chapter-2) | [`12:57`](https://www.youtube.com/live/LFCauWTNBM4?t=777)-[`16:30`](https://www.youtube.com/live/LFCauWTNBM4?t=990) | Asset Interface and Encapsulation | Use default prim and encapsulation for portable assets. |
+| [Chapter 3](#chapter-3) | [`16:30`](https://www.youtube.com/live/LFCauWTNBM4?t=990)-[`46:30`](https://www.youtube.com/live/LFCauWTNBM4?t=2790) | Reference/Payload Pattern | Use sublayers, references, payloads by intent. |
+| [Chapter 4](#chapter-4) | [`22:29`](https://www.youtube.com/live/LFCauWTNBM4?t=1349)-[`28:07`](https://www.youtube.com/live/LFCauWTNBM4?t=1687) | Asset Parameterization | Use variants and primvars instead of duplication. |
+| [Chapter 5](#chapter-5) | [`26:32`](https://www.youtube.com/live/LFCauWTNBM4?t=1592)-[`52:30`](https://www.youtube.com/live/LFCauWTNBM4?t=3150) | Lofting & Workstreams | Structure department lanes and trace winning opinions. |
+| [Chapter 6](#chapter-6) | [`34:39`](https://www.youtube.com/live/LFCauWTNBM4?t=2079)-end | Model Hierarchy | Apply model kinds, avoid anti-patterns, run checklist. |
+
+**Note on timestamps:** this livestream revisits pillars and overlaps topics (especially around the reference/payload pattern, lofting, and model hierarchy). Treat the ranges above as **jump-in anchors**, not strict boundaries — use the [Key Moments Index](#key-moments-index) when you want the most reliable YouTube jump target for a specific concept.
 
 ---
 
 ## Key Moments Index
 
-| Timestamp in video | Transcript cue | Why this moment matters |
-|---|---|---|
-| [`03:13`](https://www.youtube.com/live/LFCauWTNBM4?t=193) | "We built the Learn OpenUSD curriculum to prepare you for that." | Connects certification intent to practical learning path and sets expectations for the tutorial's structure. |
-| [`04:48`](https://www.youtube.com/live/LFCauWTNBM4?t=288) | "Content aggregation... how to apply this practically." | Marks the shift from concept definitions to workflow execution in real pipelines. |
-| [`08:42`](https://www.youtube.com/live/LFCauWTNBM4?t=522) | "Legibility, modularity, performance, navigability." | Establishes the decision rubric used in Chapters 1 and 2 for mechanism choice. |
-| [`09:03`](https://www.youtube.com/live/LFCauWTNBM4?t=543) | "Give an example question." | Transition into concrete decision-making, not abstract theory. |
-| [`22:04`](https://www.youtube.com/live/LFCauWTNBM4?t=1324) | "Where do we put this mug?" | Classic aggregation choice point used to explain why "it depends on intent." |
-| [`32:48`](https://www.youtube.com/live/LFCauWTNBM4?t=1968) | "Use sublayers, references, or payloads based on purpose." | Strong mid-session checkpoint where chapter concepts align with production choices. |
-| [`48:16`](https://www.youtube.com/live/LFCauWTNBM4?t=2896) | "What breaks when composition intent is unclear." | Captures failure-mode framing that maps directly to digital-twin review risk. |
-| [`56:10`](https://www.youtube.com/live/LFCauWTNBM4?t=3370) | "Practical recap before close." | Summarizes the operational checklist mindset needed for handoff-ready aggregates. |
+| Timestamp in video | Slide | Transcript cue | Why this moment matters |
+|---|---|---|---|
+| [`02:25`](https://www.youtube.com/live/LFCauWTNBM4?t=145) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_25.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_25.png" alt="Key moment - 2:25" width="180" /></a> | Certification exam context | Anchors the session as certification-focused and sets expectations for how practical the examples will be. |
+| [`03:13`](https://www.youtube.com/live/LFCauWTNBM4?t=193) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png" alt="Key moment - 3:13" width="180" /></a> | "We built the Learn OpenUSD curriculum to prepare you for that." | Connects certification intent to practical learning path and sets expectations for the tutorial's structure. |
+| [`04:48`](https://www.youtube.com/live/LFCauWTNBM4?t=288) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png" alt="Slide - About presenter: Hailey Ahn" width="180" /></a> | "Content aggregation... how to apply this practically." | Marks the shift from concept definitions to workflow execution in real pipelines. |
+| [`08:42`](https://www.youtube.com/live/LFCauWTNBM4?t=522) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png" alt="Slide - Four Pillars of Asset Structure" width="180" /></a> | "Legibility, modularity, performance, navigability." | Establishes the decision rubric used in Chapters 1 and 2 for mechanism choice. |
+| [`09:32`](https://www.youtube.com/live/LFCauWTNBM4?t=572) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png" alt="Key moment - 9:32" width="180" /></a> | "Give an example question." | Transition into concrete decision-making, not abstract theory. |
+| [`13:00`](https://www.youtube.com/live/LFCauWTNBM4?t=780) | — | "Asset Interface & Encapsulation" | Introduces default prim and encapsulation for portable assets (Ch 2). |
+| [`20:04`](https://www.youtube.com/live/LFCauWTNBM4?t=1204) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_39.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_39.png" alt="Key moment - 20:04" width="180" /></a> | "Reference = metadata layer, payload = heavy content layer." | Introduces the reference/payload split that keeps interfaces visible without loading heavy geometry. |
+| [`24:43`](https://www.youtube.com/live/LFCauWTNBM4?t=1483) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png" alt="Key moment - 24:43" width="180" /></a> | "Variants in practice (Chair switching)." | Shows why parameterization needs payload-aware structure to stay usable in review. |
+| [`26:32`](https://www.youtube.com/live/LFCauWTNBM4?t=1592) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_23.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_23.png" alt="Key moment - 26:32" width="180" /></a> | "Lofting & workstreams." | Shows the workstream lane structure teams use to collaborate without overwriting each other. |
+| [`48:16`](https://www.youtube.com/live/LFCauWTNBM4?t=2896) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png" alt="Key moment - 48:16" width="180" /></a> | "Be kind to the pipeline (kinds in the scene graph)." | Kinds turn a pile of prims into a navigable hierarchy and prevent downstream assumptions from breaking. |
+| [`56:10`](https://www.youtube.com/live/LFCauWTNBM4?t=3370) | <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png" alt="Key moment - 56:10" width="180" /></a> | "Kinds recap + Q&A pressure test." | Reinforces that model kinds are a collaboration contract, not a cosmetic label. |
 
 Rules:
 
@@ -160,11 +198,34 @@ Rules:
 
 ---
 
-<a id="chapter-0"></a>
-## Chapter 0 - Why Content Aggregation Is a Core OpenUSD Skill
+<a id="chapter-1"></a>
+## Chapter 1 - Asset Structure Principles
 
-**Video section (approx):** `03:13-08:40`  
+**Video section (approx):** `03:13-12:57`  
 **Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=193)
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+
+Hailey opens with the title slide that sets the tone: **“Content Aggregation (also known as: how to actually LIVRPS!)”**. This isn't just wordplay — it's the moment when your mental model of strength ordering stops being theory and starts being a daily debugging tool. **Learn more:** [8 - Introduction to composition](#link-8), [12 - LIVRPS](#link-12), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_12.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_12.png" alt="Key moment - 8:00" width="900" /></a>
+
+The agenda slide reveals the full arc: asset structure → asset interface/encapsulation → reference/payload pattern → parameterization → lofting/workstreams → model hierarchy. **Stable aggregation is not one feature — it's a contract bundle.** Structure, interface, load policy, parameterization, collaboration lanes, and hierarchy all have to align. When Hailey's kitchen scene is assembled, every one of these decisions will matter. When you build a Packaging Cell 3 stage, the same bundle determines whether departments can ship updates without collisions. **Learn more:** [14 - Asset structure](#link-14), [10 - References](#link-10), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png" alt="Key moment - 9:32" width="900" /></a>
+
+Hailey lands the central question: *"I just wanted to resize my mug. Where do I put it?"* It sounds like a joke, but it's the pivot point. A tiny change forces you to choose the *right* contribution mechanism — sublayer, reference, or payload — based on intent, not convenience. In the kitchen, this is the mug. In Packaging Cell 3, it's the robot position or the status overlay. Same decision. **Learn more:** [8 - Introduction to composition](#link-8), [12 - LIVRPS](#link-12), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png" alt="Slide - Four Pillars of Asset Structure" width="900" /></a>
+
+The Four Pillars — **Legibility, Modularity, Performance, Navigability** — become your decision rubric. They explain *why* some aggregation styles scale and others rot. When you ask "where does this mug go?", you're really asking: can another team understand where this opinion came from? Can teams contribute without stepping on each other? Does this mechanism support staged loading? Can someone trace source and intent during review? **Learn more:** [14 - Asset structure](#link-14), [16 - Best practices index](#link-16)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png" alt="Slide - Example question (1): naming leaks interface" width="900" /></a> <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png" alt="Slide - Example question (1) (answer)" width="900" /></a>
+
+**Now she digs into:** Example question about naming internal prims `geo_final_v3`, `materials_latest`, `rig_backup`. **Why it matters:** those names blur *public interface* vs *internal implementation*. Downstream teams start binding to "whatever was there today," and you lose the ability to restructure safely. **Learn more:** [14 - Asset structure](#link-14), [69 - Prims](#link-69)
 
 ### Intro bridge
 
@@ -173,14 +234,14 @@ Aggregation is where individual USD authoring decisions become a system behavior
 ### Concept -> What breaks -> How to test
 
 - **Concept:** Aggregation combines authored content from multiple files and teams.
-- **What breaks:** Conflicting opinions, hidden load behavior, unclear ownership.
+- **What breaks:** Path/contract mismatches, duplicate entry points (double-inclusion), long-lived “review fix” layers, hidden load state (payloads), and unclear ownership of the winning opinion.
 - **How to test:** Open stage, inspect composition stack, verify expected contributors.
 
 ### Kitchen checkpoint (carry-forward)
 
 - **Kitchen decision:** Treat the kitchen stage as a *composed* result, not a single “scene file.” If the mug looks wrong, assume the answer is “which contributor won,” not “somebody moved it.”
 - **What you just encoded:** A debugging habit: first identify contributors (layers/assets), then inspect composition/strength, then validate the contract.
-- **Carry forward into Chapter 1:** Before choosing any mechanism, ask one question for each change: “Should this opinion merge into the same namespace (sublayer), be inserted as a reusable module (reference), or be deferred by load policy (payload)?”
+- **Carry forward into Chapter 2:** Before choosing any mechanism, ask: “Can I move this asset into a folder without breaking everything downstream?” Interface and encapsulation are the next layer.
 
 ### Script Lab (planned / not yet committed)
 
@@ -188,101 +249,139 @@ Aggregation is where individual USD authoring decisions become a system behavior
 
 ---
 
-<a id="chapter-1"></a>
-## Chapter 1 - Choosing the Right Aggregation Mechanism
+<a id="chapter-2"></a>
+## Chapter 2 - Asset Interface and Encapsulation
 
-**Video section (approx):** `08:40-16:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=520s)
+**Video section (approx):** `12:57-16:30`  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=777)
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_26.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_26.png" alt="Key moment - 12:57" width="900" /></a>
+
+**At this moment:** Section header: **Asset Interface & Encapsulation**. **Why it matters:** in production, "aggregation reliability" is mostly "interface stability". Encapsulation is how you keep interfaces stable while internals evolve. **Learn more:** [68 - Default prim](#link-68), [14 - Asset structure](#link-14)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_48.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_48.png" alt="Key moment - 13:45" width="900" /></a> <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_52.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_52.png" alt="Key moment - 14:34" width="900" /></a>
+
+**The key moment:** "Spot the problem" encapsulation example: absolute paths and downstream references to deep internal prim paths (like `/Chair/geo/seat_mesh`) break portability. **Why it matters:** if downstream content points inside an asset's guts, you cannot refactor without breaking consumers. That is exactly how "it works on my machine" stages are created. **Learn more:** [14 - Asset structure](#link-14), [68 - Default prim](#link-68), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_23.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_23.png" alt="Key moment - 15:19" width="900" /></a>
+
+**Here:** "Asset Interface - What Is It?" defining two core interface tools: **Default prim** as the stable entry point for consumers; **Encapsulation** via a clean public surface (`/Chair`, `/Chair/Looks`) hiding `_internal`. **Why it matters:** these are the two interface tools you need to keep consumers stable. **Learn more:** [68 - Default prim](#link-68), [10 - References](#link-10)
 
 ### Intro bridge
 
-This chapter sets the rules of the game. In the kitchen scene, we are not “adding stuff” — we are encoding collaboration intent. The same choice that decides where the mug belongs also decides whether the scene stays predictable when multiple people ship updates in parallel.
+This pillar answers one question: **what is the stable entry point of an asset, and what is private implementation detail?**
 
-**Digital twin breakout (Packaging Cell 3 / Station 7):** this is the difference between “we imported something once” and “we encoded ownership + entry points so departments can keep shipping without collisions.”
+In OpenUSD, aggregation scales when assets behave like modules:
+- `defaultPrim` gives consumers a predictable root to reference.
+- Encapsulation keeps internal prim paths refactorable without breaking downstream stages.
 
-Hailey's framing is strong: mechanism choice is not about favorite syntax. It is about what kind of collaboration contract you are authoring into the stage.
+In the kitchen scene, this is why `/Chair` should be the public surface, while `_internal` is allowed to evolve as the asset matures.
+
+**Digital twin breakout (Packaging Cell 3 / Station 7):** this is why `/Factory/Cell03/Robot` should be a stable contract, while the vendor’s internal hierarchy can change without breaking your cell stage.
+
+Hailey’s "spot the problem" slide is the pitfall: deep internal bindings and absolute paths turn “works here” into “breaks everywhere.”
 
 ### Concept -> What breaks -> How to test
 
-- **Concept:** Different mechanisms encode different collaboration semantics and failure surfaces.
-- **What breaks:** Using sublayers where references are needed (or vice versa) creates hidden coupling, override confusion, and non-reproducible review scenes.
-- **How to test:** Ask one deterministic question first: "Do I want same-namespace layered contribution, or do I need reusable asset insertion with clearer boundaries?"
+- **Concept:** Asset interface = stable entry prim + shallow public paths; encapsulation = keep internals behind that boundary.
+- **What breaks:** Missing/incorrect `defaultPrim`, downstream references to deep internal prim paths, absolute file paths, and “public” naming that leaks implementation detail.
+- **How to test:** Open the asset standalone, verify `defaultPrim`, then simulate moving the asset folder and confirm downstream stages still resolve via the interface (not internals).
 
 ### Mechanism decision quick map
 
-Use this before you touch any authoring:
+Now that the interface is stable, you can choose composition mechanisms *by intent* (Chapter 3 goes deep):
 
-- **Sublayer** when multiple files are one logical stage and should merge opinions in ordered strength.
-- **Reference** when you want reusable assets with explicit composition insertion points.
-- **Payload** when you also need deferred loading behavior for runtime scale.
+- **Sublayer:** stage-level lane, same namespace, ordered strength.
+- **Reference:** reusable module insertion at a stable entry point (`defaultPrim`).
+- **Payload:** deferred loading policy on top of a module boundary.
 
 **Digital twin translation:** facility layout deltas can be sublayers, robot/workcell modules are references, and heavy scan/mesh clusters are payload candidates.
 
 ### Key moment and interpretation
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
-[![Key moment - 8:42 four pillars framing](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_22.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_22.png)
+At this moment, “legibility” and “modularity” become concrete:
+- If consumers only know the entry prim, you can refactor internals safely.
+- If consumers know internal paths, you’re locked in — and aggregation becomes brittle.
 
-At this moment, the "four pillars" are effectively your mechanism decision criteria:
-- **Legibility:** can another team understand where this opinion came from?
-- **Modularity:** can teams contribute without stepping on each other?
-- **Performance:** does this mechanism support staged loading needs?
-- **Navigability:** can someone trace source and intent quickly during review?
+### Breakout - Asset interface sanity check
 
-### Breakout - Mechanism decision pseudocode
+**Checklist (manual):**
+1. Asset opens standalone and has a `defaultPrim`.
+2. Downstream stages reference the asset’s entry prim, not deep internal prim paths.
+3. Public surface is stable (`/Asset`, `/Asset/Looks`), internals are clearly private (`_internal`).
 
-**Raw snippet:**
+**Quick probe (Python):**
 ```py
-if contribution_mode == "same_namespace":
-    use("sublayer")
-elif contribution_mode == "reusable_asset":
-    use("reference")
-if needs_deferred_load:
-    use("payload")
+from pxr import Usd
+
+stage = Usd.Stage.Open(asset_path)
+assert stage.GetDefaultPrim(), "Asset has no defaultPrim"
 ```
-
-**Commented walkthrough:**
-```py
-# Step 1: Decide if files should merge into one namespace.
-# If yes, sublayer is the first candidate.
-if contribution_mode == "same_namespace":
-    use("sublayer")
-
-# Step 2: If this content should remain a reusable module
-# with clearer source boundaries, reference is preferred.
-elif contribution_mode == "reusable_asset":
-    use("reference")
-
-# Step 3: Payload is an additional runtime load policy choice.
-# It is not just "another reference"; it encodes deferred loading intent.
-if needs_deferred_load:
-    use("payload")
-```
-
-**Why this works**
-- It separates **collaboration intent** from **runtime load strategy**.
-- It prevents accidental "one mechanism for everything" anti-patterns.
-
-**Why this fails**
-- It fails when teams skip the first question and jump to what is convenient in one DCC.
-- It fails if payloads are added without explicit load policy documentation.
 
 ### Kitchen checkpoint (carry-forward)
 
-- **Kitchen decision:** For each “where does this belong?” choice (the mug is the memorable one), decide whether you are authoring a *shared stage opinion* (sublayer) or inserting a *reusable asset module* (reference). Only add payload when you also need deferred loading behavior.
-- **What you just encoded:** Collaboration intent first, runtime load policy second — two separate decisions.
-- **Carry forward into Chapter 2:** If you choose sublayers, you must also choose **ownership lanes + stack order** so the next person can predict what wins without reverse-engineering.
+- **Kitchen decision:** Treat `/Chair` as the public contract: set `defaultPrim` and keep downstream references shallow (avoid `/Chair/geo/...`).
+- **What you just encoded:** Portability: you can move/refactor the asset without breaking consumers.
+- **Carry forward into Chapter 3:** With a stable interface, you can apply the reference/payload pattern (and sublayer lanes) without creating hidden coupling.
 
 ### Script Lab (planned / not yet committed)
 
-- `aggregation/01_mechanism_decision_matrix.py`
+- `aggregation/01_asset_interface_audit.py`
 
 ---
 
-<a id="chapter-2"></a>
-## Chapter 2 - Sublayers for Team-Owned Contributions
+<a id="chapter-3"></a>
+## Chapter 3 - Reference/Payload Pattern
 
-**Video section (approx):** `16:30-27:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=990s)
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png" alt="Slide - Reference/Payload Pattern" width="900" /></a>
+
+**Video section (approx):** `16:30-46:30`  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=990)
+
+Model hierarchy (kinds) is covered in [Chapter 6](#chapter-6).
+
+### Sublayers
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_51.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_51.png" alt="Key moment - 16:59" width="900" /></a>
+
+**Interesting approach:** Agenda revisited with the **Reference/Payload Pattern** highlighted as "most important from today". **Why it matters:** even when you choose sublayers for collaboration lanes, load-policy decisions (payloads) will change what teammates *see* and debug. **Learn more:** [9 - Layers and sublayers](#link-9), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_05.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_05.png" alt="Key moment - 17:44" width="900" /></a>
+
+**Hailey shifts to:** Houdini/Solaris viewport showing the Kitchen Set scene in context (this is the "real object" we're composing). **Why it matters:** sublayer decisions are only meaningful when you can connect them to a concrete scene graph (what prims exist, what changed, and who owns the change). **Learn more:** [42 - Solaris/USD docs](#link-42), [29 - Writing USD from Houdini](#link-29)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_19.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_19.png" alt="Key moment - 18:35" width="900" /></a>
+
+**This is where:** Houdini UI showing a **layer stack / scene graph list** and a small USDA snippet. **Why it matters:** this is the "audit surface" you need when sublayers get messy: list contributors, then trace which layer is authoring what. **Learn more:** [15 - Stage API](#link-15), [12 - LIVRPS](#link-12)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_32.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_32.png" alt="Key moment - 19:23" width="900" /></a>
+
+**The slide lands:** "Houdini Demo - payload structure for geometry (Kitchen Set)". **Why it matters:** payload boundaries often become the "fault lines" of collaboration - teams can author opinions that you cannot even see until something is loaded. **Learn more:** [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
+
+
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_39.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_39.png" alt="Key moment - 20:04" width="900" /></a>
+
+**The question:** "Reference/Payload pattern" slide: **reference = metadata layer**, **payload = heavy content layer**. **Why it matters:** this is the clean separation you want in a team environment: everybody can read the interface/metadata without loading the world. **Learn more:** [10 - References](#link-10), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_58.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h24_58.png" alt="Key moment - 20:57" width="900" /></a> <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_08.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_08.png" alt="Key moment - 21:45" width="900" /></a>
+
+**The answer:** Example question (and answer): what should live **above the payload boundary** in the reference layer. **Answer logic:** author **variant definitions** and **asset metadata (kind, assetInfo)** in the reference layer; keep heavy geometry in payload. **Why it matters:** this separation keeps interface visible without loading heavy content. **Learn more:** [70 - Variant sets](#link-70), [72 - Model kinds](#link-72), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png" alt="Slide - Example question (1): naming leaks interface" width="900" /></a>
+
+**Now:** The earlier "bad naming" example question reappears as a reminder: **don't leak implementation details into the public surface**. **Why it matters:** sublayers become dangerous when teams bind to internal names and then "fix layers" accumulate forever. **Learn more:** [14 - Asset structure](#link-14), [68 - Default prim](#link-68)
+
+*Asset Parameterization and Lofting & Workstreams are covered in [Chapter 4](#chapter-4) and [Chapter 5](#chapter-5).*
 
 ### Intro bridge
 
@@ -308,8 +407,7 @@ In the kitchen scene, sublayers are a good fit for coordinated stage-level contr
 If you cannot answer "which team owns the winning opinion for this property?" in under 30 seconds, your sublayer strategy is not yet production-safe.
 
 ### Key moment and interpretation
-
-[![Key moment - 22:04 where do we put this mug](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
 This question is useful because it sounds tiny and reveals structural intent:
 - If it is a stage-specific adjustment in a shared namespace, sublayer is often valid.
@@ -351,19 +449,28 @@ root.subLayerPaths = [
 
 - **Kitchen decision:** Keep kitchen-wide “same namespace” adjustments in a small, named, ordered layer stack (layout/lookdev/lighting/review), instead of burying everything inside one file.
 - **What you just encoded:** Strength ordering as a *human-readable contract* (later layers win), not a mystery.
-- **Carry forward into Chapter 3:** Anything that should travel as a reusable unit (a cabinet/appliance/prop-set module) should move out of the sublayer pile and become a referenced asset with a stable insertion point.
+- **Carry forward to References (below):** Anything that should travel as a reusable unit (a cabinet/appliance/prop-set module) should move out of the sublayer pile and become a referenced asset with a stable insertion point.
 
-### Script Lab (planned / not yet committed)
 
-- `aggregation/02_sublayer_order_probe.py`
 
----
-
-<a id="chapter-3"></a>
-## Chapter 3 - References for Reusable Assets
+### References
 
 **Video section (approx):** `27:30-37:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=1650s)
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=1650)
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png" alt="Key moment - 28:56" width="900" /></a>
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png" alt="Key moment - 29:39" width="900" /></a>
+
+**The slide lands:** "What is lofting?" slide: expose information *from payload up to the reference layer* so people can see what exists without loading heavy content. **Why it matters:** lofting is a key tactic for "fast stage open + still debuggable", especially when your referenced assets are huge. **Learn more:** [10 - References](#link-10), [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png" alt="Key moment - 30:30" width="900" /></a>
+
+**Hailey shifts to:** Houdini demo of lofting: the UI shows how authored data is split across layers so consumers can browse/parameterize assets without forcing heavy geometry load. **Why it matters:** this is the "collaboration reality" view - where layer boundaries are visible and therefore governable. **Learn more:** [42 - Solaris/USD docs](#link-42), [29 - Writing USD from Houdini](#link-29)
 
 ### Intro bridge
 
@@ -386,8 +493,7 @@ In the kitchen scene, references are what let you keep a “cabinet module,” �
 - Keep path contracts documented (`defaultPrim`, target prim path, naming standards).
 
 ### Key moment and interpretation
-
-[![Key moment - 32:48 references and practical composition choices](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
 This section lands the idea that references are not just a technical feature; they are an organizational tool:
 - They keep asset teams autonomous.
@@ -428,7 +534,7 @@ prim.GetReferences().AddReference("cell03_robot.usda", "/Robot")
 
 - **Kitchen decision:** Promote repeatable kitchen pieces (cabinet/appliance/prop set) into referenced modules so they can be reused, versioned, and swapped without rewriting the whole stage.
 - **What you just encoded:** References turn “content” into “modules,” which makes tracing and ownership clearer — if paths/contracts are explicit.
-- **Carry forward into Chapter 4:** Decide which referenced modules are “heavy enough” to require load policy. If performance or interactivity matters, payload is not an optimization — it’s part of correctness.
+- **Carry forward to Payloads (below):** Decide which referenced modules are “heavy enough” to require load policy. If performance or interactivity matters, payload is not an optimization — it’s part of correctness.
 
 ### Script Lab (planned / not yet committed)
 
@@ -436,11 +542,22 @@ prim.GetReferences().AddReference("cell03_robot.usda", "/Robot")
 
 ---
 
-<a id="chapter-4"></a>
-## Chapter 4 - Payloads for Scalable Runtime Aggregation
+### Payloads
 
 **Video section (approx):** `37:30-46:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=2250s)
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=2250)
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png" alt="Key moment - 37:52" width="900" /></a>
+
+**The demo:** Houdini/Solaris view with an inspection panel and code/editor view: this is the practical "where is the payload boundary?" authoring environment. **Why it matters:** payload design is only safe when you can audit it (what loads, what stays available, what is referenced vs payloaded). **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_48.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_48.png" alt="Key moment - 38:39" width="900" /></a> <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png" alt="Key moment - 39:25" width="900" /></a>
+
+**The key takeaway:** payloads make "what you see" dependent on load state. Two teammates can open the same stage and see different results unless default payload policy is explicit and tested. **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
 
 ### Intro bridge
 
@@ -463,8 +580,7 @@ In the kitchen scene, payloads are the difference between opening full-fidelity 
 - Never assume "not visible" means "not authored"; check load state before debugging composition.
 
 ### Key moment and interpretation
-
-[![Key moment - 44:49 payload behavior in practical review context](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
 The key operational lesson here is simple: load policy is part of correctness, not just speed.
 - If validation ignores payload state, teams ship false negatives ("asset missing") and false positives ("all good") depending on local app defaults.
@@ -501,6 +617,7 @@ prim.GetPayloads().AddPayload("cell03_scancluster.usda", "/ScanCluster")
 
 - **Kitchen decision:** Mark heavy kitchen content as payloads *only when you can describe the load policy in words* (what must load by default vs what is optional).
 - **What you just encoded:** A new debugging rule: “missing” might be “unloaded,” so load state must be checked before you chase composition bugs.
+- **Carry forward into Chapter 4:** Parameterization decisions (variants vs primvars) sit on top of this structure — you want options without duplicating payload-heavy assets.
 - **Carry forward into Chapter 5:** When something looks wrong, validate payload state first, then trace the winning opinion for the specific property that’s incorrect.
 
 ### Script Lab (planned / not yet committed)
@@ -509,15 +626,112 @@ prim.GetPayloads().AddPayload("cell03_scancluster.usda", "/ScanCluster")
 
 ---
 
-<a id="chapter-5"></a>
-## Chapter 5 - Opinion Resolution Across Aggregated Inputs
+<a id="chapter-4"></a>
+## Chapter 4 - Asset Parameterization
 
-**Video section (approx):** `46:30-52:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=2790s)
+**Video section (approx):** `22:29-28:07`  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=1349)
 
 ### Intro bridge
 
-When review results "look wrong," this chapter is the debugger's lifeline. Opinion resolution is where mental models get stress-tested against what USD actually composes.
+Parameterization is how teams avoid "duplicate the asset 15 times." Use variants and primvars instead of duplication.
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_58.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_58.png" alt="Key moment - 22:29" width="900" /></a>
+
+**The demo:** Section header: **Asset Parameterization**. **Why it matters:** parameterization is how teams avoid "duplicate the asset 15 times" — it's also where sublayer strategies can accidentally fight with variants if ownership is unclear. **Learn more:** [70 - Variant sets](#link-70)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_19.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_19.png" alt="Key moment - 23:14" width="900" /></a>
+
+**The idea:** Houdini scene graph + context menu showing how variants/parameters are operated in a DCC. **Why it matters:** this is where "collaboration lanes" become real: one team owns a variant set, another owns lookdev, another owns layout. **Learn more:** [70 - Variant sets](#link-70), [9 - Layers and sublayers](#link-9)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png" alt="Key moment - 24:43" width="900" /></a>
+
+**The pattern:** Houdini showing variant thumbnails / switching UI on an asset (chair). **Why it matters:** if your variant switching requires loading massive geometry every time, your review workflow will die. **Learn more:** [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h33_40.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h33_40.png" alt="Key moment - 25:40" width="900" /></a>
+
+**At this moment:** **Primvars** slide: use primvars for small per-property tweaks (cheaper memory-wise) vs variants for swapping whole configurations. **Why it matters:** "small change vs big configuration swap" is an aggregation decision. **Learn more:** [71 - Primvars](#link-71), [70 - Variant sets](#link-70)
+
+### Concept -> What breaks -> How to test
+
+- **Concept:** Variants for whole-configuration swaps; primvars for small per-property tweaks.
+- **What breaks:** Duplicating assets instead of parameterizing; mixing variant and primvar semantics; and authoring variants that require heavy payload loads because nothing is lofted above the payload boundary.
+- **How to test:** Inspect variant sets and primvars in usdview; verify switching behavior.
+
+### Breakout - Variants vs primvars decision
+
+| Use case | Mechanism |
+|---------|-----------|
+| Swap whole configuration (e.g., chair style) | Variant set |
+| Small per-property tweak (e.g., color, scale) | Primvar |
+| Same-namespace override lane | Sublayer |
+
+### Kitchen checkpoint (carry-forward)
+
+- **Kitchen decision:** Use variants for chair/appliance options; use primvars for layout tweaks that don't warrant a new variant.
+- **What you just encoded:** Parameterization reduces duplication and keeps collaboration lanes clear.
+- **Carry forward into Chapter 5:** Lofting and department layers (geo/materials/rigging) structure how teams work without chaos.
+
+### Script Lab (planned / not yet committed)
+
+- `aggregation/05_variants_primvars_probe.py`
+
+---
+
+<a id="chapter-5"></a>
+## Chapter 5 - Lofting & Workstreams
+
+**Video section (approx):** `26:32-52:30` (lofting ~27 min; overrides/conflict tracing ~47 min)  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=1592)
+
+*Lofting is covered early in the video (~27 min); overrides/conflict tracing later (~47 min). Both address "how teams work without chaos."*
+
+### Video frames (chronological)
+
+Click any thumbnail to open full-size.
+
+#### Lofting and workstream lanes (26:32-28:07)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_23.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_23.png" alt="Key moment - 26:32" width="900" /></a>
+
+**The key moment:** Section header: **Lofting & Workstreams**. **Why it matters:** this is where the talk becomes explicitly "team structure": how modelers, texture artists, and riggers can work without chaos. **Learn more:** [9 - Layers and sublayers](#link-9), [67 - Reference deck](#link-67)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_29.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_29.png" alt="Key moment - 27:17" width="900" /></a>
+
+**Here:** Example question: best layer structure for parallel collaboration across geometry/materials/rigging. **Answer intent:** separate department layers (e.g., `geo.usd`, `materials.usd`, `rigging.usd`) then compose them as **sublayers** inside the asset's payload. **Learn more:** [9 - Layers and sublayers](#link-9), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_55.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h34_55.png" alt="Key moment - 28:07" width="900" /></a>
+
+**Interesting approach:** Example question (answered): parallel collaboration works best when geometry/materials/rigging live in separate layers and are composed as sublayers (often inside an asset payload). **Learn more:** [10 - References](#link-10), [9 - Layers and sublayers](#link-9)
+
+#### Source tracing when results "look wrong" (47:39+)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png" alt="Key moment - 50:06" width="900" /></a>
+
+**Hailey shifts to:** Houdini/Solaris scene graph view showing the Kitchen Set hierarchy. **Why it matters:** this is the hands-on trace surface: identify the prim, then locate the authored source/layer/arc that is currently winning. (You’ll also see kind metadata here; the semantics are covered in Chapter 6.) **Learn more:** [15 - Stage API](#link-15), [12 - LIVRPS](#link-12)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png" alt="Key moment - 51:42" width="900" /></a>
+
+**The question:** Solaris node graph view (the procedural "how this stage is built" perspective). **Why it matters:** in node-based authoring, "the source" may be a node graph that emits layers - tracing winning opinions means mapping stage results back to the authoring graph. **Learn more:** [42 - Solaris/USD docs](#link-42), [15 - Stage API](#link-15)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png" alt="Key moment - 56:10" width="900" /></a>
+
+**This is where:** A practical recap frame that anchors the "turn this into a checklist" mindset. **Why it matters:** opinion resolution only helps if it tells you *where to fix the source-of-truth* (not where to apply yet another band-aid layer). **Learn more:** [13 - Value resolution](#link-13), [67 - Reference deck](#link-67)
+
+
+
+### Intro bridge
+
+This pillar is where aggregation becomes a day-to-day team workflow instead of a one-off composition trick.
+
+- **Workstreams:** separate department-owned lanes (geo/materials/rigging/lookdev/layout) so parallel work is predictable.
+- **Lofting:** keep the asset interface and lightweight metadata visible *above* payload boundaries so people can browse and configure without always loading heavy geometry.
+
+And when something still “looks wrong”, the second half of this pillar is your debugger’s lifeline: **trace the winning opinion to its authored source** instead of guessing.
 
 In the kitchen scene, this is how you prove why the mug is in the wrong place (or why the wrong material “won”) without guessing.
 
@@ -525,19 +739,20 @@ In the kitchen scene, this is how you prove why the mug is in the wrong place (o
 
 ### Concept -> What breaks -> How to test
 
-- **Concept:** LIVRPS-style strength reasoning over authored opinions to identify the winning value.
-- **What breaks:** Incorrect assumptions about which file "wins," often caused by undocumented layer order and hidden arc interactions.
-- **How to test:** Trace value source and arc path for target properties, then verify against intended ownership.
+- **Concept:** Workstreams (department lanes) + lofting (interface above payload) + source tracing (find the winning authored opinion).
+- **What breaks:** Departments editing the same layer, payload-only interfaces that force heavy loads, and incorrect assumptions about which file “wins” due to undocumented layer order and hidden arc interactions.
+- **How to test:** Open the asset with payloads unloaded and confirm the interface is still browsable; then trace one high-risk property to its winning source and verify it matches intended ownership.
 
 ### Practical resolution guidance
 
-- Pick one high-risk property per review (for example transform, status color, active variant) and trace it end-to-end.
-- Record winner source in review notes to reduce repeated debugging.
-- Treat "it looked right once" as non-evidence unless source tracing confirms it.
+- Keep department lanes explicit (separate layers, named by ownership/intent) so “who owns the truth” is never ambiguous.
+- Loft what reviewers need (variants, kinds, assetInfo, look bindings) above payload boundaries so “browse/configure” doesn’t require “load everything”.
+- Pick one high-risk property per review (transform, status color, active variant, visibility) and trace it end-to-end.
+- Record the winner source in review notes to reduce repeated debugging.
+- Treat “it looked right once” as non-evidence unless source tracing confirms it.
 
 ### Key moment and interpretation
-
-[![Key moment - 48:16 opinion conflict and winner reasoning](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
 This is where the tutorial aligns with certification logic:
 - not "what do I expect,"
@@ -579,15 +794,49 @@ value = attr.Get()
 
 ### Script Lab (planned / not yet committed)
 
-- `aggregation/05_value_source_trace.py`
+- `aggregation/06_value_source_trace.py`
 
 ---
 
 <a id="chapter-6"></a>
-## Chapter 6 - Aggregation Anti-Patterns in Real Pipelines
+## Chapter 6 - Model Hierarchy
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h37_53.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h37_53.png" alt="Key moment - 32:08" width="900" /></a>
+
+**Video section (approx):** `34:39-end`  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=2079)
+
+### Model Kinds
+
+Model kinds (component, assembly, group) make large composed scenes **navigable** and **machine-queryable** — they are a semantic contract, not decoration. **Learn more:** [72 - Model kinds](#link-72), [73 - Kind system (OpenUSD)](#link-73).
+
+Quick mental model:
+- **Component:** publishable leaf asset; should not contain other components.
+- **Assembly:** meaningful collection (often a publishable unit) that can contain components/assemblies.
+- **Group:** purely organizational; useful for cleanliness, but not a substitute for a real asset boundary/contract.
+
+#### Video frames (chronological)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h38_04.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h38_04.png" alt="Key moment - 33:52" width="900" /></a>
+
+**The question:** "Model Kinds: 3 main kinds" (component / assembly / group). **Why it matters:** kinds let tools traverse your stage like a table-of-contents — crucial when payloads hide geometry and you still need a stable, readable hierarchy.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png" alt="Key moment - 48:16" width="900" /></a>
+
+**The reminder:** if your hierarchy is semantically wrong (wrong kinds), downstream assumptions break (validation, navigation, reuse). This is why Hailey keeps saying “be kind to the pipeline”: kinds are for other people and downstream tools.
+
+### Anti-Patterns
 
 **Video section (approx):** `52:30-56:00`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=3150s)
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=3150)
+
+### Video frames (chronological)
+
+Click the thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png" alt="Key moment - 52:54" width="900" /></a>
+
+**The answer:** Model hierarchy example question answer: a **component** cannot contain another component; “Hero” should be assembly/group when it meaningfully collects other components. **Why it matters:** treating hierarchy as “whatever looks tidy” instead of a semantic contract leads to brittle navigation, validation failures, and wrong assumptions downstream. **Learn more:** [72 - Model kinds](#link-72), [73 - Kind system (OpenUSD)](#link-73)
 
 ### Intro bridge
 
@@ -610,8 +859,7 @@ In the kitchen scene, these are the mistakes that create “it works on my machi
 - Relying on tool auto-corrections as if they were USD guarantees.
 
 ### Key moment and interpretation
-
-[![Key moment - 52:54 anti-pattern framing before wrap-up](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)
+*(See the matching frame in the "Video frames" section at the top of this chapter.)*
 
 At this stage, the tutorial shifts from feature knowledge to operational behavior:
 - what to stop doing,
@@ -650,27 +898,32 @@ for layer in stage.GetLayerStack():
 
 - **Kitchen decision:** Treat “it works in my scene” as a warning sign. If the kitchen stage only works with local fixes, you have an aggregation anti-pattern, not a solved problem.
 - **What you just encoded:** Anti-pattern awareness as a checklist: ownership, contracts (`defaultPrim`, paths), stack discipline, and explicit load policy.
-- **Carry forward into Chapter 7:** Convert the checklist into a **release gate** so “good aggregation” is enforced automatically at handoff time.
+- **Carry forward:** Convert the checklist into a **release gate** so “good aggregation” is enforced automatically at handoff time (see Production Checklist below).
 
 ### Script Lab (planned / not yet committed)
 
-- `aggregation/06_aggregation_antipattern_audit.py`
+- `aggregation/07_aggregation_antipattern_audit.py`
 
----
-
-<a id="chapter-7"></a>
-## Chapter 7 - Aggregation Validation Checklist (Kitchen → Digital Twin)
+### Production Checklist
 
 **Video section (approx):** `56:00-end`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/watch?v=LFCauWTNBM4&t=3360s)
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=3360)
 
-### Intro bridge
+#### Video frames (chronological)
 
-This final chapter is the conversion point from learning to operation. The goal is not "looks okay once." The goal is a repeatable pass/fail gate before handoff.
+Click the thumbnail to open full-size.
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png" alt="Key moment - 56:10" width="900" /></a>
+
+**Now:** A recap moment that points toward “operationalizing” what you learned (turn the concepts into a checklist/release gate). **Why it matters:** without a checklist, “aggregation correctness” is subjective and tool-dependent; with a checklist, it becomes reproducible across people and apps. **Learn more:** [13 - Value resolution](#link-13), [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
+
+#### Intro bridge
+
+This final section is the conversion point from learning to operation. The goal is not "looks okay once." The goal is a repeatable pass/fail gate before handoff.
 
 If this checklist is used consistently, your aggregate stays stable even while content keeps evolving across contributors — whether you are validating a kitchen scene for reuse or a production digital twin before a review session.
 
-### Validation checklist
+#### Validation checklist
 
 - Contract metadata (`defaultPrim`, `upAxis`, `metersPerUnit`) verified.
 - Aggregation arcs intentionally selected and documented.
@@ -679,16 +932,15 @@ If this checklist is used consistently, your aggregate stays stable even while c
 - Critical properties traced to intended sources.
 - Payload load policy documented for runtime consumers.
 
-### Key moment and interpretation
-
-[![Key moment - 56:10 practical wrap-up and release mindset](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)
+#### Key moment and interpretation
+*(See the matching frame in the "Video frames" section at the top of this section.)*
 
 The closing section reinforces that good aggregation is a process discipline:
 - define contracts,
 - validate systematically,
 - and keep source ownership traceable.
 
-### Breakout - Release gate report pseudocode
+#### Breakout - Release gate report pseudocode
 
 **Raw snippet:**
 ```py
@@ -714,15 +966,20 @@ assert report["status"] == "PASS"
 - It fails if validation scope is too narrow (for example ignores payload state).
 - It fails if PASS is accepted without storing traceable evidence.
 
-### Kitchen checkpoint (carry-forward)
+#### Kitchen checkpoint (carry-forward)
 
 - **Kitchen decision:** Make “PASS/FAIL” real: validate contracts, contributors, resolution sources, and payload policy before you declare the kitchen stage “good.”
 - **What you just encoded:** A reproducible handoff: the same stage should open and validate consistently across tools and people.
 - **Carry forward beyond this tutorial:** Use the crosswalk section to map this kitchen-first workflow onto Packaging Cell / Station cases, then carry the same validation mindset into rendering, data modeling, and pipeline customization.
 
-### Script Lab (planned / not yet committed)
+#### Script Lab (planned / not yet committed)
 
-- `aggregation/07_release_gate_report.py`
+- `aggregation/08_release_gate_report.py`
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_58.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_58.png" alt="Key moment - 46:00" width="900" /></a>
+
+**Here:** Closing "Thank you" slide with links to community/support channels. **Learn more:** [17 - Week 2 slides](#link-17), [18 - NVIDIA Discord](#link-18)
+
 
 ---
 
@@ -742,6 +999,44 @@ Use this exact structure so screenshots can be converted into a consistent deep-
 - Commented walkthrough: fenced code block (same snippet, annotated)
 - Why this works: 2-4 bullets (what contract/behavior it demonstrates)
 - Why this fails: 2-4 bullets (common misread, tool-default trap, or missing prerequisite)
+
+---
+
+## Community Q&A — What the Audience Asked (and What the Team Answered)
+
+During the livestream, the audience asked questions that often surface in real pipelines. Here are the key exchanges, woven into the same kitchen-and-digital-twin story so you can see how the team thinks through them.
+
+### "Should the assembly or group be placed in a separate file?"
+
+**Asked in chat** during the model hierarchy section (~35:41). **Hailey and Mati answered:**
+
+Assemblies and groups can be stacked in the hierarchy — groups inside groups, assemblies inside groups. There is no requirement for a separate file. Think of it as *asset package* rather than *file*: an assembly could have lots of files. Components are the leaves; they cannot contain other components. Assemblies and groups are organizational containers. In practice, **component** and **assembly** are good candidates for publishable assets — units of work that get passed around. **Groups** are purely organizational.
+
+**Digital twin translation:** If you're modeling a city and don't care what's inside a building, a single building can be a component. If your whole scene is inside a building and you want to model each floor and window, that building becomes an assembly with components inside. The granularity depends on your workflow. Mati added: a robot can be a component (if you're a roboticist doing RL training and it's one small part of a larger environment) or an assembly (if you're the robot maker and care about every part). You can override kinds — author an opinion that changes a received asset's kind to match your workflow.
+
+### "Are there any advantages to not defining the kinds?"
+
+**Yan asked** (~40:21). **Hailey answered:**
+
+Not defining kinds is not a requirement for functioning — you can remove all kinds and the scene still works. But **please be kind to the pipeline** by using model kinds. It's for other people; it's for collaboration. It's readability and legibility. Tools, outliners, and graph views can offer a "model kinds only" view so people can interact with the scene without all the complexity — and it cuts down on compute when opening that window.
+
+### "Do you need to be a programmer to do the exam?"
+
+**Asked during Q&A** (~44:11). **Hailey and Ashley answered:**
+
+You don't need to be a programmer by trade, but there are code questions. The Learn OpenUSD curriculum has code — you want to be familiar with Python and able to hack away on your own. Ashley recommended going through the Learn OpenUSD learning path; it helps with all those questions and lets you confidently interact with code even if you're not super familiar. People from VFX and engineering have gotten certified.
+
+### "How do I force relative paths?"
+
+**Yan asked** (~45:22), referring to the earlier "spot the problem" example with absolute paths. **Mati answered:**
+
+It depends on the editor — Omniverse, usdview, etc. DCC applications tend to prefer absolute paths. If you're writing your own code, you have complete control. Kit SDK tends to default to absolute; it's up to the author to go back and fix paths.
+
+### "How do I set up the USD file in Solaris/Houdini so it still opens in Omniverse?"
+
+**Yan asked** (~46:30), with a follow-up about keeping the same structure when importing/exporting between applications. **Hailey, Mati, and Ashley answered:**
+
+Hailey has limited Omniverse experience but noted that Houdini has its own internal structure (root layer, session layers, tree) and export nodes. If the internal structure looks correct in Houdini, it should export correctly. Mati suggested USD Rop and the Houdini Component Builder for well-structured assets. **Most USD written from Houdini should work in Omniverse.** Incompatibilities are primarily materials. Ashley added: structure your USDA with best practices — for example, conflicting `defaultPrim` between one app and Omniverse can cause issues; sometimes the fix is to remove the default prim in the exporting app so the hierarchy slots into the Kit SDK default. Use Claude, Cursor, Perplexity, Discord, and forums. Divy also recommended MaterialX for better material interoperability.
 
 ---
 
@@ -823,8 +1118,8 @@ If you can move confidently between Kitchen Set, Packaging Cell, welding review,
    Complete office-hours sequence leading into certification topics. Useful for continuity and multi-session reinforcement.
 
 <a id="link-5"></a>
-5. **USD GoodStart README** - https://github.com/jph2/USD_GoodStart/blob/main/README.md
-   Entry point to repository structure, conventions, and setup scripts. Read this if you want to align tutorial practice with project organization.
+5. **USD GoodStart README** - [README.md](../README.md)
+   Entry point to repository structure, conventions, and setup scripts. Read this if you want to align tutorial practice with project organization. (Optional upstream overview: https://github.com/jph2/USD_GoodStart)
 
 <a id="link-6"></a>
 6. **usdview + Python setup** - https://docs.nvidia.com/learn-openusd/latest/usdview-install-instructions.html
@@ -1080,6 +1375,30 @@ If you can move confidently between Kitchen Set, Packaging Cell, welding review,
 67. **Composition / aggregation reference deck (Aaron Luk recommendation)** - https://drive.google.com/file/d/1lh-28b4mN37WrH2zVM5d0YQ2gZtS8wNO/view?usp=drive_link
    Curated deck specifically recommended for composition and aggregation understanding. Strong companion to Chapters 1-5 in this tutorial.
 
+<a id="link-68"></a>
+68. **Default prim (Learn OpenUSD)** - https://docs.nvidia.com/learn-openusd/latest/composition-basics/default-prim.html
+   Explains `defaultPrim` as the stable "asset entry point" concept. Use this when defining an asset interface that stays stable while internals change.
+
+<a id="link-69"></a>
+69. **Prims (Learn OpenUSD)** - https://docs.nvidia.com/learn-openusd/latest/stage-setting/prims.html
+   Establishes the basics of prim identity, paths, and hierarchy. Helpful for interface vs internal path discussions in Chapter 1.
+
+<a id="link-70"></a>
+70. **What are Variant Sets? (Learn OpenUSD)** - https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/variant-sets/what-are-variant-sets.html
+   Canonical reference for variant-set mechanics. Use it when translating "parameterization" decisions into a concrete authoring pattern.
+
+<a id="link-71"></a>
+71. **Primvars (Learn OpenUSD)** - https://docs.nvidia.com/learn-openusd/latest/beyond-basics/primvars.html
+   Shows how primvars fit into USD’s data model (and when they are a better choice than variants for small per-property tweaks).
+
+<a id="link-72"></a>
+72. **Model Kinds (Learn OpenUSD)** - https://docs.nvidia.com/learn-openusd/latest/beyond-basics/model-kinds.html
+   Practical guide to component/assembly/group usage and why kinds improve navigability in large composed scenes.
+
+<a id="link-73"></a>
+73. **Kind system (OpenUSD API docs)** - https://openusd.org/docs/api/kind_page_front.html
+   Canonical OpenUSD kind system documentation. Useful when you need the underlying API and semantics beyond the Learn OpenUSD overview.
+
 ---
 
 ## Appendix - Transcript Screenshot Placement (Pass 1)
@@ -1155,11 +1474,11 @@ First-pass framework placement:
 
 ## Appendix - Full Transcript (Verbatim Paste Zone)
 
-Copy-paste the full transcript between the two markers below.
+This appendix is a verbatim transcript paste with inline screenshots for reference. Transcript timestamps may not match the YouTube timestamps used elsewhere in this tutorial; use the [Key Moments Index](#key-moments-index) when you need a precise YouTube jump target.
 
 <div style="white-space: pre-line;">
 ===== TRANSCRIPT_START =====
-PASTE_FULL_TRANSCRIPT_VERBATIM_HERE I can talk a little bit about that. Uh so last year at sigraph we launched this uh open development
+I can talk a little bit about that. Uh so last year at sigraph we launched this uh open development
 [![Key moment - 2:25](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_25.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_25.png)
 
 2:25
@@ -1194,7 +1513,7 @@ Austin. We talked about composition arcs. Uh and we have uh six weeks in total t
 the exam, get your questions in about uh if if you're preparing on the side, you're going through learn openness
 3:50
 curriculum, you have time you have time here to ask uh specific questions about
-[![Key moment - 3:55](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png)
+[![Slide - Weekly topics (Week 2: Content Aggregation)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_56.png)
 
 3:55
 the different topics that are going to be on the exam and and get clarification from community experts uh like Haley.
@@ -1212,7 +1531,7 @@ So, so yeah, this week we have we have Haley on talking about content aggregatio
 about composition arcs and uh how that feature works in in in USD. Uh, Haley's
 4:42
 going to go even deeper into uh how to apply this practically in in your
-[![Key moment - 4:48](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png)
+[![Slide - About presenter: Hailey Ahn](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h09_05.png)
 
 4:48
 workflows and and and in creating assets and building those up into larger scale scenes.
@@ -1334,7 +1653,7 @@ Option B, prims containing final latest violate the USD specification reserved
 keywords list. C, the naming makes it unclear which prims are public versus internal. Uh, D. They are perfectly good
 10:15
 names and demonstrate their state. The next version of the geometry could be named geo v4 final. What's the answer?
-[![Key moment - 10:23](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png)
+[![Slide - Four Pillars of Asset Structure](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_34.png)
 
 10:23
 Uh, I I I'm going to say D.
@@ -1350,7 +1669,7 @@ such thing. Um, if we want to do version, we have to implement it outside. That'
 no reserve courses list or at least they're not these. Um it's just the namics makes it unclear which are public
 11:01
 versus internal like someone from downstream looks up the uh Joe final victory and they wonder okay can I can I
-[![Key moment - 11:08](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)
+[![Slide - Example question (1): naming leaks interface](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_04.png)
 
 11:08
 refer refer to this um prim and changes texture or something um and um that that
@@ -1368,7 +1687,7 @@ No questions yet. Yeah, we're good. Yeah. Yeah. This is um yeah, if if someone t
 comments, I'll probably see that. Anyways, so um second topic, um can I move an asset into a folder without
 11:57
 breaking everything downstream? So, uh yeah, second question. Um there's
-[![Key moment - 12:04](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png)
+[![Slide - Example question (1) (answer)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h22_23.png)
 
 12:04
 two problems with the structure. Can anyone guess what's the struct What's the problem here?
@@ -1454,7 +1773,7 @@ topic is actually uh probably uh the one that is most important from today's
 topic I would think. So it's how to not load 50 million p polygons only to
 16:02
 change like color or site size. And you sure you don't want to do that? You're 100% sure you don't want to load
-[![Key moment - 16:10](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png)
+[![Slide - Reference/Payload Pattern](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h23_47.png)
 
 16:10
 your scene all over again. I'll have to admit there are cases where we want to load everything and use the
@@ -1644,7 +1963,7 @@ I uh increase the uh size so I can see better. And I just click on preview and
 it shows the difference. That's a tool I made. Uh yeah, pretty simple tool except for GI development. So if you know USD
 24:44
 coding, this this is like not difficult to do. So yeah, that's the tool that I
-[![Key moment - 24:50](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)
+[![Key moment - 24:43](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h32_48.png)
 
 24:50
 made in Houdini just for convenience. I do I do want to pause here and just call
@@ -1904,7 +2223,7 @@ asset package because a NASA could have lots of files, right? Um so which of the
 better should be considered as like its own package versus maybe uh something
 36:57
 that is contained within another or defined only within another uh within a
-[![Key moment - 37:03](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)
+[![Key moment - 44:49](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h44_49.png)
 
 37:03
 particular package. Okay. um as far as I know okay there's no set rule so this is should be more of
@@ -1974,7 +2293,7 @@ uh these are all overridable. So you could get a a robot that's an assembly
 from somebody and you can decide actually for my workflow I'm going to ch change this into a component. So all you do is you make author an opinion saying
 40:10
 nope this this kind is now component. Uh and you may make a few adjustments after
-[![Key moment - 40:16](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)
+[![Key moment - 48:16](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h48_16.png)
 
 40:16
 that. But uh that's the idea is everybody can have their own opinion along the way.
@@ -2078,7 +2397,7 @@ able to confidently interact with code even if you're not super familiar with it
 Again, we love free. Yeah, I am a programmer. So I can't really speak for people who are not
 45:09
 coming from a programming background, but I do know that there are pe a lot of people like from BFX or other
-[![Key moment - 45:15](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)
+[![Key moment - 52:54](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h52_54.png)
 
 45:15
 engineering that who took the certificate and they got certified. So yes, yes, absolutely.
@@ -2198,7 +2517,7 @@ going to work where where you want to take it, whether that's uh materials or cu
 Cool. Well, that was all great questions from the community. Thank you all for
 50:43
 asking such um inquisitive questions for us to really think hard about and um
-[![Key moment - 50:51](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)
+[![Key moment - 56:10](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)](Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png)
 
 50:51
 help you on your journey to getting USD certified. Uh I do have some closing slides, but any last words from Haley or
