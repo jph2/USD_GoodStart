@@ -1,6 +1,6 @@
 # What You Should Know About Content Aggregation — Video Deep-Dive Tutorial
 
-**Version**: 0.3.6 | **Date**: 05.03.2026 | **Time**: 01:45 | **GlobalID**: 20260305_0145_USD_GoodStart_036
+**Version**: 0.3.9 | **Date**: 05.03.2026 | **Time**: 03:02 | **GlobalID**: 20260305_0302_USD_GoodStart_039
 
 **Tag block:**
 #openusd #content_aggregation #composition #layers #references #payloads #digital_twin #best_practices #certification #video_deep_dive
@@ -30,8 +30,6 @@ This tutorial is part of the OpenUSD certification deep-dive series.
 4. [Building an OpenUSD Pipeline With Data Modeling](./Building%20an%20OpenUSD%20Pipeline%20With%20Data%20Modeling__VIDEO_DEEP_DIVE_TUTORIAL.md) - released
 5. Rendering and Visualizing OpenUSD Scenes - coming soon
 6. Session 6 - coming soon
-
-<a href="file:///C:/Users/jan/.cursor/projects/e-SynologyDrive-9999-LocalRepo-General-Dev-cursor/assets/c__Users_jan_AppData_Roaming_Cursor_User_workspaceStorage_30c8c09296254163444169cbe632dd1b_images_ContentAggregation_8h21_09-a68e668a-3b9f-47e1-b62a-bdad0e8f15ed.png"><img src="file:///C:/Users/jan/.cursor/projects/e-SynologyDrive-9999-LocalRepo-General-Dev-cursor/assets/c__Users_jan_AppData_Roaming_Cursor_User_workspaceStorage_30c8c09296254163444169cbe632dd1b_images_ContentAggregation_8h21_09-a68e668a-3b9f-47e1-b62a-bdad0e8f15ed.png" alt="Opening slide - Content Aggregation" width="900" /></a>
 
 <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h08_38.png" alt="Key moment - 3:13" width="900" /></a>
 
@@ -135,7 +133,7 @@ Each chapter intentionally follows the same shape:
 - **Video frames (chronological)**: the key slides / Houdini screenshots in order (click-to-open).
 - **Frame notes**: what you’re seeing, why it matters, and where it connects to the kitchen story and the digital-twin story.
 - **Key moment and interpretation**: the decision you should remember for the exam *and* for real pipelines.
-- **Breakout**: a small, runnable (or pseudocode) snippet that turns the idea into something you can test.
+- **Breakout**: a small decision aid (matrix/checklist or runnable snippet) that turns the idea into something you can test.
 
 ### Story anchor for this session: Kitchen Set (Hailey’s kitchen scene)
 
@@ -172,6 +170,8 @@ Content aggregation mistakes can silently produce:
 | [Chapter 6](#chapter-6) | [`34:39`](https://www.youtube.com/live/LFCauWTNBM4?t=2079)-end | Model Hierarchy | Apply model kinds, avoid anti-patterns, run checklist. |
 
 **Note on timestamps:** this livestream revisits pillars and overlaps topics (especially around the reference/payload pattern, lofting, and model hierarchy). Treat the ranges above as **jump-in anchors**, not strict boundaries — use the [Key Moments Index](#key-moments-index) when you want the most reliable YouTube jump target for a specific concept.
+
+**Supplemental:** [Chapter 7 - Community Questions](#chapter-7) clusters cross-topic audience Q&A and links answers back to Chapters 1-6.
 
 ---
 
@@ -214,6 +214,8 @@ Hailey opens with the title slide that sets the tone: **“Content Aggregation (
 <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_12.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_12.png" alt="Key moment - 8:00" width="900" /></a>
 
 The agenda slide reveals the full arc: asset structure → asset interface/encapsulation → reference/payload pattern → parameterization → lofting/workstreams → model hierarchy. **Stable aggregation is not one feature — it's a contract bundle.** Structure, interface, load policy, parameterization, collaboration lanes, and hierarchy all have to align. When Hailey's kitchen scene is assembled, every one of these decisions will matter. When you build a Packaging Cell 3 stage, the same bundle determines whether departments can ship updates without collisions. **Learn more:** [14 - Asset structure](#link-14), [10 - References](#link-10), [11 - Payloads](#link-11)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_20.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_20.png" alt="Key moment - 9:32" width="900" /></a>
 
 <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h21_26.png" alt="Key moment - 9:32" width="900" /></a>
 
@@ -300,6 +302,29 @@ Now that the interface is stable, you can choose composition mechanisms *by inte
 - **Payload:** deferred loading policy on top of a module boundary.
 
 **Digital twin translation:** facility layout deltas can be sublayers, robot/workcell modules are references, and heavy scan/mesh clusters are payload candidates.
+
+### Breakout - Sublayer vs Reference vs Payload (and combinations)
+
+Use this as a quick chooser before you author:
+
+| Need | Primary mechanism | Why |
+|---|---|---|
+| Multiple teams editing the same stage paths | Sublayer | Same namespace, explicit strength order, easy lane-based collaboration |
+| Reusable asset/module insertion | Reference | Clean module boundary with stable entry point (`defaultPrim`) |
+| Heavy content that should not always load | Payload | Runtime load control without changing logical structure |
+
+Common combinations that work in production:
+
+| Combination | Use when | Watch out for |
+|---|---|---|
+| **Reference + Payload** | You want a light interface and heavy internals loaded on demand | Teams must document default load policy |
+| **Sublayer + Reference** | You assemble modules, then add stage-level review/ops overlays | Review overrides must not become permanent source-of-truth |
+| **Sublayer + Reference + Payload** | Large digital twin stages with modular assets and heavy geometry tiers | Debugging must include both strength order and load state |
+
+Quick rule of thumb:
+- If the question is **"who wins in this stage?"** start with sublayers.
+- If the question is **"how do I reuse this asset cleanly?"** start with references.
+- If the question is **"why is this scene too heavy?"** add payload policy.
 
 ### Key moment and interpretation
 *(See the matching frame in the "Video frames" section at the top of this chapter.)*
@@ -458,20 +483,6 @@ root.subLayerPaths = [
 **Video section (approx):** `27:30-37:30`  
 **Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=1650)
 
-### Video frames (chronological)
-
-Click any thumbnail to open full-size.
-
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png" alt="Key moment - 28:56" width="900" /></a>
-
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png" alt="Key moment - 29:39" width="900" /></a>
-
-**The slide lands:** "What is lofting?" slide: expose information *from payload up to the reference layer* so people can see what exists without loading heavy content. **Why it matters:** lofting is a key tactic for "fast stage open + still debuggable", especially when your referenced assets are huge. **Learn more:** [10 - References](#link-10), [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
-
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png" alt="Key moment - 30:30" width="900" /></a>
-
-**Hailey shifts to:** Houdini demo of lofting: the UI shows how authored data is split across layers so consumers can browse/parameterize assets without forcing heavy geometry load. **Why it matters:** this is the "collaboration reality" view - where layer boundaries are visible and therefore governable. **Learn more:** [42 - Solaris/USD docs](#link-42), [29 - Writing USD from Houdini](#link-29)
-
 ### Intro bridge
 
 This is the chapter where we stop treating assets as copy-paste content and start treating them as reusable units. In production, references are usually the point where pipelines become scalable instead of fragile.
@@ -500,27 +511,17 @@ This section lands the idea that references are not just a technical feature; th
 - They reduce override noise in top-level stage assembly.
 - They make defect tracing faster because source ownership is clearer.
 
-### Breakout - Reference health check pseudocode
+### Breakout - Reference health check decision matrix
 
 Digital twin example (Packaging Cell 3): reference a module into the cell stage with an explicit insertion point.
 
-**Raw snippet:**
-```py
-prim = stage.DefinePrim("/Factory/Cell03/RobotModule")
-prim.GetReferences().AddReference("cell03_robot.usda", "/Robot")
-```
-
-**Commented walkthrough:**
-```py
-# Create or fetch the destination prim where the referenced asset will be composed.
-prim = stage.DefinePrim("/Factory/Cell03/RobotModule")
-
-# Add a reference arc:
-# - First argument: source layer/asset path.
-# - Second argument: prim path inside that source asset.
-# This preserves modular authoring while composing into the current stage.
-prim.GetReferences().AddReference("cell03_robot.usda", "/Robot")
-```
+| Check | PASS condition | If FAIL |
+|---|---|---|
+| Insertion point | Target prim path is explicit and intentional (for example `/Factory/Cell03/RobotModule`) | Fix destination path before debugging anything else |
+| Source asset contract | Referenced asset exposes a stable `defaultPrim` or known target prim | Repair asset interface (`defaultPrim`, public prim path) |
+| Path portability | Asset path resolves in teammate/runtime environments | Convert to portable pathing and re-validate |
+| Namespace clarity | Composed names do not collide with existing prims | Rename insertion point or refactor namespace boundaries |
+| Ownership traceability | Team can name who owns the referenced source layer | Assign owner and document update policy |
 
 **Why this works**
 - It composes reusable asset content without merging everything into one authored file.
@@ -542,22 +543,7 @@ prim.GetReferences().AddReference("cell03_robot.usda", "/Robot")
 
 ---
 
-### Payloads
-
-**Video section (approx):** `37:30-46:30`  
-**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=2250)
-
-### Video frames (chronological)
-
-Click any thumbnail to open full-size.
-
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png" alt="Key moment - 37:52" width="900" /></a>
-
-**The demo:** Houdini/Solaris view with an inspection panel and code/editor view: this is the practical "where is the payload boundary?" authoring environment. **Why it matters:** payload design is only safe when you can audit it (what loads, what stays available, what is referenced vs payloaded). **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
-
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_48.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_48.png" alt="Key moment - 38:39" width="900" /></a> <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png" alt="Key moment - 39:25" width="900" /></a>
-
-**The key takeaway:** payloads make "what you see" dependent on load state. Two teammates can open the same stage and see different results unless default payload policy is explicit and tested. **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
+### Payloads (Core pattern)
 
 ### Intro bridge
 
@@ -585,25 +571,16 @@ In the kitchen scene, payloads are the difference between opening full-fidelity 
 The key operational lesson here is simple: load policy is part of correctness, not just speed.
 - If validation ignores payload state, teams ship false negatives ("asset missing") and false positives ("all good") depending on local app defaults.
 
-### Breakout - Payload load validation pseudocode
+### Breakout - Payload load policy decision matrix
 
 Digital twin example (Packaging Cell 3): add heavy clusters as payloads and validate load-policy behavior explicitly.
 
-**Raw snippet:**
-```py
-prim = stage.DefinePrim("/Factory/Cell03/ScanCluster")
-prim.GetPayloads().AddPayload("cell03_scancluster.usda", "/ScanCluster")
-```
-
-**Commented walkthrough:**
-```py
-# Create destination prim for heavy content.
-prim = stage.DefinePrim("/Factory/Cell03/ScanCluster")
-
-# Add payload arc so content can be deferred/unloaded by policy.
-# This is useful for large assets that should not always load by default.
-prim.GetPayloads().AddPayload("cell03_scancluster.usda", "/ScanCluster")
-```
+| Scene need | Choose | Validation question |
+|---|---|---|
+| Fast browse + occasional deep inspection | Payload | Can users still navigate key interface data when payloads are unloaded? |
+| Always-on operational visibility | Reference/sublayer (not payload) | Is critical review/runtime data available without special load toggles? |
+| Very heavy geometry with optional detail tiers | Payload + explicit policy | Is default load policy documented and tested across tools? |
+| Mixed audiences (artists + operators + runtime) | Hybrid structure | Do all audiences get consistent results under the same documented load mode? |
 
 **Why this works**
 - It gives you scale control while keeping a coherent composition structure.
@@ -620,9 +597,6 @@ prim.GetPayloads().AddPayload("cell03_scancluster.usda", "/ScanCluster")
 - **Carry forward into Chapter 4:** Parameterization decisions (variants vs primvars) sit on top of this structure — you want options without duplicating payload-heavy assets.
 - **Carry forward into Chapter 5:** When something looks wrong, validate payload state first, then trace the winning opinion for the specific property that’s incorrect.
 
-### Script Lab (planned / not yet committed)
-
-- `aggregation/04_payload_load_validation.py`
 
 ---
 
@@ -643,6 +617,9 @@ Click any thumbnail to open full-size.
 <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_58.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h25_58.png" alt="Key moment - 22:29" width="900" /></a>
 
 **The demo:** Section header: **Asset Parameterization**. **Why it matters:** parameterization is how teams avoid "duplicate the asset 15 times" — it's also where sublayer strategies can accidentally fight with variants if ownership is unclear. **Learn more:** [70 - Variant sets](#link-70)
+
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_10.png" alt="Key moment - 23:14" width="900" /></a>
 
 <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_19.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h26_19.png" alt="Key moment - 23:14" width="900" /></a>
 
@@ -708,21 +685,17 @@ Click any thumbnail to open full-size.
 
 **Interesting approach:** Example question (answered): parallel collaboration works best when geometry/materials/rigging live in separate layers and are composed as sublayers (often inside an asset payload). **Learn more:** [10 - References](#link-10), [9 - Layers and sublayers](#link-9)
 
-#### Source tracing when results "look wrong" (47:39+)
+#### Lofting visibility across reference/payload boundary (moved from Ch 3)
 
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png" alt="Key moment - 50:06" width="900" /></a>
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h35_06.png" alt="Key moment - 28:56" width="900" /></a>
 
-**Hailey shifts to:** Houdini/Solaris scene graph view showing the Kitchen Set hierarchy. **Why it matters:** this is the hands-on trace surface: identify the prim, then locate the authored source/layer/arc that is currently winning. (You’ll also see kind metadata here; the semantics are covered in Chapter 6.) **Learn more:** [15 - Stage API](#link-15), [12 - LIVRPS](#link-12)
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_01.png" alt="Key moment - 29:39" width="900" /></a>
 
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png" alt="Key moment - 51:42" width="900" /></a>
+**The slide lands:** "What is lofting?" slide: expose information *from payload up to the reference layer* so people can see what exists without loading heavy content. **Why it matters:** lofting is a key tactic for "fast stage open + still debuggable", especially when your referenced assets are huge. **Learn more:** [10 - References](#link-10), [11 - Payloads](#link-11), [67 - Reference deck](#link-67)
 
-**The question:** Solaris node graph view (the procedural "how this stage is built" perspective). **Why it matters:** in node-based authoring, "the source" may be a node graph that emits layers - tracing winning opinions means mapping stage results back to the authoring graph. **Learn more:** [42 - Solaris/USD docs](#link-42), [15 - Stage API](#link-15)
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h36_37.png" alt="Key moment - 30:30" width="900" /></a>
 
-<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png" alt="Key moment - 56:10" width="900" /></a>
-
-**This is where:** A practical recap frame that anchors the "turn this into a checklist" mindset. **Why it matters:** opinion resolution only helps if it tells you *where to fix the source-of-truth* (not where to apply yet another band-aid layer). **Learn more:** [13 - Value resolution](#link-13), [67 - Reference deck](#link-67)
-
-
+**Hailey shifts to:** Houdini demo of lofting: the UI shows how authored data is split across layers so consumers can browse/parameterize assets without forcing heavy geometry load. **Why it matters:** this is the "collaboration reality" view - where layer boundaries are visible and therefore governable. **Learn more:** [42 - Solaris/USD docs](#link-42), [29 - Writing USD from Houdini](#link-29)
 
 ### Intro bridge
 
@@ -758,25 +731,16 @@ This is where the tutorial aligns with certification logic:
 - not "what do I expect,"
 - but "which authored opinion is strongest here, and why?"
 
-### Breakout - Value source trace pseudocode
+### Breakout - Value source trace triage matrix
 
 Digital twin example (Packaging Cell 3): query the resolved value you see, then pair it with source tracing to find the winner.
 
-**Raw snippet:**
-```py
-attr = stage.GetPrimAtPath("/Factory/Cell03/Robot").GetAttribute("xformOp:translate")
-value = attr.Get()
-```
-
-**Commented walkthrough:**
-```py
-# Grab target attribute from the composed stage.
-attr = stage.GetPrimAtPath("/Factory/Cell03/Robot").GetAttribute("xformOp:translate")
-
-# Read resolved value currently visible in this composition context.
-# In practice, pair this with source tracing in your USD inspection tools.
-value = attr.Get()
-```
+| Symptom | First check | Source-trace move | Typical fix location |
+|---|---|---|---|
+| Wrong transform/value | Confirm current load mode and active variant | Trace winning opinion for that exact property | Owning layer/node that authored the winning value |
+| Wrong material/visibility | Verify binding path and inheritance context | Trace binding source + strongest override | Lookdev/material lane or accidental review override layer |
+| Asset appears “missing” | Confirm payload load state | Trace whether prim exists but is unloaded | Payload policy/default load config, not geometry authoring |
+| Works for one teammate only | Compare app/load/config context | Re-run trace in same context on both machines | Policy/docs/launch config mismatch |
 
 **Why this works**
 - It gives you the composed result that reviewers actually see.
@@ -825,6 +789,23 @@ Quick mental model:
 
 **The reminder:** if your hierarchy is semantically wrong (wrong kinds), downstream assumptions break (validation, navigation, reuse). This is why Hailey keeps saying “be kind to the pipeline”: kinds are for other people and downstream tools.
 
+### Payload boundary and load-state discipline
+
+**Video section (approx):** `37:30-46:30`  
+**Watch first:** [YouTube source - jump to chapter section](https://www.youtube.com/live/LFCauWTNBM4?t=2250)
+
+#### Video frames (chronological)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h38_54.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h38_54.png" alt="Key moment - 37:52" width="900" /></a>
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_25.png" alt="Key moment - 37:52" width="900" /></a>
+
+**The demo:** Houdini/Solaris view with an inspection panel and code/editor view: this is the practical "where is the payload boundary?" authoring environment. **Why it matters:** payload design is only safe when you can audit it (what loads, what stays available, what is referenced vs payloaded). **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
+
+ <a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h46_51.png" alt="Key moment - 39:25" width="900" /></a>
+
+**The key takeaway:** payloads make "what you see" dependent on load state. Two teammates can open the same stage and see different results unless default payload policy is explicit and tested. **Learn more:** [11 - Payloads](#link-11), [15 - Stage API](#link-15)
+
 ### Anti-Patterns
 
 **Video section (approx):** `52:30-56:00`  
@@ -866,25 +847,14 @@ At this stage, the tutorial shifts from feature knowledge to operational behavio
 - what to standardize,
 - and how to avoid repeating the same integration regressions.
 
-### Breakout - Anti-pattern audit pseudocode
+### Breakout - Anti-pattern triage matrix
 
-**Raw snippet:**
-```py
-for layer in stage.GetLayerStack():
-    check_layer_ownership(layer)
-    check_default_prim_contract(layer)
-```
-
-**Commented walkthrough:**
-```py
-# Review every composed layer for maintainability risks.
-for layer in stage.GetLayerStack():
-    # Ensure ownership is explicit and not "mystery edits."
-    check_layer_ownership(layer)
-
-    # Validate that asset path/default prim assumptions are explicit and valid.
-    check_default_prim_contract(layer)
-```
+| Smell | Why risky | Immediate containment | Durable fix |
+|---|---|---|---|
+| Mystery override layer | Nobody can explain why it wins | Freeze further edits to that layer | Reassign ownership and migrate intended opinions upstream |
+| Deep internal path dependencies | Refactors break downstream silently | Flag as contract violation | Re-anchor consumers to stable public interface/default prim |
+| Payload used as generic reference substitute | Inconsistent visibility across teams/tools | Document current load policy immediately | Redesign boundary: what must be visible unloaded vs loaded |
+| Review-time fix promoted to production by accident | Temporary patches become long-term truth | Mark layer as temporary + expiry | Convert accepted fix into owned source layer and remove patch lane |
 
 **Why this works**
 - It turns recurring failures into a repeatable automated check.
@@ -940,23 +910,15 @@ The closing section reinforces that good aggregation is a process discipline:
 - validate systematically,
 - and keep source ownership traceable.
 
-#### Breakout - Release gate report pseudocode
+#### Breakout - Release gate readiness matrix
 
-**Raw snippet:**
-```py
-report = run_aggregation_release_gate(stage)
-assert report["status"] == "PASS"
-```
-
-**Commented walkthrough:**
-```py
-# Execute project-specific validation checks for the composed stage.
-report = run_aggregation_release_gate(stage)
-
-# Fail fast if composition contracts are not satisfied.
-# In CI, this should block publish/handoff.
-assert report["status"] == "PASS"
-```
+| Gate item | Pass criterion | Evidence to store |
+|---|---|---|
+| Interface contract | `defaultPrim`, units, up-axis, and public paths are valid | Validation snapshot + contract checklist |
+| Composition integrity | Expected contributors/arcs present, no unresolved paths | Layer stack trace + unresolved-path report |
+| Value ownership | High-risk properties traced to intended source owners | Source-trace notes for chosen properties |
+| Payload policy | Default/optional load behavior documented and reproducible | Load-mode test record across target tools |
+| Decision outcome | PASS/FAIL is explicit and actionable | Gate report with owner + remediation tasks |
 
 **Why this works**
 - It enforces standards at release time, not only during manual review.
@@ -970,7 +932,7 @@ assert report["status"] == "PASS"
 
 - **Kitchen decision:** Make “PASS/FAIL” real: validate contracts, contributors, resolution sources, and payload policy before you declare the kitchen stage “good.”
 - **What you just encoded:** A reproducible handoff: the same stage should open and validate consistently across tools and people.
-- **Carry forward beyond this tutorial:** Use the crosswalk section to map this kitchen-first workflow onto Packaging Cell / Station cases, then carry the same validation mindset into rendering, data modeling, and pipeline customization.
+- **Carry forward into Chapter 7:** Use Community Q&A to connect this checklist mindset to real audience edge cases, then use the crosswalk section for Packaging Cell / Station scenarios.
 
 #### Script Lab (planned / not yet committed)
 
@@ -983,34 +945,56 @@ assert report["status"] == "PASS"
 
 ---
 
-## Breakout Pattern (MANDATORY for every screenshot with code)
+## Breakout Pattern (MANDATORY for every screenshot with decision logic)
 
-For each screenshot that contains code:
+Use one of these two structures:
 
-1. Raw snippet
-2. Commented snippet
-3. Why this works
-4. Why this fails
+1. **Decision matrix / checklist** (preferred when screenshot is conceptual or workflow-oriented)
+2. **Runnable snippet + commentary** (only when real executable code adds clear value)
 
-Use this exact structure so screenshots can be converted into a consistent deep-dive block:
+Use this exact structure so screenshots are converted into consistent deep-dive blocks:
 
 - Heading: `### Breakout - <short name>`
-- Raw snippet: fenced code block (match the source language: `usda`, `python`, `bash`, `text`)
-- Commented walkthrough: fenced code block (same snippet, annotated)
+- Option A (preferred): decision matrix/checklist with practical pass/fail or choose/avoid criteria
+- Option B (when needed): fenced code block + short commentary
 - Why this works: 2-4 bullets (what contract/behavior it demonstrates)
 - Why this fails: 2-4 bullets (common misread, tool-default trap, or missing prerequisite)
 
 ---
 
-## Community Q&A — What the Audience Asked (and What the Team Answered)
+<a id="chapter-7"></a>
+## Chapter 7 - Community Questions
 
-During the livestream, the audience asked questions that often surface in real pipelines. Here are the key exchanges, woven into the same kitchen-and-digital-twin story so you can see how the team thinks through them.
+**Video section (approx):** `35:41-46:30` + post-content Q&A  
+**Focus:** Audience-driven edge cases that cross chapter boundaries.
+
+During the livestream, the Q&A exposes the stress points that usually appear after a team has "done everything right on paper": kind granularity, path portability, and cross-tool compatibility. This chapter keeps those moments together and ties each answer back to the exact pillar where the fix belongs.
+
+### Runtime source tracing and checklist bridge (from livestream transition)
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h55_28.png" alt="Key moment - 50:06" width="900" /></a>
+
+This is the operational handoff moment between "composition theory" and "production debugging." In the Kitchen Set, the team stops debating intent and starts tracing a concrete winning opinion in the scene graph. That same move is what keeps a digital twin review from turning into guesswork when multiple departments contribute layers. **Learn more:** [15 - Stage API](#link-15), [12 - LIVRPS](#link-12). **Related pillar:** [Chapter 5](#chapter-5).
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_9h03_27.png" alt="Key moment - 51:42" width="900" /></a>
+
+The conversation then shifts one level upstream: not just "which layer wins," but "which authored graph generated the layer that wins." In node-based workflows, this distinction is the difference between fixing a symptom and fixing the actual source-of-truth. **Learn more:** [42 - Solaris/USD docs](#link-42), [15 - Stage API](#link-15). **Related pillar:** [Chapter 5](#chapter-5).
+
+<a href="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png"><img src="Pics/WhatYouShouldKnowAboutContentAggregation/ContentAggregation_8h56_10.png" alt="Key moment - 56:10" width="900" /></a>
+
+The recap frame lands the key behavior change: tracing is only valuable when it leads to upstream correction, not another temporary override. This is exactly where Chapter 6's checklist mindset becomes real process discipline. **Learn more:** [13 - Value resolution](#link-13), [67 - Reference deck](#link-67). **Related pillar:** [Chapter 6](#chapter-6).
+
+### Community Q&A — What the Audience Asked (and What the Team Answered)
+
+These are not side questions. They are the moments where the six-pillar model gets pressure-tested by real production constraints.
 
 ### "Should the assembly or group be placed in a separate file?"
 
 **Asked in chat** during the model hierarchy section (~35:41). **Hailey and Mati answered:**
 
 Assemblies and groups can be stacked in the hierarchy — groups inside groups, assemblies inside groups. There is no requirement for a separate file. Think of it as *asset package* rather than *file*: an assembly could have lots of files. Components are the leaves; they cannot contain other components. Assemblies and groups are organizational containers. In practice, **component** and **assembly** are good candidates for publishable assets — units of work that get passed around. **Groups** are purely organizational.
+
+**Related pillar:** [Chapter 6 - Model Hierarchy](#chapter-6)
 
 **Digital twin translation:** If you're modeling a city and don't care what's inside a building, a single building can be a component. If your whole scene is inside a building and you want to model each floor and window, that building becomes an assembly with components inside. The granularity depends on your workflow. Mati added: a robot can be a component (if you're a roboticist doing RL training and it's one small part of a larger environment) or an assembly (if you're the robot maker and care about every part). You can override kinds — author an opinion that changes a received asset's kind to match your workflow.
 
@@ -1020,11 +1004,15 @@ Assemblies and groups can be stacked in the hierarchy — groups inside groups, 
 
 Not defining kinds is not a requirement for functioning — you can remove all kinds and the scene still works. But **please be kind to the pipeline** by using model kinds. It's for other people; it's for collaboration. It's readability and legibility. Tools, outliners, and graph views can offer a "model kinds only" view so people can interact with the scene without all the complexity — and it cuts down on compute when opening that window.
 
+**Related pillar:** [Chapter 6 - Model Hierarchy](#chapter-6)
+
 ### "Do you need to be a programmer to do the exam?"
 
 **Asked during Q&A** (~44:11). **Hailey and Ashley answered:**
 
 You don't need to be a programmer by trade, but there are code questions. The Learn OpenUSD curriculum has code — you want to be familiar with Python and able to hack away on your own. Ashley recommended going through the Learn OpenUSD learning path; it helps with all those questions and lets you confidently interact with code even if you're not super familiar. People from VFX and engineering have gotten certified.
+
+**Related pillars:** [Chapter 1 - Asset Structure Principles](#chapter-1), [Chapter 3 - Reference/Payload Pattern](#chapter-3)
 
 ### "How do I force relative paths?"
 
@@ -1032,11 +1020,15 @@ You don't need to be a programmer by trade, but there are code questions. The Le
 
 It depends on the editor — Omniverse, usdview, etc. DCC applications tend to prefer absolute paths. If you're writing your own code, you have complete control. Kit SDK tends to default to absolute; it's up to the author to go back and fix paths.
 
+**Related pillars:** [Chapter 2 - Asset Interface and Encapsulation](#chapter-2), [Chapter 3 - Reference/Payload Pattern](#chapter-3)
+
 ### "How do I set up the USD file in Solaris/Houdini so it still opens in Omniverse?"
 
 **Yan asked** (~46:30), with a follow-up about keeping the same structure when importing/exporting between applications. **Hailey, Mati, and Ashley answered:**
 
 Hailey has limited Omniverse experience but noted that Houdini has its own internal structure (root layer, session layers, tree) and export nodes. If the internal structure looks correct in Houdini, it should export correctly. Mati suggested USD Rop and the Houdini Component Builder for well-structured assets. **Most USD written from Houdini should work in Omniverse.** Incompatibilities are primarily materials. Ashley added: structure your USDA with best practices — for example, conflicting `defaultPrim` between one app and Omniverse can cause issues; sometimes the fix is to remove the default prim in the exporting app so the hierarchy slots into the Kit SDK default. Use Claude, Cursor, Perplexity, Discord, and forums. Divy also recommended MaterialX for better material interoperability.
+
+**Related pillars:** [Chapter 2 - Asset Interface and Encapsulation](#chapter-2), [Chapter 3 - Reference/Payload Pattern](#chapter-3), [Chapter 4 - Asset Parameterization](#chapter-4)
 
 ---
 
