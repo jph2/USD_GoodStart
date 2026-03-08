@@ -544,6 +544,33 @@ OpenUSD assets should be structured to be **reactive** to PLM/PDM changes, not d
 - **Update-friendly**: Structure allows PLM/PDM scripts to modify geometry, materials, or metadata without breaking references
 - **Automation-ready**: Design assets so PLM/PDM can programmatically update them (e.g., CAD geometry changes → USD payload updates)
 
+#### Identifier Separation Implications for GoodStart (AOUSD Direction)
+
+To align with current AOUSD discussion and proposal direction, treat identifier roles explicitly:
+
+- **Namespace paths** are for USD composition and hierarchy operations.
+- **Source/external identifiers** are for traceability and cross-system integration.
+- Do **not** overload `displayName` as a source identifier field.
+- Keep source IDs in explicit metadata channels today (project conventions in data layers), and prepare migration toward standardized AOUSD mechanisms (`assetInfo` conventions and/or applied schema approaches).
+
+**v14 integration notes (implementation-focused):**
+
+1. **Adopt a minimal source-ID profile now** in `040_DATA_LYRs` (until AOUSD finalizes schema):  
+   `system`, `identifier`, `scope` (`source` or `instance`), optional `revision`, optional `confidence/provenance`.
+2. **Require identity continuity checks** in project QA: rename/re-parent/recompose should preserve source IDs.
+3. **Require reverse lookup support** for real workflows: external ID -> prim path(s)/layer(s) for BOM, compliance, and telemetry correlation.
+4. **Keep scope separated**: identifier separation first; prim-name grammar ergonomics and transcoding are related but independent workstreams.
+
+**Temporary GoodStart convention (until AOUSD convergence):**
+
+- Store source IDs in explicit metadata blocks (project-controlled namespace in data layers).
+- Keep prim naming human-readable and composition-safe; do not encode external identifiers into prim names unless required by a specific bridge.
+- Document mapping ownership and rollback path for every integration rule touching identifiers.
+
+Recommended references:
+- [OpenUSD Proposals PR #105 - Separation of Concerns for Identifiers in USD](https://github.com/PixarAnimationStudios/OpenUSD-proposals/pull/105)
+- [Proposal source README (branch)](https://raw.githubusercontent.com/asluk/OpenUSD-proposals/aluk/source-identifiers/proposals/identifier_separation_of_concerns/README.md)
+
 **Reducing Manual Labor:**
 The goal is **zero-touch updates**: When an engineer updates a CAD model in PLM, the system should:
 1. Convert CAD → USD automatically (via converters/connectors)

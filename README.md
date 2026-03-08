@@ -24,6 +24,10 @@ These are **planned / in-progress ecosystem projects** that will likely feed bac
   - **USDcodeNIM MCP** (exists): `USDcodeNIM_MCP` (USD code validation/generation helpers via NIM).
   - **Omniverse MCP server (planned)**: a dedicated Omniverse/USD workflow MCP aimed at making IDE assistants more reliable for Kit/Omniverse + project patterns (time/funding dependent).
 
+- **Identifier separation alignment (new)**: Adopt AOUSD direction that keeps namespace paths for composition and treats external/source identifiers as separate integration metadata.
+  - Proposal PR: [Separation of Concerns for Identifiers in USD (PR #105)](https://github.com/PixarAnimationStudios/OpenUSD-proposals/pull/105)
+  - Proposal source text: [README (source branch)](https://raw.githubusercontent.com/asluk/OpenUSD-proposals/aluk/source-identifiers/proposals/identifier_separation_of_concerns/README.md)
+
 **Pretex (why the hell..)**
 Dear fellow lerner: Here is a clean, organized USD project template for getting started working with Composition Arcs in OpenUSD. It has a focus on **digital twin applications + Omnniverse**, but the 'GoodStart' I provide here, is also applicable for other purposes...
 
@@ -353,6 +357,18 @@ For the full explanation + scripting helpers, see: [VarianSets_In_SessionLyr_RES
 ## 📚 Comprehensive Documentation
 
 For detailed technical guidance on OpenUSD workflows, digital twin implementation, and advanced features, see the **[OpenUSD Best Practices Guide](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md)** in the `WIP_Docs/` folder.
+
+### Implications for USD GoodStart (from AOUSD identifier proposal direction)
+
+- Keep **prim names/paths** focused on composition and hierarchy readability.
+- Treat **source identifiers** (PLM IDs, IFC IDs, OPC UA NodeIds, etc.) as separate, explicit metadata.
+- Avoid using `displayName` as a source identifier carrier.
+- Prepare migration paths from ad-hoc metadata toward standardized AOUSD mechanisms (likely `assetInfo` conventions and/or applied schema patterns).
+- **Enhanced implementation notes** are documented in the Best Practices Guide section: [Identifier Separation Implications for GoodStart (AOUSD Direction)](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md#identifier-separation-implications-for-goodstart-aousd-direction).
+
+Reference links:
+- [OpenUSD Proposals PR #105](https://github.com/PixarAnimationStudios/OpenUSD-proposals/pull/105)
+- [Proposal source README](https://raw.githubusercontent.com/asluk/OpenUSD-proposals/aluk/source-identifiers/proposals/identifier_separation_of_concerns/README.md)
 
 This comprehensive guide covers:
 - Complete OpenUSD technical reference
