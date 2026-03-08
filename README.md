@@ -25,6 +25,7 @@ These are **planned / in-progress ecosystem projects** that will likely feed bac
   - **Omniverse MCP server (planned)**: a dedicated Omniverse/USD workflow MCP aimed at making IDE assistants more reliable for Kit/Omniverse + project patterns (time/funding dependent).
 
 - **Identifier separation alignment (new)**: Adopt AOUSD direction that keeps namespace paths for composition and treats external/source identifiers as separate integration metadata.
+  - GoodStart implementation section: [Identifier Separation Implications for GoodStart (AOUSD Direction)](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md#identifier-separation-implications-for-goodstart-aousd-direction)
   - Proposal PR: [Separation of Concerns for Identifiers in USD (PR #105)](https://github.com/PixarAnimationStudios/OpenUSD-proposals/pull/105)
   - Proposal source text: [README (source branch)](https://raw.githubusercontent.com/asluk/OpenUSD-proposals/aluk/source-identifiers/proposals/identifier_separation_of_concerns/README.md)
 
