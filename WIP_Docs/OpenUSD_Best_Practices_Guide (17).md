@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: ebada3e1-1d0b-4fe8-bb97-4ef981a0ad24
+title: OpenUSD Best Practices Guide (Maximum Detail Edition)
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-08T10:49:17Z'
+last_modified: '2026-03-08T10:49:17Z'
+---
+
 **Version:** 0.9.5-beta  (documentation for USD_GoodStart project scaffolding v0.8.1)  
 **Last Updated:** 29.01.2026
 **Project Scaffold Reference:** See main `USD_GoodStart/README.md` (version 0.8.1) for folder structure and setup script details.

@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: c4a9abc1-15fc-4b25-b481-e0a18306ce62
+title: Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-04T17:15:34Z'
+last_modified: '2026-03-04T17:15:34Z'
+---
+
 # Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutorial
 
 **Version**: 1.2.2 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260226_2143_USD_GoodStart_002

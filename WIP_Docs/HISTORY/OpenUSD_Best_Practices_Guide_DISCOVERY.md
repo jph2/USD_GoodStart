@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 7699ecb0-28b3-4b05-be62-6d1020f27a24
+title: OpenUSD Best Practices Guide DISCOVERY
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-12-11T19:13:06Z'
+last_modified: '2025-12-11T19:13:06Z'
+---
+
 Those URLs (Pixar USD docs, OpenUSD, and the old Omniverse connectors marketing page) have either moved into the new OpenUSD / Learn OpenUSD site structure or into newer Omniverse docs. You can fix your “dead links” by pointing to the current equivalents below.[1][2][3][4]
 
 ## Replacements for each dead link

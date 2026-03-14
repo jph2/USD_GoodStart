@@ -1,3 +1,13 @@
+---
+arys_schema_version: '1.2'
+id: ce4f1c75-6292-4006-988a-a8247f383f60
+title: '**OpenUSD Best Practices Guide**'
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-11-21T21:51:17Z'
+last_modified: '2025-11-21T21:51:17Z'
+---
 
 # **OpenUSD Best Practices Guide**
 A comprehensive, multi‑disciplinary guide merging VFX, Digital Twin, Simulation, and CAD-to-USD production workflows.

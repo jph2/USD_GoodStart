@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 56ba91ed-3bcc-4e9d-8a11-821644fa802e
+title: Rendering and Visualizing OpenUSD Scenes — Video Deep-Dive Tutorial
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-04T17:15:38Z'
+last_modified: '2026-03-04T17:15:38Z'
+---
+
 # Rendering and Visualizing OpenUSD Scenes — Video Deep-Dive Tutorial
 
 **Version**: 0.3.10 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260303_0212_USD_GoodStart_016

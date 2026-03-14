@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 3a39881e-8b0b-4ee0-a707-34b16e5030da
+title: Understanding Composition Arcs — Video Deep-Dive Tutorial
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-04T19:58:25Z'
+last_modified: '2026-03-04T19:58:25Z'
+---
+
 # Understanding Composition Arcs — Video Deep-Dive Tutorial
 
 **Version**: 0.2.8 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260303_1900_USD_GoodStart_026

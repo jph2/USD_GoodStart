@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: d91fc595-b3b2-4f3c-8ca7-e84640ae232b
+title: Variant Sets in Session Layer - Discovery
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:42:14Z'
+last_modified: '2026-02-17T09:42:14Z'
+---
+
 # Variant Sets in Session Layer - Discovery
 
 **Version:** 1.4.0

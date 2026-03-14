@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 8c96d795-b43c-4840-9c1c-c60f8ee1a041
+title: SICK AG Industrial Metaverse - FMI/FMU Discovery
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-06T20:10:58Z'
+last_modified: '2026-03-06T20:10:58Z'
+---
+
 # SICK AG Industrial Metaverse - FMI/FMU Discovery
 
 **Meeting Notes:** [Meeting Notes](https://www.notion.so/260306-Omniverse-Pioneers-SICK-Creating-Virtual-Sensor-Solutions-31b6adb1102b80d5a248e7d36474fe07?source=copy_link)

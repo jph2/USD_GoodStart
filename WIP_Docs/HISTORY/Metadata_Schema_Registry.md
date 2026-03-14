@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: e9af14d1-09d9-4ea7-becb-43204248a8b0
+title: Metadata & Schema Registry (Template)
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-12-11T21:05:19Z'
+last_modified: '2025-12-11T21:05:19Z'
+---
+
 # Metadata & Schema Registry (Template)
 
 **Purpose:** A lightweight, human-readable registry of what metadata we write into USD, where it lives (which layer/folder), and how it is sourced (authoring vs runtime).

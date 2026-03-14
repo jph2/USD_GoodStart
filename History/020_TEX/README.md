@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 545e6e96-b0f2-4696-87ce-47fbda38ce97
+title: 020_TEX
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:07Z'
+last_modified: '2025-12-12T00:34:07Z'
+---
+
 # 020_TEX
 
 **Version:** 0.9.4-beta

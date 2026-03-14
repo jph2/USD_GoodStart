@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: a42b1268-6a2f-48e8-9602-8c8eae320710
+title: 060_LYR_METADATA
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:17Z'
+last_modified: '2025-12-12T00:34:17Z'
+---
+
 # 060_LYR_METADATA
 
 **Version:** 0.9.4-beta

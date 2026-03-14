@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 58a7ae4d-8ed6-404c-b69e-796cc4c6f876
+title: ASWF Asset Group - Minimal/Production Example Workflow
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-02-24T18:37:23Z'
+last_modified: '2026-02-24T18:37:23Z'
+---
+
 # ASWF Asset Group - Minimal/Production Example Workflow
 
 **Version**: 1.9.3 | **Date**: 24.02.2026 | **Time**: 19:37 | **GlobalID**: 20260210_1320_ASWFAssetGroupWorkflow_001

@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: b16c8e52-7ce8-4610-b5fc-bd43a721af3e
+title: README v2
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:19Z'
+last_modified: '2025-12-12T00:34:19Z'
+---
+
 - USD GoodStart
 
 **Version:** 0.9.4-beta

@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 986e8647-049c-45ec-b946-1b346449ad5b
+title: 030_LYR_USD
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:10Z'
+last_modified: '2025-12-12T00:34:10Z'
+---
+
 # 030_LYR_USD
 
 **Version:** 0.9.4-beta

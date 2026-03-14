@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: dffe3282-b5f9-45d8-9a45-facabb311786
+title: 000_SOURCE
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:42:14Z'
+last_modified: '2026-02-17T09:42:14Z'
+---
+
 **Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
 
 **Tag block:**

@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 2b5b9466-a48a-4fa4-a8d9-dcb9dea20785
+title: 050_LYR_VARIANTS
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:15Z'
+last_modified: '2025-12-12T00:34:15Z'
+---
+
 # 050_LYR_VARIANTS
 
 **Version:** 0.9.4-beta

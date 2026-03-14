@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 0e26533a-ac50-4eee-a833-0d48afe7a530
+title: 000_SOURCE
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:34:02Z'
+last_modified: '2025-12-12T00:34:02Z'
+---
+
 # 000_SOURCE
 
 **Version:** 0.9.4-beta  

@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: cdf1aba2-fed7-41b9-9167-e748127ff1ea
+title: Customizing OpenUSD for Your Pipeline — Video Deep-Dive Tutorial
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-04T17:15:55Z'
+last_modified: '2026-03-04T17:15:55Z'
+---
+
 # Customizing OpenUSD for Your Pipeline — Video Deep-Dive Tutorial
 
 **Version**: 2.1.7 | **Date**: 04.03.2026 | **Time**: 18:24 | **GlobalID**: 20260218_2220_USD_GoodStart_001

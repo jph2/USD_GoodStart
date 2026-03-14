@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: f5bf0fb1-a27a-43b8-8683-4059e47600df
+title: README Content Integration Analysis
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-11-22T18:00:06Z'
+last_modified: '2025-11-22T18:00:06Z'
+---
+
 # README Content Integration Analysis
 ## Missing Content in OpenUSD Best Practices Guide (17) from README.md
 

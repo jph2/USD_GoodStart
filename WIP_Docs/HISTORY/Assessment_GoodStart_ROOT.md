@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 374940b7-5ff9-440f-a6a6-81a82255b8fa
+title: 'Assessment: GoodStart_ROOT.usda vs. Best Practices'
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-11-21T19:37:53Z'
+last_modified: '2025-11-21T19:37:53Z'
+---
+
 # Assessment: GoodStart_ROOT.usda vs. Best Practices
 
 This assessment compares `GoodStart_ROOT.usda` against the best practices outlined in `AssetStructureBestPractices.md`.

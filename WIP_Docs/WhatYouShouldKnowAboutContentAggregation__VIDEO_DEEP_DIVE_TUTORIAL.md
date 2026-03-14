@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 0dc4df3c-fafc-4c36-9264-364f2fd75fd1
+title: What You Should Know About Content Aggregation — Video Deep-Dive Tutorial
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-03-05T17:04:31Z'
+last_modified: '2026-03-05T17:04:31Z'
+---
+
 # What You Should Know About Content Aggregation — Video Deep-Dive Tutorial
 
 **Version**: 0.3.9 | **Date**: 05.03.2026 | **Time**: 03:02 | **GlobalID**: 20260305_0302_USD_GoodStart_039

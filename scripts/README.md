@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: ed7b7ec4-33b5-4829-914f-4a09d1bac435
+title: Scripts
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:24:41Z'
+last_modified: '2026-02-17T09:24:41Z'
+---
+
 # Scripts
 
 **Version:** 0.9.0 (see `scripts/VERSION` or `setup_usd_project.bat --version`)

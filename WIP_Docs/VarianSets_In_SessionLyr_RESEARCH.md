@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: f5b18cb3-c78b-41c5-b517-450eb281000d
+title: Variant Sets in Session Layer — Internal Research Analysis (Fast Overview)
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:43:32Z'
+last_modified: '2026-02-17T09:43:32Z'
+---
+
 # Variant Sets in Session Layer — Internal Research Analysis (Fast Overview)
 
 **Version**: 1.0.0 | **Date**: 26.01.2026 | **Time**: 12:39 | **GlobalID**: 20260126_1239_GeneralResearch_VarianSetsInSessionLyr_RESEARCH

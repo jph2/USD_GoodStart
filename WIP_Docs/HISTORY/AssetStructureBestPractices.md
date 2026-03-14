@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: fad11355-d6a9-41e6-906b-474cb92fef57
+title: Best Practices for OpenUSD Asset Structure
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2025-12-10T09:41:43Z'
+last_modified: '2025-12-10T09:41:43Z'
+---
+
 # Best Practices for OpenUSD Asset Structure
 
 This document outlines best practices for structuring OpenUSD assets to ensure scalability, performance, and collaboration, based on NVIDIA's Learn OpenUSD curriculum and industry standards.

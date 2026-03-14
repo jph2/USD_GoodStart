@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 45899f63-c017-46d0-8efb-8b266ec6b1bb
+title: 'UsdSkel Joint Index Remapping: Mesh-Local to Skeleton Space'
+type: PRACTICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:42:14Z'
+last_modified: '2026-02-17T09:42:14Z'
+---
+
 **Version**: 1.0.0 | **Date**: 16.02.2026 | **Time**: 12:00 | **GlobalID**: 20260216_1200_USD_GoodStart_batch
 
 **Tag block:**

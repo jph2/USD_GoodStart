@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 203ee757-b6c1-41cd-86dc-2a6256eef9d5
+title: 010_ASS_USD
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2025-12-12T00:33:52Z'
+last_modified: '2025-12-12T00:33:52Z'
+---
+
 # 010_ASS_USD
 
 **Version:** 0.9.4-beta

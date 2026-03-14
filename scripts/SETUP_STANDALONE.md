@@ -1,3 +1,14 @@
+---
+arys_schema_version: '1.2'
+id: 852e2c3c-0138-4199-8d7d-2d38caafea56
+title: Standalone Setup Script Usage
+type: TECHNICAL
+status: active
+trust_level: 2
+created: '2026-02-17T09:42:14Z'
+last_modified: '2026-02-17T09:42:14Z'
+---
+
 # Standalone Setup Script Usage
 
 **Version:** 0.9.5.1 | **Date:** 29.01.2026 | **Time:** 14:00 (see `VERSION` or `setup_usd_project.bat --version`)
