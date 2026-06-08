@@ -68,7 +68,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 <a href="https://www.youtube.com/watch?v=FpI3K3YxUeg" target="_blank" rel="noopener noreferrer"><img src="https://img.youtube.com/vi/FpI3K3YxUeg/0.jpg" alt="Watch the video"></a>
 
-> **Note about the video:** The video demonstrates layer workflows using a simple setup with a material ball asset. That older setup (including the material ball) is preserved in the `History/` folder (`E:\SynologyDrive\9999_LocalRepo\USD_GoodStart\History`), so you can access it or retrieve specific assets from previous versions if needed, further down I provide a super clean minimal structure, Rootfile + Folders + Layers for a GoodStart.
+> **Note about the video:** The video demonstrates layer workflows using a simple setup with a material ball asset. That older setup (including the material ball) is preserved in the `History/` folder ('...\USD_GoodStart\History`), so you can access it or retrieve specific assets from previous versions if needed, further down I provide a super clean minimal structure, Rootfile + Folders + Layers for a GoodStart.
 
 **Quick Structure:**
 
