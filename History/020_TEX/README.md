@@ -5,6 +5,7 @@ title: 020_TEX
 type: TECHNICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-12T00:34:07Z'
 last_modified: '2025-12-12T00:34:07Z'
 ---

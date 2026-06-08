@@ -5,6 +5,7 @@ title: OpenUSD Best Practices Guide DISCOVERY
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-11T19:13:06Z'
 last_modified: '2025-12-11T19:13:06Z'
 ---

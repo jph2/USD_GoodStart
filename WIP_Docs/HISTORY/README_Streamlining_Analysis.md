@@ -5,6 +5,7 @@ title: README Streamlining Analysis
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-10T15:02:28Z'
 last_modified: '2025-12-10T15:02:28Z'
 ---

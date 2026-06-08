@@ -5,6 +5,7 @@ title: Customizing OpenUSD for Your Pipeline — Video Deep-Dive Tutorial
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-03-04T17:15:55Z'
 last_modified: '2026-03-04T17:15:55Z'
 ---

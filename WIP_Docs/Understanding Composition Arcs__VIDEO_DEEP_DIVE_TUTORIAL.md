@@ -5,6 +5,7 @@ title: Understanding Composition Arcs — Video Deep-Dive Tutorial
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-03-04T19:58:25Z'
 last_modified: '2026-03-04T19:58:25Z'
 ---

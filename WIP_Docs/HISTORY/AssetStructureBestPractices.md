@@ -5,6 +5,7 @@ title: Best Practices for OpenUSD Asset Structure
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-10T09:41:43Z'
 last_modified: '2025-12-10T09:41:43Z'
 ---

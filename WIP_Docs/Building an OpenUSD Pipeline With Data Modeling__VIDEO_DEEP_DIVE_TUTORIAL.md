@@ -5,6 +5,7 @@ title: Building an OpenUSD Pipeline With Data Modeling — Video Deep-Dive Tutor
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-03-04T17:15:34Z'
 last_modified: '2026-03-04T17:15:34Z'
 ---

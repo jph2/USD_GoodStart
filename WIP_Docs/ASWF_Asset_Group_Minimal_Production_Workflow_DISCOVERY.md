@@ -5,6 +5,7 @@ title: ASWF Asset Group - Minimal/Production Example Workflow
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-02-24T18:37:23Z'
 last_modified: '2026-02-24T18:37:23Z'
 ---

@@ -5,6 +5,7 @@ title: 030_LYR_USD
 type: TECHNICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-12T00:34:10Z'
 last_modified: '2025-12-12T00:34:10Z'
 ---

@@ -5,6 +5,7 @@ title: Metadata & Schema Registry (Template)
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-11T21:05:19Z'
 last_modified: '2025-12-11T21:05:19Z'
 ---

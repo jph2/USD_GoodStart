@@ -5,6 +5,7 @@ title: USD GoodStart Setup Script - Automation Prompt
 type: TECHNICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-02-17T09:43:32Z'
 last_modified: '2026-02-17T09:43:32Z'
 ---

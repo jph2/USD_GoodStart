@@ -5,6 +5,7 @@ title: 010_ASS_USD
 type: TECHNICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-12-12T00:33:52Z'
 last_modified: '2025-12-12T00:33:52Z'
 ---

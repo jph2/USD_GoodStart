@@ -5,6 +5,7 @@ title: SICK AG Industrial Metaverse - FMI/FMU Discovery
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-03-06T20:10:58Z'
 last_modified: '2026-03-06T20:10:58Z'
 ---

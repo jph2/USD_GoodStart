@@ -5,6 +5,7 @@ title: README Content Integration Analysis
 type: PRACTICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2025-11-22T18:00:06Z'
 last_modified: '2025-11-22T18:00:06Z'
 ---

@@ -5,6 +5,7 @@ title: 030_SIM_LYR
 type: TECHNICAL
 status: active
 trust_level: 2
+visibility: internal
 created: '2026-02-18T14:17:04Z'
 last_modified: '2026-02-18T14:17:04Z'
 ---
