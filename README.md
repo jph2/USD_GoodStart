@@ -73,31 +73,84 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 **Quick Structure:**
 
 ```mermaid
-graph TD
-    Root[USD_GoodStart_ROOT.usda<br/>Main Container] --> Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
-    Root --> Camera[CAM_LYR.usda<br/>Cameras]
-    Root --> Env[ENV_LYR.usda<br/>Environment & Lighting]
-    Root --> Sim[SIM_LYR.usda<br/>External Simulation Results]
-    Root --> Data[DATA_LYRs.usda<br/>Data & Metadata]
-    Root --> Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
-    Root --> Anim[ANIM_LYR.usda<br/>Animation]
-    Root --> Variant[VAR_LYR.usda<br/>Variants & Configurations]
-    Root --> Material[MTL_LYR.usda<br/>Materials & Shading]
-    Root --> Physics[PHY_LYR.usda<br/>Physics Setup &<br/>Collision Shapes]
-    Root --> Asset[ASS_LYR.usda<br/>References & Payloads<br/>Asset Import<br/>Lowest Layer]
-    
-    Source[000_SOURCE/<br/>CAD/DCC Sources] --> Assets[010_ASS_USD/<br/>USD Assets]
-    Assets --> MatLib[MatLib/<br/>Material Libraries]
-    Assets --> Tex[tex/<br/>Textures]
-    Assets --> Startpoint[USD_Startpoint/<br/>Stable DCC Startpoints]
-    
-    Startpoint --> Asset
-    MatLib --> Material
-    Tex --> Material
-    
-    Source -.-|enhanced with| Composition[USD Composition Arcs<br/>Local Inherits Variants<br/>Relocates<br/>References Payloads<br/>Specializes]
-    
-    style Root fill:#90caf9,stroke:#0d47a1,stroke-width:3px,color:#000
+flowchart LR
+    subgraph LeftColumn[" "]
+        direction TB
+        subgraph LIVRPSBox["Composition Arc Strength"]
+            direction TB
+            LIVHdr["LIVRPS · LIV(E)RPS"]
+            ArcL["L Local"]
+            ArcI["I Inherits"]
+            ArcV["V Variants"]
+            ArcE["E rElocates"]
+            ArcR["R References"]
+            ArcP["P Payloads"]
+            ArcS["S Specializes"]
+            LIVHdr --> ArcL
+            ArcL --> ArcI
+            ArcI --> ArcV
+            ArcV --> ArcE
+            ArcE --> ArcR
+            ArcR --> ArcP
+            ArcP --> ArcS
+        end
+        subgraph DiskSources["Folder structure (on disk)"]
+            direction TB
+            Source[000_SOURCE/<br/>CAD/DCC Sources]
+            Assets[010_ASS_USD/<br/>USD Assets]
+            MatLib[MatLib/<br/>Material Libraries]
+            Tex[tex/<br/>Textures]
+            Startpoint[USD_Startpoint/<br/>Stable DCC Startpoints]
+            Source --> Assets
+            Assets --> MatLib
+            Assets --> Tex
+            Assets --> Startpoint
+        end
+    end
+
+    subgraph RootContainer["USD_GoodStart_ROOT.usda · Main Container"]
+        direction TB
+        Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
+        Camera[CAM_LYR.usda<br/>Cameras]
+        Env[ENV_LYR.usda<br/>Environment & Lighting]
+        Sim[SIM_LYR.usda<br/>External Simulation Results]
+        Data[DATA_LYRs.usda<br/>Data & Metadata]
+        Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
+        Anim[ANIM_LYR.usda<br/>Animation]
+        Variant[VAR_LYR.usda<br/>Variants & Configurations]
+        Material[MTL_LYR.usda<br/>Materials & Shading]
+        Physics[PHY_LYR.usda<br/>Physics Setup & Collision Shapes]
+        Asset[ASS_LYR.usda<br/>References & Payloads · Asset Import]
+        Opinion --> Camera
+        Camera --> Env
+        Env --> Sim
+        Sim --> Data
+        Data --> Actgr
+        Actgr --> Anim
+        Anim --> Variant
+        Variant --> Material
+        Material --> Physics
+        Physics --> Asset
+    end
+
+    LIVRPSBox -.-> RootContainer
+    DiskSources --> RootContainer
+    MatLib -.->|feeds MTL_LYR| RootContainer
+    Tex -.->|feeds MTL_LYR| RootContainer
+    Startpoint -.->|feeds ASS_LYR| RootContainer
+
+    style LeftColumn fill:none,stroke:none,color:#000
+    style RootContainer fill:#e3f2fd,stroke:#0d47a1,stroke-width:3px,color:#000
+    style DiskSources fill:#fafafa,stroke:#424242,stroke-width:2px,color:#000
+    style LIVRPSBox fill:#78909c,stroke:#263238,stroke-width:3px,color:#000
+    style LIVHdr fill:#eceff1,stroke:#263238,stroke-width:2px,color:#000
+    style ArcL fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcI fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcV fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcE fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcR fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcP fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
+    style ArcS fill:#eceff1,stroke:#455a64,stroke-width:1px,color:#000
     style Asset fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
     style Opinion fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
     style Variant fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
@@ -109,7 +162,6 @@ graph TD
     style Anim fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Camera fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
     style Physics fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
-    style Composition fill:#78909c,stroke:#263238,stroke-width:4px,color:#000
     style Source fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
     style Assets fill:#ffffff,stroke:#424242,stroke-width:3px,color:#000
     style Startpoint fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
