@@ -21,7 +21,7 @@ last_modified: '2026-03-08T11:02:38Z'
 
 **Version:** 0.9.5.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
 **Last Updated:** 29.01.2026
-> **What is missing:** USD GoodStart will be updated with the framework from [LearnOpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA & Mattias [Awesome USD](https://github.com/matiascodesal/awesome-openusd)). and will become OpenUSDGoodstart... In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md).
+> **What is missing:** USD GoodStart will be updated with the framework from [Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA) and [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd), and will become OpenUSDGoodstart… In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md). See also the curated link list in [`LAYER_ORDER_REFERENCES_RESEARCH.md`](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources).
 **Tag block:**
 #framework_integration #openusd #omniverse #composition #pipeline #validation #aas_integration #architecture #conversion #workflow_automation #best_practices #usd_core #hybrid #digital_twin #digital_twin_creation #semantic_governance #layers #mcp_protocol #ai_coding_agents #quality_assurance
 
@@ -47,8 +47,8 @@ Dear fellow lerner: Here is a clean, organized USD project template for getting 
 If you are in a hurry, just read the TLDR section..., it will get you up and running  ;) , this Read me provides a decent overview..., the 
 
 In this 'Readme' I try to sum up my learnings from Sep2024 till now, strugeling to find a good path into OpenUSD.
-I also have some Tutorials here: www.haluszka.com#tutorials , 
-More great resources: Matias Codesal: https://github.com/matiascodesal/awesome-openusd , Linfan ZhangAndy GreenYizhou Zhao: https://learn-usd.github.io/
+I also have tutorials at **[haluszka.com/#tutorials](https://haluszka.com/#tutorials)**.
+More great resources: **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** (Matias Codesal) · **[OpenUSD in One Weekend](https://learn-usd.github.io/)** (Linfan Zhang, Andy Green, Yizhou Zhao) · full curated list in [`LAYER_ORDER_REFERENCES_RESEARCH.md`](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources)
 
 My Entrypoint is Omniverse - as it is build around OpenUSD - and other tools are catching up. Learning the beauty of Composition Arcs in OpenUSD has been hard, since the online Learning paths provided by NVIDIA, PIXAR and others come from the Pipelining heritage of OpenUSD and tend to Focus on the Programmatic side of things. And even though, Cursor, with strong Context engineering + MCPs, has become a good friend and has changed my approach on 3D entirely, I have an artist and Design Background and we are used to just start!!
 
@@ -62,6 +62,14 @@ P.s.The supercool feature of OpenUSD is the ability to interact on the code leve
 > **⚠️ Beta Status:** This is an early-stage beta project and has not been fully hardened yet. Please use with caution and at your own risk! 
 There are bits and pieces about the workflows suggested, that I have not tested enough to be confident about them..., therefore treat this as suggestions, trying to merge workflows we see in 'traditional' CGI / VFX Pipeline, with Omniverse DigitalTwin workflows. You are sort of watching me learning ;) 
 
+### Layer order — WIP reference & discussion base
+
+> The **`subLayers` stack** used in this template is **one proposed GoodStart approach** — work in progress and **actively under discussion**, not a finished OpenUSD standard.
+>
+> **[`WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md`](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md)** collects published layer-order conventions (ASWF, SideFX, Pixar, Omniverse, M&E pipeline practice), compares them to this stack (including recent AOUSD Slack discussion with Michael O'Brien), and records trade-offs with diagrams. Use it as a **base for evaluating alternatives** and for a more informed pipeline conversation — including whether GoodStart’s layer order should change.
+>
+> **Broader OpenUSD learning:** The same document includes a curated link list ([OpenUSD Learning & Ecosystem Resources](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources)) — Learn OpenUSD, [OpenUSD in One Weekend](https://learn-usd.github.io/), [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd), AOUSD, Omniverse docs, and more.
+
 ## TLDR (Too Long; Didn't Read)
 
 **What is this?** A USD project template adapted from VFX industry best practices for **digital twin applications**, with organized folder structure and validation scripts. ... lazy? → [go here](#laziness-is-what-got-us-here)
@@ -70,7 +78,7 @@ There are bits and pieces about the workflows suggested, that I have not tested 
 
 > **Note about the video:** The video demonstrates layer workflows using a simple setup with a material ball asset. That older setup (including the material ball) is preserved in the `History/` folder ('...\USD_GoodStart\History`), so you can access it or retrieve specific assets from previous versions if needed, further down I provide a super clean minimal structure, Rootfile + Folders + Layers for a GoodStart.
 
-**Quick Structure:**
+**Quick Structure** *(layer stack is WIP — see [Layer order — WIP reference & discussion base](#layer-order--wip-reference--discussion-base))*:
 
 ```mermaid
 flowchart LR
@@ -238,6 +246,9 @@ Asset_Root_File.usda (Interface - Lightweight)
 
 **Layer Stack Order (GoodStart_ROOT.usda)**  
 Array ordering: first = strongest, last = weakest:
+
+> **Further reading:** Full comparison tables, source links, and per-approach Mermaid diagrams — [WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md) (also linked [above](#layer-order--wip-reference--discussion-base)).
+
 1. **OPIN_LYR.usda** – Overrides & opinions (strongest)
 2. **CAM_LYR.usda** – Cameras
 3. **ENV_LYR.usda** – Environment, ground, lighting, render defaults
@@ -1454,16 +1465,37 @@ This repository structure aligns with NVIDIA's Digital Twin and Physical AI lear
 
 ### Additional Learning Resources
 
-- **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** - Curated list of OpenUSD resources
-- **[Haluszka OpenUSD Tutorials](https://haluszka.com/#tutorials)** - Hands on 'learn with me...' 
-- **[USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/)** - Practical USD onboarding guide for developers and pipeline TDs (Houdini-focused, VFX industry)
-- **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** - CAD conversion examples
-- **[AOUSD Specifications](https://aousd.org/)** - Official OpenUSD standards
-- **[USDWG Collective Project 001](https://github.com/usd-wg/collectiveproject001)** - VFX workflow examples
-- **[OpenDCC](https://github.com/shapefx/OpenDCC)** - Open-source USD-native application framework from AOUSD community
-- **[ShapeFX Loki](https://shapefx.app/)** - USD-native editing tool built on OpenDCC
-- **[usdview](https://github.com/PixarAnimationStudios/OpenUSD)** - Classic USD validation and inspection tool from Pixar
-- **[Composable Bindings](https://aka.ms/ComposableBindings)** - Modern integration pattern for connecting heterogeneous systems in digital engineering workflows (Microsoft & NVIDIA collaboration)
+**Curated index (layer order + ecosystem):** [`WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources`](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources)
+
+**Core paths**
+
+- **[Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html)** — NVIDIA’s updated learning path ([GitHub source](https://github.com/NVIDIA-Omniverse/LearnOpenUSD/tree/main))
+- **[OpenUSD in One Weekend](https://learn-usd.github.io/)** — Practical Python-focused book (Zhang, Green, Zhao)
+- **[Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd)** — Meta-list of tools, assets, and learning material
+- **[Introduction to USD](https://openusd.org/release/intro.html)** — Official Pixar/OpenUSD docs
+- **[Alliance for OpenUSD](https://aousd.org/)** — Standards body ([Core Spec 1.0 blog](https://aousd.org/blog/foundations-of-open-3d-development-introducing-aousd-core-specification-1-0/))
+
+**NVIDIA & Omniverse**
+
+- [OpenUSD learning path](https://www.nvidia.com/en-us/learn/learning-path/openusd/) · [On-demand OpenUSD sessions](https://www.nvidia.com/en-us/on-demand/search/?facet.mimetype[]=event%20session&layout=list&page=1&q=OpenUSD&sort=date&sortDir=desc)
+- [What Is OpenUSD? (NVIDIA Glossary)](https://www.nvidia.com/en-us/glossary/openusd/)
+- [OpenUSD code samples](https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/usd/usd.html) · [Omniverse Kit modules](https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/modules.html)
+- [OpenUSD certification study guide (Medium)](https://medium.com/@chaubenz/your-complete-guide-to-passing-the-nvidia-certified-professional-openusd-development-b129777b0ed6)
+
+**Practical guides & community**
+
+- **[Haluszka OpenUSD Tutorials](https://haluszka.com/#tutorials)** — Hands-on “learn with me” content
+- **[USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/)** — Pipeline TD onboarding (Houdini/VFX focus)
+- **[Cave Academy — Introduction to OpenUSD (2025)](https://caveacademy.com/courses/introduction-to-openusd-2025/)**
+- [OpenUSD Study Group](https://docs.nvidia.com/learn-openusd/latest/first-steps/first-steps.html) — Discord (linked from NVIDIA First Steps)
+
+**Project & pipeline**
+
+- **[USD GoodStart](https://github.com/jph2/USD_GoodStart)** — This repository
+- **[Layer order references (WIP research)](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md)** — Comparison doc for sublayer stacks
+- **[CAD-to-OpenUSD](https://github.com/nAurava-Technologies/CAD-to-OpenUSD)** — CAD conversion examples
+- **[USDWG Collective Project 001](https://github.com/usd-wg/collectiveproject001)** — VFX workflow examples
+- **[OpenDCC](https://github.com/shapefx/OpenDCC)** · **[ShapeFX Loki](https://shapefx.app/)** — AOUSD community USD-native tools
 
 ## Learning from VFX Industry Best Practices
 
