@@ -981,10 +981,10 @@ This section brings in the **USD GoodStart** approach (https://github.com/jph2/U
 
 | Aspect | USD GoodStart | ASWF collectiveproject001 | Learn OpenUSD |
 |--------|--------------|--------------------------|---------------|
-| **Root file** | `USD_GoodStart_ROOT.usda` — single root with 11 sublayers for a complete scene | `shots/s001_001/index.usda` — shot root with 6 sublayers + referenced elements | No project root prescribed — focuses on individual asset interface files |
-| **Layer naming** | Human-readable suffixes: `OPIN_LYR`, `MTL_LYR`, `ASS_LYR`, `SIM_LYR`, `DATA_LYRs` | Generic: `index.usda` everywhere (context from folder path) | No naming convention prescribed |
+| **Root file** | `USD_GoodStart_ROOT.usda` — single root with 12 sublayers for a complete scene | `shots/s001_001/index.usda` — shot root with 6 sublayers + referenced elements | No project root prescribed — focuses on individual asset interface files |
+| **Layer naming** | Human-readable suffixes: `OPIN_LYR`, `RUNTIME_LYR`, `MTL_LYR`, `ASS_LYR`, `SIM_LYR`, `DATA_LYRs` | Generic: `index.usda` everywhere (context from folder path) | No naming convention prescribed |
 | **Layer intent** | Each layer has one clear purpose (opinion, material, asset, animation, simulation, data, etc.) | Layers grouped by concern (fragments within asset, overrides within shot) | Recommends "workstreams" — each layer = one parallel work contribution |
-| **Strongest → Weakest** | OPIN → CAM → ENV → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → ASS | rendersettings → fx → lighting → animation → renderPasses → lightRig (shot-level) | Not prescribed at project level — principle: "sublayer order = opinion strength" |
+| **Strongest → Weakest** | OPIN → CAM → ENV → RUNTIME → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → ASS | rendersettings → fx → lighting → animation → renderPasses → lightRig (shot-level) | Not prescribed at project level — principle: "sublayer order = opinion strength" |
 
 #### Where GoodStart Excels
 
@@ -994,8 +994,8 @@ GoodStart ships with `customLayerData` containing Omniverse camera settings, `om
 **2. "Safe Mode" — Layer Locking as Default**
 All persistent layers are locked by default; the session layer is the authoring layer. This prevents accidental edits in the wrong layer — a practical production guard that neither of the other two approaches includes.
 
-**3. Digital Twin Data Layers (`040_DATA_LYRs/`)**
-GoodStart has first-class support for PLM/ERP/AAS/OPC UA data integration as a dedicated layer group. The collectiveproject001 is purely VFX (no data integration). Learn OpenUSD doesn't address external data systems.
+**3. Runtime + Digital Twin Data Layers (`035_RUNTIME_LYR/`, `040_DATA_LYRs/`)**
+GoodStart has first-class support for both live/runtime digital twin state and static integration data. `035_RUNTIME_LYR/` is the boundary for session-backed runtime opinions and explicit snapshots; `040_DATA_LYRs/` is for PLM/ERP/AAS/OPC UA mappings, CAD/Revit metadata, identifiers, and external-system references. The collectiveproject001 is purely VFX (no data integration). Learn OpenUSD doesn't address external data systems at project-template level.
 
 **4. Source File Management (`000_SOURCE/`)**
 A dedicated directory for original CAD/DCC source files, separate from USD outputs. This is similar to collectiveproject001's `host_wip/` concept but elevated to project level.
@@ -1047,12 +1047,12 @@ GoodStart's README documents the reference/payload pattern with lofting, but the
 
 | Question | GoodStart | collectiveproject001 | Learn OpenUSD |
 |----------|-----------|---------------------|---------------|
-| **How many layers per scene?** | 11 named layers (flat) | Dozens (deep, nested per asset/purpose/fragment) — see [File Tree Reference](#file-tree-reference-complete) and [Composition Arc Diagram](#composition-arc-diagram) for the full per-asset layer depth | As few as needed; don't let stacks grow procedurally |
+| **How many layers per scene?** | 12 named layers (flat, now including an explicit runtime/session slot) | Dozens (deep, nested per asset/purpose/fragment) — see [File Tree Reference](#file-tree-reference-complete) and [Composition Arc Diagram](#composition-arc-diagram) for the full per-asset layer depth | As few as needed; don't let stacks grow procedurally |
 | **Where does geometry live?** | `ASS_LYR.usda` references `010_ASS_USD/USD_Startpoint/` | `assets/*/render/model/payload.usda` | Behind a payload arc in the asset's contents layer |
 | **How are materials managed?** | `MTL_LYR.usda` references `MatLib/` | `surface/index.usda` per purpose per asset | Not specifically addressed at project level |
 | **How is the project versioned?** | No explicit versioning strategy | Git-only, version = "latest" | Not addressed (asset-level concern) |
 | **What about the host DCC?** | `000_SOURCE/` for originals, `USD_Startpoint/` for exports | `host_wip/` + `host_usd_export/` per fragment | Not addressed |
-| **What about digital twin data?** | `040_DATA_LYRs/` — first-class layer group | Not addressed (VFX focus) | Not addressed (asset-level focus) |
+| **What about digital twin data?** | `035_RUNTIME_LYR/` for live/session-backed runtime state and snapshots; `040_DATA_LYRs/` for static metadata and identifiers | Not addressed (VFX focus) | Not addressed at project-template level |
 | **Multi-user collaboration?** | Session layer isolation + layer locking | Git branches + fragment-per-artist | Layer stacks model parallel workstreams |
 
 > **Layer Depth Detail:** The collectiveproject001 per-asset composition depth is visualized in two places in this document: the **[File Tree Reference (Complete)](#file-tree-reference-complete)** (line ~626) shows every file in the hierarchy, and the **[Composition Arc Diagram](#composition-arc-diagram)** (line ~721) traces the full chain from shot root through element → asset → purpose → fragment → payload — 6 composition levels deep.
@@ -1427,7 +1427,7 @@ For the IEDT Interest Group's goal of creating a focal use case and minimal prod
 
 1. **Convert CAD data with CAD-to-OpenUSD** — Get geometry from STEP into USD with proper instancing and tessellation. This is the first mile that makes everything else possible for engineering workflows. Enable metadata conversion when available.
 
-2. **Start with GoodStart's philosophy** — Get a working scene fast. Place converted assets into a GoodStart scaffold with proper references. The digital twin data layer integration (`040_DATA_LYRs/`) is directly relevant to IEDT. The "just start" mentality gets prototypes into stakeholders' hands early.
+2. **Start with GoodStart's philosophy** — Get a working scene fast. Place converted assets into a GoodStart scaffold with proper references. The runtime/data split (`035_RUNTIME_LYR/` for live state and snapshots, `040_DATA_LYRs/` for static metadata and identifiers) is directly relevant to IEDT. The "just start" mentality gets prototypes into stakeholders' hands early.
 
 3. **Structure assets per Learn OpenUSD principles** — Each engineering asset should follow the reference/payload pattern with lofting. Use `kind` metadata properly. Implement parameterization for configuration variants. Plan instancing for repeated parts.
 
@@ -1468,7 +1468,7 @@ All changes described below are modifications or extensions to the existing `set
 
 **What exists today:**
 - Setup script generates folder structure + 11 sublayers + root file
-- Single-scene scope with named layers (OPIN, CAM, ENV, SIM, DATA, ACTGR, ANIM, VAR, MTL, PHY, ASS)
+- Single-scene scope with named layers (OPIN, CAM, ENV, RUNTIME, SIM, DATA, ACTGR, ANIM, VAR, MTL, PHY, ASS)
 - Omniverse metadata (camera settings, layer locking, render settings)
 - Safe Mode defaults (all layers locked, session layer as authoring layer)
 - Scale choice (m, cm, mm)

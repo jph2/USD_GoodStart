@@ -17,6 +17,8 @@ last_modified: '2026-02-17T09:42:14Z'
 
 # 040_DATA_LYRs
 
-**Purpose:** Data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA / sensor / data metadata).
+**Purpose:** Static and slow-changing data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA mappings, CAD/Revit metadata, identifiers, external-system references).
+
+Live/latest-value MQTT or OPC UA shopfloor telemetry should not be persisted here by default. Keep live runtime state in an application session layer or runtime signal store, and use `035_RUNTIME_LYR/` only for explicit runtime opinions or snapshots.
 
 See the main README.md for detailed usage instructions.

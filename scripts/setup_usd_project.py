@@ -4,7 +4,7 @@ USD GoodStart Project Setup Script
 
 Creates a USD_GoodStart project with folder structure and one root scene (m, cm, or mm scale).
 Based on USD_GoodStart_m_ROOT.usda, USD_GoodStart_cm_ROOT.usda, USD_GoodStart_mm_ROOT.usda
-and folders: 000_SOURCE, 010_ASS_USD, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs.
+and folders: 000_SOURCE, 010_ASS_USD, 020_BASE_LYR, 030_SIM_LYR, 035_RUNTIME_LYR, 040_DATA_LYRs.
 
 Usage:
     python scripts/setup_usd_project.py [target_directory]
@@ -33,6 +33,7 @@ FOLDER_STRUCTURE = [
     "010_ASS_USD/Envs",
     "020_BASE_LYR",
     "030_SIM_LYR",
+    "035_RUNTIME_LYR",
     "040_DATA_LYRs",
 ]
 
@@ -41,6 +42,7 @@ SUBLAYERS = [
     "./020_BASE_LYR/OPIN_LYR.usda",
     "./020_BASE_LYR/CAM_LYR.usda",
     "./020_BASE_LYR/ENV_LYR.usda",
+    "./035_RUNTIME_LYR/RUNTIME_LYR.usda",
     "./030_SIM_LYR/SIM_LYR.usda",
     "./040_DATA_LYRs/DATA_LYRs.usda",
     "./020_BASE_LYR/ACTGR_LYR.usda",
@@ -63,6 +65,7 @@ LAYERS_TO_CREATE = [
     ("020_BASE_LYR", "ANIM_LYR.usda"),
     ("020_BASE_LYR", "PHY_LYR.usda"),
     ("030_SIM_LYR", "SIM_LYR.usda"),
+    ("035_RUNTIME_LYR", "RUNTIME_LYR.usda"),
     ("040_DATA_LYRs", "DATA_LYRs.usda"),
 ]
 
@@ -167,41 +170,78 @@ See the main README.md for detailed usage instructions.
 
 See the main README.md for detailed usage instructions.
 """,
+    "035_RUNTIME_LYR": """# 035_RUNTIME_LYR
+
+**Purpose:** Runtime/session-backed layer slot for live digital twin state such as MQTT, OPC UA, or other shopfloor telemetry.
+
+Keep live telemetry in a session layer or runtime signal store by default. Use `RUNTIME_LYR.usda` only for explicit runtime opinions or snapshots that should be persisted.
+
+Static metadata belongs in `040_DATA_LYRs/`.
+
+See the main README.md for detailed usage instructions.
+""",
     "040_DATA_LYRs": """# 040_DATA_LYRs
 
-**Purpose:** Data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA / sensor / data metadata).
+**Purpose:** Static and slow-changing data layers for data-driven digital twin integration (PLM/ERP/AAS/OPC UA / metadata).
+
+Live telemetry belongs in a session layer or `035_RUNTIME_LYR/`, not here by default.
 
 See the main README.md for detailed usage instructions.
 """,
 }
 
 # ============================================================================
-# Root template: based on USD_GoodStart_m_ROOT.usda
-# {root_filename}, {mpu_str}, and {default_prim} are substituted.
+# Root template: keeps the starter scene physically consistent across unit choices.
+# Numeric values are authored in the selected stage unit.
 # ============================================================================
 
-def _get_root_template_content(root_filename: str, mpu_str: str, default_prim: str) -> str:
-    """Return root USDA content. Template uses root_filename, mpu_str, and default_prim."""
+def _fmt_usd_number(value: float) -> str:
+    """Format numeric USDA values without noisy trailing precision."""
+    if abs(value - round(value)) < 1e-9:
+        return str(int(round(value)))
+    return f"{value:.15g}"
+
+
+def _stage_units(meters: float, meters_per_unit: float) -> str:
+    """Convert a physical meter value to the selected stage unit."""
+    return _fmt_usd_number(meters / meters_per_unit)
+
+
+def _stage_tuple(values_meters: tuple[float, float, float], meters_per_unit: float) -> str:
+    return ", ".join(_stage_units(value, meters_per_unit) for value in values_meters)
+
+
+def _get_root_template_content(root_filename: str, mpu_val: float, default_prim: str) -> str:
+    """Return root USDA content with starter geometry scaled by metersPerUnit."""
+    mpu_str = "1" if mpu_val == 1.0 else str(mpu_val)
     sublayers_str = ",\n        ".join([f"@{p}@" for p in SUBLAYERS])
+    cube_half = _stage_units(0.5, mpu_val)
+    ground_half = _stage_units(7.0, mpu_val)
+    ground_size = _stage_units(14.0, mpu_val)
+    light_height = _stage_units(3.05, mpu_val)
+    camera_far = _stage_units(500.0, mpu_val)
+    camera_radius = _stage_units(5.0, mpu_val)
+    persp_position = _stage_tuple((-6.486169164847129, 7.196822390878303, 20.611666836476675), mpu_val)
+    persp_target = _stage_tuple((0.8683254870102121, -0.7283014643907768, 0.3723306848790707), mpu_val)
     return f'''#usda 1.0
 (
     customLayerData = {{
         dictionary cameraSettings = {{
             dictionary Front = {{
-                double3 position = (0, 0, 50000)
-                double radius = 500
+                double3 position = (0, 0, {camera_far})
+                double radius = {camera_radius}
             }}
             dictionary Perspective = {{
-                double3 position = (764.2241942381814, 633.5855099124096, 796.3182160588008)
-                double3 target = (-26.46817790205455, 225.2060805154992, 84.34472110960974)
+                double3 position = ({persp_position})
+                double3 target = ({persp_target})
             }}
             dictionary Right = {{
-                double3 position = (-50000, 0, 0)
-                double radius = 500
+                double3 position = (-{camera_far}, 0, 0)
+                double radius = {camera_radius}
             }}
             dictionary Top = {{
-                double3 position = (0, 50000, 0)
-                double radius = 500
+                double3 position = (0, {camera_far}, 0)
+                double radius = {camera_radius}
             }}
             string boundCamera = "/OmniverseKit_Persp"
         }}
@@ -218,6 +258,7 @@ def _get_root_template_content(root_filename: str, mpu_str: str, default_prim: s
                 bool "./020_BASE_LYR/PHY_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
                 bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./035_RUNTIME_LYR/RUNTIME_LYR.usda" = 1
                 bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
             }}
             dictionary muteness = {{
@@ -250,27 +291,27 @@ def Xform "{default_prim}"
 {{
     def Mesh "Cube"
     {{
-        float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+        float3[] extent = [(-{cube_half}, -{cube_half}, -{cube_half}), ({cube_half}, {cube_half}, {cube_half})]
         int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
         int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
         normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
             interpolation = "faceVarying"
         )
-        point3f[] points = [(-50, -50, 50), (50, -50, 50), (-50, 50, 50), (50, 50, 50), (-50, -50, -50), (50, -50, -50), (-50, 50, -50), (50, 50, -50)]
+        point3f[] points = [(-{cube_half}, -{cube_half}, {cube_half}), ({cube_half}, -{cube_half}, {cube_half}), (-{cube_half}, {cube_half}, {cube_half}), ({cube_half}, {cube_half}, {cube_half}), (-{cube_half}, -{cube_half}, -{cube_half}), ({cube_half}, -{cube_half}, -{cube_half}), (-{cube_half}, {cube_half}, -{cube_half}), ({cube_half}, {cube_half}, -{cube_half})]
         texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
             interpolation = "faceVarying"
         )
         uniform token subdivisionScheme = "none"
         double3 xformOp:rotateXYZ = (0, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 267.6749425311719, 0)
+        double3 xformOp:translate = (0, {cube_half}, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 }}
 
 def Xform "Environment"
 {{
-    int ground:size = 1400
+    int ground:size = {ground_size}
     string ground:type = "On"
     double3 xformOp:rotateXYZ = (0, 0, 0)
     double3 xformOp:scale = (1, 1, 1)
@@ -293,7 +334,7 @@ def Xform "Environment"
         token visibility = "inherited"
         double3 xformOp:rotateXYZ = (0, 180, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 305, 0)
+        double3 xformOp:translate = (0, {light_height}, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 
@@ -315,7 +356,7 @@ def Xform "Environment"
         token visibility = "inherited"
         double3 xformOp:rotateXYZ = (-105, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 305, 0)
+        double3 xformOp:translate = (0, {light_height}, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 
@@ -348,7 +389,7 @@ def Xform "Environment"
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {{
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        float3[] extent = [(-{ground_half}, -{ground_half}, 0), ({ground_half}, {ground_half}, 0)]
         int[] faceVertexCounts = [4]
         int[] faceVertexIndices = [0, 1, 3, 2]
         rel material:binding = </Environment/Looks/Grid> (
@@ -357,7 +398,7 @@ def Xform "Environment"
         normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
             interpolation = "faceVarying"
         )
-        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
+        point3f[] points = [(-{ground_half}, -{ground_half}, 0), ({ground_half}, -{ground_half}, 0), (-{ground_half}, {ground_half}, 0), ({ground_half}, {ground_half}, 0)]
         texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
             interpolation = "faceVarying"
         )
@@ -476,17 +517,12 @@ def ask_scale() -> int:
     print("  [3] (are you nuts? / special interest!) -> Millimeters (mm)\t– metersPerUnit = 0.001")
     print()
     print("Special Note:")
-    print("For some strange reason, when you create a default cube, it's always on scale 1, even if")
-    print("you change the properties of your root layer to adjust the scale, either from 1 to 0.01,")
-    print("so from meter to centimeter.... The cube that you will generate, in both scene scales, will")
-    print("differ in size. So, in 1, it's 1 meter, and in 0.01, it's 1 centimeter.")
+    print("The starter cube, ground, lights, and camera guides are authored in the selected stage")
+    print("unit so their physical size stays consistent across meters, centimeters, and millimeters.")
     print()
-    print("Nevertheless, the scale will show 1. Which is wicked. And if somebody can explain that")
-    print("to me, please DM me.")
-    print()
-    print("Hence, never trust the scale. Especially if you have a team where somebody is working")
-    print("with centimeters and the other one is working with meters. So a team of mixed Composer")
-    print("and Isaac Sim and Isaac Lab.")
+    print("Omniverse may still show transform scale as 1 because scale is a multiplier on the authored")
+    print("geometry, not the same thing as the stage unit. Debug physical size via metersPerUnit plus")
+    print("authored point/translate values, not by xformOp:scale alone.")
     print()
     while True:
         choice = input("Enter choice (1–3, default: 1 = Centimeters): ").strip() or "1"
@@ -601,8 +637,7 @@ def create_root_file(base_path: Path, scale_index: int, default_prim: str) -> st
         print(f"  [OK] {root_filename} (copied from repo)")
         return root_filename
 
-    mpu_str = "1" if mpu_val == 1.0 else str(mpu_val)
-    content = _get_root_template_content(root_filename, mpu_str, default_prim)
+    content = _get_root_template_content(root_filename, mpu_val, default_prim)
     path.write_text(content, encoding="utf-8")
     print(f"  [OK] {root_filename}")
     return root_filename
@@ -662,7 +697,7 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
         print("\nNext steps:")
         print("  1. Open the root file in Omniverse Composer")
         print("  2. Add assets under 010_ASS_USD/USD_Startpoint/")
-        print("  3. Author content in 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
+        print("  3. Author content in 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
         print()
         print("  --- Note: Stage scale (metersPerUnit) ---")
         print("  Isaac Sim and Isaac Lab handle stage scale in METERS by default.")

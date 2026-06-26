@@ -43,6 +43,7 @@ USD_GoodStart/
 ├── 000_SOURCE/README.md           ← README template
 ├── 010_ASS_USD/README.md          ← README template
 ├── 030_SIM_LYR/README.md          ← README template
+├── 035_RUNTIME_LYR/README.md      ← README template
 └── 040_DATA_LYRs/README.md        ← README template
 ```
 
@@ -77,6 +78,9 @@ The script generates this folder/file hierarchy:
 ├── 030_SIM_LYR/
 │   ├── README.md
 │   └── SIM_LYR.usda                   ← Minimal
+├── 035_RUNTIME_LYR/
+│   ├── README.md
+│   └── RUNTIME_LYR.usda               ← Minimal
 └── 040_DATA_LYRs/
     ├── README.md
     └── DATA_LYRs.usda                 ← Minimal
@@ -106,17 +110,12 @@ Please note!
   [3] (are you nuts? / special interest!) -> Millimeters (mm)	– metersPerUnit = 0.001
 
 Special Note:
-For some strange reason, when you create a default cube, it's always on scale 1, even if
-you change the properties of your root layer to adjust the scale, either from 1 to 0.01,
-so from meter to centimeter.... The cube that you will generate, in both scene scales, will
-differ in size. So, in 1, it's 1 meter, and in 0.01, it's 1 centimeter.
+The starter cube, ground, lights, and camera guides are authored in the selected stage
+unit so their physical size stays consistent across meters, centimeters, and millimeters.
 
-Nevertheless, the scale will show 1. Which is wicked. And if somebody can explain that
-to me, please DM me.
-
-Hence, never trust the scale. Especially if you have a team where somebody is working
-with centimeters and the other one is working with meters. So a team of mixed Composer
-and Isaac Sim and Isaac Lab.
+Omniverse may still show transform scale as 1 because scale is a multiplier on the authored
+geometry, not the same thing as the stage unit. Debug physical size via metersPerUnit plus
+authored point/translate values, not by xformOp:scale alone.
 
 Enter choice (1–3, default: 1 = Centimeters):
 ```
@@ -220,14 +219,15 @@ Strongest to weakest (first in array = strongest):
 1. `./020_BASE_LYR/OPIN_LYR.usda` – Opinions (strongest)
 2. `./020_BASE_LYR/CAM_LYR.usda` – Cameras
 3. `./020_BASE_LYR/ENV_LYR.usda` – Environment
-4. `./030_SIM_LYR/SIM_LYR.usda` – Simulation
-5. `./040_DATA_LYRs/DATA_LYRs.usda` – Data/Metadata
-6. `./020_BASE_LYR/ACTGR_LYR.usda` – Action Graphs
-7. `./020_BASE_LYR/ANIM_LYR.usda` – Animation
-8. `./020_BASE_LYR/VAR_LYR.usda` – Variants
-9. `./020_BASE_LYR/MTL_LYR.usda` – Materials
-10. `./020_BASE_LYR/PHY_LYR.usda` – Physics simulation
-11. `./020_BASE_LYR/ASS_LYR.usda` – Assets (weakest)
+4. `./035_RUNTIME_LYR/RUNTIME_LYR.usda` – Runtime/session-backed live state and snapshots
+5. `./030_SIM_LYR/SIM_LYR.usda` – Simulation results
+6. `./040_DATA_LYRs/DATA_LYRs.usda` – Static data/metadata
+7. `./020_BASE_LYR/ACTGR_LYR.usda` – Action Graphs
+8. `./020_BASE_LYR/ANIM_LYR.usda` – Animation
+9. `./020_BASE_LYR/VAR_LYR.usda` – Variants
+10. `./020_BASE_LYR/MTL_LYR.usda` – Materials
+11. `./020_BASE_LYR/PHY_LYR.usda` – Physics simulation
+12. `./020_BASE_LYR/ASS_LYR.usda` – Assets (weakest)
 
 ---
 
@@ -279,7 +279,7 @@ setup_usd_project.bat "D:\MyProject"
 
 ## Version History
 
-- **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, Special Note (default cube scale 1 vs metersPerUnit), double-confirm (type cm/m/mm). Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`
+- **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, physical starter-scene scaling across m/cm/mm, double-confirm (type cm/m/mm). Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`
 - **0.9.4** – (previous)
 - **0.9.3** – Custom default prim name, root file renamed to `{DefaultPrim}_{scale}_ROOT.usda`
 - **0.9.2** – Added PHY_LYR.usda, fixed README templates

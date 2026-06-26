@@ -919,8 +919,9 @@ USD_GoodStart/
 │   ├── tex/                       # Texture files
 │   └── Envs/                      # Environment library (dummy + future environment stages, wired via ENV_LYR.usda)
 ├── 020_BASE_LYR/                  # Base layers (opinion, environment, asset import, material import, variants, action-graphs, animation)
-├── 030_SIM_LYR/                    # Simulation/physics layers (collisions, joints, sensors, etc.)
-├── 040_DATA_LYRs/                  # Data & metadata layers (PLM/ERP/CAD, AAS, OPC UA, etc.) - plural for future expansion
+├── 030_SIM_LYR/                    # Simulation result layers (CFD, FEA, Isaac Sim, replayable outputs)
+├── 035_RUNTIME_LYR/                # Runtime/session-backed live state and explicit snapshots
+├── 040_DATA_LYRs/                  # Static data & metadata layers (PLM/ERP/CAD, AAS, OPC UA mappings, identifiers)
 ├── USD_GoodStart_ROOT.usda        # Master root file that references all layer stacks + assets (always this name)
 ├── GoodStart.hiplc                # Houdini file (or .ma/.mb/.max for other DCC tools)
 └── README.md                       # This file
@@ -1011,8 +1012,9 @@ subLayers = [
     @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last)
     @./020_BASE_LYR/CAM_LYR.usda@,       # Cameras
     @./020_BASE_LYR/ENV_LYR.usda@,       # Environment (ground, lighting, render defaults)
-    @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation layer
-    @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data & metadata layer
+    @./035_RUNTIME_LYR/RUNTIME_LYR.usda@, # Runtime/session-backed live state and snapshots
+    @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation result layer
+    @./040_DATA_LYRs/DATA_LYRs.usda@,    # Static data & metadata layer
     @./020_BASE_LYR/ACTGR_LYR.usda@,     # Action-graph / logic
     @./020_BASE_LYR/ANIM_LYR.usda@,      # Animation layer
     @./020_BASE_LYR/VAR_LYR.usda@,       # Variant layer
@@ -1029,7 +1031,7 @@ subLayers = [
 - `customLayerData.cameraSettings` defines default cameras (`Front`, `Perspective`, `Right`, `Top`) with consistent clipping ranges and positions.
 - `customLayerData.omni_layer` holds Omniverse-specific layer metadata:
   - `authoring_layer` – points to `./020_BASE_LYR/ASS_LYR.usda` in the root, and `./GoodStart_ROOT.usda` inside base layers.
-  - `locked` – explicit lock state for core layers (`020_BASE_LYR/*_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers), implementing the **Safe Mode** convention.
+  - `locked` – explicit lock state for core layers (`020_BASE_LYR/*_LYR.usda`, `035_RUNTIME_LYR/RUNTIME_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers), implementing the **Safe Mode** convention.
   - `muteness` – reserved for Omniverse muting state (empty in the template).
 - Core header invariants:
   - `defaultPrim = "World"`
@@ -1042,36 +1044,50 @@ The **USD_GoodStart setup script + standalone zip** generate new projects with t
 - A pre-configured, locked layer stack
 - Environment and lighting defined in `ENV_LYR.usda`
 
-#### 030_SIM_LYR/ - Simulation & Physics Layers
-**Purpose:** Physics properties, collision geometry, and simulation parameters.
+#### 030_SIM_LYR/ - Simulation Result Layers
+**Purpose:** Replayable or externally generated simulation result overlays.
 
 **Contents:**
 - `SIM_LYR.usda` - Simulation layer containing:
-  - Collision meshes and physics properties
-  - Joint definitions and articulations
-  - Sensor configurations
-  - Simulation parameters
+  - CFD/FEA/Isaac Sim result overlays
+  - stress maps, thermal fields, deformation caches
+  - replayable simulation outputs
 
 **Workflow:**
-- Add physics properties to assets without modifying geometry
-- Define collision proxies separate from visual geometry
-- Configure simulation parameters (mass, friction, etc.)
+- Add simulation results to assets without modifying geometry
+- Keep replayable simulation outputs separate from static metadata
+- Keep live/latest-value telemetry in session/runtime systems or `035_RUNTIME_LYR/` snapshots
+
+#### 035_RUNTIME_LYR/ - Runtime and Session-Backed Layers
+**Purpose:** Runtime/session-backed layer slot for live digital twin state such as MQTT, OPC UA, or other shopfloor telemetry.
+
+**Contents:**
+- `RUNTIME_LYR.usda` - Runtime layer slot for:
+  - latest-value transform, visibility, variant, or scalar opinions driven by runtime bindings
+  - operator-triggered runtime snapshots
+  - replay/evidence layers that should stay separate from static metadata
+
+**Workflow:**
+- Keep live telemetry in an application session layer or runtime signal store by default
+- Persist runtime state only when an explicit snapshot or replay artifact is required
+- Resolve runtime bindings through stable identifiers authored in `040_DATA_LYRs/`
 
 #### 040_DATA_LYRs/ - Data & Metadata Layers
-**Purpose:** Store PLM/PDM/ERP integration data and digital twin standards. Plural naming indicates multiple data layers can exist.
+**Purpose:** Store static and slow-changing PLM/PDM/ERP integration data, CAD/Revit metadata, stable identifiers, external-system references, and digital twin standards. Plural naming indicates multiple data layers can exist.
 
 **Contents:**
 - `DATA_LYRs.usda` - Data layer containing:
   - PLM system identifiers and revision information
   - AAS (Asset Administration Shell) mappings
-  - OPC UA data connections
+  - OPC UA information-model mappings and endpoint references
   - ERP system links
+  - CAD/Revit metadata and source identifiers
   - Digital product passport information
 - Additional data layers can be added as needed (hence plural naming)
 
 **Workflow:**
 - Map CAD metadata to USD attributes during conversion
-- Connect to external systems for live data updates
+- Connect to external systems through stable identifiers and references
 - Store standards-compliant metadata for interoperability
 - Add additional data layers for different data sources as needed
 
@@ -2237,8 +2253,9 @@ The `subLayers` array is ordered from **top (strongest)** to **bottom (weakest)*
     defaultPrim = "World"
     subLayers = [
         @./020_BASE_LYR/OPIN_LYR.usda@,          # Top (strongest) - overrides everything
-        @./030_SIM_LYR/SIM_LYR.usda@,             # Simulation layer
-        @./040_DATA_LYRs/DATA_LYRs.usda@,         # Data & metadata layer
+        @./035_RUNTIME_LYR/RUNTIME_LYR.usda@,     # Runtime/session-backed live state and snapshots
+        @./030_SIM_LYR/SIM_LYR.usda@,             # Simulation result layer
+        @./040_DATA_LYRs/DATA_LYRs.usda@,         # Static data & metadata layer
         @./020_BASE_LYR/ACTION_LYR.usda@,        # Action layer
         @./020_BASE_LYR/ANIM_LYR.usda@,          # Animation layer
         @./020_BASE_LYR/VAR_LYR.usda@,           # Variants and configurations
@@ -3492,10 +3509,12 @@ flowchart TD
     Tex["tex/<br/>Texture files"]:::subfolder
     BaseLyr["020_BASE_LYR/<br/>Base layers"]:::folder
     Sim["030_SIM_LYR/<br/>Simulation layers"]:::folder
-    Data["040_DATA_LYRs/<br/>Data and metadata layers"]:::folder
+    Runtime["035_RUNTIME_LYR/<br/>Runtime and snapshot layers"]:::folder
+    Data["040_DATA_LYRs/<br/>Static data and metadata layers"]:::folder
     RootFile["USD_GoodStart_ROOT.usda<br/>Entry point file"]:::usd
     
     SimLayer["SIM_LYR.usda"]:::simlayer
+    RuntimeLayer["RUNTIME_LYR.usda"]:::simlayer
     DataLayer["DATA_LYRs.usda"]:::datalayer
     
     OpinLayer["OPIN_LYR.usda<br/>Overrides and opinions"]:::layer
@@ -3542,11 +3561,12 @@ Each folder has a specific, well-defined role:
   - **MatLib/** - Material library definitions
   - **tex/** - Texture files referenced by materials
 - **020_BASE_LYR/** - Base composition layers (opinion, asset, material, variant, action, animation)
-- **030_SIM_LYR/** - Simulation and physics layers
-- **040_DATA_LYRs/** - Data and metadata layers (plural for future expansion)
+- **030_SIM_LYR/** - Simulation result layers
+- **035_RUNTIME_LYR/** - Runtime/session-backed live state and explicit snapshots
+- **040_DATA_LYRs/** - Static data and metadata layers (plural for future expansion)
 - **USD_GoodStart_ROOT.usda** - Entry point file (always this name; only default prim changes)
 
-**Important Note:** Folder numbers (020, 030, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file (`USD_GoodStart_ROOT.usda`), not by folder names. The folder numbers are simply organizational prefixes for clarity and categorization.
+**Important Note:** Folder numbers (020, 030, 035, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in the root file (`USD_GoodStart_ROOT.usda`), not by folder names. The folder numbers are simply organizational prefixes for clarity and categorization.
 
 ---
 

@@ -32,6 +32,7 @@
                 bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
                 bool "./020_BASE_LYR/VAR_LYR.usda" = 1
                 bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./035_RUNTIME_LYR/RUNTIME_LYR.usda" = 1
                 bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
             }
             dictionary muteness = {
@@ -57,6 +58,7 @@
         @./020_BASE_LYR/OPIN_LYR.usda@,
         @./020_BASE_LYR/CAM_LYR.usda@,
         @./020_BASE_LYR/ENV_LYR.usda@,
+        @./035_RUNTIME_LYR/RUNTIME_LYR.usda@,
         @./030_SIM_LYR/SIM_LYR.usda@,
         @./040_DATA_LYRs/DATA_LYRs.usda@,
         @./020_BASE_LYR/ACTGR_LYR.usda@,
@@ -87,7 +89,7 @@ def Xform "World"
         uniform token subdivisionScheme = "none"
         double3 xformOp:rotateXYZ = (0, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 267.6749425311719, 0)
+        double3 xformOp:translate = (0, 50, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }
 }
@@ -202,7 +204,7 @@ def Xform "Environment"
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
+        float3[] extent = [(-700, -700, 0), (700, 700, 0)]
         int[] faceVertexCounts = [4]
         int[] faceVertexIndices = [0, 1, 3, 2]
         rel material:binding = </Environment/Looks/Grid> (
@@ -407,4 +409,3 @@ over "OmniverseKit_Top" (
     double3 xformOp:translate = (0, 50000, 0)
     uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
 }
-

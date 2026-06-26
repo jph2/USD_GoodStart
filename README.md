@@ -121,8 +121,9 @@ flowchart LR
         Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
         Camera[CAM_LYR.usda<br/>Cameras]
         Env[ENV_LYR.usda<br/>Environment & Lighting]
+        Runtime[RUNTIME_LYR.usda<br/>Live Runtime Opinions<br/>MQTT / OPC UA Snapshots]
         Sim[SIM_LYR.usda<br/>External Simulation Results]
-        Data[DATA_LYRs.usda<br/>Data & Metadata]
+        Data[DATA_LYRs.usda<br/>Static Data & Metadata]
         Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
         Anim[ANIM_LYR.usda<br/>Animation]
         Variant[VAR_LYR.usda<br/>Variants & Configurations]
@@ -131,7 +132,8 @@ flowchart LR
         Asset[ASS_LYR.usda<br/>References & Payloads · Asset Import]
         Opinion --> Camera
         Camera --> Env
-        Env --> Sim
+        Env --> Runtime
+        Runtime --> Sim
         Sim --> Data
         Data --> Actgr
         Actgr --> Anim
@@ -164,6 +166,7 @@ flowchart LR
     style Variant fill:#ba68c8,stroke:#4a148c,stroke-width:3px,color:#000
     style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
     style Sim fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
+    style Runtime fill:#ffd54f,stroke:#f57f17,stroke-width:2px,color:#000
     style Data fill:#a1887f,stroke:#3e2723,stroke-width:2px,color:#000
     style Env fill:#c5e1a5,stroke:#558b2f,stroke-width:2px,color:#000
     style Actgr fill:#9e9e9e,stroke:#424242,stroke-width:2px,color:#000
@@ -190,7 +193,8 @@ flowchart LR
 - `010_ASS_USD/Envs/` - Environment library; contains a dummy `Environment.usda` stage as a placeholder, assuming that different environments will be created and loaded/used separately. `ENV_LYR.usda` is responsible for wiring an environment from here into the layer stack.
 - `020_BASE_LYR/` - **Base layers** (opinion, environment, asset import, material import, variants, action-graph, animation)
 - `030_SIM_LYR/` - Simulation result layers (external sim overlays: CFD, FEA, Isaac Sim, Ansys)
-- `040_DATA_LYRs/` - **Data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA)
+- `035_RUNTIME_LYR/` - **Runtime layer slot** for live/session-backed digital twin state, MQTT/OPC UA latest-value opinions, and explicit snapshots
+- `040_DATA_LYRs/` - **Static data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA metadata and external-system references)
 
 **Why This Structure?**
 
@@ -204,9 +208,11 @@ This structure was designed with **clarity, purpose, and scalability** in mind:
 
 4. **`020_BASE_LYR/`** - **Consolidates base layers** (opinion, asset import, material import, variant, action, animation) into one logical group, making the structure cleaner and easier to navigate.
 
-5. **`040_DATA_LYRs/`** - **Plural naming** reflects that there will be **multiple data layers** for digital twin integration (PLM, ERP, AAS, OPC UA, sensor data, etc.). This is where the entire data-driven digital twin connects to the 3D USD data.
+5. **`035_RUNTIME_LYR/`** - A dedicated runtime/session boundary for live digital twin state. Use it for explicit runtime opinions and snapshots; keep high-frequency MQTT/OPC UA streams in the runtime system or session layer by default.
 
-6. **Root file always `USD_GoodStart_ROOT.usda`** - The root file name stays constant. Only the default prim name changes based on your project needs, ensuring consistent file references across projects.
+6. **`040_DATA_LYRs/`** - **Plural naming** reflects that there will be **multiple static or slow-changing data layers** for digital twin integration (PLM, ERP, AAS, OPC UA mappings, CAD/Revit metadata, identifiers, external references). This is where stable data contracts connect to the 3D USD data.
+
+7. **Root file always `USD_GoodStart_ROOT.usda`** - The root file name stays constant. Only the default prim name changes based on your project needs, ensuring consistent file references across projects.
 
 **📖 Folder Documentation:** Each folder contains its own `README.md` with detailed information on **how to use it** and **why to use it this way**. Check the folder-specific READMEs for:
 - Purpose and workflow details
@@ -227,6 +233,7 @@ This structure was designed with **clarity, purpose, and scalability** in mind:
 - **Asset files**: `*_[TYPE].usda` (e.g., `0_CUBE_GEO.usda`, `MatLib_a_MAT.usda`)
 - **Variant layers**: `*_VAR_LYR.usda` (e.g., `VAR_LYR.usda`)
 - **Simulation layers**: `*_[type]_SIM_LYR.usda` (e.g., `sample_SIM_LYR.usda`)
+- **Runtime layers**: `*_RUNTIME_LYR.usda` (e.g., `RUNTIME_LYR.usda`)
 
 **Benefits:**
 - **Type identification**: Suffixes immediately show file purpose (`_LYR`, `_GEO`, `_MAT`)
@@ -252,14 +259,15 @@ Array ordering: first = strongest, last = weakest:
 1. **OPIN_LYR.usda** – Overrides & opinions (strongest)
 2. **CAM_LYR.usda** – Cameras
 3. **ENV_LYR.usda** – Environment, ground, lighting, render defaults
-4. **SIM_LYR.usda** – External simulation results & overlays (Ansys, Isaac Sim, CFD, FEA)
-5. **DATA_LYRs.usda** – Data & metadata (PLM/ERP/AAS/OPC UA, sensor data)
-6. **ACTGR_LYR.usda** – Action graph / behavior logic
-7. **ANIM_LYR.usda** – Animation
-8. **VAR_LYR.usda** – Variants & configurations
-9. **MTL_LYR.usda** – Materials & shading work
-10. **PHY_LYR.usda** – Physics setup (collision shapes, rigid body flags, mass properties)
-11. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
+4. **RUNTIME_LYR.usda** – Live/session-backed runtime opinions and explicit MQTT/OPC UA snapshots
+5. **SIM_LYR.usda** – External simulation results & overlays (Ansys, Isaac Sim, CFD, FEA)
+6. **DATA_LYRs.usda** – Static and slow-changing data & metadata (PLM/ERP/AAS/OPC UA mappings, CAD/Revit metadata, identifiers)
+7. **ACTGR_LYR.usda** – Action graph / behavior logic
+8. **ANIM_LYR.usda** – Animation
+9. **VAR_LYR.usda** – Variants & configurations
+10. **MTL_LYR.usda** – Materials & shading work
+11. **PHY_LYR.usda** – Physics setup (collision shapes, rigid body flags, mass properties)
+12. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
 ### Working with Session Layers
 
@@ -319,8 +327,8 @@ This workflow results in **less mess** than authoring directly into many layers 
 
 **Quick Workflow:**
 1. Convert CAD → USD assets → place in `010_ASS_USD/USD_Startpoint/` (stable startpoint paths)
-2. Create layer files in `020_BASE_LYR/` for base layers (opinion, environment, asset import, material import, variants, action-graph, animation) and use `030_SIM_LYR/`, `040_DATA_LYRs/` for simulation and data/metadata.
-3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Environment → Simulation → Data → ACTGR → Animation → Variant → Material → AssetImport, where first = strongest)
+2. Create layer files in `020_BASE_LYR/` for base layers (opinion, environment, asset import, material import, variants, action-graph, animation), `035_RUNTIME_LYR/` for runtime opinions/snapshots, `030_SIM_LYR/` for simulation results, and `040_DATA_LYRs/` for static data/metadata.
+3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Camera → Environment → Runtime → Simulation → Static Data → ACTGR → Animation → Variant → Material → Physics → AssetImport, where first = strongest)
 4. Use **relative paths** (`@./folder/file.usd@`) for portability
 5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
 
@@ -342,11 +350,12 @@ All root and base layers in USD_GoodStart follow an Omniverse-style header patte
 - **`customLayerData.cameraSettings`** – Per-layer default cameras (`Front`, `Perspective`, `Right`, `Top`) with consistent clipping ranges and positions.
 - **`customLayerData.omni_layer`** – Omniverse-specific layer metadata:
   - `authoring_layer` – Points at `./020_BASE_LYR/ASS_LYR.usda` in the root (or `./GoodStart_ROOT.usda` inside base layers) so Omniverse knows the intended authoring target.
-  - `locked` – Explicit lock state for all key layers (`020_BASE_LYR/*_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers, etc.) implementing the **“Safe Mode”** convention.
+  - `locked` – Explicit lock state for all key layers (`020_BASE_LYR/*_LYR.usda`, `035_RUNTIME_LYR/RUNTIME_LYR.usda`, `030_SIM_LYR/SIM_LYR.usda`, `040_DATA_LYRs/DATA_LYRs.usda`, sample layers, etc.) implementing the **“Safe Mode”** convention.
   - `muteness` – Reserved for Omniverse muting state (kept empty in the template).
 - **Core header invariants**:
   - `defaultPrim = "World"` (for root and base layers)
-  - `metersPerUnit = 1`, `upAxis = "Y"`
+  - `upAxis = "Y"`
+  - `metersPerUnit` is selected by root file: `1` for meters, `0.01` for centimeters, `0.001` for millimeters
   - `startTimeCode = 0`, `endTimeCode = 100`, `timeCodesPerSecond = 60`
 
 The **setup script + standalone zip** generate new projects with this metadata pattern baked in, so any new GoodStart-based project opens in Omniverse with:
@@ -358,6 +367,8 @@ The **setup script + standalone zip** generate new projects with this metadata p
 ### Scale and units in this setup
 
 In this setup, **scale is chosen once** (meters, centimeters, or millimeters) and **written into the root file**. The sublayers are either empty or contain only `over` prims that inherit structure from the root; the **unit scale is defined in the root** and effectively applies across the composed stage.
+
+The starter scene is authored so the physical size stays stable across root variants: the sample cube is 1 m, the ground is 14 m, and lights/camera guides are converted into the selected stage unit. Do not compare `xformOp:scale` alone when debugging size. Compare `metersPerUnit` plus authored point and translate values.
 
 **Omniverse note:** In Omniverse, the **unit scale** can also be set **per layer** in the layer’s properties. It’s not fully clear what that per-file override does in all cases. In testing, **referenced objects kept the correct scale** even when:
 - The scene units were changed for the stage into which a referenced asset was imported, and
@@ -468,7 +479,8 @@ Each folder contains its own README with detailed information:
 - **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets (USD_Startpoint, MatLib, tex)
 - **[020_BASE_LYR/](020_BASE_LYR/README.md)** - Base layers (opinion, asset import, material import, variant, action, animation)
 - **[030_SIM_LYR/](030_SIM_LYR/README.md)** - Simulation & physics layers
-- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Data layers (PLM/ERP/AAS/OPC UA integration)
+- **[035_RUNTIME_LYR/](035_RUNTIME_LYR/README.md)** - Runtime/session-backed layer slot (MQTT/OPC UA live state and snapshots)
+- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Static data layers (PLM/ERP/AAS/OPC UA metadata and identifiers)
 
 
 ---
@@ -611,13 +623,14 @@ over "RobotA" {
 
 **Layer Stack Order** (array ordering: first = strongest, last = weakest):
 1. **OPIN_LYR.usda** (first/strongest) - Final overrides and opinions
-2. **SIM_LYR.usda** - Simulation and physics
-3. **DATA_LYRs.usda** - Data and metadata (PLM/ERP/AAS/OPC UA)
-4. **ACTION_LYR.usda** - Actions (placeholder for future use)
-5. **ANIM_LYR.usda** - Animation (placeholder for future use)
-6. **VAR_LYR.usda** - Variants and configurations  
-7. **MTL_LYR.usda** - Materials and shading
-8. **ASS_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
+2. **RUNTIME_LYR.usda** - Live runtime opinions and explicit telemetry snapshots
+3. **SIM_LYR.usda** - Simulation and physics results
+4. **DATA_LYRs.usda** - Static data and metadata (PLM/ERP/AAS/OPC UA mappings)
+5. **ACTION_LYR.usda** - Actions (placeholder for future use)
+6. **ANIM_LYR.usda** - Animation (placeholder for future use)
+7. **VAR_LYR.usda** - Variants and configurations
+8. **MTL_LYR.usda** - Materials and shading
+9. **ASS_LYR.usda** (last/weakest) - **CRITICAL:** Loads assets via references/payloads
 
 **Why AssetImport Must Be Last in Array:**
 - It loads assets into the scene from stable startpoints (`010_ASS_USD/USD_Startpoint/`)
@@ -655,13 +668,14 @@ USD_GoodStart/
 │   └── tex/                       # Textures (global and asset-specific)
 ├── 020_BASE_LYR/                  # Base layers (opinion, asset import, material import, variant, action, animation)
 ├── 030_SIM_LYR/                   # Simulation/physics layers (collisions, joints, sensors, etc.)
-├── 040_DATA_LYRs/                 # Data layers (plural - multiple layers for PLM/ERP/AAS/OPC UA integration)
+├── 035_RUNTIME_LYR/               # Runtime/session-backed layer slot (MQTT/OPC UA live state and snapshots)
+├── 040_DATA_LYRs/                 # Static data layers (plural - PLM/ERP/AAS/OPC UA metadata and identifiers)
 ├── USD_GoodStart_ROOT.usda        # Master root file that references all layer stacks + assets
 ├── GoodStart.hiplc                # Houdini file (or .ma/.mb/.max for other DCC tools)
 └── README.md                      # This file
 ```
 
-**Important Note:** Folder numbers (020, 030, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in `USD_GoodStart_ROOT.usda`, not by folder names. The folder numbers are organizational prefixes for clarity and categorization.
+**Important Note:** Folder numbers (020, 030, 035, 040) **do not indicate layer order**. Layer order is determined by the `subLayers` array in `USD_GoodStart_ROOT.usda`, not by folder names. The folder numbers are organizational prefixes for clarity and categorization.
 
 ---
 
@@ -715,8 +729,9 @@ This folder structure provides a **complete, ready-to-use foundation** with most
 
 - **Collaborate via task fragments**: one responsibility = one layer, merged frequently (keep the *interactive* stage loadable in Omniverse).
   - **Base layers**: `020_BASE_LYR/` (opinion, asset import, material import, variant, action, animation)
-  - **Simulation**: `030_SIM_LYR/` (physics/collisions/sensors)
-  - **Data/metadata**: `040_DATA_LYRs/` (PLM/ERP/AAS/OPC UA mappings - plural for multiple data layers)
+  - **Simulation**: `030_SIM_LYR/` (simulation results and replayable simulation outputs)
+  - **Runtime**: `035_RUNTIME_LYR/` (session-backed live state, MQTT/OPC UA opinions, explicit snapshots)
+  - **Data/metadata**: `040_DATA_LYRs/` (static PLM/ERP/AAS/OPC UA mappings - plural for multiple data layers)
 - **Personal opinion ≠ production**: “personal opinion” layers are great for exploration, but treat them as *draft* until reviewed.
 - **Definition of Done (publishable)**:
   - Opens in Omniverse Kit without missing layers/paths
@@ -1015,8 +1030,9 @@ In these cases, integrate your USD workflow with their existing systems rather t
 3. **Textures**: Add textures to `010_ASS_USD/tex/` (global and asset-specific)
 4. **Base Layers**: Create or edit layers in `020_BASE_LYR/` for opinion, asset import, material import, variant, action, and animation layers
 5. **Simulation**: Use `030_SIM_LYR/` for simulation and physics layers
-6. **Data Integration**: Use `040_DATA_LYRs/` for data layers (PLM/ERP/AAS/OPC UA integration)
-7. **Root File**: The `USD_GoodStart_ROOT.usda` file references all layer stacks and serves as the entry point
+6. **Runtime Integration**: Use `035_RUNTIME_LYR/` only for explicit runtime opinions or snapshots; keep live MQTT/OPC UA streams in session/runtime systems by default
+7. **Data Integration**: Use `040_DATA_LYRs/` for static data layers (PLM/ERP/AAS/OPC UA metadata and identifiers)
+8. **Root File**: The `USD_GoodStart_ROOT.usda` file references all layer stacks and serves as the entry point
 
 ## Folder Details
 
@@ -1026,13 +1042,14 @@ Each folder contains its own README with detailed information:
 - **[010_ASS_USD/](010_ASS_USD/README.md)** - USD assets (USD_Startpoint, MatLib, tex)
 - **[020_BASE_LYR/](020_BASE_LYR/README.md)** - Base layers (opinion, asset import, material import, variant, action, animation)
 - **[030_SIM_LYR/](030_SIM_LYR/README.md)** - Simulation & physics layers
-- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Data layers (PLM/ERP/AAS/OPC UA integration)
+- **[035_RUNTIME_LYR/](035_RUNTIME_LYR/README.md)** - Runtime/session-backed layer slot (MQTT/OPC UA live state and snapshots)
+- **[040_DATA_LYRs/](040_DATA_LYRs/README.md)** - Static data layers (PLM/ERP/AAS/OPC UA metadata and identifiers)
 
 ## Root File
 
 `USD_GoodStart_ROOT.usda` is the master file that:
 - **Always named `USD_GoodStart_ROOT.usda`** - The filename stays constant across all projects
-- References all layer stacks from `020_BASE_LYR/`, `030_SIM_LYR/`, `040_DATA_LYRs/`
+- References all layer stacks from `020_BASE_LYR/`, `035_RUNTIME_LYR/`, `030_SIM_LYR/`, `040_DATA_LYRs/`
 - Serves as the entry point for the entire project
 - Contains the base world/root prim and high-level scene structure
 - Only the **default prim name** changes based on your project needs (e.g., "World", "ProductName", etc.)
@@ -1054,6 +1071,7 @@ Each folder contains its own README with detailed information:
 ```usda
 subLayers = [
     @./020_BASE_LYR/OPIN_LYR.usda@,
+    @./035_RUNTIME_LYR/RUNTIME_LYR.usda@,
     @./030_SIM_LYR/SIM_LYR.usda@,
     @./040_DATA_LYRs/DATA_LYRs.usda@,
     @./020_BASE_LYR/ACTION_LYR.usda@,
@@ -1183,6 +1201,7 @@ The root file (`USD_GoodStart_ROOT.usda`) automatically includes all layers via 
 ```usda
 subLayers = [
     @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last, overrides others)
+    @./035_RUNTIME_LYR/RUNTIME_LYR.usda@, # Runtime/session-backed live state and snapshots
     @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation
     @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data/metadata
     @./020_BASE_LYR/ACTION_LYR.usda@,    # Actions
@@ -1212,9 +1231,9 @@ usdcat USD_GoodStart_ROOT.usda -o production/USD_GoodStart_ROOT.usdc
 1. **Source Files**: CAD files or other source materials in `000_SOURCE/` or external systems (PLM/PDM/ERP)
 2. **Convert to USD**: Convert source files to USD format and place in `010_ASS_USD/USD_Startpoint/` (stable startpoint paths)
 3. **Add Metadata**: Map CAD metadata to USD metadata and connect to external data sources
-4. **Apply Modifications**: Use layers in `020_BASE_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` to add digital twin-specific modifications, opinions, simulation logic, configuration, and metadata.
+4. **Apply Modifications**: Use layers in `020_BASE_LYR/`, `035_RUNTIME_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` to add digital twin-specific modifications, runtime opinions/snapshots, simulation results, configuration, and metadata.
 5. **Link to Root**: Ensure all assets and modifications are properly linked in `USD_GoodStart_ROOT.usda`
-6. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data via `040_DATA_LYRs/`. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
+6. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) via `040_DATA_LYRs/` for static metadata and identifiers. Use `035_RUNTIME_LYR/` or the session layer for live/latest-value operational state. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 ### DCC Workflow (Optional)
 
@@ -1926,7 +1945,7 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 
 1. **Launch Omniverse Composer**
 2. **Open Root File**: File → Open → Select `USD_GoodStart_ROOT.usda`
-3. **Verify Layers**: Check that all layers in `020_BASE_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` are loaded correctly
+3. **Verify Layers**: Check that all layers in `020_BASE_LYR/`, `035_RUNTIME_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` are loaded correctly
 4. **Inspect Assets**: Navigate to assets in `010_ASS_USD/USD_Startpoint/` via the layer stack
 
 ### Working with Nucleus Server

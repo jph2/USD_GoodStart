@@ -17,6 +17,10 @@ last_modified: '2026-02-18T14:17:04Z'
 
 # 030_SIM_LYR
 
-**Purpose:** External simulation result overlays (CFD, FEA, Isaac Sim, Ansys). These layers carry *outputs* from simulation tools -- stress maps, thermal fields, deformation caches -- layered on top of the base asset via `over` opinions. They do **not** define physics setup (collision shapes, rigid bodies); that lives in `020_BASE_LYR/PHY_LYR.usda`.
+**Purpose:** External simulation result overlays (CFD, FEA, Isaac Sim, Ansys). These layers carry *outputs* from simulation tools -- stress maps, thermal fields, deformation caches, replayable simulation outputs -- layered on top of the base asset via `over` opinions.
+
+They do **not** define physics setup (collision shapes, rigid bodies); that lives in `020_BASE_LYR/PHY_LYR.usda`.
+
+They also do **not** carry raw live shopfloor telemetry by default. Latest-value MQTT/OPC UA runtime state belongs in the application session/runtime system or the `035_RUNTIME_LYR/` snapshot slot when persistence is intentional.
 
 See the main README.md for detailed usage instructions.

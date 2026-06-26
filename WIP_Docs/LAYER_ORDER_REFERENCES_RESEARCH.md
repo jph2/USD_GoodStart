@@ -7,12 +7,12 @@ status: draft
 trust_level: 2
 visibility: internal
 created: '2026-06-10T12:00:00Z'
-last_modified: '2026-06-10T12:00:00Z'
+last_modified: '2026-06-26T00:00:00Z'
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.1.6 | **Date**: 10.06.2026 | **Status**: Draft (WIP)
+**Version**: 1.1.7 | **Date**: 26.06.2026 | **Status**: Draft (WIP)
 
 **Purpose:** Collect documented USD sublayer-order conventions and **LIV(E)RPS / composition-arc strategies** from industry sources; compare them to **USD GoodStart** and **Michael O'Brien's M&E stack**; record trade-offs and diagrams for discussion.
 
@@ -34,7 +34,7 @@ OpenUSD does **not** define one global “correct” sublayer order. It defines 
 
 Every pipeline picks an order so that **later disciplines can override earlier work non-destructively**. That choice depends on domain: **feature-film shot**, **asset authoring**, **Omniverse digital twin**, etc.
 
-[Michael O'Brien's Slack sketch](https://aousdgroup.slack.com/archives/C095ACELRSP/p1781024066409369) reflects classic **M&E shot refinement** in **two drawings**: (1) three parallel shot pillars on shared MAT+ASS, and (2) **global SIM + global LGT** with those shot pillars stacked on top so per-shot layers override sequence defaults. **USD GoodStart** is **one possible approach** among many — it targets **digital twin + Omniverse** (DATA, SIM, ACTGR, OPC UA/MQTT-style layers) and therefore diverges on purpose in places like camera placement and dedicated lighting layers. That GoodStart stack is **work in progress** and **actively under discussion**; it is not presented here as a finished standard. **This document exists to collect and compare published conventions, evaluate alternatives side by side, and provide a shared reference base for a more informed pipeline discussion** — including whether and how GoodStart should evolve.
+[Michael O'Brien's Slack sketch](https://aousdgroup.slack.com/archives/C095ACELRSP/p1781024066409369) reflects classic **M&E shot refinement** in **two drawings**: (1) three parallel shot pillars on shared MAT+ASS, and (2) **global SIM + global LGT** with those shot pillars stacked on top so per-shot layers override sequence defaults. **USD GoodStart** is **one possible approach** among many — it targets **digital twin + Omniverse** and now separates **RUNTIME** live/session-backed state from **DATA** static metadata/identifier layers. That GoodStart stack is **work in progress** and **actively under discussion**; it is not presented here as a finished standard. **This document exists to collect and compare published conventions, evaluate alternatives side by side, and provide a shared reference base for a more informed pipeline discussion** — including whether and how GoodStart should evolve.
 
 ### Two axes you must not confuse
 
@@ -769,7 +769,7 @@ flowchart LR
 
 **Source:** [USD_GoodStart README](../README.md) · this repo's `USD_GoodStart_ROOT.usda`
 
-**Order (strong → weak):** OPIN → CAM → ENV → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → **ASS**
+**Order (strong → weak):** OPIN → CAM → ENV → RUNTIME → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → **ASS**
 
 Full diagram (folder structure + layer stack) lives in the README:
 
@@ -808,8 +808,9 @@ flowchart LR
         Opinion[OPIN_LYR.usda<br/>Overrides & Opinions]
         Camera[CAM_LYR.usda<br/>Cameras]
         Env[ENV_LYR.usda<br/>Environment & Lighting]
+        Runtime[RUNTIME_LYR.usda<br/>Live Runtime Opinions<br/>MQTT / OPC UA Snapshots]
         Sim[SIM_LYR.usda<br/>External Simulation Results]
-        Data[DATA_LYRs.usda<br/>Data & Metadata]
+        Data[DATA_LYRs.usda<br/>Static Data & Metadata]
         Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
         Anim[ANIM_LYR.usda<br/>Animation]
         Variant[VAR_LYR.usda<br/>Variants & Configurations]
@@ -818,7 +819,8 @@ flowchart LR
         Asset[ASS_LYR.usda<br/>References & Payloads · Asset Import]
         Opinion --> Camera
         Camera --> Env
-        Env --> Sim
+        Env --> Runtime
+        Runtime --> Sim
         Sim --> Data
         Data --> Actgr
         Actgr --> Anim
@@ -849,6 +851,7 @@ flowchart LR
     style Asset fill:#81c784,stroke:#1b5e20,stroke-width:3px,color:#000
     style Opinion fill:#ffb74d,stroke:#e65100,stroke-width:3px,color:#000
     style Material fill:#f48fb1,stroke:#880e4f,stroke-width:3px,color:#000
+    style Runtime fill:#ffd54f,stroke:#f57f17,stroke-width:2px,color:#000
     style Sim fill:#64b5f6,stroke:#0d47a1,stroke-width:2px,color:#000
     style Data fill:#a1887f,stroke:#3e2723,stroke-width:2px,color:#000
     style Env fill:#c5e1a5,stroke:#558b2f,stroke-width:2px,color:#000
@@ -860,7 +863,8 @@ flowchart LR
 **Advantages**
 
 - **ASS at bottom** — agrees with Michael, ASWF, Omniverse Assets layer
-- **DATA layer** for OPC UA, MQTT, PLM, ERP, AAS — twin-specific
+- **RUNTIME layer** for live/session-backed operational state and explicit MQTT/OPC UA snapshots
+- **DATA layer** for static or slow-changing PLM, ERP, AAS, OPC UA mappings, CAD/Revit metadata, and identifiers
 - **SIM above ANIM** — agrees with Michael's sim-over-anim rule
 - **OPIN on top** — explicit override layer for reviews and emergencies
 - Documented folder ↔ layer feed paths (Startpoint → ASS, MatLib/tex → MTL)
@@ -870,7 +874,7 @@ flowchart LR
 
 - **CAM high in stack** — opposite of Michael's “CAM below ANIM”
 - **ENV mid-stack** — merges environment + lighting unlike dedicated top LGT
-- **PHY vs SIM** split may confuse Isaac/Ansys users (called out as WIP in README)
+- **PHY vs SIM vs RUNTIME** split may confuse Isaac/Ansys/IoT users if the project does not document which layer owns setup, result overlays, and live latest-value state
 - **Beta / not fully hardened** — order not battle-tested across all Omniverse Kit versions
 - More layers than minimal stacks — higher authoring discipline required
 
@@ -1150,7 +1154,8 @@ flowchart LR
 | Animation | **ANIM** ✓ | **ANIM** ✓ | **anim** ✓ | — | Animation (top) | ANIM ✓ |
 | Camera | **CAM** (below anim) | — | **camera** (above assembly) | — | Camera | **CAM** (high) ✗ |
 | Materials | **MTL** ✓ | (on assets) | **finish/material** ✓ | **shading** (strong) ✓ | Material | **MTL** ✓ |
-| Runtime / twin data | — | — | — | — | — | **DATA** |
+| Runtime latest-value state | — | — | — | — | Session / live edits | **RUNTIME** |
+| Static twin metadata / identifiers | — | — | — | — | — | **DATA** |
 | Assets / layout base | **ASS** (bottom) ✓ | sequence (base) | **assembly** (bottom) ✓ | **geometry** (weak) ✓ | **Assets** (bottom) ✓ | **ASS** (bottom) ✓ |
 
 ---
@@ -1162,7 +1167,7 @@ flowchart LR
 | Feature-film shot finishing | Michael M&E / SideFX / da Vinci / openusd.work (finish/LGT high, assembly low) |
 | Lookdev merging with layout geo | Learn OpenUSD pattern — **shading sublayer above geometry sublayer** |
 | Published asset interchange | ASWF + da Vinci asset interface — **references/payloads**, geo in payload |
-| Omniverse conductor / factory twin | Omniverse Explorer layers + **GoodStart** (session layer for live edits) |
+| Omniverse conductor / factory twin | Omniverse Explorer layers + **GoodStart** (`RUNTIME_LYR` or session layer for live/latest-value state; `DATA_LYRs` for static metadata) |
 | Houdini / Solaris production | SideFX LOP stack + **USD Survival Guide** (R/P for assets) |
 | Teaching composition mechanics only | Pixar SIGGRAPH 2019 PDF + Learn OpenUSD sublayer exercises |
 | Minimal layer count | openusd.work 3-layer shot |
@@ -1257,7 +1262,7 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 >
 > **Public refs:** ASWF asset guidelines (geo bottom, lighting usually last), SideFX shot example (LGT→FX→ANIM→set dress→seq), Pixar SIGGRAPH 2019 composition PDF, Omniverse Layers Extension (Assets weakest), plus our comparison doc: `WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md`.
 >
-> Your M&E sketches: (1) three LGT→SIM→ANIM→CAM pillars on shared MAT+ASS; (2) global SIM+LGT with shot pillars on top. Collapsed to one shot that's LGT→SIM→ANIM→CAM→MTL→ASS. GoodStart diverges on purpose for digital twin (DATA, ACTGR, CAM high) but keeps ASS at the bottom and SIM above ANIM.
+> Your M&E sketches: (1) three LGT→SIM→ANIM→CAM pillars on shared MAT+ASS; (2) global SIM+LGT with shot pillars on top. Collapsed to one shot that's LGT→SIM→ANIM→CAM→MTL→ASS. GoodStart diverges on purpose for digital twin (RUNTIME, DATA, ACTGR, CAM high) but keeps ASS at the bottom and SIM above ANIM.
 
 ---
 
@@ -1274,3 +1279,4 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 | 1.1.4 | 2026-06-10 | Michael diagrams: visible header nodes (SeqHdr/PillarHdr); PadLeft/PadRight centering; remove left-only spacers |
 | 1.1.5 | 2026-06-10 | Revert Michael §1 Mermaid to simple nested subgraph titles (Screenshot-2 layout); drop spacer/header-node experiments |
 | 1.1.6 | 2026-06-10 | Unify full LIV(E)RPS sidebar (L→S) in all comparison Mermaid diagrams §2–§11 |
+| 1.1.7 | 2026-06-26 | Update USD GoodStart to explicit `RUNTIME_LYR` split: live/session-backed telemetry and snapshots are separate from static `DATA_LYRs` metadata/identifier layers |

@@ -35,9 +35,9 @@ REQUIREMENTS:
 WHAT IT DOES:
 -------------
 Generates a complete USD_GoodStart project structure with:
-- Folder hierarchy: 000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 030_SIM_LYR, 040_DATA_LYRs
+- Folder hierarchy: 000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs
 - One root file by scale: USD_GoodStart_m_ROOT.usda, _cm_, or _mm_ (metersPerUnit 1, 0.01, 0.001)
-- Minimal layer files (OPIN_LYR, CAM_LYR, ENV_LYR, SIM_LYR, DATA_LYRs, ACTGR_LYR, ANIM_LYR, VAR_LYR, MTL_LYR, ASS_LYR)
+- Minimal layer files (OPIN_LYR, CAM_LYR, ENV_LYR, RUNTIME_LYR, SIM_LYR, DATA_LYRs, ACTGR_LYR, ANIM_LYR, VAR_LYR, MTL_LYR, ASS_LYR)
 - README files in each folder
 - Scale selection: meters, centimeters, or millimeters
 

@@ -17,7 +17,7 @@ last_modified: '2026-02-18T14:17:18Z'
 
 # 020_BASE_LYR
 
-**Purpose:** Base USD layers that define the scene's visual, interactive, and structural setup. These live *above* the raw asset geometry (`ASS_LYR`) and *below* external simulation results (`030_SIM_LYR`).
+**Purpose:** Base USD layers that define the scene's visual, interactive, and structural setup. These live *above* the raw asset geometry (`ASS_LYR`) and *below* runtime/session opinions (`035_RUNTIME_LYR`), simulation results (`030_SIM_LYR`), and static data layers (`040_DATA_LYRs`) in the root stack.
 
 | File | Content |
 |------|---------|
