@@ -256,6 +256,8 @@ Array ordering: first = strongest, last = weakest:
 
 > **Further reading:** Full comparison tables, source links, and per-approach Mermaid diagrams — [WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md) (also linked [above](#layer-order--wip-reference--discussion-base)).
 
+> **Maximum setup, not mandatory setup:** GoodStart intentionally shows a broad layer stack for learning and larger digital-twin pipelines. Most projects do **not** need every layer. Remove, mute, or do not create layers you do not use. A small project with only `ASS_LYR`, `MTL_LYR`, and maybe `OPIN_LYR` is completely valid if that is all the work requires.
+
 1. **OPIN_LYR.usda** – Overrides & opinions (strongest)
 2. **CAM_LYR.usda** – Cameras
 3. **ENV_LYR.usda** – Environment, ground, lighting, render defaults
@@ -268,6 +270,44 @@ Array ordering: first = strongest, last = weakest:
 10. **MTL_LYR.usda** – Materials & shading work
 11. **PHY_LYR.usda** – Physics setup (collision shapes, rigid body flags, mass properties)
 12. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
+
+### Static Data vs Runtime State
+
+The most important digital-twin boundary in this structure is the difference between **persistent facts** and **live operational state**.
+
+```text
+DATA_LYRs    = what this thing is / where it comes from / stable metadata
+RUNTIME_LYR  = what this thing is doing right now
+```
+
+Use **`040_DATA_LYRs/DATA_LYRs.usda`** for information that should survive reloads, reviews, version control, publishing, and handover. This layer is for static or slow-changing data contracts:
+
+- Revit / ACC / BIM enrichment metadata
+- `IfcGUID`, `UniqueId`, `Position`, `Part Number`, `Mark`, family/type data
+- PLM / ERP / AAS / OPC UA identifiers and links
+- asset identity, source-system references, and mapping-table results
+- sidecar references such as `customData:revit:metadataRef`
+
+Use **`035_RUNTIME_LYR/RUNTIME_LYR.usda`** for state that is current, temporary, session-backed, or frequently changing:
+
+- MQTT latest values
+- AGV or robot position updates
+- sensor states, alarms, availability, and status colors
+- live visibility or variant overrides driven by runtime systems
+- operator/session state
+- explicit runtime snapshots when you intentionally persist a moment in time
+
+**Rule of thumb:** if the value is still true after closing and reopening the project tomorrow, it probably belongs in `DATA_LYRs`. If it represents “right now”, it belongs in `RUNTIME_LYR` or an in-memory session layer.
+
+**Example:** A Revit importer writes stable identity metadata such as `customData:revit:ifc.ifcGuid` and `customData:revit:model.position` into static data/customData. The MQTT runtime extension can use those identifiers to find the right prims, but its live values should update `RUNTIME_LYR` or a session layer, not overwrite the static Revit metadata.
+
+| Question | Use `DATA_LYRs` | Use `RUNTIME_LYR` |
+|---|---|---|
+| Is this a stable identity or external-system key? | Yes | No |
+| Is this imported/enriched metadata from CAD, Revit, PLM, ERP, AAS, or a sidecar file? | Yes | No |
+| Does this update many times per minute from MQTT/OPC UA/ROS/runtime code? | No | Yes |
+| Should this be reviewed, diffed, and versioned as source data? | Yes | Usually no |
+| Is this a deliberate snapshot of runtime state? | Maybe, as snapshot evidence | Yes, as the live source before snapshot |
 
 ### Working with Session Layers
 
@@ -309,10 +349,14 @@ Session layers are **temporary, in-memory containers** for scene description tha
    - Variants → `VAR_LYR.usda`
    - Materials → `MTL_LYR.usda`
    - Assets → `ASS_LYR.usda`
+   - Static metadata and external IDs → `DATA_LYRs.usda`
+   - Runtime snapshots or live-state opinions → `RUNTIME_LYR.usda`
    - Overrides → `OPIN_LYR.usda`
    - And so on...
 
 This workflow results in **less mess** than authoring directly into many layers from the start. It also helps maintain clean layer organization and prevents accidental edits in the wrong layer.
+
+Keep this pragmatic: if a layer has no clear owner, no authored data, and no expected future use in the project, remove it from the root stack or leave it out of the generated project. The layer stack is a toolbox, not a compliance checklist.
 
 **Technical Note:** The session layer has the **strongest composition strength** in USD's LIV(E)RPS system (Local > Inherits > Variants > (r)Elocates > References > Payloads > Specializes). This means session layer edits will override all other layers, making it perfect for temporary overrides and testing.
 
@@ -332,9 +376,12 @@ This workflow results in **less mess** than authoring directly into many layers 
 4. Use **relative paths** (`@./folder/file.usd@`) for portability
 5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
 
+For small projects, simplify this workflow. Use only the layers that carry real data or real decisions; delete unused layer references from the root file instead of keeping empty complexity around.
+
 **Key Best Practices:**
 - ✅ Use **relative paths** (never absolute paths)
 - ✅ **Keep layer structure simple** - Only use layers you actually need. Don't overcomplicate.
+- ✅ Treat GoodStart as a **maximum reference setup** - remove unused layers for smaller projects.
 - ✅ Don't import assets in root layer - use `Ass_import_LYR` at bottom and Reference / Payload the assets there. (ignoring this caused me heavy headaches and has been v)
 - ✅ **Lock layers you're not working on** to prevent accidental edits on the wrong layer
 - ✅ Use **custom attributes** for queryable metadata (PLM IDs, status)
@@ -1030,8 +1077,8 @@ In these cases, integrate your USD workflow with their existing systems rather t
 3. **Textures**: Add textures to `010_ASS_USD/tex/` (global and asset-specific)
 4. **Base Layers**: Create or edit layers in `020_BASE_LYR/` for opinion, asset import, material import, variant, action, and animation layers
 5. **Simulation**: Use `030_SIM_LYR/` for simulation and physics layers
-6. **Runtime Integration**: Use `035_RUNTIME_LYR/` only for explicit runtime opinions or snapshots; keep live MQTT/OPC UA streams in session/runtime systems by default
-7. **Data Integration**: Use `040_DATA_LYRs/` for static data layers (PLM/ERP/AAS/OPC UA metadata and identifiers)
+6. **Runtime Integration**: Use `035_RUNTIME_LYR/` for current operational state, live runtime opinions, and explicit snapshots. Keep high-frequency MQTT/OPC UA streams in runtime/session systems by default.
+7. **Data Integration**: Use `040_DATA_LYRs/` for persistent facts: PLM/ERP/AAS/OPC UA identifiers, Revit/BIM enrichment, metadata mappings, and external-system references.
 8. **Root File**: The `USD_GoodStart_ROOT.usda` file references all layer stacks and serves as the entry point
 
 ## Folder Details
@@ -1105,7 +1152,7 @@ asset inputs:diffuse_texture = @../010_ASS_USD/tex/texture_name.png@ (
 - **Relative path resolution**: USD resolves paths relative to the file containing the reference
 - **Scripts use `.resolve()` internally**: Validation scripts convert paths to absolute for checking, but USD files should contain relative paths
 - **Path examples**:
-  - `@./030_USD_LYR/file.usda@` - Same directory level
+  - `@./020_BASE_LYR/ASS_LYR.usda@` - Same directory level
   - `@../010_ASS_USD/asset.usd@` - One directory up
   - `@../../textures/texture.png@` - Two directories up
 
@@ -1200,15 +1247,18 @@ The root file (`USD_GoodStart_ROOT.usda`) automatically includes all layers via 
 
 ```usda
 subLayers = [
-    @./020_BASE_LYR/OPIN_LYR.usda@,      # First = strongest (applied last, overrides others)
-    @./035_RUNTIME_LYR/RUNTIME_LYR.usda@, # Runtime/session-backed live state and snapshots
-    @./030_SIM_LYR/SIM_LYR.usda@,        # Simulation
-    @./040_DATA_LYRs/DATA_LYRs.usda@,    # Data/metadata
-    @./020_BASE_LYR/ACTION_LYR.usda@,    # Actions
-    @./020_BASE_LYR/ANIM_LYR.usda@,      # Animation
-    @./020_BASE_LYR/VAR_LYR.usda@,       # Variants
-    @./020_BASE_LYR/MTL_LYR.usda@,       # Materials
-    @./020_BASE_LYR/ASS_LYR.usda@        # Last = weakest (applied first, can be overridden)
+    @./020_BASE_LYR/OPIN_LYR.usda@,       # First = strongest: deliberate overrides
+    @./020_BASE_LYR/CAM_LYR.usda@,        # Cameras
+    @./020_BASE_LYR/ENV_LYR.usda@,        # Environment and lighting
+    @./035_RUNTIME_LYR/RUNTIME_LYR.usda@, # Current operational state / runtime snapshots
+    @./030_SIM_LYR/SIM_LYR.usda@,         # Simulation results and overlays
+    @./040_DATA_LYRs/DATA_LYRs.usda@,     # Persistent facts and static metadata
+    @./020_BASE_LYR/ACTGR_LYR.usda@,      # Action graph / behavior logic
+    @./020_BASE_LYR/ANIM_LYR.usda@,       # Animation
+    @./020_BASE_LYR/VAR_LYR.usda@,        # Variants
+    @./020_BASE_LYR/MTL_LYR.usda@,        # Materials
+    @./020_BASE_LYR/PHY_LYR.usda@,        # Physics setup
+    @./020_BASE_LYR/ASS_LYR.usda@         # Last = weakest: asset references/payloads
 ]
 ```
 
@@ -1810,12 +1860,13 @@ Based on NVIDIA guidance and OpenUSD best practices:
 1. **Use Custom Attributes (Option 1)** when:
    - Metadata must be frequently accessed programmatically
    - Data needs to be queried or potentially animated
-   - Examples: lifecycle status updates, linked system IDs, real-time sensor data
+   - Examples: lifecycle status updates, linked system IDs, queryable runtime values
+   - For live sensor streams, author these attributes in `RUNTIME_LYR` or a session layer unless you are intentionally publishing a snapshot
 
 2. **Use customData Dictionary (Option 2)** when:
    - Metadata is static and descriptive
    - Data is archival or not actively queried
-   - Examples: documentation links, source system info, annotations, legacy metadata
+   - Examples: documentation links, source system info, Revit/BIM enrichment, annotations, legacy metadata
 
 3. **Always namespace** attributes and dictionary keys under project or domain-specific namespaces (e.g., `digitalTwin:*`, `plm:*`, `aas:*`) to avoid collisions
 
@@ -1833,9 +1884,9 @@ Based on NVIDIA guidance and OpenUSD best practices:
 **Non-Geometry Data Handling:**
 
 - **PLM Links**: Store PLM system identifiers and revision information
-- **Digital Twin Integration**: Connect to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. Standards like [IDTA AAS](https://industrialdigitaltwin.org/en/aas/) and [OPC Foundation I4AAS](https://reference.opcfoundation.org/I4AAS/v100/docs/) provide methods to define digital twins and connect data.
+- **Digital Twin Integration**: Connect to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. Stable identifiers and metadata belong in `DATA_LYRs`; latest-value operational state belongs in `RUNTIME_LYR` or a session layer.
 - **ERP Integration**: Link to ERP systems for production and logistics data
-- **IoT Data**: Connect to sensor data and real-time monitoring systems
+- **IoT Data**: Connect to sensor data and real-time monitoring systems through runtime adapters. Persist only explicit snapshots or slow-changing identifiers.
 - **Documentation**: Link to technical documentation, manuals, and specifications
 
 ### Schema Standards and Coordination
@@ -1935,9 +1986,9 @@ A GitHub Actions workflow (`.github/workflows/validate.yml`) is included for aut
 2. **Conversion**: Convert to USD via defined pipeline (possibly through STEP)
 3. **Validation**: Run validation scripts to check asset integrity
 4. **Metadata Mapping**: Map CAD metadata to USD metadata and connect to external data sources
-5. **Layer Management**: Use `030_USD_LYR/`, `040_SIM_LYR/`, `050_VARIANTS_LYR/`, and `060_METADATA_LYR` layers to add visual, simulation, variant, and metadata overrides
+5. **Layer Management**: Use `020_BASE_LYR/`, `035_RUNTIME_LYR/`, `030_SIM_LYR/`, and `040_DATA_LYRs/` to add visual, runtime, simulation, variant, and metadata overrides
 6. **Scene Validation**: Validate entire scene before deployment
-7. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA) for integrating additional data. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
+7. **Data Integration**: Connect USD assets to digital twin standards and frameworks (such as Asset Administration Shell/AAS and OPC UA). Use `DATA_LYRs` for stable facts and identifiers; use `RUNTIME_LYR` or a session layer for live/latest-value state. **Remember:** Every company and project needs its own approach. Start clean and small, build up with open source, stay agile, and expect to adjust and change as everything is evolving.
 
 ## Usage Examples and Troubleshooting
 
