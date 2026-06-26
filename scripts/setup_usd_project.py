@@ -13,8 +13,8 @@ Usage:
 If no directory is provided, the script runs in the current directory.
 """
 
-# Version: 0.9.5.1 | Date: 29.01.2026 | Time: 14:00 | GlobalID: 20260129_1400_USDGoodStart_Setup
-__version__ = "0.9.5.1"
+# Version: 0.9.5.2 | Date: 27.06.2026 | Time: 00:17 | GlobalID: 20260627_0017_USDGoodStart_Setup
+__version__ = "0.9.5.2"
 
 import sys
 from pathlib import Path

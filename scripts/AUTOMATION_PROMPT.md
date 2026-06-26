@@ -253,9 +253,9 @@ Create standalone ZIP containing:
 - `README.md`
 - `README_STANDALONE.txt`
 
-**ZIP naming:** `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip` (e.g. `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`)
+**ZIP naming:** `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip` (e.g. `USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`)
 
-**When to regenerate:** After any change to the setup script or the files above, regenerate the zip and update the version in `VERSION` and `setup_usd_project.py` (`__version__`). Update the README link to the new zip (e.g. `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`).
+**When to regenerate:** After any change to the setup script or the files above, regenerate the zip and update the version in `VERSION` and `setup_usd_project.py` (`__version__`). Update the README link to the new zip (e.g. `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`).
 
 ---
 
@@ -279,7 +279,8 @@ setup_usd_project.bat "D:\MyProject"
 
 ## Version History
 
-- **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, physical starter-scene scaling across m/cm/mm, double-confirm (type cm/m/mm). Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`
+- **0.9.5.2** – Patch release after generated-package content change: consistent physical starter-scene scaling across m/cm/mm, regenerated standalone zip with new filename. Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`
+- **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, physical starter-scene scaling across m/cm/mm, double-confirm (type cm/m/mm). Superseded by `0.9.5.2` because the package content changed after the original filename was published.
 - **0.9.4** – (previous)
 - **0.9.3** – Custom default prim name, root file renamed to `{DefaultPrim}_{scale}_ROOT.usda`
 - **0.9.2** – Added PHY_LYR.usda, fixed README templates

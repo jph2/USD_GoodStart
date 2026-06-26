@@ -12,7 +12,7 @@ last_modified: '2026-02-17T09:24:41Z'
 
 # Scripts
 
-**Version:** 0.9.0 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.5.2 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
 **Last Updated:** 29.01.2026 16:00
 **Tag block:**
 #framework_integration #api_integration #conversion #directrl #validation #post_production #ide #automation #layers #stage #openusd #workflow_automation #best_practices #usd_core #omniverse #hybrid #references #analysis #variants #composition

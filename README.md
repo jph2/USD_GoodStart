@@ -19,7 +19,7 @@ last_modified: '2026-03-08T11:02:38Z'
 > **Contact:** DM me on [LinkedIn](https://www.linkedin.com/in/jan-haluszka-tangible-digital-twins/) , visit [haluszka.com](https://www.haluszka.com), or email **jh@haluszka.com**.  , I have a proven trackrecord of finding solutions in uncharted territorry, so let's invent solutions together with OpenUSD and I wish you a good start!!!
 
 
-**Version:** 0.9.5.1 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)  
+**Version:** 0.9.5.2 (GoodStart project scaffolding; see `scripts/VERSION` for setup script version)
 **Last Updated:** 29.01.2026
 > **What is missing:** USD GoodStart will be updated with the framework from [Learn OpenUSD](https://docs.nvidia.com/learn-openusd/latest/index.html) (NVIDIA) and [Awesome OpenUSD](https://github.com/matiascodesal/awesome-openusd), and will become OpenUSDGoodstart… In the meantime, deeper content has been gathered in the local guide [`OpenUSD_Best_Practices_Guide (17).md`](WIP_Docs/OpenUSD_Best_Practices_Guide%20(17).md). See also the curated link list in [`LAYER_ORDER_REFERENCES_RESEARCH.md`](WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md#openusd-learning--ecosystem-resources).
 **Tag block:**
@@ -388,7 +388,7 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.9.5.1.zip)), and it will:
+**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip)), and it will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Startpoint/`

@@ -12,7 +12,7 @@ last_modified: '2026-02-17T09:42:14Z'
 
 # Standalone Setup Script Usage
 
-**Version:** 0.9.5.1 | **Date:** 29.01.2026 | **Time:** 14:00 (see `VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.5.2 | **Date:** 27.06.2026 | **Time:** 00:17 (see `VERSION` or `setup_usd_project.bat --version`)
 **Tag block:**
 #troubleshooting #standalone #stage #conversion #directrl #openusd #workflow_automation #best_practices #usd_core #variants #layers #composition #framework_integration #ai_coding_agents #deterministic_workflows #usd_goodstart
 
