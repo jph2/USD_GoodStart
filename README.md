@@ -271,6 +271,115 @@ Array ordering: first = strongest, last = weakest:
 11. **PHY_LYR.usda** – Physics setup (collision shapes, rigid body flags, mass properties)
 12. **ASS_LYR.usda** – References & payloads, asset imports (weakest)
 
+### Proposed New Structure: Thin Root + Owned Authoring Layers
+
+This is the proposed next GoodStart structure. It keeps the existing layer vocabulary, but tightens ownership so project re-runs, Omniverse edits, runtime updates, and source updates do not overwrite each other.
+
+**Core idea:** the root file should be a clean entry point, not the place where the project authors everything.
+
+```text
+<project>_ROOT.usda
+  = stage metadata + defaultPrim + ordered subLayers only
+```
+
+The root layer should not contain prim specs, property specs, references, payloads, material bindings, runtime values, hand-authored fixes, or Omniverse deltas. It should be machine-checkable and safely regeneratable.
+
+**Proposed strong-to-weak sublayer order:**
+
+1. `020_BASE_LYR/APPROVAL_OVERRIDE_LYR.usda` *(optional)* - approved strongest project corrections.
+2. `020_BASE_LYR/MAT_BIND_OVERRIDE_LYR.usda` *(optional)* - material-binding override authority.
+3. `020_BASE_LYR/OV_DELTA_LYR.usda` *(optional)* - controlled Omniverse-authored persistent deltas.
+4. `020_BASE_LYR/OPIN_LYR.usda` - general project opinions and controlled manual fixups.
+5. `020_BASE_LYR/CAM_LYR.usda` - cameras.
+6. `020_BASE_LYR/ENV_LYR.usda` - environment, ground, lighting, render defaults.
+7. `035_RUNTIME_LYR/RUNTIME_LYR.usda` - latest runtime state, replay outputs, explicit runtime snapshots.
+8. `030_SIM_LYR/SIM_LYR.usda` - simulation results and simulation overlays.
+9. `040_DATA_LYRs/DATA_LYRs.usda` - stable metadata, identifiers, source-system references.
+10. `020_BASE_LYR/ACTGR_LYR.usda` - action graph / behavior logic.
+11. `020_BASE_LYR/ANIM_LYR.usda` - animation.
+12. `020_BASE_LYR/VAR_LYR.usda` - variants and configurations.
+13. `020_BASE_LYR/MTL_LYR.usda` - material definitions and shading.
+14. `020_BASE_LYR/PHY_LYR.usda` - physics setup and collision shapes.
+15. `020_BASE_LYR/ASS_LYR.usda` - asset namespace and references/payloads to startpoints or wrappers.
+
+```mermaid
+flowchart TB
+    Root["<project>_ROOT.usda<br/>thin entry layer<br/>metadata + defaultPrim + subLayers only"]
+
+    subgraph Stack["Root subLayers: strongest to weakest"]
+        direction TB
+        Approval["APPROVAL_OVERRIDE_LYR.usda<br/>optional approved corrections"]
+        MatOverride["MAT_BIND_OVERRIDE_LYR.usda<br/>optional material binding authority"]
+        OvDelta["OV_DELTA_LYR.usda<br/>optional Omniverse persistent deltas"]
+        Opin["OPIN_LYR.usda<br/>controlled project opinions"]
+        Cam["CAM_LYR.usda<br/>cameras"]
+        Env["ENV_LYR.usda<br/>environment, lights, render defaults"]
+        Runtime["RUNTIME_LYR.usda<br/>latest runtime state and snapshots"]
+        Sim["SIM_LYR.usda<br/>simulation overlays"]
+        Data["DATA_LYRs.usda<br/>stable metadata and identifiers"]
+        Actgr["ACTGR_LYR.usda<br/>action graph / behavior"]
+        Anim["ANIM_LYR.usda<br/>animation"]
+        Var["VAR_LYR.usda<br/>variants and configurations"]
+        Mtl["MTL_LYR.usda<br/>materials and shading"]
+        Phy["PHY_LYR.usda<br/>physics and collision setup"]
+        Ass["ASS_LYR.usda<br/>asset namespace + refs/payloads<br/>weakest base layer"]
+
+        Approval --> MatOverride --> OvDelta --> Opin --> Cam --> Env --> Runtime --> Sim --> Data --> Actgr --> Anim --> Var --> Mtl --> Phy --> Ass
+    end
+
+    subgraph Sources["External evidence and generated asset inputs"]
+        direction TB
+        Source["000_SOURCE<br/>CAD / DCC / raw source evidence"]
+        Startpoints["010_ASS_USD/USD_Startpoint<br/>stable imported USD startpoints"]
+        Wrappers["010_ASS_USD/USD_Wrappers<br/>non-destructive transform/unit/axis wrappers"]
+        MatLib["010_ASS_USD/MatLib<br/>material libraries"]
+        Tex["010_ASS_USD/tex<br/>textures"]
+    end
+
+    Root --> Approval
+    Startpoints --> Ass
+    Wrappers --> Ass
+    Source -.-> Startpoints
+    Startpoints -.-> Wrappers
+    MatLib --> Mtl
+    Tex --> Mtl
+
+    Runtime -.->|runtime writes only| Runtime
+    Data -.->|stable facts only| Data
+    OvDelta -.->|Omniverse saves here, not root| OvDelta
+
+    style Root fill:#eceff1,stroke:#263238,stroke-width:3px,color:#000
+    style Stack fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px,color:#000
+    style Sources fill:#fafafa,stroke:#424242,stroke-width:2px,color:#000
+    style Approval fill:#ffe0b2,stroke:#e65100,stroke-width:2px,color:#000
+    style MatOverride fill:#f8bbd0,stroke:#880e4f,stroke-width:2px,color:#000
+    style OvDelta fill:#fff59d,stroke:#f57f17,stroke-width:2px,color:#000
+    style Opin fill:#ffcc80,stroke:#ef6c00,stroke-width:2px,color:#000
+    style Runtime fill:#ffd54f,stroke:#f57f17,stroke-width:2px,color:#000
+    style Data fill:#bcaaa4,stroke:#3e2723,stroke-width:2px,color:#000
+    style Ass fill:#a5d6a7,stroke:#1b5e20,stroke-width:3px,color:#000
+    style Wrappers fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Startpoints fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Mtl fill:#f48fb1,stroke:#880e4f,stroke-width:2px,color:#000
+```
+
+The optional delta layers are not mandatory in every project. They are declared ownership lanes for projects that need them. The invariant is that durable deltas are stronger than imported/base asset assembly, are assigned to a declared layer, and are never authored into the root.
+
+**Authoring rules:**
+
+- `ASS_LYR.usda` owns asset composition. References and payloads to `010_ASS_USD/USD_Startpoint` or wrapper layers belong here, not in the root.
+- `010_ASS_USD/USD_Wrappers` is the non-destructive correction zone for scale, axis, unit, rotation, and placement wrappers. Imported startpoints stay unchanged.
+- `RUNTIME_LYR.usda` owns latest-state runtime writes. Do not write live MQTT/OPC UA/latest-value data into `DATA_LYRs`.
+- `DATA_LYRs.usda` owns stable facts: identifiers, source-system references, PLM/ERP/AAS/OPC UA mappings, CAD/Revit metadata, and other slow-changing data.
+- `OV_DELTA_LYR.usda` or another declared delta lane owns persistent Omniverse-authored changes. Omniverse should not save durable edits into the generated root.
+- `_contracts/layer_contract.json` records the project root, layer registry, ownership, strength order, write targets, optional delta lanes, and validator rules.
+
+**Why propose this change?**
+
+The older structure is useful for learning and small projects, but it can become fragile when a project is regenerated or round-tripped through Omniverse. If the root owns asset arcs or user opinions, a pipeline re-run can destroy local fixes. If runtime state is mixed into static data, latest-value updates become hard to review and version. If Omniverse deltas are not constrained, manual edits can land in generated layers by accident.
+
+This proposed structure separates generated, hand-authored, runtime, and external-evidence responsibilities. That makes the layer stack safer to regenerate, easier to validate, and better suited for digital twins where CAD/source updates, runtime state, semantic identifiers, material overrides, simulation outputs, and Omniverse edits must coexist.
+
 ### Static Data vs Runtime State
 
 The most important digital-twin boundary in this structure is the difference between **persistent facts** and **live operational state**.
