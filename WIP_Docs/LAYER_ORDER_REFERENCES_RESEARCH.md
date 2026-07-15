@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-15T13:18:21+02:00"
+last_modified: "2026-07-15T13:30:26+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -38,9 +38,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.4.4 | **Date**: 15.07.2026 | **Time**: 13:18 | **GlobalID**: 20260715_1318_Layer_Order_References_v1.4.4
+**Version**: 1.4.5 | **Date**: 15.07.2026 | **Time**: 13:30 | **GlobalID**: 20260715_1330_Layer_Order_References_v1.4.5
 
-**Last Updated:** 15.07.2026 13:18<br>
+**Last Updated:** 15.07.2026 13:30<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -145,51 +145,76 @@ The sources in this paper do not merely recommend different filenames or layer o
 
 ```mermaid
 flowchart LR
-    subgraph Classic["A · Classic scene / shot"]
+    subgraph Classic["A · Classic scene / shot ordered sublayer stack"]
         direction TB
-        ClassicQuestion["Question: Who wins?"]
-        ClassicRoot["Thin scene root"]
-        ClassicOrder["Ordered peer sublayers"]
-        ClassicLayers["LGT → SIM → ANIM → CAM → MTL → ASS"]
-        ClassicResult["Result: deterministic opinion strength"]
+        ClassicQuestion["Order answers:<br/>Who wins?"]
+        ClassicScope["Scene / shot composition boundary<br/>independently authored department layers"]
+        ClassicRoot["Thin root layer<br/>ordered subLayers array"]
+        Strong["STRONGEST peer opinion"]
+        LGT["LGT · Lighting"]
+        SIM["SIM · Simulation"]
+        ANIM["ANIM · Animation"]
+        CAM["CAM · Camera"]
+        MTL["MTL · Materials"]
+        ASS["ASS · Asset assembly"]
+        Weak["WEAKEST peer opinion"]
+        ClassicResult["Resolved result<br/>strongest authored peer opinion wins"]
 
-        ClassicQuestion --> ClassicRoot
-        ClassicRoot --> ClassicOrder
-        ClassicOrder --> ClassicLayers
-        ClassicLayers --> ClassicResult
+        ClassicQuestion -.-> ClassicScope
+        ClassicScope --> ClassicRoot
+        ClassicRoot -->|"subLayers"| Strong
+        Strong --> LGT --> SIM --> ANIM --> CAM --> MTL --> ASS --> Weak --> ClassicResult
     end
 
-    subgraph Isaac["B · Isaac Sim Asset Structure 3.0"]
+    subgraph Isaac["B · NVIDIA Isaac Sim Asset Structure 3.0"]
         direction TB
-        IsaacQuestion["Question: What is reused, selected, or loaded?"]
-        IsaacPublic["One public asset interface"]
-        IsaacShared["References compose a stable shared base"]
-        IsaacVariants["Variant sets select supported configurations"]
-        IsaacPayloads["Payloads defer optional or heavy data"]
+        IsaacQuestion["Composition arcs answer:<br/>What is reused, selected,<br/>or loaded?"]
+        SceneASS["Scene ASS_LYR.usda"]
+        Public["robot_name.usda<br/>one public asset identity"]
 
-        IsaacQuestion --> IsaacPublic
-        IsaacPublic --> IsaacShared
-        IsaacShared --> IsaacVariants
-        IsaacVariants --> IsaacPayloads
+        subgraph Shared["Stable shared asset"]
+            direction TB
+            SharedStructure["base.usda<br/>composes → instances.usda<br/>instances.usda:<br/>prim reference → geometries.usd<br/>reference → materials.usda<br/>sublayer → robot.usda · schema"]
+        end
+
+        Variants{"Variant sets<br/>Which configuration?"}
+
+        subgraph Choices["Selectable feature branches"]
+            direction TB
+            FeatureBranches["physics variant → Physics<br/>PhysX · MuJoCo · other<br/><br/>controller variant → Controller<br/>sensor · ROS graph<br/><br/>end-effector variant → End effector<br/>gripper · robot hand"]
+        end
+
+        Payloads["Payloads<br/>load optional or heavy data<br/>on demand"]
+
+        IsaacQuestion -.-> SceneASS
+        SceneASS -->|"reference"| Public
+        Public -->|"reference"| SharedStructure
+        SharedStructure ~~~ Variants
+        Public --> Variants
+        Variants -->|"variant selections"| FeatureBranches
+        FeatureBranches -.->|"payloads"| Payloads
     end
 
     Classic ~~~ Isaac
 
     style Classic fill:#e3f2fd,stroke:#1565c0,stroke-width:3px,color:#000
     style Isaac fill:#fff8e1,stroke:#ef6c00,stroke-width:3px,color:#000
+    style Shared fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Choices fill:#ede7f6,stroke:#5e35b1,stroke-width:2px,color:#000
     style ClassicRoot fill:#bbdefb,stroke:#0d47a1,stroke-width:2px,color:#000
-    style ClassicOrder fill:#90caf9,stroke:#1565c0,stroke-width:2px,color:#000
-    style ClassicLayers fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-    style ClassicResult fill:#cfd8dc,stroke:#455a64,stroke-width:2px,color:#000
+    style Strong fill:#1565c0,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style Weak fill:#90a4ae,stroke:#455a64,stroke-width:2px,color:#000
+    style ASS fill:#cfd8dc,stroke:#455a64,stroke-width:2px,color:#000
     style ClassicQuestion fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
-    style IsaacPublic fill:#ffcc80,stroke:#e65100,stroke-width:2px,color:#000
-    style IsaacShared fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
-    style IsaacVariants fill:#d1c4e9,stroke:#5e35b1,stroke-width:2px,color:#000
-    style IsaacPayloads fill:#f8bbd0,stroke:#ad1457,stroke-width:2px,color:#000
+    style ClassicScope fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    style ClassicResult fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    style Public fill:#ffcc80,stroke:#e65100,stroke-width:3px,color:#000
+    style Variants fill:#ffe082,stroke:#f57f17,stroke-width:3px,color:#000
+    style Payloads fill:#f8bbd0,stroke:#ad1457,stroke-width:2px,color:#000
     style IsaacQuestion fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
 ```
 
-*Paradigm comparison — Both panels intentionally use the same abstraction level. The classic stack is a linear strength policy among peer scene contributions. Isaac Sim keeps one public asset identity and assigns references, variant sets, and payloads distinct responsibilities. Section 16 shows the detailed package anatomy.*
+*Paradigm comparison — Both panels retain their full internal structure. The classic side shows the complete peer-opinion stack from strongest to weakest. The Isaac Sim side shows the scene reference, public asset identity, stable shared asset files, variant-selected feature branches, and deferred payload path. The layouts are normalized for direct side-by-side comparison; Section 16 provides the source evidence and detailed interpretation.*
 
 ### Sublayer-order paradigms
 
@@ -2163,6 +2188,7 @@ Isaac Sim Asset Structure 3.0 is a strong reference implementation for the propo
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.4.5 | 2026-07-15 | Corrected the over-simplified 1.4.4 comparison: restored the complete classic layer stack and all Isaac Sim files, arc types, variant branches, and payload semantics; reorganized only their visual grouping to produce readable, similarly sized vertical panels side by side |
 | 1.4.4 | 2026-07-15 | Replaced the GitHub-unstable and visually unbalanced paradigm comparison with a balanced, flat two-panel Mermaid diagram; removed nested subgraphs and HTML label markup while retaining one minimal container-level alignment link |
 | 1.4.3 | 2026-07-15 | Restored the Unreal Engine 6 direction as author-held first-hand meeting evidence, clearly distinguishing that non-public primary evidence from Epic's publicly verifiable current OpenUSD implementation status |
 | 1.4.2 | 2026-07-15 | Strengthened the Introduction's “Why this matters” section with precise architectural claims, an official NVIDIA Omniverse foundation reference, evidence-based Unreal Engine OpenUSD status, and an explicit caveat against presenting Unreal Engine 6 speculation as confirmed roadmap |
