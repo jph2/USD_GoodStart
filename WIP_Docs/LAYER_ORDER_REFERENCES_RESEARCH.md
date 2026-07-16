@@ -78,34 +78,41 @@ The four composition paradigms organize **where and how opinions are composed**.
 
 ```mermaid
 flowchart TB
-    Foundation["COMMON OPENUSD BUILDING BLOCKS<br/>subLayers · references · payloads · variant sets · schemas"]
+    Foundation["COMMON OPENUSD<br/>BUILDING BLOCKS<br/>subLayers · references<br/>payloads · variants · schemas"]
 
     subgraph Architecture["COMPOSITION ARCHITECTURE — choose per boundary and design question"]
         direction TB
 
         subgraph SceneBoundary["SCENE / PROJECT BOUNDARY"]
             direction LR
-            Departmental["A · Departmental shot refinement<br/>Question: Which peer opinion wins?<br/>Center: ordered subLayers"]
-            Ownership["B · Scene / digital-twin ownership lanes<br/>Question: Who owns this opinion?<br/>Center: lifecycle and write-target contracts"]
+            Departmental["A · Departmental<br/>shot refinement<br/>Question: Which peer<br/>opinion wins?<br/>Center: ordered subLayers"]
+            Ownership["B · Scene / digital-twin<br/>ownership lanes<br/>Question: Who owns<br/>this opinion?<br/>Center: lifecycle +<br/>write-target contracts"]
         end
 
         subgraph AssetBoundary["ASSET / PRODUCT BOUNDARY"]
             direction LR
-            Published["C · Published reusable asset<br/>Question: What remains stable and reusable?<br/>Center: public interface plus references and payloads"]
-            Configurable["D · Configurable simulation product<br/>Question: What is selected or loaded?<br/>Center: variant sets plus deferred payloads"]
+            Published["C · Published<br/>reusable asset<br/>Question: What remains<br/>stable and reusable?<br/>Center: public interface<br/>+ references + payloads"]
+            Configurable["D · Configurable<br/>simulation product<br/>Question: What is<br/>selected or loaded?<br/>Center: variant sets +<br/>deferred payloads"]
         end
     end
 
     subgraph Assurance["SIMREADY ASSURANCE — applies across all four paradigms"]
-        direction LR
-        AssuranceQuestion["What must it support,<br/>and how is that proven?"]
-        Profile["Declared<br/>profile"]
-        Capability["Capabilities<br/>and features"]
-        Requirement["Requirements"]
-        Validator["Validators"]
-        Evidence["Executable<br/>evidence"]
-
-        AssuranceQuestion --> Profile --> Capability --> Requirement --> Validator --> Evidence
+        direction TB
+        subgraph AssuranceRow1[" "]
+            direction LR
+            AssuranceQuestion["What must it support?<br/>How is that proven?"]
+            Profile["Declared<br/>profile"]
+            Capability["Capabilities<br/>+ features"]
+            AssuranceQuestion --> Profile --> Capability
+        end
+        subgraph AssuranceRow2[" "]
+            direction LR
+            Requirement["Requirements"]
+            Validator["Validators"]
+            Evidence["Executable<br/>evidence"]
+            Requirement --> Validator --> Evidence
+        end
+        Capability --> Requirement
     end
 
     Foundation --> Departmental
@@ -129,6 +136,8 @@ flowchart TB
     style SceneBoundary fill:#eef7ff,stroke:#2167ae,stroke-width:1px
     style AssetBoundary fill:#fff8eb,stroke:#d97706,stroke-width:1px
     style Assurance fill:#f5f0fb,stroke:#7048b6,stroke-width:2px
+    style AssuranceRow1 fill:none,stroke:none
+    style AssuranceRow2 fill:none,stroke:none
 ```
 
 **Figure ES.1 — Architecture choice versus capability assurance.** The vertical flow is intentional: common OpenUSD mechanics enable several valid composition architectures; SimReady can then define and verify capability contracts across any of them. The two scene-scale paradigms primarily govern opinion ownership and strength, while the two asset-scale paradigms primarily govern publication, reuse, configuration, and loading.
@@ -216,7 +225,7 @@ flowchart LR
     subgraph Classic["A · Classic scene / shot ordered sublayer stack"]
         direction TB
         ClassicQuestion["Order answers:<br/>Who wins?"]
-        ClassicScope["Scene / shot composition boundary<br/>independently authored department layers"]
+        ClassicScope["Scene / shot<br/>composition boundary<br/>independently authored<br/>department layers"]
         ClassicRoot["Thin root layer<br/>ordered subLayers array"]
         Strong["STRONGEST peer opinion"]
         LGT["LGT · Lighting"]
@@ -226,7 +235,7 @@ flowchart LR
         MTL["MTL · Materials"]
         ASS["ASS · Asset assembly"]
         Weak["WEAKEST peer opinion"]
-        ClassicResult["Resolved result<br/>strongest authored peer opinion wins"]
+        ClassicResult["Resolved result<br/>strongest authored<br/>peer opinion wins"]
 
         ClassicQuestion -.-> ClassicScope
         ClassicScope --> ClassicRoot
@@ -249,7 +258,7 @@ flowchart LR
 
         subgraph Choices["Selectable feature branches"]
             direction TB
-            FeatureBranches["physics variant → Physics<br/>PhysX · MuJoCo · other<br/><br/>controller variant → Controller<br/>sensor · ROS graph<br/><br/>end-effector variant → End effector<br/>gripper · robot hand"]
+            FeatureBranches["physics variant → Physics<br/>PhysX · MuJoCo · other<br/><br/>controller variant<br/>→ Controller<br/>sensor · ROS graph<br/><br/>end-effector variant<br/>→ End effector<br/>gripper · robot hand"]
         end
 
         Payloads["Payloads<br/>load optional or heavy data<br/>on demand"]
@@ -2093,10 +2102,10 @@ The most important adaptation is **time semantics**. Variant sets describe discr
 
 ```mermaid
 flowchart TB
-    Root["Proposed USD GoodStart project root<br/>scene-level ownership stack"]
-    ASS["ASS_LYR.usda<br/>references published asset interfaces"]
+    Root["Proposed USD GoodStart<br/>project root<br/>scene-level ownership stack"]
+    ASS["ASS_LYR.usda<br/>references published<br/>asset interfaces"]
     DATA["DATA_LYRs.usda<br/>stable IDs + engineering metadata"]
-    SIM["SIM_LYR.usda<br/>scenario + project simulation opinions"]
+    SIM["SIM_LYR.usda<br/>scenario + project<br/>simulation opinions"]
     RUN["RUNTIME_LYR.usda / session<br/>live values + latest state"]
 
     Factory["factory.usda<br/><b>public factory interface</b>"]
@@ -2246,13 +2255,13 @@ The repository already contains two different maturity levels:
 
 ```mermaid
 flowchart TB
-    Sources["Engineering and supplier sources<br/>STEP · STP · URDF · MJCF · supplier USD"]
-    CadAssets["CAD-derived component outputs<br/>table · bin · base · wall · scanner · battery · conveyor"]
-    ReadyAssets["Already 3.0-like packages<br/>UR10 · Robotiq<br/>public interface + base + variants + physics payloads"]
+    Sources["Engineering + supplier sources<br/>STEP · STP · URDF · MJCF<br/>supplier USD"]
+    CadAssets["CAD-derived components<br/>table · bin · base · wall<br/>scanner · battery · conveyor"]
+    ReadyAssets["Already 3.0-like packages<br/>UR10 · Robotiq<br/>public interface + base<br/>variants + physics payloads"]
     MixedRoot["workcell_digitaltwin.usd<br/>one mixed-authoring stage"]
     Assembly["Assembly placements<br/>component payloads + transforms"]
-    Looks["Embedded Looks<br/>bindings + remote MDL dependencies"]
-    Physics["Physics integration<br/>colliders + joints + deep overrides"]
+    Looks["Embedded Looks<br/>bindings + remote<br/>MDL dependencies"]
+    Physics["Physics integration<br/>colliders + joints<br/>deep overrides"]
     Scene["Environment + ground + cameras<br/>render settings + runtime values"]
 
     Sources --> CadAssets
@@ -2302,16 +2311,16 @@ The package owns reusable defaults and internal implementation. The envelope own
 
 ```mermaid
 flowchart TB
-    P0["0 · Declare target capability profile<br/>public prims · variants · loading · simulation requirements"]
-    P1["1 · Freeze and manifest inputs<br/>source IDs · licenses · hashes · tool versions"]
-    P2["2 · Inspect and classify current stage<br/>assembly · geometry · materials · physics · environment · runtime"]
-    P3["3 · Define package boundaries<br/>workcell · robot · gripper · conveyor · scanner · table · bin · product"]
-    P4["4 · Normalize and map<br/>units · Z-up · pivots · names · instances · stable IDs"]
-    P5["5 · Build or retain component packages<br/>public interface · base · materials · semantics · feature payloads"]
-    P6["6 · Build workcell package<br/>instances reference only component public interfaces"]
-    P7["7 · Retarget authored opinions<br/>materials · joints · colliders · sensors · configuration · environment"]
-    P8["8 · Validate equivalence and closure<br/>composition · transforms · appearance · physics · paths · performance"]
-    P9["9 · Publish atomically<br/>versioned package + manifest + reports + chosen envelope"]
+    P0["0 · Declare target profile<br/>public prims · variants · loading<br/>simulation requirements"]
+    P1["1 · Freeze + manifest inputs<br/>source IDs · licenses · hashes<br/>tool versions"]
+    P2["2 · Inspect + classify stage<br/>assembly · geometry · materials<br/>physics · environment · runtime"]
+    P3["3 · Define package boundaries<br/>workcell · robot · gripper · conveyor<br/>scanner · table · bin · product"]
+    P4["4 · Normalize + map<br/>units · Z-up · pivots · names<br/>instances · stable IDs"]
+    P5["5 · Build / retain packages<br/>public interface · base · materials<br/>semantics · feature payloads"]
+    P6["6 · Build workcell package<br/>instances reference component<br/>public interfaces only"]
+    P7["7 · Retarget authored opinions<br/>materials · joints · colliders<br/>sensors · configuration · environment"]
+    P8["8 · Validate closure + equivalence<br/>composition · transforms · appearance<br/>physics · paths · performance"]
+    P9["9 · Publish atomically<br/>versioned package + manifest<br/>reports + chosen envelope"]
 
     P0 --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
 
@@ -2544,13 +2553,13 @@ The current Foundation repository operationalizes SimReady through four interloc
 
 ```mermaid
 flowchart TB
-    Profile["Profile<br/>named + versioned simulation-use-case contract"]
-    Features["Features<br/>queryable asset behaviors and properties"]
-    Capabilities["Capabilities<br/>domains that organize related requirements"]
-    Requirements["Requirements<br/>single testable statements with stable IDs"]
-    Rules["Validator rules<br/>executable checks against the USD asset"]
-    Result["Validation result<br/>per requirement + per feature + overall profile"]
-    Evidence["Publication evidence<br/>JSON report + optional validation metadata stamp"]
+    Profile["Profile<br/>named + versioned<br/>simulation-use-case contract"]
+    Features["Features<br/>queryable asset behaviors<br/>and properties"]
+    Capabilities["Capabilities<br/>domains that organize<br/>related requirements"]
+    Requirements["Requirements<br/>single testable statements<br/>with stable IDs"]
+    Rules["Validator rules<br/>executable checks<br/>against the USD asset"]
+    Result["Validation result<br/>per requirement + feature<br/>+ overall profile"]
+    Evidence["Publication evidence<br/>JSON report + optional<br/>validation metadata stamp"]
 
     Profile -->|"selects exact feature versions"| Features
     Features -->|"collect requirements + dependencies"| Requirements
@@ -2604,9 +2613,9 @@ flowchart TB
 
     subgraph Phase2["Phase 2 · Development and iteration"]
         direction LR
-        Viability["Standardizable vs runtime-specific"]
-        Draft["Specification + schema prototypes"]
-        Build["Requirements + validators + samples"]
+        Viability["Standardizable vs<br/>runtime-specific"]
+        Draft["Specification +<br/>schema prototypes"]
+        Build["Requirements + validators<br/>+ samples"]
         Beta["QA + internal/external beta"]
         Viability --> Draft --> Build --> Beta
     end
@@ -2614,9 +2623,9 @@ flowchart TB
     subgraph Phase3["Phase 3 · Package deliveries"]
         direction LR
         Candidate["Candidate specification"]
-        Pipeline["Converter + transformations + validators"]
-        Docs["Creator/runtime workflow documentation"]
-        Samples["Sample content + end-to-end runtime evidence"]
+        Pipeline["Converter + transformations<br/>+ validators"]
+        Docs["Creator/runtime<br/>workflow documentation"]
+        Samples["Sample content +<br/>end-to-end runtime evidence"]
         Candidate --> Pipeline --> Docs --> Samples
     end
 
