@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-16T16:03:09+02:00"
+last_modified: "2026-07-16T17:32:26+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -22,6 +22,7 @@ agent_index:
   maturation: 2
   routing:
     executive_summary: "#executive-summary"
+    architecture_assurance_map: "#composition-architecture-and-assurance-are-orthogonal"
     introduction: "#introduction--from-film-pipelines-to-digital-twins"
     composition_foundations: "#composition-foundations"
     diagram_guide: "#how-to-read-the-diagrams"
@@ -40,9 +41,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.6.0 | **Date**: 16.07.2026 | **Time**: 16:03 | **GlobalID**: 20260716_1603_Layer_Order_References_v1.6.0
+**Version**: 1.6.1 | **Date**: 16.07.2026 | **Time**: 17:32 | **GlobalID**: 20260716_1732_Layer_Order_References_v1.6.1
 
-**Last Updated:** 16.07.2026 16:03<br>
+**Last Updated:** 16.07.2026 17:32<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -68,6 +69,67 @@ For digital twins, the strongest conclusion is to combine paradigms rather than 
 The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
 
 [NVIDIA SimReady Foundation](https://github.com/NVIDIA/simready-foundation) adds a separate but complementary axis: versioned capability contracts and executable validation. Its requirement/capability/feature/profile hierarchy states what an asset must support for a declared simulation use case, while its standardization workflow governs how a new capability progresses from domain definition and data mapping through specifications, validators, reference pipelines, and sample content. See [Section 17](#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization). Asset Structure 3.0, SimReady, and the proposed USD GoodStart layer order are deliberately kept distinct here so their eventual integration can assign each one a clear responsibility.
+
+### Composition architecture and assurance are orthogonal
+
+The four composition paradigms organize **where and how opinions are composed**. SimReady evaluates a different dimension: **which capabilities a declared simulation use case requires and what executable evidence proves conformance**. It is therefore a cross-cutting assurance axis, not a fifth composition paradigm.
+
+```mermaid
+flowchart TB
+    Foundation["COMMON OPENUSD BUILDING BLOCKS<br/>subLayers · references · payloads · variant sets · schemas"]
+
+    subgraph Architecture["COMPOSITION ARCHITECTURE — choose per boundary and design question"]
+        direction TB
+
+        subgraph SceneBoundary["SCENE / PROJECT BOUNDARY"]
+            direction LR
+            Departmental["A · Departmental shot refinement<br/>Question: Which peer opinion wins?<br/>Center: ordered subLayers"]
+            Ownership["B · Scene / digital-twin ownership lanes<br/>Question: Who owns this opinion?<br/>Center: lifecycle and write-target contracts"]
+        end
+
+        subgraph AssetBoundary["ASSET / PRODUCT BOUNDARY"]
+            direction LR
+            Published["C · Published reusable asset<br/>Question: What remains stable and reusable?<br/>Center: public interface plus references and payloads"]
+            Configurable["D · Configurable simulation product<br/>Question: What is selected or loaded?<br/>Center: variant sets plus deferred payloads"]
+        end
+    end
+
+    subgraph Assurance["SIMREADY ASSURANCE — applies across all four paradigms"]
+        direction LR
+        AssuranceQuestion["What must it support,<br/>and how is that proven?"]
+        Profile["Declared<br/>profile"]
+        Capability["Capabilities<br/>and features"]
+        Requirement["Requirements"]
+        Validator["Validators"]
+        Evidence["Executable<br/>evidence"]
+
+        AssuranceQuestion --> Profile --> Capability --> Requirement --> Validator --> Evidence
+    end
+
+    Foundation --> Departmental
+    Foundation --> Ownership
+    Foundation --> Published
+    Foundation --> Configurable
+    Departmental --> Assurance
+    Ownership --> Assurance
+    Published --> Assurance
+    Configurable --> Assurance
+
+    classDef foundation fill:#e8eef5,stroke:#52697d,color:#17212b,stroke-width:2px
+    classDef scene fill:#dceeff,stroke:#2167ae,color:#10243a,stroke-width:2px
+    classDef asset fill:#fff0d6,stroke:#d97706,color:#3b2305,stroke-width:2px
+    classDef assurance fill:#e9ddf7,stroke:#7048b6,color:#25133f,stroke-width:3px
+    class Foundation foundation
+    class Departmental,Ownership scene
+    class Published,Configurable asset
+    class AssuranceQuestion,Profile,Capability,Requirement,Validator,Evidence assurance
+    style Architecture fill:#f8fafc,stroke:#64748b,stroke-width:1px
+    style SceneBoundary fill:#eef7ff,stroke:#2167ae,stroke-width:1px
+    style AssetBoundary fill:#fff8eb,stroke:#d97706,stroke-width:1px
+    style Assurance fill:#f5f0fb,stroke:#7048b6,stroke-width:2px
+```
+
+**Figure ES.1 — Architecture choice versus capability assurance.** The vertical flow is intentional: common OpenUSD mechanics enable several valid composition architectures; SimReady can then define and verify capability contracts across any of them. The two scene-scale paradigms primarily govern opinion ownership and strength, while the two asset-scale paradigms primarily govern publication, reuse, configuration, and loading.
 
 Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The proposed USD GoodStart layer order remains a **work-in-progress proposal**, not an OpenUSD or NVIDIA standard; this paper is a comparative research base for evaluating how it should evolve.
 
@@ -2679,6 +2741,7 @@ This section intentionally stops at that boundary. A later combined design shoul
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.6.1 | 2026-07-16 | Added an Executive Summary architecture map that positions the four composition paradigms by scene/project versus asset/product boundary, shows their distinct design questions, and presents NVIDIA SimReady as a cross-cutting capability-assurance axis over shared OpenUSD building blocks rather than as a fifth composition paradigm |
 | 1.6.0 | 2026-07-16 | Added Section 17 treating NVIDIA SimReady Foundation as a distinct capability-contract, validation, and standardization axis; documented the requirement/capability/feature/profile hierarchy, three-phase workflow, dataprep insertion points, Workcell application, publication evidence, and deferred integration questions for Asset Structure 3.0 and the proposed USD GoodStart layer order |
 | 1.5.0 | 2026-07-16 | Added Section 16.2, a Workcell-DigitalTwin conversion case study documenting the inspected mixed initial stage, a requirements-led dataprep/publication pipeline, concern-routing rules, acceptance gates, and three related delivery states: pure Asset Structure 3.0-ready product, thin ENV/MTL/ASS envelope, and the proposed USD GoodStart envelope around the same canonical package |
 | 1.4.5 | 2026-07-15 | Corrected the over-simplified 1.4.4 comparison: restored the complete classic layer stack and all Isaac Sim files, arc types, variant branches, and payload semantics; reorganized only their visual grouping to produce readable, similarly sized vertical panels side by side |
