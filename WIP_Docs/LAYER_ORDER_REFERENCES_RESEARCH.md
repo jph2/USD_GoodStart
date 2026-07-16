@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-16T15:45:57+02:00"
+last_modified: "2026-07-16T16:03:09+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -33,15 +33,16 @@ agent_index:
     isaac_asset_structure_3: "#16-nvidia-isaac-sim-60---asset-structure-30"
     digital_twin_implications: "#161-digital-twin-implications"
     workcell_case_study: "#162-case-study-workcell-digitaltwin-to-asset-structure-30"
+    simready_foundation: "#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization"
     revision_history: "#revision-history"
-tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion]
+tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.5.0 | **Date**: 16.07.2026 | **Time**: 15:45 | **GlobalID**: 20260716_1545_Layer_Order_References_v1.5.0
+**Version**: 1.6.0 | **Date**: 16.07.2026 | **Time**: 16:03 | **GlobalID**: 20260716_1603_Layer_Order_References_v1.6.0
 
-**Last Updated:** 16.07.2026 15:45<br>
+**Last Updated:** 16.07.2026 16:03<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -52,7 +53,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
 **Tag block:**
-#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion
+#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion #simready_foundation #validation #standardization #capability_profiles
 
 ---
 
@@ -65,6 +66,8 @@ OpenUSD does **not** prescribe one universal layer order or asset structure. Thi
 For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) can define scene-level ownership for assets, metadata, simulation, and runtime state, while factories, lines, cells, machines, and robots expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications) and [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary).
 
 The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
+
+[NVIDIA SimReady Foundation](https://github.com/NVIDIA/simready-foundation) adds a separate but complementary axis: versioned capability contracts and executable validation. Its requirement/capability/feature/profile hierarchy states what an asset must support for a declared simulation use case, while its standardization workflow governs how a new capability progresses from domain definition and data mapping through specifications, validators, reference pipelines, and sample content. See [Section 17](#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization). Asset Structure 3.0, SimReady, and the proposed USD GoodStart layer order are deliberately kept distinct here so their eventual integration can assign each one a clear responsibility.
 
 Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The proposed USD GoodStart layer order remains a **work-in-progress proposal**, not an OpenUSD or NVIDIA standard; this paper is a comparative research base for evaluating how it should evolve.
 
@@ -1536,6 +1539,8 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 
 This section records additional NVIDIA sources that are not primarily "layer order" documents, but they affect how the proposed USD GoodStart layer order should structure updateable digital twin assets. The common theme is that reusable assets need an explicit public interface, heavy content should sit behind payloads, and simulation metadata should be authored as separate, validated contributions rather than mixed into source geometry or root layers.
 
+This addendum extracts **asset- and scene-architecture implications** from those sources. [Section 17](#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization) treats the current SimReady Foundation separately as a versioned specification, capability, validation, and standardization system. The distinction prevents SimReady validation from being reduced to a folder convention or layer-order recommendation.
+
 ### Sources
 
 | Source | Relevant scope |
@@ -2450,12 +2455,231 @@ This profile should be **optional**, because a static industrial asset does not 
 
 Isaac Sim Asset Structure 3.0 is a strong reference implementation for the proposed USD GoodStart reusable asset boundary. It confirms that complex simulation assets scale by combining a thin public interface with purpose-specific internal layers, deferred payloads, and explicit variants. The transferable lesson is not the literal robot filenames; it is the stable separation of shared asset data, backend-specific simulation data, optional behavior stacks, and the single downstream reference target.
 
+## 17. NVIDIA SimReady Foundation: Capability Contracts, Validation, and Standardization
+
+**Primary sources:** [NVIDIA SimReady Foundation repository](https://github.com/NVIDIA/simready-foundation) · [SimReady Standardization Workflow](https://docs.omniverse.nvidia.com/simready/latest/simready-standards/standardization_workflow.html) · [Validation Workflow](https://github.com/NVIDIA/simready-foundation/blob/main/nv_core/sr_specs/docs/guides/validate_workflow.md) · [Profiles Validation Workflow](https://github.com/NVIDIA/simready-foundation/blob/main/nv_core/sr_specs/docs/guides/profiles_validation_workflow.md) · [Repository Acceptance Workflow](https://github.com/NVIDIA/simready-foundation/blob/main/nv_core/sr_specs/docs/guides/acceptance_workflow.md)
+
+SimReady belongs in this research as a **separate architectural axis**. Asset Structure 3.0 is primarily a composition and packaging pattern: it determines how a reusable product can expose one public identity while organizing shared data, variants, and payloaded features. SimReady Foundation defines what a declared asset capability means, which requirements prove it, how validators execute those requirements, and how specifications mature into reproducible industry workflows.
+
+The distinction can be summarized as follows:
+
+| Concern | Main question | Primary mechanism |
+|---------|---------------|-------------------|
+| Asset Structure 3.0 | How is one configurable asset product composed, loaded, and published? | Public interface, references, payloads, variants, package-local layers |
+| SimReady Foundation | What must an asset support for a named simulation use case, and how is that claim verified? | Versioned profiles, features, requirements, rules, reports, validation metadata |
+| Proposed USD GoodStart layer order | Who owns scene/project opinions and which peer contribution wins? | Thin root and ordered scene-level ownership layers |
+| Dataprep/publication pipeline | How are source models transformed into a package that satisfies the selected contracts? | Mapping, conversion, enrichment, validation, provenance, atomic publication |
+
+These systems can reinforce one another, but none is a substitute for the others. A well-organized 3.0 package can fail its selected SimReady profile. A SimReady-validated asset can still be placed in a poorly governed scene. A clean USD GoodStart stack cannot repair missing collision, invalid units, or an incomplete articulation.
+
+### The SimReady specification hierarchy
+
+The current Foundation repository operationalizes SimReady through four interlocking specification surfaces. Profiles select features; features bundle requirements and dependencies; capabilities organize requirement domains; executable rules enforce the individual requirements.
+
+```mermaid
+flowchart TB
+    Profile["Profile<br/>named + versioned simulation-use-case contract"]
+    Features["Features<br/>queryable asset behaviors and properties"]
+    Capabilities["Capabilities<br/>domains that organize related requirements"]
+    Requirements["Requirements<br/>single testable statements with stable IDs"]
+    Rules["Validator rules<br/>executable checks against the USD asset"]
+    Result["Validation result<br/>per requirement + per feature + overall profile"]
+    Evidence["Publication evidence<br/>JSON report + optional validation metadata stamp"]
+
+    Profile -->|"selects exact feature versions"| Features
+    Features -->|"collect requirements + dependencies"| Requirements
+    Capabilities -->|"organize requirement domains"| Requirements
+    Requirements -->|"are enforced by"| Rules
+    Rules --> Result
+    Result --> Evidence
+
+    style Profile fill:#ffcc80,stroke:#e65100,stroke-width:3px,color:#000
+    style Features fill:#d1c4e9,stroke:#5e35b1,stroke-width:2px,color:#000
+    style Capabilities fill:#b2dfdb,stroke:#00796b,stroke-width:2px,color:#000
+    style Requirements fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000
+    style Rules fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style Result fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+    style Evidence fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+```
+
+*Figure 17.1 - SimReady's validation hierarchy. A profile claim is meaningful only when its pinned features, transitive requirements, executable rules, and results can be resolved for the declared versions.*
+
+| Level | Role | Repository realization | Example from official guidance |
+|-------|------|------------------------|--------------------------------|
+| **Requirement** | One testable rule with an identifier | Requirement documentation and validation code under `nv_core/sr_specs/docs/capabilities/` | A stage must define a default prim |
+| **Capability** | Domain/category that organizes related requirements | Capability folders such as Sample, Visualization/Geometry, or Units | Units, hierarchy, geometry, materials |
+| **Feature** | Versioned bundle of requirements and feature dependencies describing a behavior/property | Feature JSON plus documentation under `nv_core/sr_specs/docs/features/` | Minimal placeable visual, rigid-body physics, driven joints |
+| **Profile** | Named, versioned bundle of exact feature versions for one complete simulation scenario | `nv_core/sr_specs/docs/profiles/profiles.toml` and profile documentation | `Prop-Robotics-Neutral`, `Prop-Robotics-Physx`, `Robot-Body-Neutral`, `Robot-Body-Runnable` |
+
+The profile is the producer/consumer contract. Validation resolves its exact feature versions, includes transitive feature dependencies, collects the associated requirement IDs, executes the backing rules, and reports results at requirement, feature, and profile level. This is substantially stronger than calling an asset “simulation ready” based on visual inspection or the presence of a physics API.
+
+### What SimReady does and does not decide
+
+SimReady can define and validate facts such as units, default prims, hierarchy properties, geometry readiness, materials, rigid-body behavior, articulations, joints, or other runtime-facing capabilities. It can also provide transformation and validation workflows between profiles, for example from a neutral asset toward a PhysX- or Isaac-oriented result.
+
+SimReady does **not by itself prescribe one universal repository tree, sublayer order, or Asset Structure 3.0 package**. Individual requirements may constrain composition or prim organization when a capability depends on it, but a profile is fundamentally a capability contract, not a complete project architecture. It also does not define ownership of live telemetry, shot/scene overrides, review opinions, or project-level simulation results.
+
+This matters for the Workcell case study. A table can pass a prop profile without using the same internal package layout as a robot. Conversely, a workcell may use the 3.0 interface/reference/payload/variant pattern and still lack a profile that proves material-flow, controller, sensor, safety, or workcell-topology capabilities.
+
+### The SimReady standardization workflow
+
+The published standardization workflow is not merely an asset-validation checklist. It is a process for defining a new simulation capability and making it adoptable:
+
+```mermaid
+flowchart TB
+    subgraph Phase1["Phase 1 · Definition and alignment"]
+        direction LR
+        Domain["Domain + experts + partners"]
+        UseCase["Scoped MVP use case"]
+        Mapping["Conceptual data mapping"]
+        Gap["OpenUSD gap analysis"]
+        Domain --> UseCase --> Mapping --> Gap
+    end
+
+    subgraph Phase2["Phase 2 · Development and iteration"]
+        direction LR
+        Viability["Standardizable vs runtime-specific"]
+        Draft["Specification + schema prototypes"]
+        Build["Requirements + validators + samples"]
+        Beta["QA + internal/external beta"]
+        Viability --> Draft --> Build --> Beta
+    end
+
+    subgraph Phase3["Phase 3 · Package deliveries"]
+        direction LR
+        Candidate["Candidate specification"]
+        Pipeline["Converter + transformations + validators"]
+        Docs["Creator/runtime workflow documentation"]
+        Samples["Sample content + end-to-end runtime evidence"]
+        Candidate --> Pipeline --> Docs --> Samples
+    end
+
+    Phase1 --> Phase2 --> Phase3
+
+    style Phase1 fill:#e3f2fd,stroke:#1565c0,stroke-width:3px,color:#000
+    style Phase2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px,color:#000
+    style Phase3 fill:#fff3e0,stroke:#ef6c00,stroke-width:3px,color:#000
+```
+
+*Figure 17.2 - Condensed SimReady Standardization Workflow. The output is not just a document: it includes specifications, validators, transformations, reference pipelines, workflow guidance, and sample content tested into target runtimes.*
+
+#### Phase 1 - Definition and alignment
+
+- Identify the domain, domain expert, OpenUSD expertise, QA/content/engineering responsibilities, stakeholders, and partners.
+- Specify a deliberately bounded MVP use case, asset class, runtime interfaces, inputs, and outputs.
+- Map existing standards or de facto domain data models to OpenUSD.
+- Perform gap analysis where required data or behaviors have no suitable OpenUSD representation.
+
+For a factory workcell, this phase must answer whether the target is only placeable visualization, rigid-body manipulation, robot execution, material-flow simulation, controller integration, sensor/synthetic-data generation, or a combination. “Digital twin” is too broad to serve as a single profile definition.
+
+#### Phase 2 - Development and iteration
+
+- Separate capabilities that are broadly standardizable from solver-, runtime-, or product-specific behavior that is not yet ready for standardization.
+- Prototype content specifications, attributes, schemas, sample assets, and runtime connections.
+- Define testable requirements and implement validators.
+- Build creator workflows and iterate through QA, internal beta, and external beta against declared acceptance criteria.
+
+This phase prevents a current project convention from being presented prematurely as an industry standard. A useful project-local workcell profile can exist before it is accepted as an official SimReady profile, provided its provenance and maturity are explicit.
+
+#### Phase 3 - Package deliveries
+
+- Publish the candidate specification and its versioned contracts.
+- Provide converter/data-mapping implementation, post-export or pre-ingest transformations, validators, and runtime test procedures.
+- Provide creator documentation showing how to author, validate, and exercise the capability.
+- Supply sample content or datasets that demonstrate the capability and continuously exercise its validators.
+
+The official workflow explicitly treats non-file sources such as streams and databases as valid pipeline inputs. That aligns with digital twins: the standardization problem is not limited to CAD-to-USD conversion, although authored runtime values must still be separated from stable asset truth.
+
+### Where SimReady enters the dataprep pipeline
+
+The Case Study pipeline in Section 16.2 should be extended with two separate kinds of contracts:
+
+1. **Package contract:** public prims, private paths, dependencies, payload policy, variant interface, ownership, and versioning.
+2. **Capability profile:** features and requirements the published entry point claims to satisfy for a named simulation scenario.
+
+```text
+source evidence
+  -> conceptual data mapping
+  -> conversion and normalization
+  -> 3.0-ready package composition
+  -> profile-specific enrichment / transformation
+  -> requirement validation
+  -> runtime acceptance tests
+  -> publish package + profile/version claim + reports
+```
+
+Validation should run during conversion, at component publication, at workcell assembly, and in the target runtime. The chosen profile and version must be pinned in the build manifest and validation record; silently validating against “latest” would make a previously published claim non-reproducible.
+
+### Applying SimReady to the Workcell case study
+
+| Publication boundary | Existing or candidate profile direction | Immediate evidence required |
+|----------------------|-----------------------------------------|-----------------------------|
+| Table, bin, battery pack, static fixtures | Existing neutral/PhysX prop profiles where applicable | Placeability, units, geometry, materials, collision/rigid-body behavior, validation JSON |
+| UR10 robot body | Existing neutral/runnable/Isaac-oriented robot profiles as supported | Articulation, driven joints, physics backend, default variants, runtime execution |
+| Robotiq gripper | Applicable robot/end-effector feature set; do not assume the robot-body profile is automatically sufficient | Joint behavior, grasp/contact behavior, attachment interface, selected physics implementation |
+| Conveyor | Existing features plus a project-local behavior profile if driven material transport is not covered | Collision, driven surface/actuation, velocity interface, runtime behavior |
+| X-ray scanner and sensors | Existing placeable/visual features plus candidate sensor capability if required | Coordinate frame, sensor interface, outputs, runtime/synthetic-data behavior |
+| Workcell public interface | Composition validation plus a candidate workcell profile if no accepted profile covers the use case | Dependency closure, public interfaces, configuration, topology, runtime task acceptance |
+
+The workcell must not be stamped with a broad profile merely because each child asset passes some profile. Aggregate composition can introduce new failures: invalid attachment frames, overlapping collisions, broken relationships, incompatible variant defaults, missing material dependencies, or a task that no longer runs. Component validation and assembly/runtime acceptance are separate gates.
+
+If the Foundation does not yet contain an accepted workcell or factory profile covering the desired use case, the correct path is:
+
+1. select existing profiles for the component claims they genuinely cover;
+2. define a clearly named **project-local candidate profile** for missing workcell capabilities;
+3. document its data mapping, gaps, requirements, validators, and runtime tests;
+4. avoid calling that candidate an official SimReady standard until it passes the relevant acceptance and standardization process.
+
+### Required publication evidence
+
+A SimReady-aware package publication should add evidence such as:
+
+```text
+data/
+  package_contract.json
+  source_manifest.json
+  mapping_report.json
+  capability_claims.json          # profile IDs + exact versions + applicability
+  validation/
+    <profile>-<version>.json       # machine-readable validator output
+    runtime_acceptance.json
+    validation_environment.json   # validator/tool/runtime versions
+```
+
+Validation metadata stamped into a USD layer can improve discoverability, but it must not replace the external report and reproducibility record. The claim needs an asset hash/version, profile version, feature/requirement resolution, validator version, execution environment, result, and date.
+
+### Deferred integration with Asset Structure 3.0 and USD GoodStart
+
+The final integration should be designed in a follow-up synthesis rather than assumed from folder names. The main open questions are:
+
+| Integration question | Why it matters |
+|----------------------|----------------|
+| Which public entry point is validated? | Profile claims must attach to the stable interface consumers actually reference, not an arbitrary internal payload. |
+| Does each variant require its own profile claim? | A neutral, PhysX, MuJoCo, controller, or end-effector configuration may satisfy different features and requirements. |
+| Are unloaded payloads validated structurally and loaded payloads behaviorally? | Selective loading must not hide invalid dependencies or unsupported feature branches. |
+| How are child-profile claims aggregated at workcell/factory level? | Passing components do not prove correct assembly, topology, or runtime task behavior. |
+| Where are validation reports and stamps published? | Evidence must survive package versioning without turning mutable validation results into asset source truth. |
+| Which checks belong to asset packages versus scene/project layers? | Asset-local capabilities and project-level scenario/runtime acceptance have different owners and release cycles. |
+| How are official and project-local profiles distinguished? | Experimental capability work must not be misrepresented as an accepted NVIDIA or industry standard. |
+
+The provisional responsibility split is therefore:
+
+```text
+Asset Structure 3.0  -> package and composition architecture
+SimReady Foundation  -> capability semantics, specification maturity, and executable evidence
+USD GoodStart        -> project/scene ownership and peer opinion strength
+Dataprep pipeline    -> deterministic transformation that satisfies all selected contracts
+```
+
+This section intentionally stops at that boundary. A later combined design should map profiles and validation gates onto each 3.0 package/variant and then map assembly/runtime acceptance onto the relevant USD GoodStart project layers without duplicating ownership.
+
 ---
 
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.6.0 | 2026-07-16 | Added Section 17 treating NVIDIA SimReady Foundation as a distinct capability-contract, validation, and standardization axis; documented the requirement/capability/feature/profile hierarchy, three-phase workflow, dataprep insertion points, Workcell application, publication evidence, and deferred integration questions for Asset Structure 3.0 and the proposed USD GoodStart layer order |
 | 1.5.0 | 2026-07-16 | Added Section 16.2, a Workcell-DigitalTwin conversion case study documenting the inspected mixed initial stage, a requirements-led dataprep/publication pipeline, concern-routing rules, acceptance gates, and three related delivery states: pure Asset Structure 3.0-ready product, thin ENV/MTL/ASS envelope, and the proposed USD GoodStart envelope around the same canonical package |
 | 1.4.5 | 2026-07-15 | Corrected the over-simplified 1.4.4 comparison: restored the complete classic layer stack and all Isaac Sim files, arc types, variant branches, and payload semantics; reorganized only their visual grouping to produce readable, similarly sized vertical panels side by side |
 | 1.4.4 | 2026-07-15 | Replaced the GitHub-unstable and visually unbalanced paradigm comparison with a balanced, flat two-panel Mermaid diagram; removed nested subgraphs and HTML label markup while retaining one minimal container-level alignment link |
