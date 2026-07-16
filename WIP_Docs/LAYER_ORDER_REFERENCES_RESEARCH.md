@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-15T13:30:26+02:00"
+last_modified: "2026-07-16T15:45:57+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -32,15 +32,16 @@ agent_index:
     simready_addendum: "#15-nvidia-simready--physical-ai-addendum---rules-that-affect-the-proposed-usd-goodstart-layer-order"
     isaac_asset_structure_3: "#16-nvidia-isaac-sim-60---asset-structure-30"
     digital_twin_implications: "#161-digital-twin-implications"
+    workcell_case_study: "#162-case-study-workcell-digitaltwin-to-asset-structure-30"
     revision_history: "#revision-history"
-tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research]
+tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.4.5 | **Date**: 15.07.2026 | **Time**: 13:30 | **GlobalID**: 20260715_1330_Layer_Order_References_v1.4.5
+**Version**: 1.5.0 | **Date**: 16.07.2026 | **Time**: 15:45 | **GlobalID**: 20260716_1545_Layer_Order_References_v1.5.0
 
-**Last Updated:** 15.07.2026 13:30<br>
+**Last Updated:** 16.07.2026 15:45<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -51,7 +52,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
 **Tag block:**
-#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research
+#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion
 
 ---
 
@@ -62,6 +63,8 @@ OpenUSD does **not** prescribe one universal layer order or asset structure. Thi
 [NVIDIA Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html) is the clearest configurable-product example in this paper. It combines a stable public asset identity with shared base data, deferred payloads, and variant-selected physics, controller, and end-effector features. Its significance is not the robot-specific filenames, but the deliberate use of composition arcs according to their native purposes. See the [detailed Asset Structure 3.0 case study](#16-nvidia-isaac-sim-60---asset-structure-30).
 
 For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) can define scene-level ownership for assets, metadata, simulation, and runtime state, while factories, lines, cells, machines, and robots expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications) and [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary).
+
+The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
 
 Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The proposed USD GoodStart layer order remains a **work-in-progress proposal**, not an OpenUSD or NVIDIA standard; this paper is a comparative research base for evaluating how it should evolve.
 
@@ -2152,6 +2155,271 @@ The proposed USD GoodStart layer order should consider Asset Structure 3.0 as th
 
 The approach is therefore suitable for digital twins, but only after separating **recursive asset composition** from **project ownership layers** and **live operational state**. That separation is the part that prevents a factory-scale application of Asset Structure 3.0 from becoming an unmanageable robot package with thousands of unrelated responsibilities.
 
+### 16.2 Case Study: Workcell-DigitalTwin to Asset Structure 3.0
+
+This case study applies the preceding principles to the public [nAurava Technologies Workcell-DigitalTwin repository](https://github.com/nAurava-Technologies/Workcell-DigitalTwin) and to the locally inspected working copy at `E:\SynologyDrive\9999_LocalRepo\Workcell-DigitalTwin`. The purpose is not to criticize a functioning demonstration stage. It is to identify what a reproducible dataprep and publication pipeline must do when a composed engineering/simulation scene becomes a reusable 3.0-ready asset product.
+
+#### Evidence boundary and terminology
+
+The repository's canonical assembly is `workcell_digitaltwin.usd`. The detailed counts below come from the local ASCII inspection copy `workcell_digitaltwin.usda` on **2026-07-16**; that inspection copy was untracked in the Workcell repository and is therefore evidence for this case-study snapshot, not a claim about an additional published source file. The canonical binary stage, public repository, and generated ASCII inspection copy must be treated as different artifacts in provenance records.
+
+“Asset Structure 3.0-ready” is used here as an **architectural target**, not as a claim that NVIDIA publishes a factory-specific conformance certificate. The official Isaac Sim pattern is robot-oriented. This case study adapts its stable public interface, shared base, payload, and variant principles recursively to a workcell while preserving the distinction between asset-local packaging and scene-level ownership.
+
+#### Initial state: useful content with mixed ownership
+
+The repository already contains two different maturity levels:
+
+1. **UR10 and Robotiq are already close to the 3.0 pattern.** Their public `.usda` files reference `payloads/base.usda`, expose physics variant sets, and load backend-specific physics with payloads. They should be validated and reused, not flattened and rebuilt into the workcell.
+2. **Most CAD-derived equipment remains single-file or lightly packaged.** Table, bin, robot base, wall, X-ray scanner, battery pack, and related items pair engineering source files such as STEP/STP with processed USD assets, but do not yet expose the same uniform public-interface contract.
+3. **The workcell root is simultaneously an assembly, lookdev layer, physics integration layer, environment, runtime snapshot, and viewport/render document.** In the inspected ASCII copy, the 4,550-line stage contains 19 payload mentions, 73 `def` declarations, 729 `over` declarations, seven embedded materials, extensive physics/PhysX opinions, environment content, camera metadata, and render settings. It composes component files with payloads and authors many deep overrides below their imported prims.
+
+```mermaid
+flowchart TB
+    Sources["Engineering and supplier sources<br/>STEP · STP · URDF · MJCF · supplier USD"]
+    CadAssets["CAD-derived component outputs<br/>table · bin · base · wall · scanner · battery · conveyor"]
+    ReadyAssets["Already 3.0-like packages<br/>UR10 · Robotiq<br/>public interface + base + variants + physics payloads"]
+    MixedRoot["workcell_digitaltwin.usd<br/>one mixed-authoring stage"]
+    Assembly["Assembly placements<br/>component payloads + transforms"]
+    Looks["Embedded Looks<br/>bindings + remote MDL dependencies"]
+    Physics["Physics integration<br/>colliders + joints + deep overrides"]
+    Scene["Environment + ground + cameras<br/>render settings + runtime values"]
+
+    Sources --> CadAssets
+    Sources --> ReadyAssets
+    CadAssets --> MixedRoot
+    ReadyAssets --> MixedRoot
+    MixedRoot --> Assembly
+    MixedRoot --> Looks
+    MixedRoot --> Physics
+    MixedRoot --> Scene
+
+    style Sources fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    style CadAssets fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
+    style ReadyAssets fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style MixedRoot fill:#ffcdd2,stroke:#c62828,stroke-width:3px,color:#000
+    style Assembly fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    style Looks fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000
+    style Physics fill:#ede7f6,stroke:#5e35b1,stroke-width:2px,color:#000
+    style Scene fill:#f1f8e9,stroke:#558b2f,stroke-width:2px,color:#000
+```
+
+*Figure 16.5 - Inspected initial state. The red box is not “bad USD”; it is a useful integration stage whose responsibilities must be classified before it can become a reusable asset publication.*
+
+The conversion must therefore preserve the working composition while moving each opinion to an explicit owner. A naive “save every prim into a new folder” operation would break deep override paths, joint relationships, material bindings, source traceability, or all four.
+
+#### Target invariant: package once, wrap as needed
+
+The three requested outcomes should not be maintained as three separately converted workcells. They share one canonical 3.0-ready workcell package:
+
+```text
+canonical reusable product
+  = Workcell Asset Structure 3.0-ready package
+
+delivery A
+  = canonical package opened directly
+
+delivery B
+  = minimal root + ENV + MTL + ASS around the canonical package
+
+delivery C
+  = proposed USD GoodStart ownership stack around the canonical package
+```
+
+The package owns reusable defaults and internal implementation. The envelope owns project-, scenario-, review-, or runtime-specific opinions. This avoids three copies drifting apart and makes migration from the minimal envelope to USD GoodStart a scene-governance change rather than another CAD conversion.
+
+#### Required dataprep and publication pipeline
+
+```mermaid
+flowchart TB
+    P0["0 · Declare target capability profile<br/>public prims · variants · loading · simulation requirements"]
+    P1["1 · Freeze and manifest inputs<br/>source IDs · licenses · hashes · tool versions"]
+    P2["2 · Inspect and classify current stage<br/>assembly · geometry · materials · physics · environment · runtime"]
+    P3["3 · Define package boundaries<br/>workcell · robot · gripper · conveyor · scanner · table · bin · product"]
+    P4["4 · Normalize and map<br/>units · Z-up · pivots · names · instances · stable IDs"]
+    P5["5 · Build or retain component packages<br/>public interface · base · materials · semantics · feature payloads"]
+    P6["6 · Build workcell package<br/>instances reference only component public interfaces"]
+    P7["7 · Retarget authored opinions<br/>materials · joints · colliders · sensors · configuration · environment"]
+    P8["8 · Validate equivalence and closure<br/>composition · transforms · appearance · physics · paths · performance"]
+    P9["9 · Publish atomically<br/>versioned package + manifest + reports + chosen envelope"]
+
+    P0 --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
+
+    style P0 fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
+    style P1 fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    style P2 fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+    style P3 fill:#e8eaf6,stroke:#3949ab,stroke-width:2px,color:#000
+    style P4 fill:#e0f2f1,stroke:#00796b,stroke-width:2px,color:#000
+    style P5 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style P6 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    style P7 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style P8 fill:#fff8e1,stroke:#f9a825,stroke-width:2px,color:#000
+    style P9 fill:#dcedc8,stroke:#558b2f,stroke-width:3px,color:#000
+```
+
+*Figure 16.6 - Conversion pipeline. File conversion occurs inside steps 4-6; requirements, ownership mapping, retargeting, validation, and publication are equally important deliverables.*
+
+The steps have the following Workcell-specific responsibilities:
+
+1. **Declare the product contract before restructuring.** Decide which prim paths are public, which subsets load independently, which physics/controller/sensor variants are supported, which component placements are addressable, and whether the environment belongs to the reusable workcell or to the consuming scene.
+2. **Create a source manifest.** Record the STEP/STP, URDF, MJCF, supplier USD, textures, validation JSON, licenses, Git commit, conversion settings, and hashes. Preserve the existing source folders; generated packages must not replace their evidence.
+3. **Inventory the composed stage.** Traverse prims and composition arcs, classify every authored field, and generate a source-path-to-target-owner mapping. Explicitly flag stale `delete payload` edits, absolute/external paths, remote material URLs, and overrides into package-private prims.
+4. **Define reusable boundaries.** The workcell, UR10, Robotiq gripper, conveyor, scanner, robot base, tables, bins, battery pack, and wall/guarding should each have a stable public entry point when they are independently reusable or replaceable. Do not create a package merely because a CAD body exists; use functional and lifecycle boundaries.
+5. **Normalize without erasing provenance.** Enforce meters and Z-up, establish stable pivots and local frames, sanitize names, preserve source IDs as metadata, detect repeated parts, and produce visual/collision representations according to the selected capability profile.
+6. **Retain mature packages.** UR10 and Robotiq already demonstrate the desired public-interface/base/physics-variant pattern. Validate their defaults and dependencies, then reference their public files. Repacking their internal geometry into the workcell would destroy the boundary this migration is trying to create.
+7. **Package the remaining components.** Generate a public `<asset_id>.usda`, a stable base, geometry/instance/material/semantic contributions, optional collision or backend physics payloads, and validation reports. Static props need only the features they actually support; they do not need empty robot/controller folders.
+8. **Author the workcell assembly through public interfaces.** `instances.usda` or the equivalent assembly contribution owns component placement and references the published component roots. Scene code must not reference `geometries.usd`, internal links, or private material prims directly.
+9. **Retarget integration opinions.** Move material bindings, fixed joints, collision overrides, conveyor behavior, grasp guides, sensors, and connections to package-local feature layers or declared scene layers. Deep `over` paths must be mapped to stable public prims or promoted connection points; textual path replacement is not sufficient.
+10. **Separate discrete configuration from runtime state.** Layout, physics backend, robot tool, product format, and fidelity can be bounded variants. Belt velocity, live joint state, current battery position, PLC values, alarms, and measurements belong in runtime/session infrastructure, not in asset variants.
+11. **Validate equivalence before publishing.** Compare transforms, extents, material assignments, loaded/unloaded payload behavior, collision coverage, joints, default variant selections, articulation behavior, and visual output against the accepted initial stage. A structurally cleaner stage that changes the working simulation is a failed conversion.
+12. **Publish atomically.** Version the public package, dependency lock, source manifest, mapping report, validation results, and envelope together. Downstream consumers switch one published interface only after all gates pass.
+
+#### Workcell concern-routing map
+
+| Inspected initial concern | Canonical 3.0-ready owner | Minimal envelope override | Proposed USD GoodStart owner |
+|---------------------------|---------------------------|---------------------------|----------------------------------|
+| Component payloads and placements | `workcell/payloads/instances.usda`, referencing component public interfaces | `ASS_LYR.usda` references `workcell.usda` | `ASS_LYR.usda` references `workcell.usda` |
+| UR10 and Robotiq package internals | Existing component packages; validate, do not copy | No direct access | No direct access |
+| Workcell-owned geometry | Workcell base/geometry payload or a dedicated wall/ground asset | No geometry authored in root | No geometry authored in root |
+| Reusable default materials | Asset-local `materials.usda` | Project look overrides in `MTL_LYR.usda` | Project look overrides in `MTL_LYR.usda` |
+| Ground, lights, scene environment | Optional workcell environment feature only for self-contained delivery A | `ENV_LYR.usda` | `ENV_LYR.usda` |
+| Reusable component collision/physics | Component-local neutral/backend feature payloads | Asset defaults remain active | Asset defaults remain active; `PHY_LYR.usda` authors project integration overrides |
+| Fixed joints and connections between assets | Workcell-local topology/physics feature using promoted attachment points | Remains in workcell package unless project-specific | `PHY_LYR.usda` or `SIM_LYR.usda` only when scenario-specific |
+| Layout or backend alternatives | Declared variant sets on the public workcell/component interface | Select public variants in `ASS` or a small configuration layer | Select public variants in `VAR_LYR.usda` |
+| Stable source IDs and engineering metadata | Asset-local semantics plus manifest | Not duplicated | `DATA_LYRs.usda` adds project/system mappings without replacing asset identity |
+| Conveyor speed, joint values, current product positions | Not authored as reusable asset truth | External/session state | `RUNTIME_LYR.usda` or session/Fabric/external data system |
+| Cameras and viewport/render settings | Preview defaults only if deliberately part of the asset product | Root metadata or `ENV_LYR` by documented minimal policy | `CAM_LYR.usda`; review/render overrides may use `OPIN_LYR.usda` |
+| Validation JSON and migration evidence | Package `data/` and publication reports | Referenced by release metadata, not composed as scene opinions | Same; project QA may aggregate results outside the USD stage |
+
+#### Delivery A: pure Asset Structure 3.0-inspired workcell product
+
+This is the reusable product without a project layer stack. It is appropriate when the workcell itself is the deliverable and must open directly with sensible defaults.
+
+```text
+Workcell_AS3/
+  workcell.usda                       # stable public interface + default variants
+  payloads/
+    base.usda                         # stable hierarchy / package assembly
+    instances.usda                    # placements; references component public roots
+    geometries.usdc                   # only geometry genuinely owned by the workcell
+    materials.usda                    # reusable default materials and bindings
+    semantics.usda                    # stable IDs, classifications, attachment points
+    Physics/
+      physics.usda                    # neutral/shared physics contribution
+      physx.usda                      # optional backend implementation
+  features/
+    environment/environment.usda      # optional self-contained preview environment
+    process/material_flow.usda
+    controls/controller_interfaces.usda
+    sensors/measurement_points.usda
+  data/
+    source_manifest.json
+    mapping_report.json
+    package_contract.json
+    validation/
+  dependencies/
+    dependency_lock.json              # UR10, Robotiq, conveyor, props, etc.
+```
+
+`workcell.usda` references the stable base, exposes only supported variants, and payloads optional/heavy features. `instances.usda` references `ur10.usda`, `Robotiq_2F_85.usda`, and every other component's public interface. The workcell package must not reach into their `payloads/` folders. If environment or process behavior is not part of the reusable product contract, omit those features rather than publishing empty placeholders.
+
+#### Delivery B: thin three-layer scene plus 3.0-ready assets
+
+This is the smallest governed scene envelope. The root contains metadata and the ordered sublayer list only. Strong-to-weak order is **ENV → MTL → ASS** so scene environment and look overrides can refine the referenced asset defaults.
+
+```text
+Workcell_Minimal/
+  Workcell_ROOT.usda                  # thin root; subLayers only
+  020_LYR/
+    ENV_LYR.usda                      # ground, lights, scene environment
+    MTL_LYR.usda                      # project-specific look overrides
+    ASS_LYR.usda                      # references Workcell_AS3/workcell.usda
+  010_ASS_USD/
+    Workcell_AS3/                     # canonical package; not a copied rewrite
+```
+
+```usda
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+    subLayers = [
+        @./020_LYR/ENV_LYR.usda@,
+        @./020_LYR/MTL_LYR.usda@,
+        @./020_LYR/ASS_LYR.usda@
+    ]
+)
+```
+
+Physics defaults remain inside the 3.0-ready component/workcell packages. If project-specific physics, runtime state, animation, or data integration becomes necessary, do not overload these three layers indefinitely; graduate to delivery C.
+
+#### Delivery C: proposed USD GoodStart layer order plus 3.0-ready assets
+
+This is the operational digital-twin envelope. It uses the same canonical workcell package, but distributes scene-level authorship across explicit ownership lanes.
+
+```text
+Workcell_USDGoodStart/
+  Workcell_ROOT.usda
+  000_SOURCE/                        # preserved engineering sources / manifests
+  010_ASS_USD/
+    Workcell_AS3/workcell.usda       # canonical public workcell interface
+  020_BASE_LYR/
+    OPIN_LYR.usda
+    CAM_LYR.usda
+    ENV_LYR.usda
+    ACTGR_LYR.usda
+    ANIM_LYR.usda
+    VAR_LYR.usda
+    MTL_LYR.usda
+    PHY_LYR.usda
+    ASS_LYR.usda                     # references only workcell.usda
+  030_SIM_LYR/SIM_LYR.usda
+  035_RUNTIME_LYR/RUNTIME_LYR.usda
+  040_DATA_LYRs/DATA_LYRs.usda
+```
+
+The proposed strong-to-weak order remains **OPIN → CAM → ENV → RUNTIME → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → ASS**. The important constraint is that these project layers do not duplicate asset-package ownership:
+
+- `ASS_LYR` places the public workcell interface; it does not rebuild the workcell.
+- `PHY_LYR` owns scene/project integration overrides; reusable component physics remains asset-local.
+- `VAR_LYR` selects declared public variants; it does not author private variant internals.
+- `MTL_LYR` provides project look overrides; reusable default materials remain in their asset packages.
+- `DATA_LYRs` maps project systems and identifiers; it does not replace source identity or package manifests.
+- `RUNTIME_LYR` carries latest/live state; it never becomes the source for the next asset publication.
+
+#### Comparing the three final states
+
+| Decision | A - Pure 3.0-ready product | B - Thin layers + 3.0 | C - Proposed USD GoodStart + 3.0 |
+|----------|----------------------------|-----------------------|----------------------------------|
+| Canonical asset package | Yes | Same package | Same package |
+| Scene-level layers | None | `ENV`, `MTL`, `ASS` | Full ownership stack |
+| Opens as self-contained workcell | Yes, if preview environment is included | Yes | Yes |
+| Best fit | Reusable library/product delivery | Small project, review, demonstration | Operational twin, simulation programs, multi-system collaboration |
+| Runtime/live-state lane | External only | External only | Explicit `RUNTIME`/session lane |
+| Project simulation lane | Asset defaults/features | Not explicit | Explicit `SIM` and `PHY` responsibilities |
+| Static system-data lane | Package semantics/manifest | Not explicit | Explicit `DATA` aggregation/mapping |
+| Authoring overhead | Lowest scene governance; strong package discipline | Low | Highest, justified only by real ownership needs |
+| Migration relationship | Foundation | Wraps A | Wraps A; can replace B without reconverting A |
+
+**Recommended sequence for this repository:** build and validate delivery A as the canonical publication; adopt delivery B as the immediate replacement for the mixed demonstration root; introduce delivery C when the Workcell becomes an operational twin with live state, scenario simulation, system mappings, multiple authoring roles, or persistent project overrides.
+
+#### Acceptance gates for this case study
+
+The conversion is complete only when all of the following are demonstrated:
+
+- One stable public workcell path and one public path per reusable component.
+- All assembly dependencies target public interfaces and resolve package-relatively or through a versioned resolver policy.
+- No scene layer authors opinions against undocumented package-private prim paths.
+- Meters, Z-up, time codes, pivots, and default prims are declared and validated consistently.
+- Every supported variant has a documented meaning, valid default, complete dependency closure, and successful load test.
+- The stage opens with all payloads loaded, with optional payloads unloaded, and under each supported configuration.
+- Remote materials and third-party content have reproducible dependency and license records.
+- Source-to-target prim mappings, removed/stale edits, and manually approved exceptions are recorded.
+- Visual placement, material appearance, collision coverage, joints, articulation, conveyor behavior, and task behavior match the accepted initial-state baseline within declared tolerances.
+- Re-importing one changed CAD component can regenerate and republish that component without changing unrelated public paths or rebuilding the entire workcell.
+
+The final state is therefore not defined by a prettier folder tree. It is defined by **stable public contracts, explicit ownership, reproducible transformation, controlled configuration, selective loading, and proven behavioral equivalence**.
+
 ### Optional Isaac-style robot package profile
 
 For robot and multi-physics assets, the generic proposed USD GoodStart asset-package template can support an Isaac-aligned profile such as:
@@ -2188,6 +2456,7 @@ Isaac Sim Asset Structure 3.0 is a strong reference implementation for the propo
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.5.0 | 2026-07-16 | Added Section 16.2, a Workcell-DigitalTwin conversion case study documenting the inspected mixed initial stage, a requirements-led dataprep/publication pipeline, concern-routing rules, acceptance gates, and three related delivery states: pure Asset Structure 3.0-ready product, thin ENV/MTL/ASS envelope, and the proposed USD GoodStart envelope around the same canonical package |
 | 1.4.5 | 2026-07-15 | Corrected the over-simplified 1.4.4 comparison: restored the complete classic layer stack and all Isaac Sim files, arc types, variant branches, and payload semantics; reorganized only their visual grouping to produce readable, similarly sized vertical panels side by side |
 | 1.4.4 | 2026-07-15 | Replaced the GitHub-unstable and visually unbalanced paradigm comparison with a balanced, flat two-panel Mermaid diagram; removed nested subgraphs and HTML label markup while retaining one minimal container-level alignment link |
 | 1.4.3 | 2026-07-15 | Restored the Unreal Engine 6 direction as author-held first-hand meeting evidence, clearly distinguishing that non-public primary evidence from Epic's publicly verifiable current OpenUSD implementation status |
