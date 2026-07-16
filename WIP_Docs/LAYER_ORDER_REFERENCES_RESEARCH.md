@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-16T17:32:26+02:00"
+last_modified: "2026-07-16T19:02:46+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -28,7 +28,7 @@ agent_index:
     diagram_guide: "#how-to-read-the-diagrams"
     paradigm_comparison: "#composition-paradigms-compared"
     decision_matrix: "#decision-matrix--choosing-a-composition-paradigm"
-    michael_me_stack: "#1-michael-obrien--me-shot-stack-slack-june-2026"
+    me_shot_refinement_baseline: "#1-me-shot-stack--internal-practitioner-synthesis"
     proposed_goodstart_order: "#8-proposed-usd-goodstart-layer-order--digital-twin--omniverse-template"
     simready_addendum: "#15-nvidia-simready--physical-ai-addendum---rules-that-affect-the-proposed-usd-goodstart-layer-order"
     isaac_asset_structure_3: "#16-nvidia-isaac-sim-60---asset-structure-30"
@@ -41,15 +41,15 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.6.1 | **Date**: 16.07.2026 | **Time**: 17:32 | **GlobalID**: 20260716_1732_Layer_Order_References_v1.6.1
+**Version**: 1.6.2 | **Date**: 16.07.2026 | **Time**: 19:02 | **GlobalID**: 20260716_1902_Layer_Order_References_v1.6.2
 
-**Last Updated:** 16.07.2026 17:32<br>
+**Last Updated:** 16.07.2026 19:02<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
 **Git:** Repo: USD_GoodStart | Branch: main | Path: WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md | Commit: pending
 
-**Purpose:** Collect documented USD sublayer-order conventions and **LIV(E)RPS / composition-arc strategies** from industry sources; compare them to the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) and **Michael O'Brien's M&E stack**; record trade-offs and diagrams for discussion.
+**Purpose:** Collect documented USD sublayer-order conventions and **LIV(E)RPS / composition-arc strategies** from public industry sources; compare them to the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) and an author-created **M&E practitioner synthesis**; record trade-offs and diagrams for discussion.
 
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
@@ -59,6 +59,8 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 ---
 
 ## Executive Summary
+
+> **Publication and affiliation status:** This is independent author research. Its externally verifiable evidence base consists of publicly accessible documentation and repositories; the M&E comparison also includes an anonymized author synthesis informed by internal practitioner discussions, without reproducing private records or attributing participants. It is not an [Alliance for OpenUSD (AOUSD)](https://aousd.org/) publication, Interest Group recommendation, approved deliverable, certification, or endorsement. References to AOUSD describe only publicly documented organizational scope and standards activity.
 
 OpenUSD does **not** prescribe one universal layer order or asset structure. This research identifies four complementary composition paradigms: **departmental shot refinement**, **scene/digital-twin ownership lanes**, **published reusable assets**, and **configurable simulation products**. They answer different questions and often belong at different scales of the same project.
 
@@ -151,14 +153,12 @@ This flexibility must not be confused with an “anything goes” architecture. 
 
 - **This is what distinguishes OpenUSD from a conventional interchange format.** It does not merely transfer a flattened result between applications; it preserves composition, stable asset identity, non-destructive opinions, optional loading, and controlled variation. The architecture can evolve without every participating tool having to invent a new scene-assembly model.
 - **This is the platform leverage behind NVIDIA Omniverse.** NVIDIA explicitly describes [Omniverse as being built on OpenUSD](https://docs.omniverse.nvidia.com/dev-overview/latest/introduction.html), using it for interoperability, connectivity, and collaboration across content creation, product design, manufacturing, and simulation platforms. OpenUSD supplies the shared composition and data foundation; Omniverse adds application services, RTX rendering, physics, runtime systems, and deployment capabilities above it.
-- **The same direction is visible in Unreal Engine and is expected to become stronger in Unreal Engine 6.** The author has direct, first-hand evidence from industry meetings in which a stronger OpenUSD foundation for Unreal Engine 6 was discussed. This is relevant primary evidence for the research, but it is currently **non-public and therefore not independently verifiable from this paper alone**; it should be understood as an evidenced development direction rather than a publicly announced Epic product commitment. The public record already supports the trajectory: Epic's current documentation lists [USD Core as a Beta feature](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/PluginIndex/USDCore) and [Interchange OpenUSD as Experimental](https://dev.epicgames.com/documentation/unreal-engine/API/PluginIndex/InterchangeOpenUSD). Together, the first-hand meeting evidence and the expanding public implementation support the expectation that OpenUSD will play a more foundational role in future Unreal workflows.
+- **Unreal Engine already exposes an expanding but explicitly qualified OpenUSD integration.** Epic's current public documentation lists [USD Core as a Beta feature](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/PluginIndex/USDCore) and [Interchange OpenUSD as Experimental](https://dev.epicgames.com/documentation/unreal-engine/API/PluginIndex/InterchangeOpenUSD). These sources establish present implementation direction only. This paper makes no claim about unannounced features, future major-version architecture, or an Epic product roadmap.
 - **The strategic consequence is larger than any single platform.** Film/VFX, games, CAD/BIM, robotics, and digital twins can share composition semantics while retaining domain-specific schemas, runtime systems, and ownership policies. OpenUSD does not provide every domain with its final architecture; it provides a durable framework in which those architectures can be discovered, compared, and evolved without surrendering interoperability.
-
-> **Evidence-hardening note:** If disclosure permissions allow, the private research record should capture the meeting date, context, participating organizations, relevant speaker or role, and a pointer to notes, minutes, or a recording. That preserves provenance without requiring confidential meeting material to be published; a public Epic source can replace this note if the direction is formally announced later.
 
 ### Scope and status
 
-This paper compares published guidance and practical examples rather than asserting one universal answer. [Michael O'Brien's Slack sketch](https://aousdgroup.slack.com/archives/C095ACELRSP/p1781024066409369) represents classic **M&E shot refinement**: per-shot contributions override sequence defaults above a shared material and asset base. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) is one possible digital-twin/Omniverse approach that separates live/session-backed **RUNTIME** state from static **DATA** metadata and identifiers. It is actively under discussion and is evaluated here alongside published alternatives—not presented as a finished standard.
+This paper compares published guidance and practical examples rather than asserting one universal answer. Its **M&E practitioner synthesis** was developed by the author from internal discussions with experienced visual-effects practitioners and cross-checked against the cited public ASWF, SideFX, Pixar, and NVIDIA materials. It preserves the resulting architectural reasoning without identifying participants, linking member-only channels, reproducing confidential records, or presenting the synthesis as a studio or AOUSD standard. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) is one possible digital-twin/Omniverse approach that separates live/session-backed **RUNTIME** state from static **DATA** metadata and identifiers. It is actively under discussion and is evaluated here alongside published alternatives—not presented as a finished standard.
 
 ---
 
@@ -180,7 +180,7 @@ Most layer-order debates mix up **two separate mechanisms**:
 
 | Axis | Question it answers | Where it is documented |
 |------|---------------------|-------------------------|
-| **1. Sublayer order** (`subLayerPaths`) | Among **peer department or ownership layers** at a shot, scene, or asset root, who wins? | SideFX, Michael M&E, da Vinci, Omniverse Layers, [proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) |
+| **1. Sublayer order** (`subLayerPaths`) | Among **peer department or ownership layers** at a shot, scene, or asset root, who wins? | SideFX, the M&E practitioner synthesis in Section 1, da Vinci, Omniverse Layers, [proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) |
 | **2. LIV(E)RPS arc strength** | Among **composition arc types** on a prim, who wins? | [Pixar glossary](https://openusd.org/release/glossary.html), [Learn OpenUSD — LIVERPS](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/strength-ordering/what-is-liverps.html), [USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/composition/livrps.html) |
 
 **Key clarifications from sources:**
@@ -194,9 +194,9 @@ Most layer-order debates mix up **two separate mechanisms**:
 All stack diagrams below reuse the layout from [README.md — Quick Structure](../README.md#quick-structure):
 
 - **Left**: **Full** LIV(E)RPS reference (L → I → V → E → R → P → S, strongest at top) — **same in every diagram**; universal OpenUSD mechanics, not source-specific
-- **Right**: `subLayers` stack (**strongest at top**, **weakest at bottom**) — Michael O'Brien uses **two sketches** (see §1): per-shot pillars, then global LGT/SIM with shots stacked above
+- **Right**: `subLayers` stack (**strongest at top**, **weakest at bottom**) — Section 1 uses two author-created analytical views: per-shot pillars, then sequence-level defaults with shot refinements above
 - **Arrow**: LIV(E)RPS governs *how* opinions combine; sublayer order governs *who wins* among peer layers
-> **Mermaid note:** Labels containing `(E)` in LIV(E)RPS must stay quoted in Mermaid source. Nested `subgraph` titles may sit close to the next row — acceptable for Michael §1; do not add spacer/header-node workarounds there.
+> **Mermaid note:** Labels containing `(E)` in LIV(E)RPS must stay quoted in Mermaid source. Nested `subgraph` titles may sit close to the next row in the analytical Section 1 diagrams; do not add spacer/header-node workarounds there.
 
 ---
 
@@ -206,7 +206,7 @@ The sources in this paper do not merely recommend different filenames or layer o
 
 | Paradigm | Primary question | Dominant OpenUSD mechanisms | Representative cases |
 |----------|------------------|-----------------------------|----------------------|
-| **Departmental / shot refinement** | Which peer contribution should win when departments refine the same shot? | Ordered `subLayers`; thin root; stronger downstream disciplines above weaker foundations | Michael O'Brien M&E stack, SideFX shot examples, ASWF production guidance |
+| **Departmental / shot refinement** | Which peer contribution should win when departments refine the same shot? | Ordered `subLayers`; thin root; stronger downstream disciplines above weaker foundations | M&E practitioner synthesis in Section 1, SideFX shot examples, ASWF production guidance |
 | **Scene and digital-twin ownership lanes** | Which system owns static assets, metadata, runtime state, simulation, cameras, and overrides? | Ordered `subLayers`, references/payloads at the asset boundary, explicit write targets and contracts | [Proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read), Omniverse digital-twin structures |
 | **Published reusable asset** | How can one asset expose a stable public identity while hiding heavy or private implementation details? | Public interface layer, references, payloads, asset-local sublayers | ASWF reference-first assets, NVIDIA scalable asset structure, SimReady packages |
 | **Configurable simulation product** | How can one published asset support selectable physics engines and optional behaviors without duplicating the asset? | References, payloads, variant sets, and bounded internal sublayers used together | NVIDIA Isaac Sim Asset Structure 3.0 |
@@ -395,11 +395,13 @@ A high score is meaningful only when the profile's minimum condition is also tru
 
 ---
 
-## 1. Michael O'Brien — M&E Shot Stack (Slack, June 2026)
+## 1. M&E Shot Stack — Internal Practitioner Synthesis
 
-**Context:** Discussion with Jan Haluszka about the [proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read). Michael described how **Media & Entertainment (M&E)** pipelines usually think about layer resolution: departments refine the shot in passes; **ASS_LYR is the lowest (weakest) opinion** — the base asset import layer.
+**Status and provenance:** Based on internal discussions with experienced visual-effects practitioners, the author developed the synthesis below and cross-checked it against the [ASWF Guidelines for Structuring USD Assets](https://github.com/usd-wg/assets/blob/main/docs/asset-structure-guidelines.md), the [SideFX Sublayer LOP shot example](https://www.sidefx.com/docs/houdini20.5/nodes/lop/sublayer.html), and Pixar's public [USD Composition — SIGGRAPH 2019](https://openusd.org/files/Siggraph2019_USD%20Composition.pdf). The section preserves the technical conclusions without identifying participants, linking private channels, quoting confidential discussions, or claiming endorsement by a studio, AOUSD, or an AOUSD Interest Group.
 
-**Michael's principles (paraphrased):**
+The synthesis describes how **Media & Entertainment (M&E)** pipelines often reason about layer resolution: departments refine the shot in passes; **ASS_LYR is the lowest (weakest) opinion** and serves as the base asset-import layer.
+
+**Practitioner-informed principles:**
 
 - **LGT on top** — you light *to the camera*
 - **SIM above ANIM** — simulation consumes animation and must be able to override it
@@ -407,7 +409,7 @@ A high score is meaningful only when the profile's minimum condition is also tru
 - **MAT above ASS** — materials/shading override imported asset defaults
 - **ASS at bottom** — references, payloads, geometry import (weakest sublayer)
 
-Michael shared **two related sketches** in Slack — both use **three parallel shot pillars** on a **shared MAT+ASS base**, but the second adds **sequence-wide SIM and LGT** bands that shots sit on top of (per-shot layers override the global defaults).
+The resulting synthesis uses **two related sketches**: both show **three parallel shot pillars** on a **shared MAT+ASS base**, while the second adds **sequence-wide SIM and LGT** bands below the shot-specific refinements. These are author-redrawn analytical diagrams, not reproduced meeting artifacts.
 
 **Two views of the same rules:**
 
@@ -440,14 +442,14 @@ Michael shared **two related sketches** in Slack — both use **three parallel s
 | 7 | **MTL** | Materials & shading — overrides imported asset defaults |
 | 8 | **ASS** | Asset import — references & payloads (weakest) |
 
-**How the sketches might be realized in USD** (Michael did not prescribe file names — interpretive mapping):
+**How the sketches might be realized in USD — interpretive mapping:**
 
 - **Shared foundation:** sequence root sublayers **MTL** then **ASS** (ASS weakest / last in `subLayers`).
 - **Sketch 2 middle:** sequence root also sublayers **global SIM** then **global LGT** above MAT (still below per-shot stacks).
 - **Per pillar:** shot root sublayers **CAM → ANIM → SIM → LGT** (weak→strong in file; diagram shows strong at top), composed on the sequence stage.
 - **Override rule:** per-shot LGT/SIM in a pillar **wins over** the global LGT/SIM bands; global provides defaults before shot-specific finish.
 
-**Not a published spec** — studio pipeline convention shared in conversation. Aligns with several public VFX examples (SideFX, openusd.work) but is not authored by Pixar/ASWF as a normative standard.
+**Not a published specification:** this is the author's practitioner-informed synthesis. It aligns with public VFX examples such as SideFX and openusd.work but is not authored or endorsed by Pixar, ASWF, AOUSD, or any participating organization as a normative standard.
 
 #### Sketch 1
 
@@ -469,7 +471,7 @@ flowchart LR
         end
     end
 
-    subgraph RootContainer["M&E sequence · Michael O'Brien sketch · 3 pillars"]
+    subgraph RootContainer["Author synthesis · illustrative M&E sequence · 3 shot pillars"]
         direction TB
 
         subgraph Pillars["Parallel pillars · per shot / track · strong at top"]
@@ -564,7 +566,7 @@ flowchart LR
         end
     end
 
-    subgraph RootContainer2["M&E sequence · Michael O'Brien sketch · 3 pillars"]
+    subgraph RootContainer2["Author synthesis · illustrative M&E sequence · 3 shot pillars"]
         direction TB
 
         subgraph Pillars2["Parallel pillars · per shot / track · strong at top"]
@@ -804,7 +806,7 @@ flowchart LR
 **Advantages**
 
 - **Concrete, copy-paste** shot stack from a major DCC
-- Separates **FX** from **ANIM** explicitly (Michael's SIM slot)
+- Separates **FX** from **ANIM** explicitly, supporting the analytical FX/SIM-above-animation baseline
 - **Sequence** at bottom preserves seq-wide layout as weak base
 - Documents sublayer **replacement/reorder** in LOP networks
 
@@ -1019,7 +1021,7 @@ flowchart LR
 
 **Disadvantages**
 
-- **Asset-scoped**, not shot-scoped — different problem than Michael's sketch
+- **Asset-scoped**, not shot-scoped — a different problem from the Section 1 shot-refinement baseline
 - Not tied to Omniverse Explorer layer names 1:1
 
 ---
@@ -1086,7 +1088,7 @@ flowchart LR
 **Advantages**
 
 - Minimal teaching stack — easy entry point
-- **LGT on top** aligns with Michael and SideFX
+- **LGT on top** aligns with the Section 1 practitioner synthesis and the public SideFX example
 - Includes payload/reference patterns in same article
 
 **Disadvantages**
@@ -1193,17 +1195,17 @@ flowchart LR
 
 **Advantages**
 
-- **ASS at bottom** — agrees with Michael, ASWF, Omniverse Assets layer
+- **ASS at bottom** — agrees with the Section 1 practitioner synthesis, ASWF guidance, and the Omniverse Assets layer
 - **RUNTIME layer** for live/session-backed operational state and explicit MQTT/OPC UA snapshots
 - **DATA layer** for static or slow-changing PLM, ERP, AAS, OPC UA mappings, CAD/Revit metadata, and identifiers
-- **SIM above ANIM** — agrees with Michael's sim-over-anim rule
+- **SIM above ANIM** — agrees with the Section 1 practitioner synthesis and the public SideFX FX-over-animation pattern
 - **OPIN on top** — explicit override layer for reviews and emergencies
 - Documented folder ↔ layer feed paths (Startpoint → ASS, MatLib/tex → MTL)
 - Validation scripts and README per folder
 
 **Disadvantages**
 
-- **CAM high in stack** — opposite of Michael's “CAM below ANIM”
+- **CAM high in stack** — opposite the Section 1 practitioner synthesis in which CAM sits below ANIM
 - **ENV mid-stack** — merges environment + lighting unlike dedicated top LGT
 - **PHY vs SIM vs RUNTIME** split may confuse Isaac/Ansys/IoT users if the project does not document which layer owns setup, result overlays, and live latest-value state
 - **Beta / not fully hardened** — order not battle-tested across all Omniverse Kit versions
@@ -1288,7 +1290,7 @@ flowchart LR
 | 4 | **camera** | Shot camera |
 | 5 | **assembly** | Asset references + layout (weakest base) |
 
-**Inside `finish`:** `_finish_light.usd`, `_finish_material.usd`, `_finish_sky.usd`, etc. — **lighting and material passes grouped**, similar in spirit to Michael’s top **LGT** + **MTL**, but as nested composition, not only sublayer names.
+**Inside `finish`:** `_finish_light.usd`, `_finish_material.usd`, `_finish_sky.usd`, etc. — **lighting and material passes grouped**, similar in spirit to the Section 1 practitioner synthesis with strong **LGT** and **MTL** contributions, but as nested composition, not only sublayer names.
 
 **Assets** use **references + payloads** at the asset interface (`.usd`), with contributions under `pub/geometry`, `pub/material`, `pub/rig` — **not** one flat sublayer list per mesh.
 
@@ -1337,9 +1339,9 @@ flowchart LR
     style Fin fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
 ```
 
-**Advantages:** Production-scale NVIDIA sample; combines sublayers **and** references/payloads/variants; documents OVERRIDE + finish passes; aligns with Michael on **assembly at bottom**, **look/light high**.
+**Advantages:** Production-scale NVIDIA sample; combines sublayers **and** references/payloads/variants; documents OVERRIDE + finish passes; aligns with the Section 1 practitioner synthesis on **assembly at bottom** and **look/light high**.
 
-**Disadvantages:** Complex nested files; not a minimal template; **camera above anim** here (opposite Michael’s CAM-below-ANIM sketch).
+**Disadvantages:** Complex nested files; not a minimal template; **camera above anim** here, opposite the Section 1 practitioner synthesis.
 
 ---
 
@@ -1429,7 +1431,7 @@ flowchart LR
 
 **Timeline principle (unchanged):** geometry **weak**, materials next, **lighting usually last** — often implemented as **payload + referenced contribution files**, not necessarily six named shot sublayers.
 
-**Advantages:** Interoperability focus; separates **asset structure** from **shot structure**; underpins AOUSD IEDT comparisons with the proposed USD GoodStart layer order.
+**Advantages:** Interoperability focus; separates **asset structure** from **shot structure**; supports this paper's independent comparisons within the publicly documented scope of industrial digital twins.
 
 **Disadvantages:** Leaves shot-level ordering to each studio; no standard layer filenames.
 
@@ -1453,7 +1455,7 @@ flowchart LR
 
 | Need / domain | Sublayer stack? | R/P on prims? | Typical strong→weak theme | Primary sources |
 |---------------|-----------------|---------------|---------------------------|-----------------|
-| **VFX shot finishing** | Yes — dept USD files | Assets referenced from weak assembly/layout layer | LGT/FX/finish high; layout/seq low | Michael M&E, SideFX, openusd.work, da Vinci |
+| **VFX shot finishing** | Yes — dept USD files | Assets referenced from weak assembly/layout layer | LGT/FX/finish high; layout/seq low | Section 1 practitioner synthesis, SideFX, openusd.work, da Vinci |
 | **Lookdev over model (same namespace)** | Yes — shading above geometry | Optional | Materials strong, geo weak | Learn OpenUSD skyscraper, ASWF timeline |
 | **Published assets** | Sometimes | **Preferred** — geo in payload | Geo weak; surf/rig/light later | ASWF, da Vinci assets, Remedy |
 | **Heavy CAD / twin plant** | Thin root + dept layers | **Payloads** in ASS/base layer | Twin data & sim override anim; assets at bottom | [Proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read), Omniverse, Survival Guide |
@@ -1475,9 +1477,9 @@ flowchart LR
 
 ## Master Comparison Table
 
-**Strongest → weakest (top → bottom).** ✓ = aligned with Michael's M&E sketch; ✗ = deliberate difference; ~ = partial.
+**Strongest → weakest (top → bottom).** ✓ = aligned with the Section 1 practitioner synthesis; ✗ = deliberate difference; ~ = partial.
 
-| Layer role | Michael M&E | SideFX shot | da Vinci shot | Learn OpenUSD | Omniverse stage | Proposed USD GoodStart layer order |
+| Layer role | M&E synthesis | SideFX shot | da Vinci shot | Learn OpenUSD | Omniverse stage | Proposed USD GoodStart layer order |
 |------------|-------------|-------------|---------------|---------------|-----------------|-----------|
 | Overrides / review | — | — | **OVERRIDE** | — | Session / Markup | **OPIN** ✓ |
 | Lighting / finish | **LGT** (top) ✓ | **LGT** (top) ✓ | **finish** (top) ✓ | — | LGT (mid) | ENV (mid) ~ |
@@ -1495,7 +1497,7 @@ flowchart LR
 
 | If your priority is… | Lean toward… |
 |----------------------|--------------|
-| Feature-film shot finishing | Michael M&E / SideFX / da Vinci / openusd.work (finish/LGT high, assembly low) |
+| Feature-film shot finishing | Section 1 practitioner synthesis / SideFX / da Vinci / openusd.work (finish/LGT high, assembly low) |
 | Lookdev merging with layout geo | Learn OpenUSD pattern — **shading sublayer above geometry sublayer** |
 | Published asset interchange | ASWF + da Vinci asset interface — **references/payloads**, geo in payload |
 | Omniverse conductor / factory twin | Omniverse Explorer layers + the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) (`RUNTIME_LYR` or session layer for live/latest-value state; `DATA_LYRs` for static metadata) |
@@ -1587,13 +1589,13 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 
 ---
 
-## Slack Reply Snippet (copy-paste)
+## Public Discussion Reply Snippet (copy-paste)
 
 > There isn’t one official OpenUSD layer-order spec — Pixar/ASWF/NVIDIA document the **mechanism** (first sublayer = strongest, thin root, LIV(E)RPS). Each pipeline picks order by workflow.
 >
 > **Public refs:** ASWF asset guidelines (geo bottom, lighting usually last), SideFX shot example (LGT→FX→ANIM→set dress→seq), Pixar SIGGRAPH 2019 composition PDF, Omniverse Layers Extension (Assets weakest), plus our comparison doc: `WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md`.
 >
-> Your M&E sketches: (1) three LGT→SIM→ANIM→CAM pillars on shared MAT+ASS; (2) global SIM+LGT with shot pillars on top. Collapsed to one shot that's LGT→SIM→ANIM→CAM→MTL→ASS. The proposed USD GoodStart layer order diverges on purpose for digital twins (RUNTIME, DATA, ACTGR, CAM high) but keeps ASS at the bottom and SIM above ANIM.
+> The Section 1 practitioner synthesis uses: (1) three LGT→SIM→ANIM→CAM pillars on shared MAT+ASS; and (2) global SIM+LGT with shot pillars on top. Collapsed to one shot, this becomes LGT→SIM→ANIM→CAM→MTL→ASS. The proposed USD GoodStart layer order diverges on purpose for digital twins (RUNTIME, DATA, ACTGR, CAM high) but keeps ASS at the bottom and SIM above ANIM.
 
 ---
 
@@ -2224,7 +2226,9 @@ The approach is therefore suitable for digital twins, but only after separating 
 
 ### 16.2 Case Study: Workcell-DigitalTwin to Asset Structure 3.0
 
-This case study applies the preceding principles to the public [nAurava Technologies Workcell-DigitalTwin repository](https://github.com/nAurava-Technologies/Workcell-DigitalTwin) and to the locally inspected working copy at `E:\SynologyDrive\9999_LocalRepo\Workcell-DigitalTwin`. The purpose is not to criticize a functioning demonstration stage. It is to identify what a reproducible dataprep and publication pipeline must do when a composed engineering/simulation scene becomes a reusable 3.0-ready asset product.
+This case study applies the preceding principles to the public [nAurava Technologies Workcell-DigitalTwin repository](https://github.com/nAurava-Technologies/Workcell-DigitalTwin) and a locally inspected working copy. The purpose is not to criticize a functioning demonstration stage. It is to identify what a reproducible dataprep and publication pipeline must do when a composed engineering/simulation scene becomes a reusable 3.0-ready asset product.
+
+> **Independent case-study status:** The repository is the public source object being analyzed; the migration assessment, target structures, diagrams, and recommendations are the author's independent work. This section is not an AOUSD or IEDT Interest Group case study, publication, recommendation, validation result, or endorsement. The repository's [licensing notice](https://github.com/nAurava-Technologies/Workcell-DigitalTwin#licensing--third-party-assets) applies Apache 2.0 to the project while expressly excluding the UR10, Robotiq, and conveyor assets from that license. This paper links to and analyzes package structure; it does not relicense or redistribute those third-party assets.
 
 #### Evidence boundary and terminology
 
@@ -2741,13 +2745,14 @@ This section intentionally stops at that boundary. A later combined design shoul
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.6.2 | 2026-07-16 | Prepared the paper for external review: removed personal attribution and private-channel links from the M&E material while preserving its complete technical content as an author-created synthesis informed by internal VFX practitioner discussions; limited Unreal Engine claims to Epic's public documentation; added explicit independent-research, non-AOUSD-endorsement, and Workcell licensing/status notices |
 | 1.6.1 | 2026-07-16 | Added an Executive Summary architecture map that positions the four composition paradigms by scene/project versus asset/product boundary, shows their distinct design questions, and presents NVIDIA SimReady as a cross-cutting capability-assurance axis over shared OpenUSD building blocks rather than as a fifth composition paradigm |
 | 1.6.0 | 2026-07-16 | Added Section 17 treating NVIDIA SimReady Foundation as a distinct capability-contract, validation, and standardization axis; documented the requirement/capability/feature/profile hierarchy, three-phase workflow, dataprep insertion points, Workcell application, publication evidence, and deferred integration questions for Asset Structure 3.0 and the proposed USD GoodStart layer order |
 | 1.5.0 | 2026-07-16 | Added Section 16.2, a Workcell-DigitalTwin conversion case study documenting the inspected mixed initial stage, a requirements-led dataprep/publication pipeline, concern-routing rules, acceptance gates, and three related delivery states: pure Asset Structure 3.0-ready product, thin ENV/MTL/ASS envelope, and the proposed USD GoodStart envelope around the same canonical package |
 | 1.4.5 | 2026-07-15 | Corrected the over-simplified 1.4.4 comparison: restored the complete classic layer stack and all Isaac Sim files, arc types, variant branches, and payload semantics; reorganized only their visual grouping to produce readable, similarly sized vertical panels side by side |
 | 1.4.4 | 2026-07-15 | Replaced the GitHub-unstable and visually unbalanced paradigm comparison with a balanced, flat two-panel Mermaid diagram; removed nested subgraphs and HTML label markup while retaining one minimal container-level alignment link |
-| 1.4.3 | 2026-07-15 | Restored the Unreal Engine 6 direction as author-held first-hand meeting evidence, clearly distinguishing that non-public primary evidence from Epic's publicly verifiable current OpenUSD implementation status |
-| 1.4.2 | 2026-07-15 | Strengthened the Introduction's “Why this matters” section with precise architectural claims, an official NVIDIA Omniverse foundation reference, evidence-based Unreal Engine OpenUSD status, and an explicit caveat against presenting Unreal Engine 6 speculation as confirmed roadmap |
+| 1.4.3 | 2026-07-15 | Earlier internal-research treatment of possible future Unreal direction; superseded by the public-source-only wording in 1.6.2 |
+| 1.4.2 | 2026-07-15 | Strengthened the Introduction's “Why this matters” section with precise architectural claims, an official NVIDIA Omniverse foundation reference, evidence-based Unreal Engine OpenUSD status, and an explicit caveat against presenting future major-version speculation as a confirmed roadmap |
 | 1.4.1 | 2026-07-15 | Upgraded the frontmatter to ARYS 1.3 with synchronized canonical tags, Domain020 ownership, provenance, agent-native routing, maturation metadata, and a complete visible dual-header block |
 | 1.4.0 | 2026-07-15 | Reorganized the opening into a brief results-focused Executive Summary, a separate research Introduction, and a Composition Foundations section for mechanics, LIV(E)RPS, and the two comparison axes |
 | 1.3.9 | 2026-07-15 | Added a pre-case-study decision matrix with a scored questionnaire, validity gates, hybrid interpretation rules, and recommended starting architectures for the four composition paradigms |
@@ -2768,13 +2773,13 @@ This section intentionally stops at that boundary. A later combined design shoul
 | 1.2.0 | 2026-07-14 | Added NVIDIA Isaac Sim 6.0 Asset Structure 3.0 case study with source screenshots, base and expanded feature-stack analysis, composition-arc roles, and an optional GoodStart robot/multi-physics asset-package profile |
 | 1.1.9 | 2026-07-03 | Added explicit impact decision for GoodStart Minimal Layer Setup: keep default root stack stable, generate asset-package folders/contracts/reports/workflow notes, and keep per-asset metadata/connection points below public wrapper/interface assets |
 | 1.1.8 | 2026-07-03 | Added NVIDIA SimReady / Physical AI addendum: asset interface rule, bounded workstream layers, reference-payload pattern, separate simulation metadata, connection points, validation artifacts, and scene-level vs asset-package ownership split |
-| 1.0.0 | 2026-06-10 | Initial research doc from Slack thread with Michael O'Brien |
+| 1.0.0 | 2026-06-10 | Initial research document informed by internal discussions with experienced visual-effects practitioners |
 | 1.0.1 | 2026-06-10 | Added OpenUSD Learning & Ecosystem Resources link collection |
 | 1.1.0 | 2026-06-10 | Added Learn OpenUSD, da Vinci, Remedy, Survival Guide, ASWF reference-first, session layers; LIV(E)RPS two-axis synthesis |
-| 1.1.1 | 2026-06-10 | Michael §1 Mermaid: three parallel pillars (LGT→SIM→ANIM→CAM) on shared MAT+ASS base; USD realization notes |
-| 1.1.2 | 2026-06-10 | Michael §1: Sketch 2 (global SIM/LGT + shots on top); padding via spacer nodes + subGraphTitleMargin |
+| 1.1.1 | 2026-06-10 | Section 1 practitioner-synthesis Mermaid: three parallel pillars (LGT→SIM→ANIM→CAM) on shared MAT+ASS base; USD realization notes |
+| 1.1.2 | 2026-06-10 | Section 1 Sketch 2 (global SIM/LGT + shots on top); padding via spacer nodes + subGraphTitleMargin |
 | 1.1.3 | 2026-06-10 | Restore in-diagram subgraph titles (M&E sequence / Parallel pillars) with extra header spacing |
-| 1.1.4 | 2026-06-10 | Michael diagrams: visible header nodes (SeqHdr/PillarHdr); PadLeft/PadRight centering; remove left-only spacers |
-| 1.1.5 | 2026-06-10 | Revert Michael §1 Mermaid to simple nested subgraph titles (Screenshot-2 layout); drop spacer/header-node experiments |
+| 1.1.4 | 2026-06-10 | Section 1 diagrams: visible header nodes (SeqHdr/PillarHdr); PadLeft/PadRight centering; remove left-only spacers |
+| 1.1.5 | 2026-06-10 | Revert Section 1 Mermaid to simple nested subgraph titles (Screenshot-2 layout); drop spacer/header-node experiments |
 | 1.1.6 | 2026-06-10 | Unify full LIV(E)RPS sidebar (L→S) in all comparison Mermaid diagrams §2–§11 |
 | 1.1.7 | 2026-06-26 | Update USD GoodStart to explicit `RUNTIME_LYR` split: live/session-backed telemetry and snapshots are separate from static `DATA_LYRs` metadata/identifier layers |
