@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-17T08:48:05+02:00"
+last_modified: "2026-07-17T16:56:41+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -33,17 +33,18 @@ agent_index:
     simready_addendum: "#15-nvidia-simready--physical-ai-addendum---rules-that-affect-the-proposed-usd-goodstart-layer-order"
     isaac_asset_structure_3: "#16-nvidia-isaac-sim-60---asset-structure-30"
     digital_twin_implications: "#161-digital-twin-implications"
+    engineering_to_twin_reconciliation: "#1611-engineering-to-twin-hierarchy-reconciliation"
     workcell_case_study: "#162-case-study-workcell-digitaltwin-to-asset-structure-30"
     simready_foundation: "#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization"
     revision_history: "#revision-history"
-tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles]
+tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles, relationships, relocates, namespace_editing, source_identifiers, presentation_hierarchy, multi_bom, plm, reimport]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.6.3 | **Date**: 17.07.2026 | **Time**: 08:48 | **GlobalID**: 20260717_0848_Layer_Order_References_v1.6.3
+**Version**: 1.7.0 | **Date**: 17.07.2026 | **Time**: 16:56 | **GlobalID**: 20260717_1656_Layer_Order_References_v1.7.0
 
-**Last Updated:** 17.07.2026 08:48<br>
+**Last Updated:** 17.07.2026 16:56<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -54,7 +55,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
 **Tag block:**
-#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion #simready_foundation #validation #standardization #capability_profiles
+#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion #simready_foundation #validation #standardization #capability_profiles #relationships #relocates #namespace_editing #source_identifiers #presentation_hierarchy #multi_bom #plm #reimport
 
 ---
 
@@ -66,7 +67,7 @@ OpenUSD does **not** prescribe one universal layer order or asset structure. Thi
 
 [NVIDIA Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html) is the clearest configurable-product example in this paper. It combines a stable public asset identity with shared base data, deferred payloads, and variant-selected physics, controller, and end-effector features. Its significance is not the robot-specific filenames, but the deliberate use of composition arcs according to their native purposes. See the [detailed Asset Structure 3.0 case study](#16-nvidia-isaac-sim-60---asset-structure-30).
 
-For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) can define scene-level ownership for assets, metadata, simulation, and runtime state, while factories, lines, cells, machines, and robots expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications) and [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary).
+For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) can define scene-level ownership for assets, metadata, simulation, and runtime state, while factories, lines, cells, machines, and robots expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. The hierarchy-reconciliation rule is to preserve source identity and mapping evidence, use relationships or collections for alternate non-transform views, use references and authored transforms for placement, and reserve relocates for deliberate composed-namespace edits. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications), [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary), and [Section 16.1.1 - Engineering-to-twin hierarchy reconciliation](#1611-engineering-to-twin-hierarchy-reconciliation).
 
 The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
 
@@ -191,6 +192,8 @@ Most layer-order debates mix up **two separate mechanisms**:
 |------|---------------------|-------------------------|
 | **1. Sublayer order** (`subLayerPaths`) | Among **peer department or ownership layers** at a shot, scene, or asset root, who wins? | SideFX, the M&E practitioner synthesis in Section 1, da Vinci, Omniverse Layers, [proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) |
 | **2. LIV(E)RPS arc strength** | Among **composition arc types** on a prim, who wins? | [Pixar glossary](https://openusd.org/release/glossary.html), [Learn OpenUSD — LIVERPS](https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/strength-ordering/what-is-liverps.html), [USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/composition/livrps.html) |
+
+A separate hierarchy-design question appears when engineering content becomes a digital twin: **which transform/model namespace is canonical, which groupings are presentation-only, and when is an actual composed-namespace edit required?** That is not another strength-order axis. It is an identity and structure decision addressed in [Section 16.1.1](#1611-engineering-to-twin-hierarchy-reconciliation).
 
 **Key clarifications from sources:**
 
@@ -1590,6 +1593,16 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 | da Vinci’s Workshop (NVIDIA sample) | https://docs.omniverse.nvidia.com/usd/latest/usd_content_samples/davinci_workshop.html |
 | Learn OpenUSD — sublayer exercise | https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/sublayers/working-with-sublayers.html |
 | Learn OpenUSD — LIVERPS | https://docs.nvidia.com/learn-openusd/latest/creating-composition-arcs/strength-ordering/what-is-liverps.html |
+| OpenUSD — Relationships | https://openusd.org/release/api/class_usd_relationship.html |
+| OpenUSD — Collections (`UsdCollectionAPI`) | https://openusd.org/release/user_guides/collections_and_patterns.html |
+| OpenUSD — Relocates | https://openusd.org/release/glossary.html#relocates |
+| OpenUSD — Namespace editing | https://openusd.org/release/user_guides/namespace_editing.html |
+| OpenUSD — Model asset identity (`assetInfo`) | https://openusd.org/release/api/class_usd_model_a_p_i.html |
+| AOUSD Core Specification 1.0.1 | https://aousd.org/usd-core-specification/ |
+| NVIDIA Learn OpenUSD — hierarchy transformation | https://docs.nvidia.com/learn-openusd/latest/data-exchange/data-transformation/transformation-hierarchy.html |
+| NVIDIA VFI — CAD conversion considerations | https://docs.omniverse.nvidia.com/vfi/latest/guide/cad-conversion-considerations.html |
+| NVIDIA VFI — factory-level structuring | https://docs.omniverse.nvidia.com/vfi/latest/guide/factory-level-structuring.html |
+| NVIDIA DSX — SimReady asset journey | https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html |
 | USD Survival Guide — LIVRPS | https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/composition/livrps.html |
 | Remedy USDBook — layer stacks | https://remedy-entertainment.github.io/USDBook/terminology/layer_stacks.html |
 | OpenUSD in One Weekend | https://learn-usd.github.io/ |
@@ -2061,6 +2074,93 @@ These requirements must be **versioned and adaptable**, not hard-coded as one fr
 
 This leads to a key architectural principle: **the digital-twin structure is a generated product of requirements, mappings, and validated source evidence**. The CAD structure remains an authoritative engineering input; the simulation-oriented USD package becomes the authoritative published interface for the digital twin.
 
+#### 16.1.1 Engineering-to-twin hierarchy reconciliation
+
+An engineering hierarchy and a digital-twin hierarchy are not competing versions of the same model. A CAD or PLM tree answers questions about design assemblies, part definitions, occurrences, revisions, and engineering ownership. A digital twin instead needs functional package boundaries, independently loadable units, stable simulation frames, connection topology, and operational grouping. Both structures can be valid; the pipeline must make their relationship explicit rather than repeatedly exporting and manually rearranging files.
+
+> **Evidence boundary:** A related internal Discovery paper supplied the use case and the questions in this subsection. The technical conclusions below are re-derived from public OpenUSD and NVIDIA documentation. They are not a claim that a source-identifier schema, a multi-BOM representation, or a particular runtime implementation is already standardized.
+
+NVIDIA's current factory guidance independently supports this framing: CAD conversion, structuring, and optimization/deployment are distinct phases, and asset boundaries should follow lifecycle, ownership, validation scope, instancing, and selective-loading needs rather than the incidental shape of a CAD tree. See [CAD conversion considerations](https://docs.omniverse.nvidia.com/vfi/latest/guide/cad-conversion-considerations.html), [factory-level structuring](https://docs.omniverse.nvidia.com/vfi/latest/guide/factory-level-structuring.html), and the [three-phase pipeline pattern](https://docs.omniverse.nvidia.com/vfi/latest/guide/asset-structure-optimizations-and-tradeoffs.html#three-phase-pipeline-pattern).
+
+The transformation therefore produces two complementary outputs:
+
+1. A **canonical operational hierarchy**: one transform/model tree and a set of published asset interfaces that simulations and downstream scenes can compose reliably.
+2. **Traceable alternate views**: design-BOM, manufacturing-BOM, station, maintenance, or reporting groupings that refer to the canonical content without claiming a second transform hierarchy.
+
+##### Mechanism boundaries: identity, composition, views, and runtime
+
+| Need | Appropriate mechanism | Verified boundary and rule |
+|------|-----------------------|----------------------------|
+| Publish a reusable machine, robot, or workcell | Public wrapper/interface plus **references** and optional **payloads** | A reference composes a reusable subtree at a chosen anchor; the wrapper's authored transform performs spatial placement. A reference is the normal asset-composition mechanism, not a relocate. [OpenUSD References](https://openusd.org/release/glossary.html#references) |
+| Place equipment in a cell or line | Reference the public interface below a placement `Xform` and author the required transform | **Relocates do not author transforms or preserve world space automatically.** They remap namespace; placement and coordinate conversion remain explicit pipeline work. |
+| Show design BOM, station BOM, maintenance group, or another non-transform view | Namespaced **relationships** or [`UsdCollectionAPI`](https://openusd.org/release/user_guides/collections_and_patterns.html) | Relationships are uniform, list-editable path pointers. They do not create, move, or reparent prims in the composed namespace. Collections are the stock set-membership abstraction; a consumer/schema must define what the grouping means. [UsdRelationship](https://openusd.org/release/api/class_usd_relationship.html) |
+| Rename, reparent, or delete a referenced/provider prim in the local composed namespace | **Relocate**, authored deliberately through a controlled namespace-edit workflow | Relocates are a composition arc for non-destructive namespace adaptation across an ancestral composition arc. They apply to prim paths, not property paths. The supplier layer remains unchanged, but the old path is no longer simultaneously available in the composed stage. [Relocates](https://openusd.org/release/glossary.html#relocates) |
+| Re-import a changed CAD/PLM export | Versioned **identity ledger** plus mapping/regeneration rules | USD can store model-level `assetInfo`, but neither `assetInfo` nor a custom ID automatically rebinds a replacement prim. Reconciliation is pipeline behavior. Use separate definition and occurrence/instance IDs where repeated parts require it. [UsdModelAPI](https://openusd.org/release/api/class_usd_model_a_p_i.html) |
+| Pick, carry, or place a part over time | Runtime/physics/constraint implementation, time-sampled transforms, or an instancing strategy | A normal USD relationship is always **uniform** and cannot contain time samples. It can express a static association, but not animate a changing parent. NVIDIA's factory guidance uses time-sampled transforms or PointInstancers for dynamic material flow. [OpenUSD relationship API](https://openusd.org/release/api/class_usd_relationship.html), [NVIDIA object handling](https://docs.omniverse.nvidia.com/vfi/latest/guide/factory-level-structuring.html#step-7-object-handling) |
+| Choose an approved authored configuration | **Variant set** | Variants select discrete authored alternatives. They are not a high-frequency operational state machine. |
+
+This distinction resolves a common ambiguity in digital-twin proposals: **relationships, relocates, and source identifiers are not competing answers to one question.** They operate on different concerns. Identity supports reconciliation; references and authored transforms establish the canonical operational structure; relationships and collections provide semantic views; relocates are a narrow namespace-editing tool.
+
+```mermaid
+flowchart TB
+    S["Engineering sources<br/>CAD · PLM · supplier USD"]
+    I["Immutable source snapshot<br/>identity ledger · revisions · hashes"]
+    R["Target profile<br/>simulation · loading · consumers"]
+    C["Classify boundaries<br/>asset · assembly · operational group"]
+    H["Canonical twin hierarchy<br/>one transform and model tree"]
+    P["Published packages<br/>public interfaces · references · payloads"]
+    V["Alternate views<br/>relationships · collections"]
+    N["Optional namespace adaptation<br/>relocates only when required"]
+    Q["Retarget and validate<br/>paths · transforms · bindings · joints"]
+    O["Atomic publication<br/>USD packages · mapping · reports"]
+
+    S --> I --> R --> C --> H --> P
+    P --> V --> Q
+    P --> N --> Q
+    P --> Q
+    Q --> O
+
+    style S fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    style I fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
+    style R fill:#e8eaf6,stroke:#3949ab,stroke-width:2px,color:#000
+    style C fill:#e0f2f1,stroke:#00796b,stroke-width:2px,color:#000
+    style H fill:#e3f2fd,stroke:#1565c0,stroke-width:3px,color:#000
+    style P fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px,color:#000
+    style V fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style N fill:#fff8e1,stroke:#f9a825,stroke-width:2px,color:#000
+    style Q fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#000
+    style O fill:#dcedc8,stroke:#558b2f,stroke-width:3px,color:#000
+```
+
+*Figure 16.4 - Engineering-to-twin transformation. The canonical operational hierarchy is generated once. Semantic views and any exceptional namespace adaptation are separate, validated contributions; neither replaces the source evidence or becomes a second transform tree.*
+
+##### Identity ledger and mapping contract
+
+The bridge between source and published twin should be a versioned pipeline artifact, not an informal collection of renamed prim paths. File names below are illustrative; the contract matters more than the serialization:
+
+| Artifact | Minimum record | Purpose |
+|----------|----------------|---------|
+| Source manifest | Source system, document, export tool/version, hash, original hierarchy, units, and revision | Makes the engineering input reproducible and auditable. |
+| Identity ledger | `definitionId`, `occurrenceId`, source revision, source path, and provenance | Distinguishes the identity of a part design from the identity of one installed occurrence. Avoids treating a prim path as the only key. |
+| Mapping plan | Source identity/path -> target asset package -> public prim path -> transformation-rule version | Makes hierarchy restructuring deterministic and supports incremental regeneration. |
+| View map | BOM/station/group identifiers -> relationship or collection paths -> consumer meaning | Records semantic groupings without introducing a second transform hierarchy. |
+| Namespace-edit record | Relocate source/target, rationale, target runtime, dependent-path result, and validation outcome | Makes every exceptional composed-namespace edit reviewable and reversible in the pipeline. |
+| Publication report | Profile/version, payload/variant matrix, validation results, approved exceptions, and package hash | Proves what was actually published and against which contract. |
+
+`assetInfo` is useful for model-level asset identity, name, version, and provenance. For per-part CAD/PLM identity, however, a project should use a documented typed, namespaced attribute or schema when interoperability is required, together with the external ledger. Ad-hoc `customData` can be a transitional implementation detail, not a substitute for a defined contract.
+
+##### Re-import and namespace-edit rules
+
+1. **Freeze and classify the source before changing it.** Preserve the raw/startpoint source and capture both the engineering hierarchy and the source identifiers that are actually available.
+2. **Match by durable identity, not by path alone.** A new export path with the same verified occurrence ID should update source provenance without forcing a new public twin path. Missing, duplicated, or ambiguous IDs must be reported rather than guessed.
+3. **Generate the canonical hierarchy through references and package interfaces.** Use functional/lifecycle boundaries, not every CAD body, as the decision for a reusable asset package.
+4. **Represent alternate views separately.** A design BOM and a station BOM can point to the same canonical prims through relationships or collections, provided their consumer semantics, membership rules, and ordering requirements are explicitly defined.
+5. **Use relocates only for a real namespace requirement.** Before authoring one, test whether a wrapper/reference arrangement achieves the requirement more transparently. If a relocate is justified, validate the new namespace, any compensating transforms, and all path-bearing opinions.
+6. **Retarget through tooling, not text replacement.** Material bindings, attribute connections, joint targets, relationships, overrides, and references require composition-aware updates. [`UsdNamespaceEditor`](https://openusd.org/release/user_guides/namespace_editing.html) can assist, but its current OpenUSD documentation explicitly marks it as work in progress and not feature-complete; pin and test the exact OpenUSD/Kit/Isaac runtime.
+7. **Validate every composition state that matters.** Namespace-edit dependency discovery cannot see unloaded payloads, unselected variants, inactive prims, or load-masked content. Test the supported payload and variant matrix, and treat unresolved relationship/connection targets as publication failures.
+
+The official NVIDIA DSX asset journey illustrates the same separation in a concrete pipeline: conversion preserves source hierarchy, materials, and geometry; optimization restructures and packages content; metadata and connection points are authored as separate layers; the final composed asset is validated before delivery. [NVIDIA DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html).
+
 The Isaac Sim structure strengthens the distinction introduced in Section 15:
 
 | Isaac Sim concept | Proposed USD GoodStart interpretation |
@@ -2173,7 +2273,7 @@ flowchart TB
     style FactoryVariants fill:#ffe082,stroke:#f57f17,stroke-width:2px,color:#000
 ```
 
-*Figure 16.4 - Proposed recursive factory adaptation. The proposed USD GoodStart layer order retains scene-level ownership lanes while the factory and its subsets expose nested public asset interfaces. Authored configurations use variants/payloads; runtime state remains a separate contribution.*
+*Figure 16.5 - Proposed recursive factory adaptation. The proposed USD GoodStart layer order retains scene-level ownership lanes while the factory and its subsets expose nested public asset interfaces. Authored configurations use variants/payloads; runtime state remains a separate contribution.*
 
 #### Proposed factory package profile
 
@@ -2283,7 +2383,7 @@ flowchart TB
     style Scene fill:#f1f8e9,stroke:#558b2f,stroke-width:2px,color:#000
 ```
 
-*Figure 16.5 - Inspected initial state. The red box is not “bad USD”; it is a useful integration stage whose responsibilities must be classified before it can become a reusable asset publication.*
+*Figure 16.6 - Inspected initial state. The red box is not “bad USD”; it is a useful integration stage whose responsibilities must be classified before it can become a reusable asset publication.*
 
 The conversion must therefore preserve the working composition while moving each opinion to an explicit owner. A naive “save every prim into a new folder” operation would break deep override paths, joint relationships, material bindings, source traceability, or all four.
 
@@ -2312,13 +2412,13 @@ The package owns reusable defaults and internal implementation. The envelope own
 ```mermaid
 flowchart TB
     P0["0 · Declare target profile<br/>public prims · variants · loading<br/>simulation requirements"]
-    P1["1 · Freeze + manifest inputs<br/>source IDs · licenses · hashes<br/>tool versions"]
+    P1["1 · Freeze + manifest inputs<br/>definition/occurrence IDs · hashes<br/>tool versions"]
     P2["2 · Inspect + classify stage<br/>assembly · geometry · materials<br/>physics · environment · runtime"]
     P3["3 · Define package boundaries<br/>workcell · robot · gripper · conveyor<br/>scanner · table · bin · product"]
-    P4["4 · Normalize + map<br/>units · Z-up · pivots · names<br/>instances · stable IDs"]
+    P4["4 · Normalize + map<br/>units · Z-up · pivots · names<br/>instances · identity ledger"]
     P5["5 · Build / retain packages<br/>public interface · base · materials<br/>semantics · feature payloads"]
     P6["6 · Build workcell package<br/>instances reference component<br/>public interfaces only"]
-    P7["7 · Retarget authored opinions<br/>materials · joints · colliders<br/>sensors · configuration · environment"]
+    P7["7 · Retarget authored opinions<br/>relationships · bindings · joints<br/>sensors · configuration · environment"]
     P8["8 · Validate closure + equivalence<br/>composition · transforms · appearance<br/>physics · paths · performance"]
     P9["9 · Publish atomically<br/>versioned package + manifest<br/>reports + chosen envelope"]
 
@@ -2336,19 +2436,19 @@ flowchart TB
     style P9 fill:#dcedc8,stroke:#558b2f,stroke-width:3px,color:#000
 ```
 
-*Figure 16.6 - Conversion pipeline. File conversion occurs inside steps 4-6; requirements, ownership mapping, retargeting, validation, and publication are equally important deliverables.*
+*Figure 16.7 - Conversion pipeline. File conversion occurs inside steps 4-6; requirements, ownership mapping, retargeting, validation, and publication are equally important deliverables.*
 
 The steps have the following Workcell-specific responsibilities:
 
 1. **Declare the product contract before restructuring.** Decide which prim paths are public, which subsets load independently, which physics/controller/sensor variants are supported, which component placements are addressable, and whether the environment belongs to the reusable workcell or to the consuming scene.
-2. **Create a source manifest.** Record the STEP/STP, URDF, MJCF, supplier USD, textures, validation JSON, licenses, Git commit, conversion settings, and hashes. Preserve the existing source folders; generated packages must not replace their evidence.
-3. **Inventory the composed stage.** Traverse prims and composition arcs, classify every authored field, and generate a source-path-to-target-owner mapping. Explicitly flag stale `delete payload` edits, absolute/external paths, remote material URLs, and overrides into package-private prims.
+2. **Create a source manifest and identity ledger.** Record the STEP/STP, URDF, MJCF, supplier USD, textures, validation JSON, licenses, Git commit, conversion settings, hashes, original source hierarchy, definition IDs, occurrence IDs, and source revisions where available. Preserve the existing source folders; generated packages must not replace their evidence.
+3. **Inventory the composed stage and create the mapping plan.** Traverse prims and composition arcs, classify every authored field, and generate a source-identity/path-to-target-owner/public-path mapping. Explicitly distinguish canonical hierarchy, presentation relationship/collection membership, and any genuine namespace edit. Flag stale `delete payload` edits, absolute/external paths, remote material URLs, and overrides into package-private prims.
 4. **Define reusable boundaries.** The workcell, UR10, Robotiq gripper, conveyor, scanner, robot base, tables, bins, battery pack, and wall/guarding should each have a stable public entry point when they are independently reusable or replaceable. Do not create a package merely because a CAD body exists; use functional and lifecycle boundaries.
-5. **Normalize without erasing provenance.** Enforce meters and Z-up, establish stable pivots and local frames, sanitize names, preserve source IDs as metadata, detect repeated parts, and produce visual/collision representations according to the selected capability profile.
+5. **Normalize without erasing provenance.** Enforce meters and Z-up, establish stable pivots and local frames, sanitize names, preserve source identity through a documented typed contract and the identity ledger, detect repeated parts, and produce visual/collision representations according to the selected capability profile. A path change alone must never be treated as proof of a new component identity.
 6. **Retain mature packages.** UR10 and Robotiq already demonstrate the desired public-interface/base/physics-variant pattern. Validate their defaults and dependencies, then reference their public files. Repacking their internal geometry into the workcell would destroy the boundary this migration is trying to create.
 7. **Package the remaining components.** Generate a public `<asset_id>.usda`, a stable base, geometry/instance/material/semantic contributions, optional collision or backend physics payloads, and validation reports. Static props need only the features they actually support; they do not need empty robot/controller folders.
 8. **Author the workcell assembly through public interfaces.** `instances.usda` or the equivalent assembly contribution owns component placement and references the published component roots. Scene code must not reference `geometries.usd`, internal links, or private material prims directly.
-9. **Retarget integration opinions.** Move material bindings, fixed joints, collision overrides, conveyor behavior, grasp guides, sensors, and connections to package-local feature layers or declared scene layers. Deep `over` paths must be mapped to stable public prims or promoted connection points; textual path replacement is not sufficient.
+9. **Retarget integration opinions and views.** Move material bindings, fixed joints, collision overrides, conveyor behavior, grasp guides, sensors, connections, and alternate BOM/station groupings to package-local feature layers or declared scene layers. Deep `over` paths, relationship targets, attribute connections, and collection membership must be mapped to stable public prims or promoted connection points; textual path replacement is not sufficient. Any relocate is an exceptional, separately recorded namespace edit rather than a default layout operation.
 10. **Separate discrete configuration from runtime state.** Layout, physics backend, robot tool, product format, and fidelity can be bounded variants. Belt velocity, live joint state, current battery position, PLC values, alarms, and measurements belong in runtime/session infrastructure, not in asset variants.
 11. **Validate equivalence before publishing.** Compare transforms, extents, material assignments, loaded/unloaded payload behavior, collision coverage, joints, default variant selections, articulation behavior, and visual output against the accepted initial stage. A structurally cleaner stage that changes the working simulation is a failed conversion.
 12. **Publish atomically.** Version the public package, dependency lock, source manifest, mapping report, validation results, and envelope together. Downstream consumers switch one published interface only after all gates pass.
@@ -2495,6 +2595,8 @@ The conversion is complete only when all of the following are demonstrated:
 - The stage opens with all payloads loaded, with optional payloads unloaded, and under each supported configuration.
 - Remote materials and third-party content have reproducible dependency and license records.
 - Source-to-target prim mappings, removed/stale edits, and manually approved exceptions are recorded.
+- Definition and occurrence identities are unique where required; a changed source path with the same verified identity preserves the intended published contract, while missing or ambiguous identities block automated reconciliation.
+- Relationship and collection targets resolve in every supported payload/variant state. Each relocate has a documented rationale, target-runtime compatibility check, and namespace/transform-equivalence result.
 - Visual placement, material appearance, collision coverage, joints, articulation, conveyor behavior, and task behavior match the accepted initial-state baseline within declared tolerances.
 - Re-importing one changed CAD component can regenerate and republish that component without changing unrelated public paths or rebuilding the entire workcell.
 
@@ -2754,6 +2856,7 @@ This section intentionally stops at that boundary. A later combined design shoul
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.7.0 | 2026-07-17 | Added Section 16.1.1, “Engineering-to-twin hierarchy reconciliation,” which turns the CAD/PLM-to-digital-twin problem into a reproducible identity, mapping, package-publication, and validation contract. It distinguishes references and authored transforms for canonical placement, relationships/collections for alternate semantic views, and relocates for controlled composed-namespace edits; adds a verified correction that USD relationships are uniform rather than time-sampled; extends the Workcell pipeline, acceptance gates, references, ARYS routing, and tags accordingly. |
 | 1.6.3 | 2026-07-17 | Removed the direct nAurava Technologies Workcell-DigitalTwin repository link while the asset remains under development; retained the named project context and independent technical case study, and recorded that the public repository reference may be added once the asset is finished and ready for publication |
 | 1.6.2 | 2026-07-16 | Prepared the paper for external review: removed personal attribution and private-channel links from the M&E material while preserving its complete technical content as an author-created synthesis informed by internal VFX practitioner discussions; limited Unreal Engine claims to Epic's public documentation; added explicit independent-research, non-AOUSD-endorsement, and Workcell licensing/status notices |
 | 1.6.1 | 2026-07-16 | Added an Executive Summary architecture map that positions the four composition paradigms by scene/project versus asset/product boundary, shows their distinct design questions, and presents NVIDIA SimReady as a cross-cutting capability-assurance axis over shared OpenUSD building blocks rather than as a fifth composition paradigm |
