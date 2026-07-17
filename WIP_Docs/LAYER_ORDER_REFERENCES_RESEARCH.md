@@ -8,7 +8,7 @@ status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-16T19:02:46+02:00"
+last_modified: "2026-07-17T08:48:05+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -41,9 +41,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.6.2 | **Date**: 16.07.2026 | **Time**: 19:02 | **GlobalID**: 20260716_1902_Layer_Order_References_v1.6.2
+**Version**: 1.6.3 | **Date**: 17.07.2026 | **Time**: 08:48 | **GlobalID**: 20260717_0848_Layer_Order_References_v1.6.3
 
-**Last Updated:** 16.07.2026 19:02<br>
+**Last Updated:** 17.07.2026 08:48<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -152,7 +152,7 @@ Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to 
 
 The purpose of this research is not merely to catalogue layer orders or reconstruct the history of NVIDIA robot packages. It traces how **composable asset structures evolve when a stable set of OpenUSD building blocks is applied to changing requirements**. Layers, references, payloads, variants, inherits, schemas, and published prim interfaces each provide a defined behavior; their larger value comes from how deliberately they can be combined. The progression from a largely coupled robot import to Asset Structure 3.0 makes that process visible. Developers, designers, and engineers discover what must be independently owned, loaded, configured, validated, or replaced—and then redraw the package boundaries without having to discard the underlying composition model.
 
-That adaptability connects domains that initially appear far apart. OpenUSD emerged at Pixar to solve large-scale collaborative scene assembly for animation and visual effects. It was created and refined by a broad team whose [historical contributor record](https://openusd.org/release/contributors.html) includes figures such as [Aaron Luk and Nick Porcino](https://aousd.org/leadership/), among many others. The same system can now address robot configuration, multi-physics simulation, industrial asset publication, and recursively composed digital twins. This is not simply a graphics format being reused outside film. It is evidence that the underlying composition model captures more general problems: stable identity, distributed ownership, non-destructive refinement, optional loading, controlled configuration, and collaboration across tools and organizations.
+That adaptability connects domains that initially appear far apart. OpenUSD emerged at Pixar to solve large-scale collaborative scene assembly for animation and visual effects. The same system can now address robot configuration, multi-physics simulation, industrial asset publication, and recursively composed digital twins. This is not simply a graphics format being reused outside film. It is evidence that the underlying composition model captures more general problems: stable identity, distributed ownership, non-destructive refinement, optional loading, controlled configuration, and collaboration across tools and organizations.
 
 The central lesson of the comparisons in this paper is that **OpenUSD's versatility does not come from one universal layer stack, folder tree, or asset template**. It comes from separating stable composition mechanics from domain-specific policy. A film pipeline may organize layers around departments and shot refinement; a robot package may organize them around physics backends, controllers, and end effectors; a digital twin may organize them around asset identity, engineering metadata, simulation state, operational telemetry, and independently loadable facility subsets. The composition arcs remain consistent while the contracts and architectural boundaries change.
 
@@ -2235,19 +2235,19 @@ The approach is therefore suitable for digital twins, but only after separating 
 
 ### 16.2 Case Study: Workcell-DigitalTwin to Asset Structure 3.0
 
-This case study applies the preceding principles to the public [nAurava Technologies Workcell-DigitalTwin repository](https://github.com/nAurava-Technologies/Workcell-DigitalTwin) and a locally inspected working copy. The purpose is not to criticize a functioning demonstration stage. It is to identify what a reproducible dataprep and publication pipeline must do when a composed engineering/simulation scene becomes a reusable 3.0-ready asset product.
+This case study applies the preceding principles to the **nAurava Technologies Workcell-DigitalTwin project** and a locally inspected working copy. The purpose is not to criticize a functioning demonstration stage. It is to identify what a reproducible dataprep and publication pipeline must do when a composed engineering/simulation scene becomes a reusable 3.0-ready asset product.
 
-> **Independent case-study status:** The repository is the public source object being analyzed; the migration assessment, target structures, diagrams, and recommendations are the author's independent work. This section is not an AOUSD or IEDT Interest Group case study, publication, recommendation, validation result, or endorsement. The repository's [licensing notice](https://github.com/nAurava-Technologies/Workcell-DigitalTwin#licensing--third-party-assets) applies Apache 2.0 to the project while expressly excluding the UR10, Robotiq, and conveyor assets from that license. This paper links to and analyzes package structure; it does not relicense or redistribute those third-party assets.
+> **Work-in-progress and independent case-study status:** The nAurava Technologies asset is still under development. Its GitHub repository is therefore intentionally not linked from this paper at this time; a direct repository reference can be added once the asset is finished and ready to serve as a public case-study source. The migration assessment, target structures, diagrams, and recommendations are the author's independent work. This section is not an AOUSD or IEDT Interest Group case study, publication, recommendation, validation result, or endorsement. This paper analyzes package structure only; it does not relicense or redistribute project or third-party assets.
 
 #### Evidence boundary and terminology
 
-The repository's canonical assembly is `workcell_digitaltwin.usd`. The detailed counts below come from the local ASCII inspection copy `workcell_digitaltwin.usda` on **2026-07-16**; that inspection copy was untracked in the Workcell repository and is therefore evidence for this case-study snapshot, not a claim about an additional published source file. The canonical binary stage, public repository, and generated ASCII inspection copy must be treated as different artifacts in provenance records.
+The project's canonical assembly is `workcell_digitaltwin.usd`. The detailed counts below come from the local ASCII inspection copy `workcell_digitaltwin.usda` on **2026-07-16**; that inspection copy was untracked in the local Workcell working copy and is therefore evidence for this case-study snapshot, not a claim about an additional published source file. The canonical binary stage, evolving project source, and generated ASCII inspection copy must be treated as different artifacts in provenance records.
 
 “Asset Structure 3.0-ready” is used here as an **architectural target**, not as a claim that NVIDIA publishes a factory-specific conformance certificate. The official Isaac Sim pattern is robot-oriented. This case study adapts its stable public interface, shared base, payload, and variant principles recursively to a workcell while preserving the distinction between asset-local packaging and scene-level ownership.
 
 #### Initial state: useful content with mixed ownership
 
-The repository already contains two different maturity levels:
+The inspected project snapshot already contains two different maturity levels:
 
 1. **UR10 and Robotiq are already close to the 3.0 pattern.** Their public `.usda` files reference `payloads/base.usda`, expose physics variant sets, and load backend-specific physics with payloads. They should be validated and reused, not flattened and rebuilt into the workcell.
 2. **Most CAD-derived equipment remains single-file or lightly packaged.** Table, bin, robot base, wall, X-ray scanner, battery pack, and related items pair engineering source files such as STEP/STP with processed USD assets, but do not yet expose the same uniform public-interface contract.
@@ -2481,7 +2481,7 @@ The proposed strong-to-weak order remains **OPIN → CAM → ENV → RUNTIME →
 | Authoring overhead | Lowest scene governance; strong package discipline | Low | Highest, justified only by real ownership needs |
 | Migration relationship | Foundation | Wraps A | Wraps A; can replace B without reconverting A |
 
-**Recommended sequence for this repository:** build and validate delivery A as the canonical publication; adopt delivery B as the immediate replacement for the mixed demonstration root; introduce delivery C when the Workcell becomes an operational twin with live state, scenario simulation, system mappings, multiple authoring roles, or persistent project overrides.
+**Recommended sequence for this project:** build and validate delivery A as the canonical publication; adopt delivery B as the immediate replacement for the mixed demonstration root; introduce delivery C when the Workcell becomes an operational twin with live state, scenario simulation, system mappings, multiple authoring roles, or persistent project overrides.
 
 #### Acceptance gates for this case study
 
@@ -2754,6 +2754,7 @@ This section intentionally stops at that boundary. A later combined design shoul
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.6.3 | 2026-07-17 | Removed the direct nAurava Technologies Workcell-DigitalTwin repository link while the asset remains under development; retained the named project context and independent technical case study, and recorded that the public repository reference may be added once the asset is finished and ready for publication |
 | 1.6.2 | 2026-07-16 | Prepared the paper for external review: removed personal attribution and private-channel links from the M&E material while preserving its complete technical content as an author-created synthesis informed by internal VFX practitioner discussions; limited Unreal Engine claims to Epic's public documentation; added explicit independent-research, non-AOUSD-endorsement, and Workcell licensing/status notices |
 | 1.6.1 | 2026-07-16 | Added an Executive Summary architecture map that positions the four composition paradigms by scene/project versus asset/product boundary, shows their distinct design questions, and presents NVIDIA SimReady as a cross-cutting capability-assurance axis over shared OpenUSD building blocks rather than as a fifth composition paradigm |
 | 1.6.0 | 2026-07-16 | Added Section 17 treating NVIDIA SimReady Foundation as a distinct capability-contract, validation, and standardization axis; documented the requirement/capability/feature/profile hierarchy, three-phase workflow, dataprep insertion points, Workcell application, publication evidence, and deferred integration questions for Asset Structure 3.0 and the proposed USD GoodStart layer order |
