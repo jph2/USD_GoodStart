@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.9.0"
+document_version: "1.9.1"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-08-08T15:47:38+02:00"
+last_modified: "2026-08-08T16:24:39+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -48,9 +48,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.9.0 | **Date**: 08.08.2026 | **Time**: 15:47 | **GlobalID**: 20260808_1547_Layer_Order_References_v1.9.0
+**Version**: 1.9.1 | **Date**: 08.08.2026 | **Time**: 16:24 | **GlobalID**: 20260808_1624_Layer_Order_References_v1.9.1
 
-**Last Updated:** 08.08.2026 15:47<br>
+**Last Updated:** 08.08.2026 16:24<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -3179,6 +3179,21 @@ flowchart LR
     Package --> Measure["Measure cold load, warm load, memory, interaction, and resolver fan-out"]
     Measure -->|"targets fail"| Package
     Measure -->|"targets pass"| Runtime["Publish fingerprinted runtime artifact"]
+
+    classDef intake fill:#e8f1ff,stroke:#2563eb,stroke-width:2px,color:#123b73
+    classDef sourceTruth fill:#eaf8ee,stroke:#2f9e44,stroke-width:2px,color:#175c2a
+    classDef authoring fill:#f3edff,stroke:#7c3aed,stroke-width:2px,color:#4c1d95
+    classDef deployment fill:#fff4df,stroke:#e07a00,stroke-width:2px,color:#8a4600
+    classDef measurement fill:#e8f1ff,stroke:#2563eb,stroke-width:2px,color:#123b73
+    classDef published fill:#e7f8ed,stroke:#16a34a,stroke-width:2px,color:#166534
+
+    class Source,Convert,Validate,Structure intake
+    class Interface sourceTruth
+    class Components,Payloads,Instancing,Libraries,Domains,Motion authoring
+    class Package deployment
+    class Measure measurement
+    class Runtime published
+    style Authoring fill:#fbf9ff,stroke:#c4b5fd,stroke-width:2px
 ```
 
 **Figure 19.1 - VFI authoring-to-deployment diamond.** The arrows do not imply that every project needs every authoring contribution or one mandatory packaging strategy. They show responsibility flow: source evidence enters a validated modular graph; a reproducible packaging step derives a runtime artifact; measurements decide whether that artifact is fit for its target environment. The deployment result does not replace the maintained graph.
@@ -3308,6 +3323,7 @@ Classic file pipelines can also generate optimized delivery files, but they usua
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.9.1 | 2026-08-08 | Added native Mermaid color classes to the Section 19 VFI authoring-to-deployment diamond for clearer visual separation of source intake, maintained interfaces, modular authoring, deployment packaging, measurement, and runtime publication while preserving the editable diagram source. |
 | 1.9.0 | 2026-08-08 | Added Section 19 integrating NVIDIA Virtual Facility Integration guidance and the NVIDIA Omniverse Blueprints/Workflows source map; separated engineering source, modular authoring, composed operational, and generated deployment structures; added the VFI authoring-to-deployment diamond, seven-step transfer table, GoodStart/VFI/Isaac comparison, directional packaging-performance evidence, instancing and object-handling implications, discovery-source dispositions, new GoodStart contract fields, and the correction that modular authoring truth may be reproducibly packaged for a measured runtime without becoming a fifth composition paradigm or a flattened replacement source. Updated the Executive Summary, decision guide, ecosystem resources, canonical links, GoodStart policy, ARYS routing, tags, and synchronized version metadata. |
 | 1.8.0 | 2026-07-31 | Added Section 18 with source-grounded NVIDIA DSX conclusions, the observable Generic CDU asset-internal sublayer and payload pattern, a DSX composition Mermaid diagram, a DSX-equipment-versus-Isaac-Asset-Structure-3.0 comparison breakout and table, a digital-twin/robotics/Omniverse versus classic-VFX breakout, and the resulting B+C+D hybrid conclusion; corrected the overbroad “universal” asset-base claim, separated intrinsic asset properties from scene/instance `DATA_LYRs`, separated reusable connection points from scene topology, aligned the proposed wrapper layout with an atomic DSX-style package, and clarified that DSX does not prescribe the exact GoodStart scene order or runtime/data positions. |
 | 1.7.0 | 2026-07-17 | Added Section 16.1.1, “Engineering-to-twin hierarchy reconciliation,” which turns the CAD/PLM-to-digital-twin problem into a reproducible identity, mapping, package-publication, and validation contract. It distinguishes references and authored transforms for canonical placement, relationships/collections for alternate semantic views, and relocates for controlled composed-namespace edits; adds a verified correction that USD relationships are uniform rather than time-sampled; extends the Workcell pipeline, acceptance gates, references, ARYS routing, and tags accordingly. |
