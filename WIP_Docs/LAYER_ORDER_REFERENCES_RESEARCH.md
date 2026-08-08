@@ -3,12 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
+document_version: "1.9.0"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-07-17T16:56:41+02:00"
+last_modified: "2026-08-08T15:47:38+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -18,7 +19,7 @@ provenance:
   git_commit_full: null
   git_path: "WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md"
 agent_index:
-  context: "Comparative OpenUSD research on layer order, composition paradigms, reusable asset structures, Isaac Sim Asset Structure 3.0, and digital-twin implications."
+  context: "Comparative OpenUSD research on layer order, composition paradigms, reusable asset structures, Isaac Sim Asset Structure 3.0, NVIDIA VFI factory structuring, deployment packaging, and digital-twin implications."
   maturation: 2
   routing:
     executive_summary: "#executive-summary"
@@ -36,15 +37,20 @@ agent_index:
     engineering_to_twin_reconciliation: "#1611-engineering-to-twin-hierarchy-reconciliation"
     workcell_case_study: "#162-case-study-workcell-digitaltwin-to-asset-structure-30"
     simready_foundation: "#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization"
+    dsx_conclusions: "#18-nvidia-dsx-blueprint--evidence-based-conclusions-and-goodstart-corrections"
+    dsx_isaac_comparison: "#breakout--dsx-equipment-assets-versus-isaac-sim-asset-structure-30"
+    digital_twin_robotics_breakout: "#breakout--why-this-architecture-matters-for-digital-twins-robotics-and-omniverse"
+    vfi_factory_structuring: "#19-nvidia-vfi--factory-scale-authoring-composition-and-deployment-structure"
+    vfi_authoring_deployment_breakout: "#breakout--authoring-structure-is-not-deployment-structure"
     revision_history: "#revision-history"
-tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dataprep, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles, relationships, relocates, namespace_editing, source_identifiers, presentation_hierarchy, multi_bom, plm, reimport]
+tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dsx, vfi, ai_factory, dataprep, deployment_packaging, instancing, value_clips, point_instancer, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles, relationships, relocates, namespace_editing, source_identifiers, presentation_hierarchy, multi_bom, plm, reimport]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.7.0 | **Date**: 17.07.2026 | **Time**: 16:56 | **GlobalID**: 20260717_1656_Layer_Order_References_v1.7.0
+**Version**: 1.9.0 | **Date**: 08.08.2026 | **Time**: 15:47 | **GlobalID**: 20260808_1547_Layer_Order_References_v1.9.0
 
-**Last Updated:** 17.07.2026 16:56<br>
+**Last Updated:** 08.08.2026 15:47<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -55,7 +61,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
 **Tag block:**
-#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dataprep #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion #simready_foundation #validation #standardization #capability_profiles #relationships #relocates #namespace_editing #source_identifiers #presentation_hierarchy #multi_bom #plm #reimport
+#openusd #layers #composition #sublayers #livrps #composition_arcs #layer_order #asset_structure #vfx #digital_twin #robotics #isaac_sim #omniverse #dsx #vfi #ai_factory #dataprep #deployment_packaging #instancing #value_clips #point_instancer #best_practices #pipeline #pipeline_architecture #usd_goodstart #research #case_study #workcell #cad_conversion #simready_foundation #validation #standardization #capability_profiles #relationships #relocates #namespace_editing #source_identifiers #presentation_hierarchy #multi_bom #plm #reimport
 
 ---
 
@@ -72,6 +78,10 @@ For digital twins, the strongest conclusion is to combine paradigms rather than 
 The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
 
 [NVIDIA SimReady Foundation](https://github.com/NVIDIA/simready-foundation) adds a separate but complementary axis: versioned capability contracts and executable validation. Its requirement/capability/feature/profile hierarchy states what an asset must support for a declared simulation use case, while its standardization workflow governs how a new capability progresses from domain definition and data mapping through specifications, validators, reference pipelines, and sample content. See [Section 17](#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization). Asset Structure 3.0, SimReady, and the proposed USD GoodStart layer order are deliberately kept distinct here so their eventual integration can assign each one a clear responsibility.
+
+The [NVIDIA DSX Blueprint](https://docs.omniverse.nvidia.com/dsx/latest/index.html) and its public [Generic CDU reference asset](https://github.com/NVIDIA-Omniverse/aif-pipeline-samples/blob/main/assets/Generic_CDU/Generic_CDU.usda) provide concrete digital-twin evidence for that responsibility split. They show one public asset interface, intrinsic product properties and connection points as asset-local sublayers, and internal/external geometry behind selectively loaded payloads. They do **not** prescribe the full proposed USD GoodStart scene order. [Section 18](#18-nvidia-dsx-blueprint--evidence-based-conclusions-and-goodstart-corrections) records the resulting corrections and explains why this composition model matters for long-lived digital twins, robotics, and Omniverse applications compared with classic flattened interchange workflows.
+
+The [NVIDIA Virtual Facility Integration Guide](https://docs.omniverse.nvidia.com/vfi/latest/index.html) adds a lifecycle and deployment dimension that the earlier comparisons did not make explicit enough. It separates modular, instancing-friendly **authoring structure** from measured **deployment packaging**: fine-grained asset interfaces, payload boundaries, material libraries, animation clips, domain layers, and reusable subcomponents can remain the maintained source of truth while a governed build consolidates selected components into fewer runtime layers for lower open/stat overhead. This is not a fifth composition paradigm and not permission to flatten the authoring source. It is a cross-cutting rule: choose composition boundaries for ownership and reuse, then generate and benchmark deployment artifacts for the target resolver, storage, network, memory, and interaction envelope. See [Section 19](#19-nvidia-vfi--factory-scale-authoring-composition-and-deployment-structure).
 
 ### Composition architecture and assurance are orthogonal
 
@@ -143,6 +153,10 @@ flowchart TB
 
 **Figure ES.1 — Architecture choice versus capability assurance.** The vertical flow is intentional: common OpenUSD mechanics enable several valid composition architectures; SimReady can then define and verify capability contracts across any of them. The two scene-scale paradigms primarily govern opinion ownership and strength, while the two asset-scale paradigms primarily govern publication, reuse, configuration, and loading.
 
+### Authoring topology and deployment topology are also distinct
+
+VFI introduces a third question after composition architecture and capability assurance: **how should the accepted authored graph be packaged for a particular runtime?** A highly modular asset library may be correct for lifecycle management and still create excessive layer-resolution overhead in a remote or cloud deployment. Conversely, a compact runtime package may load quickly while being a poor authoring source because it hides ownership and regeneration boundaries. The maintained authoring graph, its composed semantics, and its generated deployment representation must therefore be evaluated separately and connected by reproducible build evidence.
+
 Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The proposed USD GoodStart layer order remains a **work-in-progress proposal**, not an OpenUSD or NVIDIA standard; this paper is a comparative research base for evaluating how it should evolve.
 
 ---
@@ -199,7 +213,7 @@ A separate hierarchy-design question appears when engineering content becomes a 
 
 - **Local (L)** includes opinions authored in the **root layer and its ordered sublayer stack** — not a separate “sublayer arc” in the Pixar sense. NVIDIA Learn OpenUSD groups “Local + sublayers” when teaching LIV(E)RPS; [Learn OpenUSD glossary](https://docs.nvidia.com/learn-openusd/latest/glossary.html) wording can read differently from [Pixar’s glossary](https://openusd.org/release/glossary.html) — both agree on *behavior*, not always on *mnemonics*.
 - **References (R) and Payloads (P)** are how **assets and heavy geometry** usually enter a stage — typically **on prims in a weak base layer**, not as unlimited sublayer merges ([ASWF](https://github.com/usd-wg/assets/blob/main/docs/asset-structure-guidelines.md), [USD Survival Guide](https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/composition/livrps.html)).
-- **Any Local opinion in the root layer beats all sublayers** — universal reason every source says *keep root thin* ([Pixar SIGGRAPH 2019](https://openusd.org/files/Siggraph2019_USD%20Composition.pdf), [proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read)).
+- **Any direct Local opinion in the root layer beats opinions in its sublayers.** This universal strength behavior motivates the project-policy recommendation to keep scene roots thin; an asset interface root can still author the lightweight public fields and composition arcs that define its contract ([Pixar SIGGRAPH 2019](https://openusd.org/files/Siggraph2019_USD%20Composition.pdf), [NVIDIA scalable asset-structure principles](https://docs.omniverse.nvidia.com/usd/latest/learn-openusd/independent/asset-structure-principles.html)).
 
 ### How to Read the Diagrams
 
@@ -1155,7 +1169,7 @@ flowchart LR
         Env[ENV_LYR.usda<br/>Environment & Lighting]
         Runtime[RUNTIME_LYR.usda<br/>Live Runtime Opinions<br/>MQTT / OPC UA Snapshots]
         Sim[SIM_LYR.usda<br/>External Simulation Results]
-        Data[DATA_LYRs.usda<br/>Static Data & Metadata]
+        Data[DATA_LYRs.usda<br/>Project / Instance Data<br/>Mappings & Identifiers]
         Actgr[ACTGR_LYR.usda<br/>Action Graph / Logic]
         Anim[ANIM_LYR.usda<br/>Animation]
         Variant[VAR_LYR.usda<br/>Variants & Configurations]
@@ -1209,7 +1223,7 @@ flowchart LR
 
 - **ASS at bottom** — agrees with the Section 1 practitioner synthesis, ASWF guidance, and the Omniverse Assets layer
 - **RUNTIME layer** for live/session-backed operational state and explicit MQTT/OPC UA snapshots
-- **DATA layer** for static or slow-changing PLM, ERP, AAS, OPC UA mappings, CAD/Revit metadata, and identifiers
+- **DATA layer** for project- or instance-owned PLM, ERP, AAS, OPC UA mappings, source identifiers, placement context, and cross-asset relationships; intrinsic reusable product properties remain in the asset package
 - **SIM above ANIM** — agrees with the Section 1 practitioner synthesis and the public SideFX FX-over-animation pattern
 - **OPIN on top** — explicit override layer for reviews and emergencies
 - Documented folder ↔ layer feed paths (Startpoint → ASS, MatLib/tex → MTL)
@@ -1220,6 +1234,7 @@ flowchart LR
 - **CAM high in stack** — opposite the Section 1 practitioner synthesis in which CAM sits below ANIM
 - **ENV mid-stack** — merges environment + lighting unlike dedicated top LGT
 - **PHY vs SIM vs RUNTIME** split may confuse Isaac/Ansys/IoT users if the project does not document which layer owns setup, result overlays, and live latest-value state
+- The exact position of `DATA_LYRs` and `RUNTIME_LYR` is a proposed GoodStart ownership policy; the DSX Blueprint supports separating validated asset definitions from runtime and operational data, but does not prescribe this scene-level order
 - **Beta / not fully hardened** — order not battle-tested across all Omniverse Kit versions
 - More layers than minimal stacks — higher authoring discipline required
 
@@ -1471,6 +1486,7 @@ flowchart LR
 | **Lookdev over model (same namespace)** | Yes — shading above geometry | Optional | Materials strong, geo weak | Learn OpenUSD skyscraper, ASWF timeline |
 | **Published assets** | Sometimes | **Preferred** — geo in payload | Geo weak; surf/rig/light later | ASWF, da Vinci assets, Remedy |
 | **Heavy CAD / twin plant** | Thin root + dept layers | **Payloads** in ASS/base layer | Twin data & sim override anim; assets at bottom | [Proposed USD GoodStart layer order](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read), Omniverse, Survival Guide |
+| **Factory-scale authoring and deployment** | Scene lanes where ownership conflicts require them | **References, payloads, instancing, value clips, and packaged component libraries** | Modular authoring first; measured deployment consolidation second | [NVIDIA VFI factory structuring](https://docs.omniverse.nvidia.com/vfi/latest/guide/factory-level-structuring.html), [VFI structure examples](https://docs.omniverse.nvidia.com/vfi/latest/guide/usd-structure-example.html), [VFI packaging tradeoffs](https://docs.omniverse.nvidia.com/vfi/latest/guide/asset-structure-optimizations-and-tradeoffs.html) |
 | **Teaching mechanics only** | Minimal 2-layer examples | Demonstrate separately | Override demo | Pixar SIGGRAPH 2019 |
 | **Live multi-user** | Persistent layers + **session** on top | Same as above | Session strongest | Omniverse Layers Extension |
 | **Houdini / Solaris** | LOP-generated sublayer stack | Payloads per shot asset | Lighting → FX → Anim → … | SideFX LOP docs, Survival Guide |
@@ -1512,13 +1528,17 @@ flowchart LR
 | Feature-film shot finishing | Section 1 practitioner synthesis / SideFX / da Vinci / openusd.work (finish/LGT high, assembly low) |
 | Lookdev merging with layout geo | Learn OpenUSD pattern — **shading sublayer above geometry sublayer** |
 | Published asset interchange | ASWF + da Vinci asset interface — **references/payloads**, geo in payload |
-| Omniverse conductor / factory twin | Omniverse Explorer layers + the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) (`RUNTIME_LYR` or session layer for live/latest-value state; `DATA_LYRs` for static metadata) |
+| Omniverse conductor / factory twin | Omniverse Explorer layers + the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) (`RUNTIME_LYR` or session layer for live/latest-value state; `DATA_LYRs` for project/instance mappings and identifiers; intrinsic product properties remain asset-local) |
 | Houdini / Solaris production | SideFX LOP stack + **USD Survival Guide** (R/P for assets) |
+| Factory-scale reusable authoring | NVIDIA VFI modular asset boundaries, stable interfaces, payloads, instancing, material libraries, externalized animation, and domain layers |
+| Cloud, remote, or latency-sensitive deployment | Preserve modular authoring truth, then generate and benchmark a VFI-style packaged representation; do not choose layer count from a diagram alone |
 | Teaching composition mechanics only | Pixar SIGGRAPH 2019 PDF + Learn OpenUSD sublayer exercises |
 | Minimal layer count | openusd.work 3-layer shot |
 | Live multi-user + session merges | Omniverse Layers Extension session workflow |
 
-**Hybrid pattern (common in practice):** Keep **ASS (or Assets) at the bottom** and **departmental overrides above** — universal. Debate is *which* departments sit above animation and whether cameras/lighting are split or combined.
+VFI is intentionally not another column in the scene-sublayer comparison above. It does not publish one fixed departmental stack. Its factory guidance primarily governs assetization, recursive aggregation, instancing granularity, optional payload boundaries, externalized animation, domain-specific enrichment, and later packaging of the accepted authoring graph for a measured deployment target.
+
+**Hybrid pattern (common in the compared production examples):** Keep **ASS (or Assets) as a weak scene-level base** and place intentional departmental or ownership refinements above it. This is a defensible pipeline policy, not a universal OpenUSD rule. Different asset categories and consuming applications can require different structures; the required invariant is that the chosen strength order and write ownership are explicit and validated.
 
 ---
 
@@ -1548,6 +1568,11 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 | OpenUSD code samples (Omniverse Developer Guide) | https://docs.omniverse.nvidia.com/dev-guide/latest/programmer_ref/usd/usd.html |
 | Omniverse Kit — modules overview | https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/modules.html |
 | Data aggregation best practices | https://docs.omniverse.nvidia.com/usd/latest/learn-openusd/independent/best-practices.html |
+| NVIDIA Omniverse documentation and Blueprints/Workflows hub | https://docs.nvidia.com/omniverse/index.html#nvidiatab-blueprints-workflows |
+| NVIDIA Virtual Facility Integration Guide | https://docs.omniverse.nvidia.com/vfi/latest/index.html |
+| NVIDIA VFI script samples | https://github.com/NVIDIA-Omniverse/vfi-samples |
+| NVIDIA AI Factory digital-twin pipeline samples | https://github.com/NVIDIA-Omniverse/aif-pipeline-samples |
+| NVIDIA Data Aggregation and Navigation Guide | https://docs.omniverse.nvidia.com/dang/latest/index.html |
 | OpenUSD Development Certification — study guide (community) | https://medium.com/@chaubenz/your-complete-guide-to-passing-the-nvidia-certified-professional-openusd-development-b129777b0ed6 |
 | Learn OpenUSD community highlight (LinkedIn) | https://www.linkedin.com/posts/austin-hwang18_learn-openusd-activity-7351753987999559680-1YW_/ |
 
@@ -1605,6 +1630,12 @@ Curated links for **deeper context** on composition, layers, and pipeline design
 | NVIDIA DSX — SimReady asset journey | https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html |
 | USD Survival Guide — LIVRPS | https://lucascheller.github.io/VFX-UsdSurvivalGuide/pages/core/composition/livrps.html |
 | Remedy USDBook — layer stacks | https://remedy-entertainment.github.io/USDBook/terminology/layer_stacks.html |
+| NVIDIA VFI complete asset-structure examples | https://docs.omniverse.nvidia.com/vfi/latest/guide/usd-structure-example.html |
+| NVIDIA VFI authoring and deployment packaging tradeoffs | https://docs.omniverse.nvidia.com/vfi/latest/guide/asset-structure-optimizations-and-tradeoffs.html |
+| NVIDIA VFI script samples (pinned review revision) | https://github.com/NVIDIA-Omniverse/vfi-samples/tree/2b11331c63694be791320cfee8b4b76aaace9473 |
+| NVIDIA AI Factory pipeline samples (pinned review revision) | https://github.com/NVIDIA-Omniverse/aif-pipeline-samples/tree/41038967ef0a2459b128a225161f8d59beb3b424 |
+| NVIDIA Data Aggregation and Navigation project assembly | https://docs.omniverse.nvidia.com/dang/latest/guide/assembly.html |
+| NVIDIA Omniverse Blueprints and Workflows discovery hub | https://docs.nvidia.com/omniverse/index.html#nvidiatab-blueprints-workflows |
 | OpenUSD in One Weekend | https://learn-usd.github.io/ |
 | openusd.work shot example | https://openusd.work/ |
 | USD GoodStart README | ../README.md |
@@ -1678,7 +1709,9 @@ The DSX SimReady asset journey describes visual geometry and SimReady metadata a
 
 **Proposed USD GoodStart derivation:**
 
-- `DATA_LYRs.usda` owns stable semantic facts: source identifiers, Revit/CAD metadata, AAS/ERP/PLM mappings, manufacturer/model data, dimensions, ratings, and tool provenance.
+- Asset-local property layers own **intrinsic reusable product facts** such as manufacturer, model, dimensions, weight, ratings, asset version, and asset-generation tool provenance. This follows the DSX `aif:core:*` and `aif:spec:*` pattern.
+- `DATA_LYRs.usda` owns **project- or instance-scoped facts** such as source-system identifiers, placement-specific mappings, AAS/ERP/PLM bindings, project classifications, cross-asset relationships, and scene-level provenance.
+- The same semantic property should not be authored independently in both locations. Any project-level override of an intrinsic asset fact requires a declared reason, owner, and strength policy.
 - Runtime/latest values still belong in `RUNTIME_LYR.usda`, not in `DATA_LYRs.usda`.
 - SimReady-style domain metadata should be generated from mapping tables or normalized property packages and then composed as authored USD opinions, not edited into imported source geometry.
 - The contract should record which layer owns which metadata namespace, for example `aif:core:*`, `aif:spec:*`, `revit:*`, `aas:*`, or project-specific namespaces.
@@ -1689,9 +1722,9 @@ The DSX SimReady example models equipment interfaces such as cooling, electrical
 
 **Proposed USD GoodStart derivation:**
 
-- Digital twin assets should be able to carry connection-point layers or payloads alongside geometry and metadata.
+- Digital twin assets should carry their reusable physical ports in a dedicated asset-local connection-point layer alongside geometry and metadata. The published DSX workflow composes this contribution as a sublayer; treating it as a payload would be a separate project design that requires its own loading rationale.
 - Connection points should not be hand-authored into the project root.
-- If connection points describe physical interfaces, they may belong in a dedicated asset-internal `layers/<asset>_ConnectionPoints.usd` file or a declared layer in the proposed USD GoodStart order such as `PHY_LYR` / future `CONN_LYR`.
+- Reusable port definitions belong in `layers/<asset>_ConnectionPoints.usd`. A scene- or assembly-level `PHY_LYR` or future `CONN_LYR` may own the **topology between placed asset instances**—for example, which rack port connects to which facility pipe—but should not duplicate the asset's port geometry or intrinsic port metadata.
 - Validators should check naming, purpose, placement, and required metadata for connection points when a project declares SimReady-style expectations.
 
 ### Rule 6 - Make validation part of the asset structure, not an afterthought
@@ -1722,8 +1755,10 @@ The DSX SimReady delivered asset layout uses a main asset interface file, `layer
 |---------------------------|-----------------------------|---------------------|
 | Main asset interface file | Referenced/payloaded by `ASS_LYR.usda` | `<asset>.usd` |
 | Heavy visual geometry | Below `ASS_LYR` via payloads | `payloads/internal.usd`, `payloads/external.usd`, or equivalent |
-| Stable metadata / identifiers | `040_DATA_LYRs/DATA_LYRs.usda` | `layers/<asset>_Properties.usda` |
-| Connection points | `PHY_LYR` or declared future connection layer, if scene-owned | `layers/<asset>_ConnectionPoints.usd` |
+| Intrinsic reusable product properties | No duplicate scene owner by default; explicit overrides only | `layers/<asset>_Properties.usda` |
+| Project / instance identifiers and mappings | `040_DATA_LYRs/DATA_LYRs.usda` | Optional source identity or package manifest fields only |
+| Reusable physical ports | No duplicate scene owner by default | `layers/<asset>_ConnectionPoints.usd` |
+| Connections between placed asset instances | `PHY_LYR` or a declared future scene topology layer | Public port interface consumed by the assembly |
 | Runtime latest values | `035_RUNTIME_LYR/RUNTIME_LYR.usda` | Usually not asset package-owned |
 | Validation outputs | `_pipeline_reports` | asset validation report / package manifest |
 | Mapping and gap analysis | `_contracts`, `_pipeline_reports`, Requirements/Spec artifacts | `data/`, manifest, mapping profile |
@@ -1737,8 +1772,8 @@ The proposed USD GoodStart layer order should keep its current scene-level thin-
   USD_Startpoint/
     <raw_or_imported_startpoint>.usd
   USD_Wrappers/
-    <asset_id>.usd                 # public asset interface / wrapper
     <asset_id>/
+      <asset_id>.usd               # public asset interface / wrapper
       layers/
         <asset_id>_Properties.usda
         <asset_id>_ConnectionPoints.usda
@@ -1748,9 +1783,10 @@ The proposed USD GoodStart layer order should keep its current scene-level thin-
       data/
         source_manifest.json
         mapping_profile.json
+        <asset_id>.json            # optimizer preset when applicable
 ```
 
-This keeps the proposed USD GoodStart scene assembly simple while allowing each industrial asset to evolve toward SimReady-style packaging without forcing every small project to use the full structure.
+This atomic folder keeps the interface and its anchored dependencies together, matches the DSX delivery shape more closely, and keeps the proposed USD GoodStart scene assembly simple without forcing every small project to use the full structure. `source_manifest.json` and `mapping_profile.json` are GoodStart provenance extensions; the DSX example specifically documents the model-named JSON file as the Scene Optimizer preset.
 
 ### Impact on the proposed USD GoodStart Minimal Layer Setup
 
@@ -1765,7 +1801,7 @@ The NVIDIA / SimReady material changes the **generated folder and contract struc
 **Do change in projects generated from the proposed USD GoodStart layer order:**
 
 - Generate `010_ASS_USD/USD_Wrappers` as a first-class sibling of `USD_Startpoint`.
-- Generate an asset-package template under `010_ASS_USD/USD_Wrappers/_asset_package_template/{layers,payloads,data}` so users see the intended package shape.
+- Generate an atomic asset-package template under `010_ASS_USD/USD_Wrappers/_asset_package_template/` containing a public interface file plus `{layers,payloads,data}` so users see the intended package shape.
 - Generate `_contracts`, `_pipeline_reports`, and `_comfyui_workflows` in the baseline because contracts, reports, and build workflows are part of the updateable structure.
 - Record the asset-package convention in `layer_contract.json` so downstream nodes and validators read the same paths.
 - Put short setup notes into generated ComfyUI workflow metadata so a visual operator sees the thin-root, startpoint, wrapper, assembly, data, and runtime boundaries.
@@ -1776,9 +1812,9 @@ The NVIDIA / SimReady material changes the **generated folder and contract struc
 
 ```text
 ASS_LYR.usda
-  -> references/payloads 010_ASS_USD/USD_Wrappers/<asset_id>.usd
+  -> references 010_ASS_USD/USD_Wrappers/<asset_id>/<asset_id>.usd
 
-010_ASS_USD/USD_Wrappers/<asset_id>.usd
+010_ASS_USD/USD_Wrappers/<asset_id>/<asset_id>.usd
   -> payloads private heavy geometry
   -> composes asset-local properties / connection points
   -> points to mapping evidence under data/
@@ -2196,7 +2232,7 @@ The Isaac Sim structure strengthens the distinction introduced in Section 15:
 | Robot sensors | Factory sensors and logical measurement points with stable identities; live values remain external/session-backed |
 | Robot package validation | Hierarchy, units, coordinates, connection topology, metadata, source provenance, payload closure, and domain-specific simulation validation |
 
-The most important adaptation is **time semantics**. Variant sets describe discrete authored configurations; they should not be used as a high-frequency state machine for a running plant. Current temperatures, PLC bits, joint positions, work orders, alarms, and material locations belong in `RUNTIME_LYR.usda`, a session layer, Fabric, or an external time-series/data system. Stable identifiers and engineering metadata belong in `DATA_LYRs.usda` or asset-local property layers. Simulation scenarios and predicted states belong in `SIM_LYR.usda` or explicitly published scenario packages.
+The most important adaptation is **time semantics**. Variant sets describe discrete authored configurations; they should not be used as a high-frequency state machine for a running plant. Current temperatures, PLC bits, joint positions, work orders, alarms, and material locations belong in `RUNTIME_LYR.usda`, a session layer, Fabric, or an external time-series/data system. Intrinsic reusable product properties belong in asset-local property layers; project- and instance-scoped identifiers, mappings, and engineering context belong in `DATA_LYRs.usda`. Simulation scenarios and predicted states belong in `SIM_LYR.usda` or explicitly published scenario packages.
 
 #### Recursive factory composition model
 
@@ -2204,7 +2240,7 @@ The most important adaptation is **time semantics**. Variant sets describe discr
 flowchart TB
     Root["Proposed USD GoodStart<br/>project root<br/>scene-level ownership stack"]
     ASS["ASS_LYR.usda<br/>references published<br/>asset interfaces"]
-    DATA["DATA_LYRs.usda<br/>stable IDs + engineering metadata"]
+    DATA["DATA_LYRs.usda<br/>project / instance IDs<br/>mappings + context"]
     SIM["SIM_LYR.usda<br/>scenario + project<br/>simulation opinions"]
     RUN["RUNTIME_LYR.usda / session<br/>live values + latest state"]
 
@@ -2852,10 +2888,428 @@ This section intentionally stops at that boundary. A later combined design shoul
 
 ---
 
+## 18. NVIDIA DSX Blueprint — Evidence-Based Conclusions and GoodStart Corrections
+
+The [NVIDIA Omniverse DSX Blueprint](https://docs.omniverse.nvidia.com/dsx/latest/index.html), its [SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), the public [AI Factory pipeline samples](https://nvidia-omniverse.github.io/aif-pipeline-samples/index.html), and the [Generic CDU reference asset](https://github.com/NVIDIA-Omniverse/aif-pipeline-samples/blob/main/assets/Generic_CDU/Generic_CDU.usda) add concrete digital-twin evidence to the comparisons in this paper. They strengthen the proposed separation between scene ownership, reusable asset publication, configurable simulation content, and runtime systems. They also require several corrections to earlier GoodStart wording.
+
+### Evidence boundary
+
+DSX is an NVIDIA blueprint and reference workflow for AI Factory digital twins. NVIDIA describes it as a starting point that developers are expected to customize, not a turn-key production application or a universal OpenUSD standard. The evidence below is therefore classified deliberately:
+
+- **OpenUSD mechanics:** normative composition behavior such as sublayer and LIVERPS strength ordering.
+- **Published DSX pattern:** the documented asset delivery tree and the observable Generic CDU reference implementation.
+- **Proposed GoodStart policy:** the scene-level ownership order and the extensions derived for broader industrial digital twins.
+
+DSX validates the asset-package side of the proposed architecture. It does **not** prescribe the full GoodStart order `OPIN → CAM → ENV → RUNTIME → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → ASS`, nor does it establish that every project needs all of those lanes.
+
+### Observed DSX asset composition
+
+The DSX delivery guidance publishes one model as an atomic package:
+
+```text
+<model_name>/
+  <model_name>.usd                       # public asset interface
+  layers/
+    <model_name>_Properties.usda         # intrinsic AIF metadata
+    <model_name>_ConnectionPoints.usd    # reusable physical ports
+  payloads/
+    internal.usd                         # internal geometry
+    external.usd                         # external geometry
+  data/
+    <model_name>.json                    # Scene Optimizer preset
+```
+
+The public Generic CDU sample makes the asset-internal strength order inspectable:
+
+```usda
+subLayers = [
+    @./layers/Generic_CDU_Properties.usda@,
+    @./layers/Generic_CDU_ConnectionPoints.usd@
+]
+```
+
+For that sample, the interface layer's direct local opinions are strongest, the properties layer is the first and strongest sublayer, and the connection-points layer is the next sublayer. The interface authors external and internal payload arcs; external geometry is available by default, while the internal prim is authored inactive in the published sample. Because local layer-stack opinions are stronger than payload opinions under LIVERPS, the asset-local semantic layers can non-destructively enrich the payloaded geometry at matching composed paths.
+
+This is useful evidence, not a universal mandate that every asset must order properties above connection points. Those contributions should normally own disjoint fields. If they can collide, the package contract must state the intended order and validators must test it.
+
+#### DSX composition diagram
+
+```mermaid
+flowchart TB
+    SceneRoot["Project / digital-twin scene root"]
+    ASS["ASS_LYR.usda<br/>scene-level asset assembly"]
+
+    subgraph DSXPackage["DSX-style SimReady equipment package"]
+        direction TB
+        Interface["model_name.usd<br/>public asset interface"]
+
+        subgraph SemanticLayers["Asset-local semantic layers"]
+            direction LR
+            Properties["model_name_Properties.usda<br/>sublayer 1 · strongest sublayer<br/>intrinsic product properties"]
+            Connections["model_name_ConnectionPoints.usd<br/>sublayer 2<br/>reusable facility ports"]
+        end
+
+        subgraph GeometryPayloads["Selective geometry payloads"]
+            direction LR
+            External["external.usd<br/>external shell<br/>available by default"]
+            Internal["internal.usd<br/>internal detail<br/>inactive in reference sample"]
+        end
+
+        Preset["data/model_name.json<br/>Scene Optimizer preset<br/>pipeline input · not a USD arc"]
+        GeometryBuild["CAD conversion +<br/>geometry optimization"]
+        Validation["Geometry + asset validation<br/>published package evidence"]
+
+        Interface -->|subLayers #1| Properties
+        Interface -->|subLayers #2| Connections
+        Interface -->|payload| External
+        Interface -->|payload / opt-in| Internal
+        Preset -->|drives geometry optimization| GeometryBuild
+        GeometryBuild -->|produces payload| External
+        GeometryBuild -->|produces payload| Internal
+        Properties --> Validation
+        Connections --> Validation
+        External --> Validation
+        Internal --> Validation
+    end
+
+    SceneRoot -->|subLayers| ASS
+    ASS -->|GoodStart policy: references public interface| Interface
+
+    classDef scene fill:#dceeff,stroke:#2167ae,color:#10243a,stroke-width:2px
+    classDef interface fill:#ffcc80,stroke:#e65100,color:#3b2305,stroke-width:3px
+    classDef semantic fill:#e9ddf7,stroke:#7048b6,color:#25133f,stroke-width:2px
+    classDef payload fill:#e8f5e9,stroke:#2e7d32,color:#17351d,stroke-width:2px
+    classDef pipeline fill:#fff3e0,stroke:#ef6c00,color:#3b2305,stroke-width:2px
+    class SceneRoot,ASS scene
+    class Interface interface
+    class Properties,Connections semantic
+    class External,Internal payload
+    class Preset,GeometryBuild,Validation pipeline
+    style DSXPackage fill:#f8fafc,stroke:#52697d,stroke-width:2px
+    style SemanticLayers fill:#f5f0fb,stroke:#7048b6,stroke-width:1px
+    style GeometryPayloads fill:#f1f8f3,stroke:#2e7d32,stroke-width:1px
+```
+
+**Figure 18.1 — DSX-style equipment asset composition.** Under the corrected GoodStart policy, the model interface is the intended scene reference target; DSX documents it as the main asset interface file. Product properties and physical connection points remain asset-local sublayers; external and internal geometry remain selectively loadable payloads. The optimizer preset participates in the production pipeline but is not itself composed into the USD stage. Compare this with the configurable robot graph in [Figure 16.1](#composition-overview).
+
+### Breakout — DSX equipment assets versus Isaac Sim Asset Structure 3.0
+
+The DSX and [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html) patterns use the same OpenUSD building blocks but optimize different reusable-asset problems. DSX starts from facility equipment that must become placeable, queryable, selectively visible, and connectable to electrical, cooling, and airflow systems. Isaac Sim starts from articulated robots that must preserve shared structure while switching physics backends and adding optional control, ROS, sensor, or end-effector features.
+
+| Comparison dimension | NVIDIA DSX / AI Factory equipment pattern | NVIDIA Isaac Sim Asset Structure 3.0 | Why the difference matters |
+|----------------------|-------------------------------------------|--------------------------------------|----------------------------|
+| Primary asset class | Racks, coolant distribution units, chillers, building shells, and other facility equipment | Robot bodies, manipulators, mobile robots, hands, grippers, and articulated systems | The package boundary should follow the product and its consumers, not one universal folder taxonomy. |
+| Central design question | How does CAD-derived equipment become a validated SimReady asset with product semantics and facility interfaces? | How does one robot identity support shared geometry plus selectable physics and behavior stacks? | DSX emphasizes enrichment and facility integration; Isaac emphasizes controlled simulation configuration. |
+| Stable downstream entry point | `<model_name>.usd` | `asset.usd` final composed interface; published filenames may be product-specific | Both protect consumers from private file reorganization. |
+| Shared structural content | Main assembly with external/internal geometry payloads | `base.usda`, `instances.usda`, `geometries.usd`, `materials.usda`, and `robot.usda` | Isaac exposes more robot-internal workstream boundaries because articulation and reusable mesh/physics structure demand them. |
+| Semantic contribution | `<model>_Properties.usda` with `aif:core:*` and `aif:spec:*` properties | Dedicated `robot.usda` Robot Schema layer plus robot-level metadata and relationships | Both isolate semantics from geometry, but their schemas answer different domain questions. |
+| Physical interfaces | Explicit connection-point geometry for power, cooling, and airflow, authored with `guide` purpose | Robot links, joints, named poses, attachment frames, and end-effector composition | Facility ports and articulation interfaces need different schemas and validation even when they meet in one workcell. |
+| Heavy-content strategy | Split external and internal equipment geometry into payloads | Reuse geometry through references; add feature and backend content through payloads | DSX primarily controls equipment detail; Isaac controls both data weight and optional simulation capability. |
+| Configuration strategy | The published example focuses on load choice and separately authored enrichment; it does not require a broad variant matrix | Variants select physics backends or feature configurations without duplicating the robot identity | Do not introduce variants merely for symmetry. Use them when consumers need a finite supported choice. |
+| Physics strategy | Simulation metadata and connection contracts support external thermal, electrical, airflow, and related services | Neutral physics foundation plus backend-specific PhysX, MuJoCo, or other layers | Backend isolation prevents incompatible solver opinions from contaminating shared robot data. |
+| Optional features | Internal detail and domain-specific metadata or connections as required by the equipment class | Controllers, ROS graphs, sensors, end effectors, and other add-on feature stacks | Isaac's feature graph is intentionally more configurable because robot capabilities change by task and runtime. |
+| Source-update rule | Normalize and optimize CAD, preserving enough hierarchy and breadcrumb data for deterministic regeneration | Keep source assets unchanged; transform structure and add simulation features downstream | Both protect re-import, but Isaac states the source/transform/feature separation especially explicitly. |
+| Validation center | Geometry quality, units, hierarchy, materials, intrinsic properties, connection points, atomic delivery | Structure, robot schema, articulation, joints, backend physics, feature selections, and runtime behavior | Passing one pattern's checks does not prove conformance to the other pattern's use case. |
+| Best-fit benefit | Consistent equipment publication, selective internal detail, facility connectivity, metadata-driven engineering workflows | Reusable multiphysics robots, isolated tuning, controlled feature selection, maintainable controller and end-effector integration | Each pattern minimizes the complexity that is dominant for its asset class. |
+
+Neither pattern replaces the other. A robot installed in an AI Factory can remain an Isaac-style configurable robot product while the enclosing cell, facility equipment, and utility interfaces follow DSX-style publication. The workcell or facility assembly references each public interface and owns the connections between them. It should not flatten the robot's backend variants into facility layers or copy DSX equipment properties into the robot's private physics files.
+
+The combined recursive model is:
+
+```text
+GoodStart scene ownership (B)
+  -> facility / workcell assembly
+       -> DSX-style equipment packages (C)
+       -> Isaac-style configurable robot packages (C + D)
+       -> scene-owned topology between public ports and attachment interfaces
+       -> SimReady profile validation per package and per assembled use case
+```
+
+The benefit of maintaining both approaches is controlled specialization. Their public-interface rule remains shared, so the scene can compose them uniformly. Their private layers remain domain-specific, so equipment metadata does not dictate robot physics architecture and robot feature variants do not inflate every passive facility asset.
+
+### Corrections to the proposed USD GoodStart interpretation
+
+| Earlier or ambiguous wording | Corrected conclusion |
+|------------------------------|----------------------|
+| Assets at the bottom are “universal.” | A weak scene-level asset assembly with intentional refinements above it is common in the compared pipelines, but it remains a domain policy. OpenUSD defines strength mechanics, not one universal semantic order. |
+| `DATA_LYRs` and an asset `Properties.usda` can both own stable product metadata. | Intrinsic reusable product facts belong in the asset package. `DATA_LYRs` owns project- or instance-scoped mappings, identifiers, relationships, and context. Duplicate independent authorship is prohibited by default. |
+| Connection points may be asset layers, payloads, or scene-level data without a sharper distinction. | The published DSX pattern uses an asset-local connection-point sublayer. A scene topology layer may connect placed instances through their public ports, but should not duplicate port geometry or intrinsic port metadata. Payloading connection points would be a separate, justified GoodStart design. |
+| The wrapper can sit beside a separate dependency directory. | Keep the public interface, layers, payloads, and data together in one atomic asset folder with anchored relative dependencies. |
+| DSX validates the exact `DATA_LYRs` and `RUNTIME_LYR` positions. | DSX separates validated assets from simulations, operational data, scene state, and runtime services at the system level. The exact GoodStart scene-layer positions remain a proposed ownership policy that must be tested per use case. |
+
+### Breakout — Why this architecture matters for digital twins, robotics, and Omniverse
+
+Classic visual-effects production and operational digital twins both benefit from OpenUSD, but their dominant composition problems differ.
+
+| Dimension | Classic VFX shot pipeline | Digital twin / robotics / Omniverse application |
+|-----------|---------------------------|-------------------------------------------------|
+| Primary lifecycle | Bounded shot or sequence refined toward rendered deliverables | Long-lived system evolving from design through commissioning and operation |
+| Dominant ordering question | Which downstream department refines or overrides the shot? | Which system owns asset truth, simulation setup, configuration, project context, and live state? |
+| Asset boundary | Published characters, props, sets, and materials consumed by shots | Recursive facilities, lines, cells, machines, robots, sensors, and connection interfaces |
+| Configuration | Often shot- or asset-specific artistic variants | Supported physics backends, controllers, end effectors, sensors, operating modes, and fidelity levels |
+| Loading | Shot working set and render needs | Selective loading of facilities, internal equipment, collision, sensor, or solver-specific content |
+| External systems | Production tracking, caches, render farm, editorial | CAD/BIM/PLM, ERP/AAS, control systems, telemetry, solvers, data lakes, agents, and runtime APIs |
+| Acceptance evidence | Image, cache, shot, and render validation | Package validation plus configuration-, assembly-, simulation-, and runtime-acceptance evidence |
+
+A departmental shot stack—Paradigm **A**—is optimized for ordered refinement of a bounded production unit. Digital twins usually need Paradigm **B** at the scene boundary, Paradigm **C** at every reusable asset boundary, and Paradigm **D** wherever a stable asset identity exposes controlled simulation configurations. Robotics makes this especially visible: one robot identity may need neutral structure, selectable PhysX or MuJoCo data, optional controllers and ROS graphs, swappable end effectors, sensors, collision representations, and deferred high-detail geometry without changing the downstream reference target.
+
+OpenUSD can integrate these concerns because it supplies several orthogonal mechanisms in one composed stage:
+
+1. **Ordered sublayers** express explicit peer ownership and non-destructive refinement.
+2. **References** preserve reusable asset identity while remapping assets into assembly namespaces.
+3. **Payloads** defer heavy or optional content without changing the public asset entry point.
+4. **Variant sets** expose supported configurations without turning each configuration into a different asset identity.
+5. **Schemas, relationships, and collections** make simulation semantics, interfaces, and alternate views queryable.
+6. **Session and project layers** allow contextual or live opinions without rewriting the published asset source.
+
+Common interchange files such as OBJ, FBX, STEP, or a flattened scene export can carry valuable geometry, hierarchy, materials, and sometimes metadata. A single classic file does not, by itself, provide OpenUSD's distributed opinion composition, explicit strength ordering, stable cross-file asset interface, selective payload loading, or composed variant model. A pipeline can reproduce parts of those behaviors with databases, sidecars, naming rules, custom merge code, and generated exports, but then the external pipeline is effectively rebuilding a composition system around the files. The precise conclusion is therefore not that other formats can never participate in a digital twin; it is that a flattened interchange file alone cannot preserve the live, modular composition contract required by this architecture.
+
+For Omniverse, this distinction is operational rather than academic. DSX combines validated SimReady OpenUSD assets with Kit applications, USD storage, simulation services, a simulation data delegate, a data lake, streaming, and AI-agent interaction. The asset packages provide stable authored interfaces; the runtime systems provide changing simulation and operational context. If those responsibilities are flattened into one mutable file or one undifferentiated strongest layer, asset updates can overwrite operational edits, runtime values can contaminate reusable product truth, and configuration or loading choices become difficult to reproduce.
+
+### Resulting GoodStart policy
+
+The proposed USD GoodStart layer order remains useful as a **scene-level ownership policy**, subject to these corrected rules:
+
+1. Keep the project root thin and treat its ordered sublayers as contracted ownership lanes, not as a universal taxonomy or version history.
+2. Let `ASS_LYR.usda` reference the public interface of an atomic asset package; do not reach into private layers or payloads.
+3. Keep intrinsic product properties and reusable connection points inside the asset package.
+4. Use `DATA_LYRs.usda` for project- and instance-scoped identifiers, mappings, context, and cross-asset relationships—not as a second owner of intrinsic product truth.
+5. Use `PHY_LYR` or a declared topology layer for scene-owned connections between placed public ports when that concern is not owned by a simulation package.
+6. Keep transient operational values and explicit runtime snapshots in `RUNTIME_LYR.usda` or an equivalent session/runtime mechanism, separate from stable asset and project facts.
+7. Keep solver outputs in `SIM_LYR.usda` only when an authored USD result is required; high-volume or transient results may remain in external stores and be connected through runtime services.
+8. Declare write targets, collision policy, payload defaults, variant semantics, source mapping, and validation evidence in machine-readable package and scene contracts.
+9. Keep the modular authoring package as source of truth. If a target runtime needs fewer files or less resolver fan-out, generate a fingerprinted deployment package and benchmark it separately rather than flattening or hand-editing the maintained authoring graph.
+
+The corrected default asset-package profile is:
+
+```text
+010_ASS_USD/
+  USD_Startpoint/
+    <source_or_normalized_startpoint>.usd
+  USD_Wrappers/
+    <asset_id>/
+      <asset_id>.usd
+      layers/
+        <asset_id>_Properties.usda
+        <asset_id>_ConnectionPoints.usd
+      payloads/
+        external.usd
+        internal.usd
+      data/
+        <asset_id>.json
+        source_manifest.json
+        mapping_profile.json
+        package_contract.json
+```
+
+Small or purely visual assets may use a reduced profile when selective loading, connection points, or separate metadata workstreams provide no benefit. The contract should explain omitted capabilities rather than generating empty layers merely to match a folder diagram.
+
+### Final conclusion
+
+The strongest evidence-based conclusion is a hybrid: **B + C + D** for digital twins and robotics, rather than one ever-growing scene sublayer stack. GoodStart can govern project-level ownership and opinion strength; DSX-style asset packages can provide stable reusable equipment interfaces; Isaac-style configurable products can expose physics and behavior choices; SimReady can define and verify the required capabilities; and Omniverse runtime services can manage simulation and operational data without turning live state into asset source truth.
+
+This differs from the dominant classic VFX pattern **A + C**, where departmental shot refinement is usually the central ordering problem. Both use the same OpenUSD composition mechanics. The architectural difference comes from lifecycle, ownership, configuration, selective loading, external-system integration, and acceptance requirements—not from a different version of USD.
+
+---
+
+## 19. NVIDIA VFI — Factory-Scale Authoring, Composition, and Deployment Structure
+
+### Abstract and evidence boundary
+
+**Reader problem.** A factory program can adopt stable asset interfaces, payloads, instancing, and explicit workstream layers and still perform poorly when thousands of authored layers must be resolved across remote storage. The reverse failure also occurs: a team can collapse the dataset into a compact file set that loads quickly but is difficult to update, validate, or regenerate because authoring ownership and asset boundaries have disappeared.
+
+**Intended outcome.** This section separates four related structures: engineering source structure, modular OpenUSD authoring structure, the composed operational stage, and generated deployment packaging. It shows how NVIDIA's Virtual Facility Integration guidance changes the proposed GoodStart policy without turning VFI into another fixed sublayer order.
+
+**Sources used.** The primary product-scoped sources are the [VFI Guide overview](https://docs.omniverse.nvidia.com/vfi/latest/index.html), [Content Iteration Cycle](https://docs.omniverse.nvidia.com/vfi/latest/guide/content-iteration-cycle.html), [Factory-Level USD Structuring](https://docs.omniverse.nvidia.com/vfi/latest/guide/factory-level-structuring.html), [VFI Asset Structure Examples](https://docs.omniverse.nvidia.com/vfi/latest/guide/usd-structure-example.html), and [Asset Structure Performance Optimizations and Tradeoffs](https://docs.omniverse.nvidia.com/vfi/latest/guide/asset-structure-optimizations-and-tradeoffs.html). Supporting implementation evidence comes from the pinned [VFI script-samples revision](https://github.com/NVIDIA-Omniverse/vfi-samples/tree/2b11331c63694be791320cfee8b4b76aaace9473), the pinned [AI Factory pipeline-samples revision](https://github.com/NVIDIA-Omniverse/aif-pipeline-samples/tree/41038967ef0a2459b128a225161f8d59beb3b424), and the [Data Aggregation and Navigation project-assembly guide](https://docs.omniverse.nvidia.com/dang/latest/guide/assembly.html). These sources were reviewed on 8 August 2026; the inspected VFI pages report an update date of 6 August 2026.
+
+**Treatment.** The NVIDIA documentation and repositories are external, public, official ecosystem sources. They are referenced and paraphrased rather than imported. VFI behavior remains NVIDIA/Omniverse product guidance, not normative OpenUSD Core behavior. The VFI sample repository is covered by the NVIDIA Omniverse license at the inspected revision, so this paper does not reproduce its implementation. The AIF pipeline-samples repository remains pinned and licensed separately. In the derived OpenUSD-GoodStart publication, Chapter 5 owns the architectural decision; Chapters 6, 9, and 20 should receive focused cross-links for interfaces, publication, packaging, and automation.
+
+**What is preserved and generalized.** This section preserves VFI's lifecycle, structuring stages, asset-boundary criteria, instancing constraints, authoring/deployment distinction, and directional performance evidence. Product UI steps, Kit-version defects, converter switches, screenshots, NVIDIA sample content, and commands are excluded because they do not define a general layer-order rule.
+
+### VFI does not add a fifth composition paradigm
+
+VFI reinforces Paradigms **B** and **C** and can participate in **D** when a facility asset exposes controlled alternatives or optional content. Its principal new contribution is not a new strength order. It is the explicit separation between the structure that teams maintain and the structure that a target deployment consumes.
+
+| Structure | Primary question | Typical contents | Authority and lifecycle |
+|-----------|------------------|------------------|-------------------------|
+| Engineering source structure | What did CAD, BIM, PLM, DCC, scanning, or simulation author? | Native assemblies, product structure, supplier hierarchy, source identifiers | Owned upstream; preserve provenance and mapping evidence |
+| Modular OpenUSD authoring structure | What must be independently updated, reused, loaded, validated, or owned? | Public interfaces, payloads, component and subcomponent assets, material libraries, animation clips, domain layers | Maintained publication source of truth |
+| Composed operational stage | What facility, line, cell, machine, robot, and context must the consumer see? | Referenced assets, placement, topology, project selections, scenario layers, runtime or session opinions | Composed result for a task; not necessarily a single stored file |
+| Generated deployment package | What file fan-out and representation meet the target runtime envelope? | Consolidated component libraries, subcomponent libraries, binary heavy data, optional sharding, deployment manifests | Reproducible build artifact; never an independent authoring truth |
+
+This distinction corrects a common interpretation of the proposed GoodStart folder tree. A directory or layer lane can be the correct ownership boundary without being the ideal network or runtime package. Conversely, a fast eight-layer deployment artifact does not prove that eight authored files are sufficient for lifecycle management.
+
+### VFI content cycle and the authoring-to-deployment diamond
+
+The VFI guide presents conversion, validation, optimization, and structure/assembly as an iteration cycle. Its factory-level guidance then expands a monolithic export into reusable assets, interfaces, payloads, subcomponents, libraries, animation, and domain layers. Finally, its performance guidance permits a deployment build to consolidate selected modules into fewer library files. The resulting topology is a diamond: narrow source intake, wider modular authoring, and narrower measured deployment packaging.
+
+```mermaid
+flowchart LR
+    Source["CAD, BIM, DCC, scan, and simulation sources"] --> Convert["Extract and convert"]
+    Convert --> Validate["Validate units, geometry, hierarchy, identity, and quality"]
+    Validate --> Structure["Structure modular authoring graph"]
+
+    subgraph Authoring["Maintained authoring source of truth"]
+        direction TB
+        Interface["Stable public interfaces"]
+        Components["Components and subcomponents"]
+        Payloads["Payload and load boundaries"]
+        Instancing["Instancing at valid opinion boundaries"]
+        Libraries["Shared material and resource libraries"]
+        Domains["Physics, sensors, semantics, and other domain layers"]
+        Motion["Animation clips and material-flow representations"]
+    end
+
+    Structure --> Interface
+    Structure --> Components
+    Structure --> Payloads
+    Structure --> Instancing
+    Structure --> Libraries
+    Structure --> Domains
+    Structure --> Motion
+
+    Interface --> Package["Generate deployment package"]
+    Components --> Package
+    Payloads --> Package
+    Instancing --> Package
+    Libraries --> Package
+    Domains --> Package
+    Motion --> Package
+
+    Package --> Measure["Measure cold load, warm load, memory, interaction, and resolver fan-out"]
+    Measure -->|"targets fail"| Package
+    Measure -->|"targets pass"| Runtime["Publish fingerprinted runtime artifact"]
+```
+
+**Figure 19.1 - VFI authoring-to-deployment diamond.** The arrows do not imply that every project needs every authoring contribution or one mandatory packaging strategy. They show responsibility flow: source evidence enters a validated modular graph; a reproducible packaging step derives a runtime artifact; measurements decide whether that artifact is fit for its target environment. The deployment result does not replace the maintained graph.
+
+### Seven VFI structuring steps and their GoodStart implications
+
+| VFI step | Source-grounded intent | GoodStart interpretation |
+|----------|------------------------|--------------------------|
+| 1. Separate animation | Keep time-varying animation outside geometry and bind it through layers or value clips | Keep asset geometry replaceable; place scenario animation at the narrowest stable boundary that owns it |
+| 2. Identify asset boundaries | Align assets with lifecycle, ownership, reuse, validation, optimization, instancing, and selective-loading needs | Do not mirror a source hierarchy blindly; record why each component or assembly is a publication unit |
+| 3. Add interface/payload separation when useful | Keep public fields available while heavy implementation is unloaded | Reference the public interface from `ASS_LYR`; do not require every small asset to manufacture an empty payload split |
+| 4. Enable instancing | Align instance boundaries with where opinions and animation must be authored | Do not instance an entire articulated robot when independent joint state is required; instance reusable rigid links or subcomponents instead |
+| 5. Organize materials as libraries | Reference and reuse canonical material definitions instead of duplicating them per mesh | Treat material libraries as governed reusable assets with explicit renderer and portability boundaries |
+| 6. Layer domain-specific data | Add physics, sensors, semantics, or material specialization against stable paths without modifying source assets | Keep reusable asset-domain facts asset-local; keep project relationships and instance context in the consuming scene |
+| 7. Model object handling deliberately | Use Point Instancers and time-sampled data for large repeated populations instead of dynamic reparenting or duplicated prims | Separate high-volume material-flow representation from equipment identity; use richer referenced prims only when individual identity or overrides justify their cost |
+
+The steps form a decision sequence, not a mandatory folder checklist. Optionality is explicit: interface/payload separation is most useful when stable unloaded state and selective loading matter, and deployment consolidation is justified only by the measured target environment.
+
+### Instancing follows opinion granularity
+
+VFI makes a constraint especially visible for robotics and factory scenes: instanceability and authoring freedom are coupled. Descendants of an OpenUSD instance proxy cannot receive arbitrary per-instance opinions. A whole articulated robot therefore cannot be treated as one immutable shared instance when its links, joints, annotations, visibility, or task state must differ independently. Reusable rigid geometry can be instanced at link or subcomponent boundaries, while each robot retains the unique articulation structure required for control and simulation.
+
+This reinforces the Isaac Sim comparison rather than contradicting it. Isaac Asset Structure 3.0 governs configurable robot packages; VFI governs how many such products and facility assets can be aggregated and optimized at factory scale. The shared rule is to design stable composition boundaries before enabling instancing. Retrofitting instanceability after downstream paths and overrides have proliferated is a restructuring project, not a metadata toggle.
+
+### Breakout — Authoring structure is not deployment structure
+
+| Dimension | Proposed GoodStart scene lanes | VFI modular authoring | VFI runtime package | Isaac Asset Structure 3.0 |
+|-----------|--------------------------------|-----------------------|---------------------|---------------------------|
+| Central question | Who owns each scene-level opinion? | What is independently reusable, updated, validated, optimized, or loaded? | What representation meets deployment latency and memory targets? | Which robot structure, backend, and optional features are selected? |
+| Primary scale | Project or digital-twin scene | Components, equipment, workcells, lines, and factory assemblies | Facility runtime or distribution target | Configurable robot product |
+| Main mechanisms | Ordered sublayers and public asset references | Interfaces, references, payloads, material libraries, domain layers, clips, and instancing | Consolidated component/subcomponent libraries, binary heavy layers, optional sharding | References, payloads, variants, and feature stacks |
+| Unit of change | Contracted ownership lane | Asset, aggregate, library, or domain contribution | Generated deployment artifact | Robot feature or supported configuration |
+| Instancing concern | Scene placement and repeated products | Match instance boundaries to opinion and animation granularity | Preserve prototype sharing while reducing file fan-out | Reuse rigid structure without freezing required articulation differences |
+| Validation center | Write targets, collision policy, layer strength, and scene behavior | Structure, identity, stable paths, source mapping, asset quality, and unloaded behavior | Cold/warm load, memory, resolver calls, layer count, and interaction targets | Articulation, backend, controller, feature selection, and runtime behavior |
+| Source of truth | Authored project profile | Yes - maintained modular package | No - reproducibly generated | Published robot interface and package |
+
+The benefit of keeping these structures separate is reversible optimization. Teams can change a deployment package when infrastructure or working-set needs change without rewriting the semantic ownership model. They can also improve authoring boundaries without forcing every consumer to adopt private source paths, because the public interface and build contract remain stable.
+
+### Directional VFI performance evidence
+
+The VFI performance page reports an anonymized factory case with approximately 500,000 prims and compares several packaging strategies. The reported results are directional, environment-sensitive observations rather than a portable benchmark:
+
+| Inspected strategy | Cold load | Warm load | Process memory | Layer count |
+|--------------------|-----------|-----------|----------------|-------------|
+| Monolithic baseline | About 2.1 minutes | About 56 seconds | About 15 GB | 3,664 |
+| Highly disaggregated structure | About 4 minutes | About 1.6 minutes | About 11.6 GB | 11,488 |
+| Component and subcomponent library packaging | About 53 seconds | About 15 seconds | About 6.6 GB | 8 |
+
+The correct conclusion is not that eight layers are universally optimal. The case demonstrates that fine-grained lifecycle structure and runtime layer fan-out can pull in opposite directions, especially across remote or cloud storage. The applicable requirement is to benchmark cold and warm paths separately and record the resolver, cache, network, storage, hardware, payload-load policy, prim count, and working set used for the test.
+
+Layer count is therefore an operational metric, not an architectural score. A monolith can be slow, a disaggregated graph can be slower, and a generated package can be faster while preserving the logical scene. The deployment decision must be evidence-led.
+
+### Omniverse Blueprints and Workflows source map
+
+The [NVIDIA Omniverse documentation overview](https://docs.nvidia.com/omniverse/index.html#nvidiatab-blueprints-workflows) is useful as a maintained discovery hub. It is not, by itself, evidence for one layer order. Each linked blueprint or workflow owns a different system boundary and must be evaluated through its specific documentation or repository.
+
+| Discovered source | Relevance to this paper | Treatment |
+|-------------------|-------------------------|-----------|
+| [Virtual Facility Integration Guide](https://docs.omniverse.nvidia.com/vfi/latest/index.html) | Factory-scale asset boundaries, recursive aggregation, instancing, domain layering, and packaging | Core Section 19 evidence within NVIDIA's product boundary |
+| [AI Factory Digital Twin Pipeline Samples](https://nvidia-omniverse.github.io/aif-pipeline-samples/) | Executable CAD conversion, optimization, validation, properties, connection points, and delivery evidence | Supporting implementation evidence; already used by Section 18; pin revision |
+| [DSX Blueprint](https://docs.omniverse.nvidia.com/dsx/latest/index.html) | AI Factory equipment packages and system responsibility boundaries | Core Section 18 evidence; do not duplicate here |
+| [Data Aggregation and Navigation Guide](https://docs.omniverse.nvidia.com/dang/latest/guide/assembly.html) | Source-preserving wrappers, references/payloads, project assembly, and collaborative edit layers | Supporting scene-assembly evidence for Paradigms B and C |
+| [Omniverse Reference Architectures](https://docs.omniverse.nvidia.com/arch-diagrams/latest/index.html) | High-level system integration context | Discovery and system-context source; insufficient alone for layer-strength claims |
+| [Digital Twin for Interactive Fluid Simulation](https://github.com/NVIDIA-Omniverse-blueprints/digital-twins-for-fluid-simulation) | Separation of authored visualization state, simulation/inference services, caches, and deployment profiles | Supporting runtime-boundary evidence for future research; not a layer-order authority |
+| Synthetic-data, motion-generation, streaming, CAE, and web-viewer workflows | Downstream consumers and deployment examples | Follow only when a claim affects an identified composition, asset-interface, or runtime boundary |
+
+This source map prevents catalog inflation. A link appearing under NVIDIA Blueprints or Workflows proves discoverability and product ownership, not that its architecture should be copied into the GoodStart root stack.
+
+### Corrections to the proposed GoodStart profile
+
+VFI produces the following concrete corrections and additions:
+
+1. The proposed GoodStart layer order remains a **scene-level authoring and ownership profile**, not a runtime packaging prescription.
+2. `ASS_LYR.usda` should reference stable public asset or aggregate interfaces. Deployment packaging may redirect or resolve those interfaces through a governed build, but consumers must not depend on private authoring files.
+3. Asset boundaries should be justified by lifecycle, ownership, update cadence, source identity, validation scope, reuse, instancing, and selective-loading needs.
+4. The authoring graph may intentionally expand into many component and subcomponent layers. The deployment graph may intentionally consolidate them, provided composed behavior, public interfaces, identity, and instancing are preserved and verified.
+5. A derived representation created by merging, decimating, clustering, or deactivating source content is regenerable output. Its manifest must point back to the source package and transformation profile.
+6. Animation, scenario clips, point-instanced material flow, and solver/runtime streams require explicit ownership. They should not be baked into reusable equipment geometry merely to reduce file count.
+7. Instancing policy must be decided before publication and tested against expected per-instance opinions. `instanceable = true` is not a late-stage universal optimization.
+8. Binary formats are appropriate for heavy geometry or array data; readable sparse interfaces and contracts may remain ASCII. File format choice does not replace the composition contract.
+9. Every deployment profile must record the environment and evidence that justified its packaging choices. A package that is fast on a local warm cache is not automatically fit for a remote cold start.
+10. The modular authoring package remains authoritative. Deployment artifacts are never hand-edited and never become a second independent source of product truth.
+
+The machine-readable package or scene contract should add these fields:
+
+| Contract field | Required meaning |
+|----------------|------------------|
+| `authoring_profile` | Versioned modular structure and ownership policy used as source of truth |
+| `deployment_profile` | Named packaging strategy, target environment, payload defaults, and sharding or consolidation rules |
+| `source_fingerprint` | Hash or immutable identifier of the accepted authoring package |
+| `transform_profile` | Versioned conversion, restructuring, optimization, and packaging recipe |
+| `interface_map` | Public entry points and any permitted mapping into packaged libraries |
+| `identity_map` | Source, publication, and domain identifiers preserved through packaging |
+| `benchmark_context` | Resolver, cache state, storage, network, hardware, working set, and load policy |
+| `acceptance_evidence` | Cold/warm load, memory, layer fan-out, composition, instancing, and behavioral validation results |
+| `regeneration_rule` | Trigger and procedure for rebuilding after source, schema, profile, or dependency change |
+
+These are proposed GoodStart contract fields, not NVIDIA or OpenUSD schema requirements. A project may use different names, but it must carry equivalent evidence if it claims reproducible authoring-to-deployment transformation.
+
+### Resulting integrated architecture
+
+The paper's earlier **B + C + D** conclusion remains valid and becomes more precise:
+
+```text
+GoodStart scene ownership (B)
+  -> recursively composed public assets and aggregates (C)
+       -> DSX-style equipment packages where appropriate (C)
+       -> Isaac-style configurable robot products where appropriate (C + D)
+       -> VFI-style modular factory authoring graph (B + C, with optional D)
+  -> SimReady capability and validation evidence across declared profiles
+  -> governed deployment build
+       -> measured packaged representation for the target runtime
+  -> Omniverse applications and services consume authored and runtime contracts
+```
+
+VFI therefore changes how the architecture is delivered, not the universal rules of OpenUSD strength. GoodStart governs scene ownership; public asset interfaces protect recursive composition; DSX and Isaac provide domain-specific package patterns; SimReady governs declared capability assurance; VFI governs factory-scale structuring and the authoring-to-deployment transformation; and target-runtime measurements decide how much modularity should remain physically distributed in a published package.
+
+### Research conclusion
+
+The most important VFI contribution is the rejection of a false choice between maintainable modularity and runtime performance. OpenUSD allows a program to maintain explicit asset, workstream, payload, animation, material, semantic, and simulation boundaries while producing a different physical package for a specific runtime. That is possible because logical composition, authored layer files, and delivered storage units are related but not identical concepts.
+
+Classic file pipelines can also generate optimized delivery files, but they usually require external databases, sidecars, naming rules, and custom merge logic to preserve the authoring graph and its provenance. OpenUSD keeps the public interfaces, composition arcs, prim identities, load boundaries, and opinions in a queryable model that the packaging pipeline can transform and validate. The advantage is not the number of files. It is the ability to change that number without losing the architectural contract.
+
+---
+
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.9.0 | 2026-08-08 | Added Section 19 integrating NVIDIA Virtual Facility Integration guidance and the NVIDIA Omniverse Blueprints/Workflows source map; separated engineering source, modular authoring, composed operational, and generated deployment structures; added the VFI authoring-to-deployment diamond, seven-step transfer table, GoodStart/VFI/Isaac comparison, directional packaging-performance evidence, instancing and object-handling implications, discovery-source dispositions, new GoodStart contract fields, and the correction that modular authoring truth may be reproducibly packaged for a measured runtime without becoming a fifth composition paradigm or a flattened replacement source. Updated the Executive Summary, decision guide, ecosystem resources, canonical links, GoodStart policy, ARYS routing, tags, and synchronized version metadata. |
+| 1.8.0 | 2026-07-31 | Added Section 18 with source-grounded NVIDIA DSX conclusions, the observable Generic CDU asset-internal sublayer and payload pattern, a DSX composition Mermaid diagram, a DSX-equipment-versus-Isaac-Asset-Structure-3.0 comparison breakout and table, a digital-twin/robotics/Omniverse versus classic-VFX breakout, and the resulting B+C+D hybrid conclusion; corrected the overbroad “universal” asset-base claim, separated intrinsic asset properties from scene/instance `DATA_LYRs`, separated reusable connection points from scene topology, aligned the proposed wrapper layout with an atomic DSX-style package, and clarified that DSX does not prescribe the exact GoodStart scene order or runtime/data positions. |
 | 1.7.0 | 2026-07-17 | Added Section 16.1.1, “Engineering-to-twin hierarchy reconciliation,” which turns the CAD/PLM-to-digital-twin problem into a reproducible identity, mapping, package-publication, and validation contract. It distinguishes references and authored transforms for canonical placement, relationships/collections for alternate semantic views, and relocates for controlled composed-namespace edits; adds a verified correction that USD relationships are uniform rather than time-sampled; extends the Workcell pipeline, acceptance gates, references, ARYS routing, and tags accordingly. |
 | 1.6.3 | 2026-07-17 | Removed the direct nAurava Technologies Workcell-DigitalTwin repository link while the asset remains under development; retained the named project context and independent technical case study, and recorded that the public repository reference may be added once the asset is finished and ready for publication |
 | 1.6.2 | 2026-07-16 | Prepared the paper for external review: removed personal attribution and private-channel links from the M&E material while preserving its complete technical content as an author-created synthesis informed by internal VFX practitioner discussions; limited Unreal Engine claims to Epic's public documentation; added explicit independent-research, non-AOUSD-endorsement, and Workcell licensing/status notices |
