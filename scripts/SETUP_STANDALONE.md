@@ -45,7 +45,20 @@ cd scripts
 .\setup_usd_project.ps1 "D:\MyProject"
 ```
 
-### Method 4: Direct Python (if Python is in PATH)
+### Method 4: Linux/macOS shell
+```bash
+# From repository root
+sh scripts/setup_usd_project.sh "/path/to/MyProject"
+
+# Or from an extracted standalone package that contains the shell launcher
+chmod +x setup_usd_project.sh
+./setup_usd_project.sh "/path/to/MyProject"
+```
+
+The Windows and POSIX launchers call the same `setup_usd_project.py` generator,
+so they create the same folder and file structure for the same answers.
+
+### Method 5: Direct Python (if Python is in PATH)
 ```bash
 python scripts\setup_usd_project.py "D:\MyProject"
 ```

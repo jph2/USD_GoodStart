@@ -52,6 +52,9 @@ scripts\setup_usd_project.bat [target_directory]
 # PowerShell script
 .\scripts\setup_usd_project.ps1 [target_directory]
 
+# Linux/macOS POSIX shell script
+sh scripts/setup_usd_project.sh [target_directory]
+
 # Or simply double-click setup_usd_project.bat in Windows Explorer
 ```
 
@@ -66,7 +69,8 @@ scripts\setup_usd_project.bat [target_directory]
 3. **Unit System**: Choose millimeters, centimeters, or meters (affects scene scale and camera settings)
 
 **Generated Structure:**
-- Complete folder hierarchy (000_SOURCE, 010_ASS_USD/USD_Endpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs)
+- Complete folder hierarchy (000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/USD_Wrappers, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs, _contracts, _pipeline_reports, _comfyui_workflows)
+- Asset-package template under `010_ASS_USD/USD_Wrappers/_asset_package_template/{layers,payloads,data}`
 - Root USD file (`USD_GoodStart_ROOT.usda` - always this name)
 - Layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)
 - Sub-assembly files (for complex products)

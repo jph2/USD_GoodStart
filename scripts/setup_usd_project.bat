@@ -1,6 +1,8 @@
 @echo off
 REM USD GoodStart Project Setup - Windows Batch Wrapper
 REM Standalone launcher for setup_usd_project.py
+REM The Python generator owns the current GoodStart folder contract,
+REM including USD_Wrappers, _contracts, _pipeline_reports, and _comfyui_workflows.
 REM Version: see setup_usd_project.py --version or VERSION file
 
 setlocal
@@ -29,6 +31,7 @@ if not exist "%PYTHON_SCRIPT%" (
 
 REM Run the Python script with all arguments passed through
 echo Running USD GoodStart Project Setup...
+echo Creates thin-root layers, asset wrapper/package folders, contracts, reports, and workflow folders.
 echo.
 python "%PYTHON_SCRIPT%" %*
 

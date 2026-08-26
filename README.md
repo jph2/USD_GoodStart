@@ -188,6 +188,7 @@ flowchart LR
 **Folder Organization:**
 - `000_SOURCE/` - Original CAD/DCC/2D Texture source files
 - `010_ASS_USD/USD_Startpoint/` - **Stable geometry startpoints** (exports from CAD/DCC tools - Blender/Rhino plugins)
+- `010_ASS_USD/USD_Wrappers/` - **Public asset interfaces and wrapper packages** for non-destructive transforms, payload routing, asset-local metadata, connection points, and mapping data
 - `010_ASS_USD/MatLib/` - Material libraries (reusable materials)
 - `010_ASS_USD/tex/` - Textures (global and asset-specific)
 - `010_ASS_USD/Envs/` - Environment library; contains a dummy `Environment.usda` stage as a placeholder, assuming that different environments will be created and loaded/used separately. `ENV_LYR.usda` is responsible for wiring an environment from here into the layer stack.
@@ -195,6 +196,9 @@ flowchart LR
 - `030_SIM_LYR/` - Simulation result layers (external sim overlays: CFD, FEA, Isaac Sim, Ansys)
 - `035_RUNTIME_LYR/` - **Runtime layer slot** for live/session-backed digital twin state, MQTT/OPC UA latest-value opinions, and explicit snapshots
 - `040_DATA_LYRs/` - **Static data layers** (plural - multiple data layers for digital twin integration: PLM/ERP/AAS/OPC UA metadata and external-system references)
+- `_contracts/` - Machine-readable layer contract, asset-package policy, write targets, validator policy, and optional lane declarations
+- `_pipeline_reports/` - Deterministic setup, conversion, validation, mapping, and assembly evidence reports
+- `_comfyui_workflows/` - Project-local ComfyUI workflow JSON files used to recreate or continue the build
 
 **Why This Structure?**
 
@@ -332,6 +336,7 @@ flowchart TB
         Source["000_SOURCE<br/>CAD / DCC / raw source evidence"]
         Startpoints["010_ASS_USD/USD_Startpoint<br/>stable imported USD startpoints"]
         Wrappers["010_ASS_USD/USD_Wrappers<br/>non-destructive transform/unit/axis wrappers"]
+        AssetPackage["USD_Wrappers/&lt;asset_id&gt;/<br/>layers + payloads + data"]
         MatLib["010_ASS_USD/MatLib<br/>material libraries"]
         Tex["010_ASS_USD/tex<br/>textures"]
     end
@@ -341,6 +346,7 @@ flowchart TB
     Wrappers --> Ass
     Source -.-> Startpoints
     Startpoints -.-> Wrappers
+    Wrappers -.-> AssetPackage
     MatLib --> Mtl
     Tex --> Mtl
 
@@ -359,6 +365,7 @@ flowchart TB
     style Data fill:#bcaaa4,stroke:#3e2723,stroke-width:2px,color:#000
     style Ass fill:#a5d6a7,stroke:#1b5e20,stroke-width:3px,color:#000
     style Wrappers fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    style AssetPackage fill:#dcedc8,stroke:#33691e,stroke-width:2px,color:#000
     style Startpoints fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
     style Mtl fill:#f48fb1,stroke:#880e4f,stroke-width:2px,color:#000
 ```
@@ -369,10 +376,39 @@ The optional delta layers are not mandatory in every project. They are declared 
 
 - `ASS_LYR.usda` owns asset composition. References and payloads to `010_ASS_USD/USD_Startpoint` or wrapper layers belong here, not in the root.
 - `010_ASS_USD/USD_Wrappers` is the non-destructive correction zone for scale, axis, unit, rotation, and placement wrappers. Imported startpoints stay unchanged.
+- Industrial/reusable assets should use `010_ASS_USD/USD_Wrappers/<asset_id>.usd` as the public interface where practical, with asset-local `layers/`, `payloads/`, and `data/` underneath `<asset_id>/`.
+- Asset-local `layers/<asset_id>_Properties.usda` and `layers/<asset_id>_ConnectionPoints.usda` are preferred over adding new scene-level root sublayers for every asset metadata or connection-point concern.
 - `RUNTIME_LYR.usda` owns latest-state runtime writes. Do not write live MQTT/OPC UA/latest-value data into `DATA_LYRs`.
 - `DATA_LYRs.usda` owns stable facts: identifiers, source-system references, PLM/ERP/AAS/OPC UA mappings, CAD/Revit metadata, and other slow-changing data.
 - `OV_DELTA_LYR.usda` or another declared delta lane owns persistent Omniverse-authored changes. Omniverse should not save durable edits into the generated root.
 - `_contracts/layer_contract.json` records the project root, layer registry, ownership, strength order, write targets, optional delta lanes, and validator rules.
+- `_pipeline_reports/` records conversion, validation, metadata mapping, and assembly evidence. It is not an authoring layer.
+
+**NVIDIA / SimReady implication for the minimal setup:**
+
+The minimal GoodStart layer stack does **not** need a new default root sublayer for every SimReady-style concern. The optimization is to keep the root stack stable and add an explicit asset-package convention below `010_ASS_USD/USD_Wrappers`.
+
+Recommended generated folder convention:
+
+```text
+010_ASS_USD/
+  USD_Startpoint/
+    <raw_or_imported_startpoint>.usd
+  USD_Wrappers/
+    <asset_id>.usd
+    <asset_id>/
+      layers/
+        <asset_id>_Properties.usda
+        <asset_id>_ConnectionPoints.usda
+      payloads/
+        internal.usd
+        external.usd
+      data/
+        source_manifest.json
+        mapping_profile.json
+```
+
+Use scene-level lanes when the opinion is project-wide or assembly-owned. Use asset-local package files when the opinion belongs to one reusable asset and should travel with that asset.
 
 **Why propose this change?**
 
@@ -480,10 +516,11 @@ Keep this pragmatic: if a layer has no clear owner, no authored data, and no exp
 
 **Quick Workflow:**
 1. Convert CAD → USD assets → place in `010_ASS_USD/USD_Startpoint/` (stable startpoint paths)
-2. Create layer files in `020_BASE_LYR/` for base layers (opinion, environment, asset import, material import, variants, action-graph, animation), `035_RUNTIME_LYR/` for runtime opinions/snapshots, `030_SIM_LYR/` for simulation results, and `040_DATA_LYRs/` for static data/metadata.
-3. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Camera → Environment → Runtime → Simulation → Static Data → ACTGR → Animation → Variant → Material → Physics → AssetImport, where first = strongest)
-4. Use **relative paths** (`@./folder/file.usd@`) for portability
-5. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
+2. Create public wrappers or asset packages under `010_ASS_USD/USD_Wrappers/` when transforms, payload routing, properties, connection points, or mapping data must stay non-destructive and updateable.
+3. Create layer files in `020_BASE_LYR/` for base layers (opinion, environment, asset import, material import, variants, action-graph, animation), `035_RUNTIME_LYR/` for runtime opinions/snapshots, `030_SIM_LYR/` for simulation results, and `040_DATA_LYRs/` for static data/metadata.
+4. Reference layers in `USD_GoodStart_ROOT.usda` (array order: Opinion → Camera → Environment → Runtime → Simulation → Static Data → ACTGR → Animation → Variant → Material → Physics → AssetImport, where first = strongest)
+5. Use **relative paths** (`@./folder/file.usd@`) for portability
+6. Validate with `python scripts/validate_asset.py` (for individual assets) or `python scripts/validate_scene.py` (for entire scenes)
 
 For small projects, simplify this workflow. Use only the layers that carry real data or real decisions; delete unused layer references from the root file instead of keeping empty complexity around.
 
@@ -522,9 +559,13 @@ The **setup script + standalone zip** generate new projects with this metadata p
 
 ### Scale and units in this setup
 
-In this setup, **scale is chosen once** (meters, centimeters, or millimeters) and **written into the root file**. The sublayers are either empty or contain only `over` prims that inherit structure from the root; the **unit scale is defined in the root** and effectively applies across the composed stage.
+In this setup, **scale is chosen once** (meters, centimeters, or millimeters) and **written into the root file**. The root layer stays thin: stage metadata, `defaultPrim`, and ordered `subLayers` only. Starter scene payload is authored into governed sublayers instead of the root:
 
-The starter scene is authored so the physical size stays stable across root variants: the sample cube is 1 m, the ground is 14 m, and lights/camera guides are converted into the selected stage unit. Do not compare `xformOp:scale` alone when debugging size. Compare `metersPerUnit` plus authored point and translate values.
+- `020_BASE_LYR/ASS_LYR.usda` defines the default prim and sample cube.
+- `020_BASE_LYR/CAM_LYR.usda` defines the starter camera.
+- `020_BASE_LYR/ENV_LYR.usda` defines the environment, dome light, distant light, and ground.
+
+The checked-in sample layers are centimeter-oriented because the repository has one shared `020_BASE_LYR` folder and multiple unit root variants. For new generated projects, the setup script and ComfyUI GoodStart Bootstrap follow the same thin-root pattern and can generate the starter scene as project-local layer content.
 
 **Omniverse note:** In Omniverse, the **unit scale** can also be set **per layer** in the layer’s properties. It’s not fully clear what that per-file override does in all cases. In testing, **referenced objects kept the correct scale** even when:
 - The scene units were changed for the stage into which a referenced asset was imported, and
@@ -544,7 +585,12 @@ You have three options to get started:
 2. **Copy-paste from GitHub** — Simply copy the folders and files directly from this GitHub repository.
 3. **Run the setup script** — Use the automated script to generate everything for you.
 
-**Quick Setup Script:** Just run the batch file (`setup_usd_project.bat`) from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip)), and it will:
+**Quick Setup Script:** Both launchers call the same Python generator and therefore create the same structure:
+
+- **Windows:** run `setup_usd_project.bat` from the standalone zip package ([`scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`](scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip)).
+- **Linux:** from a repository checkout, run `sh scripts/setup_usd_project.sh [target_directory]` (or `chmod +x scripts/setup_usd_project.sh` once, then run `./scripts/setup_usd_project.sh [target_directory]`).
+
+The setup generator will:
 - Generate the complete folder structure
 - Create all layer files with consistent default prim naming
 - Set up a simplified scene with sample assets (cube, shader ball) in `USD_Startpoint/`
@@ -732,10 +778,10 @@ Understanding when to use **Payloads** vs **Sublayers** is fundamental to USD ar
 
 ### Root File and Layer Stacking
 
-**Critical Concept:** The root file defines structure. Asset loading happens in the **lowest (weakest) layer**, with all modifications stacked on top.
+**Critical Concept:** The root file defines the entry point and layer stack, not the scene payload. Asset loading happens in the **lowest (weakest) governed layer**, with all modifications stacked on top.
 
 **Root File Must Be "Thin":**
-- ✅ Base scene structure (`def Xform "World"`)
+- ✅ Stage metadata, `defaultPrim`, and ordered `subLayers`
 - ✅ `subLayers` array
 - ✅ Metadata (defaultPrim, upAxis)
 - ❌ **NO** geometry, references, payloads, or attribute values
@@ -1207,7 +1253,8 @@ Each folder contains its own README with detailed information:
 - **Always named `USD_GoodStart_ROOT.usda`** - The filename stays constant across all projects
 - References all layer stacks from `020_BASE_LYR/`, `035_RUNTIME_LYR/`, `030_SIM_LYR/`, `040_DATA_LYRs/`
 - Serves as the entry point for the entire project
-- Contains the base world/root prim and high-level scene structure
+- Contains stage metadata, the `defaultPrim`, and the ordered `subLayers` stack
+- Does **not** contain local scene payload; base scene content belongs in governed sublayers such as `ASS_LYR`, `CAM_LYR`, and `ENV_LYR`
 - Only the **default prim name** changes based on your project needs (e.g., "World", "ProductName", etc.)
 
 ## Path Best Practices: Use Relative Paths

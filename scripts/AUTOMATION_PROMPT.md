@@ -86,6 +86,18 @@ The script generates this folder/file hierarchy:
     └── DATA_LYRs.usda                 ← Minimal
 ```
 
+Additional generated folders required by the current GoodStart structure:
+
+```text
+010_ASS_USD/USD_Wrappers/
+010_ASS_USD/USD_Wrappers/_asset_package_template/layers/
+010_ASS_USD/USD_Wrappers/_asset_package_template/payloads/
+010_ASS_USD/USD_Wrappers/_asset_package_template/data/
+_contracts/
+_pipeline_reports/
+_comfyui_workflows/
+```
+
 ---
 
 ## Interactive Prompts
@@ -239,6 +251,7 @@ Strongest to weakest (first in array = strongest):
 4. **Script folder detection:** If run from scripts folder, creates project in parent
 5. **Non-empty directory warning:** Asks for confirmation before proceeding
 6. **Wrapper scripts:** Include `.bat` (Windows CMD) and `.ps1` (PowerShell) wrappers
+7. **Asset package convention:** Generate `010_ASS_USD/USD_Wrappers/_asset_package_template/{layers,payloads,data}` and keep this convention aligned with README.md and ComfyUI bootstrap contract policy.
 
 ---
 
@@ -278,6 +291,8 @@ setup_usd_project.bat "D:\MyProject"
 ---
 
 ## Version History
+
+- **0.9.5.3** - Adds `USD_Wrappers` asset-package template plus `_contracts`, `_pipeline_reports`, and `_comfyui_workflows` to the generated baseline.
 
 - **0.9.5.2** – Patch release after generated-package content change: consistent physical starter-scene scaling across m/cm/mm, regenerated standalone zip with new filename. Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`
 - **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, physical starter-scene scaling across m/cm/mm, double-confirm (type cm/m/mm). Superseded by `0.9.5.2` because the package content changed after the original filename was published.

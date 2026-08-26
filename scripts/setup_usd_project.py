@@ -4,7 +4,8 @@ USD GoodStart Project Setup Script
 
 Creates a USD_GoodStart project with folder structure and one root scene (m, cm, or mm scale).
 Based on USD_GoodStart_m_ROOT.usda, USD_GoodStart_cm_ROOT.usda, USD_GoodStart_mm_ROOT.usda
-and folders: 000_SOURCE, 010_ASS_USD, 020_BASE_LYR, 030_SIM_LYR, 035_RUNTIME_LYR, 040_DATA_LYRs.
+and folders: 000_SOURCE, 010_ASS_USD, 020_BASE_LYR, 030_SIM_LYR, 035_RUNTIME_LYR, 040_DATA_LYRs,
+_contracts, _pipeline_reports, and _comfyui_workflows.
 
 Usage:
     python scripts/setup_usd_project.py [target_directory]
@@ -13,8 +14,8 @@ Usage:
 If no directory is provided, the script runs in the current directory.
 """
 
-# Version: 0.9.5.2 | Date: 27.06.2026 | Time: 00:17 | GlobalID: 20260627_0017_USDGoodStart_Setup
-__version__ = "0.9.5.2"
+# Version: 0.9.5.3 | Date: 03.07.2026 | Time: 00:00 | GlobalID: 20260703_0000_USDGoodStart_Setup
+__version__ = "0.9.5.3"
 
 import sys
 from pathlib import Path
@@ -28,6 +29,11 @@ FOLDER_STRUCTURE = [
     "000_SOURCE",
     "010_ASS_USD",
     "010_ASS_USD/USD_Startpoint",
+    "010_ASS_USD/USD_Wrappers",
+    "010_ASS_USD/USD_Wrappers/_asset_package_template",
+    "010_ASS_USD/USD_Wrappers/_asset_package_template/layers",
+    "010_ASS_USD/USD_Wrappers/_asset_package_template/payloads",
+    "010_ASS_USD/USD_Wrappers/_asset_package_template/data",
     "010_ASS_USD/MatLib",
     "010_ASS_USD/tex",
     "010_ASS_USD/Envs",
@@ -35,6 +41,9 @@ FOLDER_STRUCTURE = [
     "030_SIM_LYR",
     "035_RUNTIME_LYR",
     "040_DATA_LYRs",
+    "_contracts",
+    "_pipeline_reports",
+    "_comfyui_workflows",
 ]
 
 # Sublayer paths (strongest first). Must match roots USD_GoodStart_*_ROOT.usda.
@@ -76,30 +85,30 @@ SCALE_OPTIONS = [
     ("mm", 0.001, "Millimeters"),
 ]
 
-# Layer templates for files that need more than just #usda 1.0
-# Use {default_prim} placeholder for the default prim name
+# Layer templates for files that need more than just #usda 1.0.
+# Root files stay thin; starter scene payload lives in governed sublayers.
+# Use {default_prim} placeholder for the default prim name.
 LAYER_TEMPLATES = {
     "ASS_LYR.usda": '''#usda 1.0
 
-over "{default_prim}"
+def Xform "{default_prim}"
 {{
-    def Xform "A" (
-        references = <>
-    )
+    def Mesh "Cube"
     {{
+        float3[] extent = [(-50, -50, -50), (50, 50, 50)]
+        int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+        int[] faceVertexIndices = [0, 1, 3, 2, 4, 6, 7, 5, 6, 2, 3, 7, 4, 5, 1, 0, 4, 0, 2, 6, 5, 7, 3, 1]
+        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 0, -1), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (0, -1, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (-1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0), (1, 0, 0)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-50, -50, 50), (50, -50, 50), (-50, 50, 50), (50, 50, 50), (-50, -50, -50), (50, -50, -50), (-50, 50, -50), (50, 50, -50)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0), (0, 1), (0, 0), (1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 1), (0, 0), (1, 0), (1, 1), (0, 1), (1, 0), (1, 1), (0, 1), (0, 0)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
         double3 xformOp:rotateXYZ = (0, 0, 0)
         double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
-    }}
-
-    def Xform "B" (
-        references = <>
-    )
-    {{
-        double3 xformOp:rotateXYZ = (0, 0, 0)
-        double3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0, 0, 0)
+        double3 xformOp:translate = (0, 50, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
     }}
 }}
@@ -122,6 +131,62 @@ over "{default_prim}"
 }}
 
 ''',
+    "ENV_LYR.usda": '''#usda 1.0
+
+def Xform "Environment"
+{{
+    int ground:size = 1400
+    string ground:type = "On"
+    double3 xformOp:rotateXYZ = (0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+    def DomeLight "Sky"
+    {{
+        float inputs:colorTemperature = 6250
+        bool inputs:enableColorTemperature = 1
+        float inputs:exposure = 9
+        float inputs:intensity = 1
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (0, 180, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 305, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
+
+    def DistantLight "DistantLight"
+    {{
+        float inputs:angle = 2.5
+        float inputs:colorTemperature = 7250
+        bool inputs:enableColorTemperature = 1
+        float inputs:exposure = 12
+        float inputs:intensity = 1
+        bool inputs:normalize = 1
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (-105, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 305, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }}
+
+    def Mesh "ground"
+    {{
+        float3[] extent = [(-700, 0, -700), (700, 0, 700)]
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 2, 3, 1]
+        normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-700, 0, -700), (700, 0, -700), (-700, 0, 700), (700, 0, 700)]
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
+    }}
+}}
+
+''',
 }
 
 README_TEMPLATES = {
@@ -137,6 +202,8 @@ Place your source files here (CAD files, DCC project files, etc.) before convert
 
 ## Folder Structure
 - `USD_Startpoint/` - Geometry assets -> Exports froM CAD / DCC as stable Startpoints, the name Stays constant
+- `USD_Wrappers/` - Public asset interfaces and non-destructive wrapper packages
+- `USD_Wrappers/_asset_package_template/` - Template for asset-local layers, payloads, and mapping data
 - `MatLib/` - Material libraries
 - `tex/` - Global textures shared across multiple assets Place shared texture files here. Asset-specific textures can live with their assets in `USD_Startpoint/`
 - `Envs/` -  Environments 
@@ -188,10 +255,28 @@ Live telemetry belongs in a session layer or `035_RUNTIME_LYR/`, not here by def
 
 See the main README.md for detailed usage instructions.
 """,
+    "_contracts": """# _contracts
+
+**Purpose:** Machine-readable GoodStart governance contracts.
+
+Use this folder for `layer_contract.json`, validator policies, declared optional lanes, and asset-package conventions.
+""",
+    "_pipeline_reports": """# _pipeline_reports
+
+**Purpose:** Deterministic reports produced by project setup, conversion, validation, and build pipelines.
+
+Reports are evidence. Do not store authored USD opinions here.
+""",
+    "_comfyui_workflows": """# _comfyui_workflows
+
+**Purpose:** Project-local ComfyUI workflows that can recreate or continue the GoodStart build.
+
+Keep workflow JSON files here instead of mixing them with USD layers or pipeline reports.
+""",
 }
 
 # ============================================================================
-# Root template: keeps the starter scene physically consistent across unit choices.
+# Root template: root stays thin; generated starter scene payload is authored in sublayers.
 # Numeric values are authored in the selected stage unit.
 # ============================================================================
 
@@ -389,16 +474,16 @@ def Xform "Environment"
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {{
-        float3[] extent = [(-{ground_half}, -{ground_half}, 0), ({ground_half}, {ground_half}, 0)]
+        float3[] extent = [(-{ground_half}, 0, -{ground_half}), ({ground_half}, 0, {ground_half})]
         int[] faceVertexCounts = [4]
-        int[] faceVertexIndices = [0, 1, 3, 2]
+        int[] faceVertexIndices = [0, 2, 3, 1]
         rel material:binding = </Environment/Looks/Grid> (
             bindMaterialAs = "weakerThanDescendants"
         )
-        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
+        normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)] (
             interpolation = "faceVarying"
         )
-        point3f[] points = [(-{ground_half}, -{ground_half}, 0), ({ground_half}, -{ground_half}, 0), (-{ground_half}, {ground_half}, 0), ({ground_half}, {ground_half}, 0)]
+        point3f[] points = [(-{ground_half}, 0, -{ground_half}), ({ground_half}, 0, -{ground_half}), (-{ground_half}, 0, {ground_half}), ({ground_half}, 0, {ground_half})]
         texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
             interpolation = "faceVarying"
         )
@@ -483,6 +568,80 @@ def "Render" (
         }}
     }}
 }}
+'''
+
+
+def _get_thin_root_template_content(root_filename: str, mpu_val: float, default_prim: str) -> str:
+    """Return thin root USDA content. Starter scene payload belongs in sublayers."""
+    mpu_str = "1" if mpu_val == 1.0 else str(mpu_val)
+    sublayers_str = ",\n        ".join([f"@{p}@" for p in SUBLAYERS])
+    camera_far = _stage_units(500.0, mpu_val)
+    camera_radius = _stage_units(5.0, mpu_val)
+    persp_position = _stage_tuple((-6.486169164847129, 7.196822390878303, 20.611666836476675), mpu_val)
+    persp_target = _stage_tuple((0.8683254870102121, -0.7283014643907768, 0.3723306848790707), mpu_val)
+    return f'''#usda 1.0
+(
+    customLayerData = {{
+        dictionary cameraSettings = {{
+            dictionary Front = {{
+                double3 position = (0, 0, {camera_far})
+                double radius = {camera_radius}
+            }}
+            dictionary Perspective = {{
+                double3 position = ({persp_position})
+                double3 target = ({persp_target})
+            }}
+            dictionary Right = {{
+                double3 position = (-{camera_far}, 0, 0)
+                double radius = {camera_radius}
+            }}
+            dictionary Top = {{
+                double3 position = (0, {camera_far}, 0)
+                double radius = {camera_radius}
+            }}
+            string boundCamera = "/OmniverseKit_Persp"
+        }}
+        dictionary omni_layer = {{
+            string authoring_layer = "./{root_filename}"
+            dictionary locked = {{
+                bool "./020_BASE_LYR/ACTGR_LYR.usda" = 1
+                bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/CAM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
+                bool "./020_BASE_LYR/MTL_LYR.usda" = 1
+                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/PHY_LYR.usda" = 1
+                bool "./020_BASE_LYR/VAR_LYR.usda" = 1
+                bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./035_RUNTIME_LYR/RUNTIME_LYR.usda" = 1
+                bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
+            }}
+            dictionary muteness = {{
+            }}
+        }}
+        dictionary renderSettings = {{
+            double "rtx:directLighting:sampledLighting:maxRayUnexposedIntensity" = 6399.9990234375
+            double "rtx:indirectDiffuse:maxRayUnexposedIntensity" = 6399.9990234375
+            double "rtx:pathtracing:fireflyFilter:maxPerEmissiveUnexposedIntensity" = 3199.99951171875
+            double "rtx:pathtracing:fireflyFilter:maxUnexposedIntensityPerSample" = 3199.99951171875
+            double "rtx:pathtracing:fireflyFilter:maxUnexposedIntensityPerSampleDiffuse" = 3199.99951171875
+            double "rtx:post:lensFlares:flareScale" = 0.075
+            double "rtx:raytracing:inscattering:maxRTSampleUnexposedIntensity" = 204799.96875
+            float3 "rtx:sceneDb:ambientLightColor" = (0, 0, 0)
+            double "rtx:translucency:maxRayUnexposedIntensity" = 19199.998046875
+        }}
+    }}
+    defaultPrim = "{default_prim}"
+    endTimeCode = 100
+    metersPerUnit = {mpu_str}
+    startTimeCode = 0
+    subLayers = [
+        {sublayers_str}
+    ]
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
 '''
 
 
@@ -580,11 +739,15 @@ def create_folder_structure(base_path: Path):
 
 def create_readme_files(base_path: Path):
     print("\nCreating README files...")
+    written_tops: set[str] = set()
     for folder in FOLDER_STRUCTURE:
         top = folder.split("/")[0]
+        if top in written_tops:
+            continue
         if top in README_TEMPLATES:
             readme_path = base_path / top / "README.md"
             readme_path.write_text(README_TEMPLATES[top], encoding="utf-8")
+            written_tops.add(top)
             print(f"  [OK] {top}/README.md")
 
 
@@ -637,7 +800,7 @@ def create_root_file(base_path: Path, scale_index: int, default_prim: str) -> st
         print(f"  [OK] {root_filename} (copied from repo)")
         return root_filename
 
-    content = _get_root_template_content(root_filename, mpu_val, default_prim)
+    content = _get_thin_root_template_content(root_filename, mpu_val, default_prim)
     path.write_text(content, encoding="utf-8")
     print(f"  [OK] {root_filename}")
     return root_filename
@@ -696,8 +859,10 @@ def setup_project(target_dir: Optional[Path] = None) -> bool:
         print(f"Default prim: {default_prim}")
         print("\nNext steps:")
         print("  1. Open the root file in Omniverse Composer")
-        print("  2. Add assets under 010_ASS_USD/USD_Startpoint/")
-        print("  3. Author content in 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
+        print("  2. Add imported USD startpoints under 010_ASS_USD/USD_Startpoint/")
+        print("  3. Put public asset wrappers/packages under 010_ASS_USD/USD_Wrappers/")
+        print("  4. Author content in 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs as needed")
+        print("  5. Keep contracts, reports, and ComfyUI workflow JSON in _contracts, _pipeline_reports, _comfyui_workflows")
         print()
         print("  --- Note: Stage scale (metersPerUnit) ---")
         print("  Isaac Sim and Isaac Lab handle stage scale in METERS by default.")

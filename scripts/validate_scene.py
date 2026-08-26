@@ -102,7 +102,14 @@ def validate_scene(root_file):
                 warnings.append(f"Absolute file path detected in sublayer: '{sublayer_path}'. "
                                "Consider using relative paths (e.g., @./020_LYR_USD/file.usda@) for portability.")
         
-        resolved_path = root_layer.ResolvePath(sublayer_path)
+        if hasattr(Sdf, "ComputeAssetPathRelativeToLayer"):
+            resolved_path = Sdf.ComputeAssetPathRelativeToLayer(root_layer, sublayer_path)
+        else:
+            clean_sublayer_path = sublayer_path.strip("@")
+            candidate_path = Path(clean_sublayer_path)
+            if not candidate_path.is_absolute():
+                candidate_path = root_file.parent / clean_sublayer_path
+            resolved_path = str(candidate_path.resolve())
         
         if not resolved_path:
             # USD couldn't figure out where this file is
@@ -134,8 +141,8 @@ def validate_scene(root_file):
     if sublayers:
         last_layer = sublayers[-1]  # Get the last layer in the list
         # Check if it's an asset import layer (by name pattern)
-        if "AssetImport" in last_layer or "asset" in last_layer.lower():
-            print("✓ Asset import layer correctly positioned at bottom")
+        if "AssetImport" in last_layer or "asset" in last_layer.lower() or "ASS_LYR" in last_layer:
+            print("Asset import layer correctly positioned at bottom")
         else:
             # Not an error, but a recommendation for better organization
             warnings.append("Consider placing asset import layer at bottom of subLayers array")
@@ -164,10 +171,11 @@ def validate_scene(root_file):
     # STEP 9: Check for composition errors (placeholder for future checks)
     # Composition is how USD combines layers, references, variants, etc.
     # This is a placeholder that can be extended with specific composition validation
-    composition_query = Usd.CompositionQuery(stage.GetPseudoRoot())
-    if composition_query:
-        # Future: Could check for circular references, invalid composition arcs, etc.
-        pass  # Can be extended with specific composition checks
+    if hasattr(Usd, "CompositionQuery"):
+        composition_query = Usd.CompositionQuery(stage.GetPseudoRoot())
+        if composition_query:
+            # Future: Could check for circular references, invalid composition arcs, etc.
+            pass  # Can be extended with specific composition checks
     
     # STEP 10: Report all findings
     if errors:
@@ -182,13 +190,13 @@ def validate_scene(root_file):
     
     # STEP 11: Return validation result
     if not errors and not warnings:
-        print("\n✓ Scene validation passed")
+        print("\nScene validation passed")
         return True
     
     if errors:
-        print(f"\n✗ Scene validation failed with {len(errors)} error(s)")
+        print(f"\nScene validation failed with {len(errors)} error(s)")
     else:
-        print(f"\n⚠ Scene validation passed with {len(warnings)} warning(s)")
+        print(f"\nScene validation passed with {len(warnings)} warning(s)")
     
     # Return True if no errors (warnings are OK), False if errors exist
     return len(errors) == 0

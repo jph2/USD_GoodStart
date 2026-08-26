@@ -13,14 +13,3 @@ over "World"
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateYXZ", "xformOp:scale"]
     }
 }
-
-over "Environment"
-{
-    over "ground"
-    {
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
-        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
-        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
-    }
-}
-

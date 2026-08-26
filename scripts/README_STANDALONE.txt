@@ -14,6 +14,7 @@ CONTENTS:
 - setup_usd_project.py      - Main Python script
 - setup_usd_project.bat     - Windows batch file wrapper (double-click to run)
 - setup_usd_project.ps1     - PowerShell wrapper
+- setup_usd_project.sh      - Linux/macOS POSIX shell wrapper
 - VERSION                    - Single source of version (X.Y.Z)
 - SETUP_STANDALONE.md        - Detailed usage documentation
 - README.md                  - Full scripts documentation
@@ -26,6 +27,13 @@ QUICK START:
 
 Or run from command line:
   setup_usd_project.bat "D:\MyProject"
+
+On Linux or macOS:
+  sh setup_usd_project.sh "/path/to/MyProject"
+
+Or make it executable once:
+  chmod +x setup_usd_project.sh
+  ./setup_usd_project.sh "/path/to/MyProject"
 
 REQUIREMENTS:
 -------------

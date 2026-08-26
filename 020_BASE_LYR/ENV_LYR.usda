@@ -1,12 +1,54 @@
 #usda 1.0
 
-over "Environment"
+def Xform "Environment"
 {
-    over "ground"
+    int ground:size = 1400
+    string ground:type = "On"
+    double3 xformOp:rotateXYZ = (0, 0, 0)
+    double3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+
+    def DomeLight "Sky"
     {
-        float3[] extent = [(-1400, -1400, 0), (1400, 1400, 0)]
-        point3f[] points = [(-700, -700, 0), (700, -700, 0), (-700, 700, 0), (700, 700, 0)]
-        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)]
+        float inputs:colorTemperature = 6250
+        bool inputs:enableColorTemperature = 1
+        float inputs:exposure = 9
+        float inputs:intensity = 1
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (0, 180, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 305, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+
+    def DistantLight "DistantLight"
+    {
+        float inputs:angle = 2.5
+        float inputs:colorTemperature = 7250
+        bool inputs:enableColorTemperature = 1
+        float inputs:exposure = 12
+        float inputs:intensity = 1
+        bool inputs:normalize = 1
+        token visibility = "inherited"
+        double3 xformOp:rotateXYZ = (-105, 0, 0)
+        double3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 305, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+    }
+
+    def Mesh "ground"
+    {
+        float3[] extent = [(-700, 0, -700), (700, 0, 700)]
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 2, 3, 1]
+        normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(-700, 0, -700), (700, 0, -700), (-700, 0, 700), (700, 0, 700)]
+        texCoord2f[] primvars:st = [(0, 0), (14, 0), (14, 14), (0, 14)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
     }
 }
-
