@@ -261,14 +261,15 @@ Create standalone ZIP containing:
 - `setup_usd_project.py`
 - `setup_usd_project.bat`
 - `setup_usd_project.ps1`
+- `setup_usd_project.sh`
 - `VERSION`
 - `SETUP_STANDALONE.md`
 - `README.md`
 - `README_STANDALONE.txt`
 
-**ZIP naming:** `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip` (e.g. `USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`)
+**ZIP naming:** `USD_GoodStart_Setup_Standalone_v{X.Y.Z}.zip` (e.g. `USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`)
 
-**When to regenerate:** After any change to the setup script or the files above, regenerate the zip and update the version in `VERSION` and `setup_usd_project.py` (`__version__`). Update the README link to the new zip (e.g. `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`).
+**When to regenerate:** After any change to the setup script or the files above, regenerate the zip and update the version in `VERSION` and `setup_usd_project.py` (`__version__`). Update the README link to the new zip (e.g. `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`).
 
 ---
 
@@ -286,13 +287,16 @@ setup_usd_project.bat "D:\MyProject"
 
 # PowerShell
 .\setup_usd_project.ps1 "D:\MyProject"
+
+# Linux/macOS from the unpacked package
+sh setup_usd_project.sh "/path/to/MyProject"
 ```
 
 ---
 
 ## Version History
 
-- **0.9.5.3** - Adds `USD_Wrappers` asset-package template plus `_contracts`, `_pipeline_reports`, and `_comfyui_workflows` to the generated baseline.
+- **0.9.5.3** - Adds `USD_Wrappers` asset-package template plus `_contracts`, `_pipeline_reports`, and `_comfyui_workflows` to the generated baseline; adds the cross-platform standalone ZIP with a Linux/macOS launcher. Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`
 
 - **0.9.5.2** – Patch release after generated-package content change: consistent physical starter-scene scaling across m/cm/mm, regenerated standalone zip with new filename. Zip: `USD_GoodStart_Setup_Standalone_v0.9.5.2.zip`
 - **0.9.5.1** – Scale dialog: Composer/Isaac Sim/Lab labels, default Centimeters, physical starter-scene scaling across m/cm/mm, double-confirm (type cm/m/mm). Superseded by `0.9.5.2` because the package content changed after the original filename was published.

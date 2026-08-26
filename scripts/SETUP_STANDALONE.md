@@ -12,16 +12,16 @@ last_modified: '2026-02-17T09:42:14Z'
 
 # Standalone Setup Script Usage
 
-**Version:** 0.9.5.2 | **Date:** 27.06.2026 | **Time:** 00:17 (see `VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.5.3 | **Date:** 26.08.2026 | **Time:** 00:00 (see `VERSION` or `setup_usd_project.py --version`)
 **Tag block:**
 #troubleshooting #standalone #stage #conversion #directrl #openusd #workflow_automation #best_practices #usd_core #variants #layers #composition #framework_integration #ai_coding_agents #deterministic_workflows #usd_goodstart
 
 ## Quick Start
 
-The setup script can be run in multiple ways:
+Download `USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`, unpack it, and run the launcher for your operating system:
 
 ### Method 1: Double-Click (Windows)
-1. Navigate to `scripts/` folder
+1. Unpack the ZIP file
 2. Double-click `setup_usd_project.bat`
 3. Follow the interactive prompts
 
@@ -47,10 +47,10 @@ cd scripts
 
 ### Method 4: Linux/macOS shell
 ```bash
-# From repository root
-sh scripts/setup_usd_project.sh "/path/to/MyProject"
+# From the unpacked standalone package
+sh setup_usd_project.sh "/path/to/MyProject"
 
-# Or from an extracted standalone package that contains the shell launcher
+# Or make it executable once
 chmod +x setup_usd_project.sh
 ./setup_usd_project.sh "/path/to/MyProject"
 ```
@@ -73,7 +73,7 @@ python scripts\setup_usd_project.py "D:\MyProject"
 The setup script interactively generates a complete USD_GoodStart project structure:
 
 1. **Asks questions** about default prim name, unit system, and configuration
-2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs)
+2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/USD_Wrappers, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs, _contracts, _pipeline_reports, _comfyui_workflows)
 3. **Generates USD files** programmatically:
    - Root file with proper layer ordering
    - All layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)

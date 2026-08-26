@@ -5,7 +5,7 @@ This package contains everything you need to set up a new USD_GoodStart project.
 
 VERSION:
 --------
-See VERSION file or run:  setup_usd_project.bat --version
+See VERSION file or run:  python setup_usd_project.py --version
 
 When creating a release zip, name it: USD_GoodStart_Setup_Standalone_vX.Y.Z.zip
 
@@ -21,15 +21,15 @@ CONTENTS:
 
 QUICK START:
 ------------
-1. Extract this zip file to any location
-2. Double-click setup_usd_project.bat
-3. Follow the interactive prompts
+1. Extract this zip file to any location.
+2. On Windows, double-click setup_usd_project.bat.
+3. On Linux or macOS, open a terminal in the extracted folder and run:
+     sh setup_usd_project.sh
+4. Follow the interactive prompts.
 
-Or run from command line:
-  setup_usd_project.bat "D:\MyProject"
-
-On Linux or macOS:
-  sh setup_usd_project.sh "/path/to/MyProject"
+Optional target directory:
+  Windows: setup_usd_project.bat "D:\MyProject"
+  Linux/macOS: sh setup_usd_project.sh "/path/to/MyProject"
 
 Or make it executable once:
   chmod +x setup_usd_project.sh
@@ -43,7 +43,7 @@ REQUIREMENTS:
 WHAT IT DOES:
 -------------
 Generates a complete USD_GoodStart project structure with:
-- Folder hierarchy: 000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs
+- Folder hierarchy: 000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/USD_Wrappers, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs, _contracts, _pipeline_reports, _comfyui_workflows
 - One root file by scale: USD_GoodStart_m_ROOT.usda, _cm_, or _mm_ (metersPerUnit 1, 0.01, 0.001)
 - Minimal layer files (OPIN_LYR, CAM_LYR, ENV_LYR, RUNTIME_LYR, SIM_LYR, DATA_LYRs, ACTGR_LYR, ANIM_LYR, VAR_LYR, MTL_LYR, ASS_LYR)
 - README files in each folder

@@ -12,7 +12,7 @@ last_modified: '2026-02-17T09:24:41Z'
 
 # Scripts
 
-**Version:** 0.9.5.2 (see `scripts/VERSION` or `setup_usd_project.bat --version`)
+**Version:** 0.9.5.3 (see `VERSION` or `python setup_usd_project.py --version`)
 **Last Updated:** 29.01.2026 16:00
 **Tag block:**
 #framework_integration #api_integration #conversion #directrl #validation #post_production #ide #automation #layers #stage #openusd #workflow_automation #best_practices #usd_core #omniverse #hybrid #references #analysis #variants #composition
@@ -46,14 +46,18 @@ python scripts/setup_usd_project.py /path/to/new/project
 
 **Option 2: Standalone Wrappers (recommended)**
 ```bash
-# Windows Batch file (double-click or run from command line)
+# In a repository checkout:
+#   download and unpack `scripts/USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`
+#   when you want the standalone package.
+
+# Windows Batch file from a repository checkout
 scripts\setup_usd_project.bat [target_directory]
 
-# PowerShell script
+# PowerShell script from a repository checkout
 .\scripts\setup_usd_project.ps1 [target_directory]
 
-# Linux/macOS POSIX shell script
-sh scripts/setup_usd_project.sh [target_directory]
+# Linux/macOS POSIX shell script from the unpacked standalone package
+sh setup_usd_project.sh [target_directory]
 
 # Or simply double-click setup_usd_project.bat in Windows Explorer
 ```
