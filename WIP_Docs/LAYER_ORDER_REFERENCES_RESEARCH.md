@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.9.2"
+document_version: "1.11.0"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-08-17T16:27:30+02:00"
+last_modified: "2026-10-11T01:02:00+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -43,15 +43,17 @@ agent_index:
     digital_twin_robotics_breakout: "#breakout--why-this-architecture-matters-for-digital-twins-robotics-and-omniverse"
     vfi_factory_structuring: "#19-nvidia-vfi--factory-scale-authoring-composition-and-deployment-structure"
     vfi_authoring_deployment_breakout: "#breakout--authoring-structure-is-not-deployment-structure"
+    profiles_cross_cutting: "#profiles-and-composition-contracts"
+    approach_comparison: "#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020"
     revision_history: "#revision-history"
 tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dsx, vfi, ai_factory, dataprep, deployment_packaging, instancing, value_clips, point_instancer, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles, relationships, relocates, namespace_editing, source_identifiers, presentation_hierarchy, multi_bom, plm, reimport]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.9.2 | **Date**: 17.08.2026 | **Time**: 16:27 | **GlobalID**: 20260817_1627_Layer_Order_References_v1.9.2
+**Version**: 1.11.0 | **Date**: 11.10.2026 | **Time**: 01:02 | **GlobalID**: 20261011_0102_Layer_Order_References_v1.11.0
 
-**Last Updated:** 17.08.2026 16:27<br>
+**Last Updated:** 11.10.2026 01:02<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -87,6 +89,10 @@ The [NVIDIA Virtual Facility Integration Guide](https://docs.omniverse.nvidia.co
 ### Composition architecture and assurance are orthogonal
 
 The four composition paradigms organize **where and how opinions are composed**. SimReady evaluates a different dimension: **which capabilities a declared simulation use case requires and what executable evidence proves conformance**. It is therefore a cross-cutting assurance axis, not a fifth composition paradigm.
+
+[Section 20](#profiles-and-composition-contracts) extends this distinction to profiles generally: target requirements guide implementation of cross-cutting concerns, while composition determines ownership, strength, interfaces, and loading. Capability declarations, validation evidence, and project architecture remain separate contracts.
+
+For a direct applied comparison, [Section 21](#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020) places the locally inspected Kitchen Set, NVIDIA DSX, Isaac Sim Asset Structure 3.0, and the OpenUSD Composition Contracts project/sample set labelled **0.2.0** side by side. The comparison treats them as complementary approaches at different scales, not competing universal layer orders.
 
 ```mermaid
 flowchart TB
@@ -3323,10 +3329,103 @@ Classic file pipelines can also generate optimized delivery files, but they usua
 
 ---
 
+<a id="profiles-and-composition-contracts"></a>
+
+## 20. Profiles, Cross-Cutting Concerns, and Composition Contracts
+
+**Research synthesis added 04.10.2026.** Profiles help decide how to implement cross-cutting concerns for a particular domain, industry, and application. In the context of this paper, they connect the consumer's requirements to the composition and publication choices discussed in Sections 8 and 16–19. They do not introduce another composition arc or a universal layer order.
+
+### Evidence and terminology
+
+| Source | Supported contribution | Boundary |
+|---|---|---|
+| [ASF Open Source Days '26 talk, 11:40–15:27](https://www.youtube.com/watch?v=Lb2xsgSwz1k&t=700s) | Profiles organize capabilities and discussions across domains; source identifiers, authorship, and IP protection illustrate cross-cutting concerns. | Based on the user-supplied screenshots and timestamped transcript, attributed by the user to Aaron Luke and Nick Porcino. Speaker spelling and video transcription are not independently verified. Metadata versus schemas and shared fields are open questions in this discussion, not finalized standards. |
+| [OpenUSD UsdProfiles overview](https://openusd.org/dev/user_guides/schemas/UsdProfiles/overview.html) | Capability DAG, named profile nodes, a registry, and prim-level capability/compatibility declarations. | Inspected 04.10.2026 in 26.11 development documentation; course/runtime API availability has not been tested. A declaration is not an executable conformance report. |
+| [SimReady Foundation Getting Started](https://nvidia.github.io/simready-foundation/latest/guides/getting_started.html) and [Profiles guide](https://nvidia.github.io/simready-foundation/latest/guides/profiles/profiles.html) | Versioned profiles select feature requirements for simulation use cases, with validation workflows. | A family of profiles, not a single profile. Mutable documentation; pin the actual specification and validator versions before use. No direct SimReady-to-UsdProfiles registry integration is established here. |
+| [Open Robotics interoperability proposal](https://reps.openrobotics.org/rep-0158-2006/) | An example of a community defining simulation-asset requirements for exchange across tools. | Inspected 04.10.2026; marked Draft. Its conventions are proposal-specific, not universal USD rules. |
+
+The talk's domain lanes, the OpenUSD capability graph, SimReady's validation specifications, and this paper's proposed package/authoring/deployment profiles are related uses of the word **profile**, not interchangeable implementations. In particular, a domain lane is not a physical USD layer, and the proposed USD GoodStart ownership lanes are not entries in a capability registry.
+
+Concrete documented SimReady examples include Robotics-Prop, Robot-Body, Robot-Gripper, and Open-Taxonomy-COCO. Section 17 retains the earlier guide's Neutral/Physx examples; naming differs across the current guides. OpenUSD's `studio.vfx.26.08` and `studio.mobile.v1` are illustrative documentation examples, not evidence of adopted industry standards. Categories such as physics, materials, geometry, and digital twins should not be presented as a finished catalog of standardized profiles.
+
+### From profile requirements to composition decisions
+
+The following mapping is this paper's proposed design method, derived from its existing case studies. It is not a prescribed OpenUSD architecture.
+
+| Contract question | Connection to this paper | Implementation consequence |
+|---|---|---|
+| What must the intended consumer understand or simulate? | Section 17 capability requirements; Section 16 configurable products | Select a named/versioned target and its dependencies; identify the asset configurations for which compatibility will be claimed. |
+| What must remain stable when an asset is reused? | Sections 16 and 18 public interfaces | Expose a stable entry point and relevant identity/connection information; keep implementation details behind that interface. A profile may constrain interface content without prescribing every internal filename. |
+| Who owns an opinion, and which override should win? | Section 8 scene ownership; Section 16.2 concern routing | Assign asset-intrinsic data to the reusable package and scene-specific opinions to the scene. Choose arcs and peer layer order for the intended strength. Profile dependency edges are not USD composition-strength edges. |
+| Which features are selected or loaded? | Section 16 variants and payloads | Map target requirements to configuration and loading policies. Selecting a variant or loading a payload does not itself establish profile conformance. |
+| How does the delivered artifact preserve the contract? | Section 19 authoring versus deployment | Generate and measure deployment packaging while retaining interface/identity mappings and provenance; validate the delivered configuration as well as the maintained source when transformation can affect requirements. |
+
+### Applying the three cross-cutting concerns
+
+| Concern | Proposed ownership and implementation | Evidence to retain |
+|---|---|---|
+| Source identifiers | Preserve source-system identifiers and CAD/PLM-to-USD mappings through dataprep (Section 16.1.1). Keep intrinsic product identity with the asset; distinguish instance placement and external telemetry bindings owned by the scene. A prim path alone does not express all external identities. | Source revision, mapping version, stable public interface, and identity-map checks after regeneration or repackaging. |
+| Authorship | Carry contributor and transformation provenance through composed sources and generated deployment artifacts. Decide the required information and representation with the target community; neither layer-stack inspection nor a compatibility label alone reconstructs a complete authorship record. | Source manifests and build/transform records, including relevant human/AI contribution information required by the agreed contract. These are proposed evidence requirements, not a claim of an established authorship schema. |
+| IP protection | Use delivery boundaries and externally enforced resolver/storage/service policies for privileged content. Layer separation supports organization; unloaded payloads and separate layers do not enforce access control. | Delivery manifest, applicable rights information, and checks of the actual access policy and delivered content. A profile claim cannot grant rights or prove enforcement. |
+
+Profiles can help a community codify shared requirements and domain-specific choices for these concerns. The cited talk leaves the choice between metadata and formal schemas open; this paper does not invent standard fields or assert that SimReady already implements all three proposals.
+
+### Worked design example: one robot, several consumers
+
+Consider the configurable robot package in Section 16, placed in the workcell of Section 16.2. This is a proposed teaching/design example, not a validated asset result.
+
+1. The robotics consumer selects a documented Robot-Body profile and pins its version and requirements. A visualization consumer defines a separate target contract; it does not automatically inherit the simulation claim.
+2. The same public robot interface can expose the product while configuration choices select the required physics/controller content. Whether one package can satisfy both targets must be checked against their actual constraints.
+3. Product identity and reusable connection points remain asset-owned. Cell placement, live telemetry bindings, and scenario overrides remain scene-owned according to the selected project architecture.
+4. The publication process records the source mapping, selected variants, payload/load policy, target profile, validator version, and report for the exact asset revision. A component pass does not establish that the composed workcell satisfies assembly/runtime requirements.
+5. If deployment packaging changes the representation, preserve the mappings and recheck affected requirements against the generated artifact. Compatibility declarations may summarize the intended target; they do not replace the report.
+
+The resulting design sequence is **consumer → profile requirements → ownership and interface decisions → composition/configuration → validation → deployment evidence**. This extends the paper's architecture/assurance distinction while keeping the four composition paradigms intact.
+
+**Editorial review scope:** This update adds source-backed terminology and explicitly labeled synthesis. Existing section headings and public anchors are retained. No USD runtime, SimReady validator, asset conversion, or compatibility certification was executed for this documentary update.
+
+---
+
+## 21. Quick Comparison: Kitchen Set, DSX, Asset Structure 3.0, and Composition Contracts 0.2.0
+
+This comparison asks what each approach is designed to solve. It does not rank them against one universal “best structure”: the Kitchen Set is a production scene/package example, DSX is an AI-factory digital-twin blueprint and asset pipeline, Asset Structure 3.0 is a configurable robot-package pattern, and Composition Contracts is a proposed scene/assembly ownership and evaluation framework.
+
+### Comparison table
+
+| Approach and scale | Composition / authoring center | Main benefit and speciality | Best fit and boundary |
+|---|---|---|---|
+| **Kitchen Set — film/animation scene and reusable asset packages** | Scene references reusable packages; payloads defer heavy contents; asset interfaces expose variant choices, including lofted choices above payloads. A local read-only audit found **425 reference sites across 76 unique packages**. Its instanced entrypoint marked 425 sites instanceable and composed 114 prototypes. | Strong production example of reference/payload reuse, publishable asset interfaces, variant discovery without loading heavy implementation, and native instancing at repeated sites. It demonstrates a mature visual-scene reuse pattern. | Best evidence here for a film/animation set and reusable visual assets. In the inspected files, no Physics schemas/time samples or Material/Shader prim types were found; appearance used `displayColor`. This is a bounded scan, not a claim about every Kitchen Set release or a judgment of the production pipeline. Layer/file counts are not speed or memory benchmarks. |
+| **NVIDIA DSX — AI-factory digital twin and SimReady delivery pipeline** | CAD/BIM source is converted and optimized; geometry and simulation metadata are developed on parallel tracks, then combined into a validated OpenUSD asset. Published equipment packages have a public interface, property and connection-point layers, internal/external payloads, and a Scene Optimizer preset. The wider blueprint connects assets to facility simulation, surrogate services, data storage, runtime applications and agents. | Specializes in industrial equipment semantics and facility integration: power, thermal/cooling, electrical and connection-point data, geometry optimization, selective loading, and an end-to-end AI-factory digital-twin workflow. | Best fit for converting and integrating facility equipment into a system-level digital twin. DSX is a blueprint/workflow, not a universal scene sublayer order; it does not prescribe the Composition Contracts stack. Its pipeline and runtime are broader than an individual asset folder. |
+| **NVIDIA Isaac Sim Asset Structure 3.0 — configurable robot asset** | One stable robot interface composes purpose-specific base, instances, geometry, material and Robot Schema content; physics backends and optional capabilities are selected through variants/payloads. The package can preserve one robot identity while exposing multiple simulation configurations. | Specializes in articulated robotics and simulation configuration: shared geometry and robot structure, separable backend physics, and selectable controllers, ROS, sensors or end effectors without duplicating the product. | Best fit for publishing and consuming a configurable robot as a reusable asset. It describes the robot package boundary, not the complete scene/workcell ownership model, external telemetry authority, or facility-level data lifecycle. A workcell still needs a scene/assembly composition policy. |
+| **OpenUSD Composition Contracts project/sample set 0.2.0 — nested scene and assembly authoring** | A thin `SceneROOT` assembles role-owned scene layers. The baseline orders `DataLyr → TransLyr → VariLyr → GeoLyr` (strongest first), with GeoLyr weakest; Opinion is the default persistent authoring target. Asset/assembly packages retain their own interfaces and implementations. Current samples add 1,024 repeated reference occurrences and a PointInstancer demonstration with six prototype configurations over two source shapes and three shared materials. | Specializes in stating **why** a composition exists, who owns each opinion, where scene choices may override asset choices, and how humans or agents evaluate results against requirements. It aims to scale those rules recursively from assets through assemblies to scenes, with separate data, simulation and runtime roles. | Best fit for project-wide scene/assembly ownership, explicit authoring rules, and repeatable evaluation/cleanup planning across digital-twin scenarios. It is an independent proposal with local examples, not an industry standard or a validated automation system. Instancing is authored, but performance is unbenchmarked; MotionGraphics live behavior and overall conformance remain under development. |
+
+### Important version and evidence boundary
+
+The compared Composition Contracts project README is labelled **0.2.0**. At the time of this comparison, `CompositionContracts.md` itself still identifies its normative working text as **0.1.1**. Therefore, “0.2.0” here identifies the current project/example state and its additions, not a separately revised or accepted 0.2.0 contract specification. Reconcile those labels before presenting 0.2.0 as a released contract revision.
+
+Kitchen Set figures above come from a local, read-only inspection of the supplied scene/package files. The inspected entrypoints composed **230 USD layers with `LoadAll` and 78 with `LoadNone`**, including the anonymous session layer in those stage counts. These are composition/load-scope observations, not performance results. No rendering, memory, timing, robotics or simulation benchmark was run for this comparison. DSX and Asset Structure 3.0 descriptions summarize NVIDIA's published documentation and the source analyses in Sections 16–18. Composition Contracts counts summarize the current local example documentation and authoring record; they do not prove runtime acceptance.
+
+### How the approaches fit together
+
+These approaches are most useful as layers of a larger design:
+
+1. **Use an asset-package pattern for each product.** A robot may follow Asset Structure 3.0 principles; facility equipment may follow the DSX SimReady delivery pattern. The scene should reference their stable published interfaces and preserve each package's own schema, variant and payload context.
+2. **Use a scene/assembly contract for composition across packages.** Composition Contracts focuses on occurrence placement, scene scenarios, responsibility for cross-asset bindings, identity/context, simulation inputs and runtime state. It should not copy internal robot or equipment implementation into the scene stack.
+3. **Borrow production techniques where they fit.** The Kitchen Set is useful evidence for reusable packages, payload-aware variant interfaces and instance sharing. Adopt those mechanisms where they meet the target requirements; they do not, by themselves, define industrial identity, connection semantics or runtime authority.
+4. **Evaluate the composed system against its purpose.** A valid asset package does not prove a valid workcell or factory. A visually efficient instance layout does not prove simulation fidelity. The applicable contract/profile must state required behavior, evidence, load policy, update authority and acceptance measures at each boundary.
+
+The concise distinction is: **Kitchen Set demonstrates production reuse; Asset Structure 3.0 packages configurable robots; DSX connects validated industrial equipment to an AI-factory twin; Composition Contracts proposes ownership and evaluation rules for composing such packages into nested scenes.** They can be combined, but none is a substitute for the others.
+
+**Evidence sources:** [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html), [DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), [DSX system architecture](https://docs.omniverse.nvidia.com/dsx/latest/system-architecture.html), and [OpenUSD Composition Contracts project](https://github.com/jph2/OpenUSD_Composition_Contracts). Kitchen Set counts are attributed to the local inspection described above; they are not externally benchmarked results.
+
+**Editorial review scope:** Added a 0.2.0 project/example comparison and clarified its mismatch with the contract text's 0.1.1 label. Existing section headings and public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
+
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.11.0 | 2026-10-11 | Added Section 21's requirements-led comparison of the inspected Kitchen Set, NVIDIA DSX, Isaac Sim Asset Structure 3.0, and the Composition Contracts project/example set labelled 0.2.0. Distinguished their scale, composition center, speciality, benefits, boundaries, source evidence, and ways they can be combined; flagged that CompositionContracts.md remains labelled 0.1.1. Preserved existing section routes and the pre-existing 1.10.0 draft. |
+| 1.10.0 | 2026-10-04 | Added Section 20 connecting profiles and cross-cutting concerns to the existing composition, identity, asset-interface, validation, and deployment research. Distinguished domain lanes, UsdProfiles declarations, SimReady profiles, and project architecture policies; added source/maturity boundaries and a proposed multi-consumer robot example. Preserved existing section routes. |
 | 1.9.2 | 2026-08-17 | Added explicit stable anchors for the OpenUSD learning and ecosystem resource index, preserving the existing `#openusd-learning--ecosystem-resources` URL while introducing the canonical `#openusd-learning-ecosystem-resources` route; renamed the heading to avoid an ampersand-dependent autogenerated GitHub slug. |
 | 1.9.1 | 2026-08-08 | Added native Mermaid color classes to the Section 19 VFI authoring-to-deployment diamond for clearer visual separation of source intake, maintained interfaces, modular authoring, deployment packaging, measurement, and runtime publication while preserving the editable diagram source. |
 | 1.9.0 | 2026-08-08 | Added Section 19 integrating NVIDIA Virtual Facility Integration guidance and the NVIDIA Omniverse Blueprints/Workflows source map; separated engineering source, modular authoring, composed operational, and generated deployment structures; added the VFI authoring-to-deployment diamond, seven-step transfer table, GoodStart/VFI/Isaac comparison, directional packaging-performance evidence, instancing and object-handling implications, discovery-source dispositions, new GoodStart contract fields, and the correction that modular authoring truth may be reproducibly packaged for a measured runtime without becoming a fifth composition paradigm or a flattened replacement source. Updated the Executive Summary, decision guide, ecosystem resources, canonical links, GoodStart policy, ARYS routing, tags, and synchronized version metadata. |
