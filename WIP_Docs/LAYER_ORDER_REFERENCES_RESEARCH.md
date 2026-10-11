@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.11.1"
+document_version: "1.12.0"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-10-11T01:20:00+02:00"
+last_modified: "2026-10-11T01:35:00+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -51,7 +51,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.11.1 | **Date**: 11.10.2026 | **Time**: 01:20 | **GlobalID**: 20261011_0120_Layer_Order_References_v1.11.1
+**Version**: 1.12.0 | **Date**: 11.10.2026 | **Time**: 01:35 | **GlobalID**: 20261011_0135_Layer_Order_References_v1.12.0
 
 **Last Updated:** 11.10.2026 01:02<br>
 **Framework:** USD GoodStart / Studio Framework<br>
@@ -59,7 +59,7 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 **Origin Domain:** Domain020<br>
 **Git:** Repo: USD_GoodStart | Branch: main | Path: WIP_Docs/LAYER_ORDER_REFERENCES_RESEARCH.md | Commit: pending
 
-**Purpose:** Collect documented USD sublayer-order conventions and **LIV(E)RPS / composition-arc strategies** from public industry sources; compare them to the [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) and an author-created **M&E practitioner synthesis**; record trade-offs and diagrams for discussion.
+**Purpose:** Collect documented USD sublayer-order conventions and **LIV(E)RPS / composition-arc strategies** from public industry sources; preserve the historic [**USD GoodStart layer-order proposal**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) as research context; and record the step toward the current [**OpenUSD GoodStart Composition Contract**](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main), where the broader composition knowledge and discussion are now bundled and focused.
 
 **Related**: [README.md — Quick Structure & Layer Stack Order](../README.md#quick-structure)
 
@@ -76,7 +76,7 @@ OpenUSD does **not** prescribe one universal layer order or asset structure. Thi
 
 [NVIDIA Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html) is the clearest configurable-product example in this paper. It combines a stable public asset identity with shared base data, deferred payloads, and variant-selected physics, controller, and end-effector features. Its significance is not the robot-specific filenames, but the deliberate use of composition arcs according to their native purposes. See the [detailed Asset Structure 3.0 case study](#16-nvidia-isaac-sim-60---asset-structure-30).
 
-For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) can define scene-level ownership for assets, metadata, simulation, and runtime state, while factories, lines, cells, machines, and robots expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. The hierarchy-reconciliation rule is to preserve source identity and mapping evidence, use relationships or collections for alternate non-transform views, use references and authored transforms for placement, and reserve relocates for deliberate composed-namespace edits. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications), [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary), and [Section 16.1.1 - Engineering-to-twin hierarchy reconciliation](#1611-engineering-to-twin-hierarchy-reconciliation).
+For digital twins, the strongest conclusion is to combine paradigms rather than force every concern into one stack. The [historic USD GoodStart layer-order proposal](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) was a step toward the current [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main), but its prescribed layer order is now partly outdated. The Composition Contract repo is the current place to bundle this knowledge and focus discussion of scene-level ownership, composition responsibilities, and evaluation rules. Factories, lines, cells, machines, and robots should expose recursively composed public asset interfaces below that boundary. Dataprep must transform source-oriented CAD, BIM, plant, and robotics hierarchies into those simulation-oriented packages and validate them against explicit, versioned requirements. The hierarchy-reconciliation rule is to preserve source identity and mapping evidence, use relationships or collections for alternate non-transform views, use references and authored transforms for placement, and reserve relocates for deliberate composed-namespace edits. See [Section 16.1 - Digital Twin Implications](#161-digital-twin-implications), [Dataprep pipeline as the transformation boundary](#dataprep-pipeline-as-the-transformation-boundary), and [Section 16.1.1 - Engineering-to-twin hierarchy reconciliation](#1611-engineering-to-twin-hierarchy-reconciliation).
 
 The [Workcell-DigitalTwin conversion case study](#162-case-study-workcell-digitaltwin-to-asset-structure-30) turns that conclusion into a concrete migration design. It compares the inspected mixed-authoring stage with three publishable target envelopes: a pure Asset Structure 3.0-inspired product, a minimal three-layer scene around 3.0-ready assets, and the full proposed USD GoodStart layer order around the same asset packages.
 
@@ -164,7 +164,7 @@ flowchart TB
 
 VFI introduces a third question after composition architecture and capability assurance: **how should the accepted authored graph be packaged for a particular runtime?** A highly modular asset library may be correct for lifecycle management and still create excessive layer-resolution overhead in a remote or cloud deployment. Conversely, a compact runtime package may load quickly while being a poor authoring source because it hides ownership and regeneration boundaries. The maintained authoring graph, its composed semantics, and its generated deployment representation must therefore be evaluated separately and connected by reproducible build evidence.
 
-Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The proposed USD GoodStart layer order remains a **work-in-progress proposal**, not an OpenUSD or NVIDIA standard; this paper is a comparative research base for evaluating how it should evolve.
+Use the [Decision Matrix](#decision-matrix--choosing-a-composition-paradigm) to select a primary paradigm for each composition boundary. The USD GoodStart layer order documented here is a **historic, work-in-progress proposal**—not an OpenUSD or NVIDIA standard—and should be treated as an earlier step toward the current [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main). The Composition Contract repo is now the place where this knowledge is bundled and the active discussion is focused; this paper remains a comparative research record explaining that evolution.
 
 ---
 
@@ -189,7 +189,7 @@ This flexibility must not be confused with an “anything goes” architecture. 
 
 ### Scope and status
 
-This paper compares published guidance and practical examples rather than asserting one universal answer. Its **M&E practitioner synthesis** was developed by the author from internal discussions with experienced visual-effects practitioners and cross-checked against the cited public ASWF, SideFX, Pixar, and NVIDIA materials. It preserves the resulting architectural reasoning without identifying participants, linking member-only channels, reproducing confidential records, or presenting the synthesis as a studio or AOUSD standard. The [**proposed USD GoodStart layer order**](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) is one possible digital-twin/Omniverse approach that separates live/session-backed **RUNTIME** state from static **DATA** metadata and identifiers. It is actively under discussion and is evaluated here alongside published alternatives—not presented as a finished standard.
+This paper compares published guidance and practical examples rather than asserting one universal answer. Its **M&E practitioner synthesis** was developed by the author from internal discussions with experienced visual-effects practitioners and cross-checked against the cited public ASWF, SideFX, Pixar, and NVIDIA materials. It preserves the resulting architectural reasoning without identifying participants, linking member-only channels, reproducing confidential records, or presenting the synthesis as a studio or AOUSD standard. The [historic USD GoodStart layer-order proposal](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) was one possible digital-twin/Omniverse approach that separates live/session-backed **RUNTIME** state from static **DATA** metadata and identifiers. It is now partly outdated and should be understood as a step toward the [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main), which is the current repository for bundling the knowledge and focusing the discussion—not as a finished OpenUSD standard.
 
 ---
 
@@ -1133,7 +1133,7 @@ flowchart LR
 
 ## 8. Proposed USD GoodStart Layer Order — Digital Twin + Omniverse Template
 
-**Source:** [Proposed USD GoodStart layer order — TL;DR](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) · [local USD_GoodStart README](../README.md) · this repo's `USD_GoodStart_ROOT.usda`
+**Source:** [Historic USD GoodStart layer-order proposal — TL;DR](https://github.com/jph2/USD_GoodStart#tldr-too-long-didnt-read) · [local USD_GoodStart README](../README.md) · this repo's `USD_GoodStart_ROOT.usda` · current [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main)
 
 **Order (strong → weak):** OPIN → CAM → ENV → RUNTIME → SIM → DATA → ACTGR → ANIM → VAR → MTL → PHY → **ASS**
 
@@ -3076,9 +3076,9 @@ Common interchange files such as OBJ, FBX, STEP, or a flattened scene export can
 
 For Omniverse, this distinction is operational rather than academic. DSX combines validated SimReady OpenUSD assets with Kit applications, USD storage, simulation services, a simulation data delegate, a data lake, streaming, and AI-agent interaction. The asset packages provide stable authored interfaces; the runtime systems provide changing simulation and operational context. If those responsibilities are flattened into one mutable file or one undifferentiated strongest layer, asset updates can overwrite operational edits, runtime values can contaminate reusable product truth, and configuration or loading choices become difficult to reproduce.
 
-### Resulting GoodStart policy
+### Resulting GoodStart policy (historic layer-order proposal)
 
-The proposed USD GoodStart layer order remains useful as a **scene-level ownership policy**, subject to these corrected rules:
+The proposed USD GoodStart layer order remains useful as a **historic scene-level ownership policy** and research baseline, subject to these corrected rules. It is a step toward the current [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main), which is now the place to bundle the broader knowledge and focus active composition-contract discussion:
 
 1. Keep the project root thin and treat its ordered sublayers as contracted ownership lanes, not as a universal taxonomy or version history.
 2. Let `ASS_LYR.usda` reference the public interface of an atomic asset package; do not reach into private layers or payloads.
@@ -3418,13 +3418,14 @@ The concise distinction is: **Kitchen Set demonstrates production reuse; Asset S
 
 **Evidence sources:** [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html), [DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), [DSX system architecture](https://docs.omniverse.nvidia.com/dsx/latest/system-architecture.html), and the [OpenUSD GoodStart Composition Contract project](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main). Kitchen Set counts are attributed to the local inspection described above; they are not externally benchmarked results.
 
-**Editorial review scope:** Added a 0.2.0 project/example comparison and clarified its mismatch with the contract text's 0.1.1 label. Existing section headings and public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
+**Editorial review scope:** Added a 0.2.0 project/example comparison, clarified its mismatch with the contract text's 0.1.1 label, and marked the local layer-order proposal as historic context leading to the current Composition Contract repository. Existing public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
 
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
 | 1.11.1 | 2026-10-11 | Renamed the current project in the comparison to OpenUSD GoodStart Composition Contract, updated its repository link after the rename, and distinguished it from the historic USD GoodStart layer-order proposal. Preserved existing section routes and the pre-existing 1.11.0 comparison. |
+| 1.12.0 | 2026-10-11 | Reframed the USD GoodStart layer order as a historic, partly outdated proposal and identified it as a step toward the OpenUSD GoodStart Composition Contract. Linked the Composition Contract repository as the current place for bundled knowledge and focused discussion, and updated the paper's explanatory passages accordingly. |
 | 1.10.0 | 2026-10-04 | Added Section 20 connecting profiles and cross-cutting concerns to the existing composition, identity, asset-interface, validation, and deployment research. Distinguished domain lanes, UsdProfiles declarations, SimReady profiles, and project architecture policies; added source/maturity boundaries and a proposed multi-consumer robot example. Preserved existing section routes. |
 | 1.9.2 | 2026-08-17 | Added explicit stable anchors for the OpenUSD learning and ecosystem resource index, preserving the existing `#openusd-learning--ecosystem-resources` URL while introducing the canonical `#openusd-learning-ecosystem-resources` route; renamed the heading to avoid an ampersand-dependent autogenerated GitHub slug. |
 | 1.9.1 | 2026-08-08 | Added native Mermaid color classes to the Section 19 VFI authoring-to-deployment diamond for clearer visual separation of source intake, maintained interfaces, modular authoring, deployment packaging, measurement, and runtime publication while preserving the editable diagram source. |
