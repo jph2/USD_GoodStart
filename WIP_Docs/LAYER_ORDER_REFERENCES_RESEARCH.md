@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.12.0"
+document_version: "1.16.0"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-10-11T01:35:00+02:00"
+last_modified: "2026-10-11T12:27:00+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -43,17 +43,19 @@ agent_index:
     digital_twin_robotics_breakout: "#breakout--why-this-architecture-matters-for-digital-twins-robotics-and-omniverse"
     vfi_factory_structuring: "#19-nvidia-vfi--factory-scale-authoring-composition-and-deployment-structure"
     vfi_authoring_deployment_breakout: "#breakout--authoring-structure-is-not-deployment-structure"
-    profiles_cross_cutting: "#profiles-and-composition-contracts"
-    approach_comparison: "#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020"
-    revision_history: "#revision-history"
+  profiles_cross_cutting: "#profiles-and-composition-contracts"
+  approach_comparison: "#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020"
+  research_outcome: "#current-research-outcome-four-approaches-one-composition-contract"
+  research_record: "#research-record-behind-this-outcome"
+  revision_history: "#revision-history"
 tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_order, asset_structure, vfx, digital_twin, robotics, isaac_sim, omniverse, dsx, vfi, ai_factory, dataprep, deployment_packaging, instancing, value_clips, point_instancer, best_practices, pipeline, pipeline_architecture, usd_goodstart, research, case_study, workcell, cad_conversion, simready_foundation, validation, standardization, capability_profiles, relationships, relocates, namespace_editing, source_identifiers, presentation_hierarchy, multi_bom, plm, reimport]
 ---
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.12.0 | **Date**: 11.10.2026 | **Time**: 01:35 | **GlobalID**: 20261011_0135_Layer_Order_References_v1.12.0
+**Version**: 1.16.0 | **Date**: 11.10.2026 | **Time**: 12:27 | **GlobalID**: 20261011_1227_Layer_Order_References_v1.16.0
 
-**Last Updated:** 11.10.2026 01:02<br>
+**Last Updated:** 11.10.2026 12:27<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -71,6 +73,34 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 ## Executive Summary
 
 > **Publication and affiliation status:** This is independent author research. Its externally verifiable evidence base consists of publicly accessible documentation and repositories; the M&E comparison also includes an anonymized author synthesis informed by internal practitioner discussions, without reproducing private records or attributing participants. It is not an [Alliance for OpenUSD (AOUSD)](https://aousd.org/) publication, Interest Group recommendation, approved deliverable, certification, or endorsement. References to AOUSD describe only publicly documented organizational scope and standards activity.
+
+### Current research outcome: four approaches, one composition contract
+
+The comparison at the end of this paper is the current synthesis of the longer research record below. These approaches solve related but different structural problems; they are complementary patterns, not competing universal layer orders.
+
+**The four-way comparison and implementation-level diagrams:** [21. Kitchen Set, DSX, Asset Structure 3.0, and Composition Contracts](#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020).
+
+
+| Approach | Structural center | What the research shows |
+|---|---|---|
+| [Kitchen Set](#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020) | Production scene assembled from reusable asset packages | References, payloads, published choices, and native instancing support large visual scenes. |
+| [NVIDIA DSX](#18-nvidia-dsx-blueprint--evidence-based-conclusions-and-goodstart-corrections) | Industrial equipment publication and facility delivery | Public asset interfaces connect geometry, properties, connection points, selective loading, conversion, and validation. |
+| [Isaac Sim Asset Structure 3.0](#16-nvidia-isaac-sim-60---asset-structure-30) | Configurable robot product | A stable package interface composes shared structure and geometry with selectable physics backends and optional capabilities. |
+| [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main) | Ownership and evaluation across nested assets, assemblies, and scenes | Explicit composition responsibilities and evaluation rules provide the current home for bundling this knowledge and focusing the discussion. |
+
+
+---
+
+**Current conclusion:** the historic USD GoodStart layer-order proposal was a useful step, but its prescribed order is now partly outdated and does not capture the full range of ownership, asset, assembly, and evaluation questions explored here. The OpenUSD GoodStart Composition Contract is the next step and the active place to consolidate and develop that architecture. This remains an independent, evolving proposal—not an OpenUSD standard or industry endorsement. This paper preserves the evidence, comparisons, and reasoning that led to that conclusion; it does not replace the Contract repository as the focus of ongoing composition-contract work.
+
+### Research record behind this outcome
+
+The supporting research remains below in its existing sequence. Use this map to follow the evidence and analysis:
+
+- **Published layer-order and asset-structure evidence:** [1. M&E shot stack](#1-me-shot-stack--internal-practitioner-synthesis); [2. ASWF / USD Working Group](#2-aswf--usd-working-group--asset-timeline-principle); [3. SideFX Houdini](#3-sidefx-houdini--shot-sublayer-example); [4. Pixar](#4-pixar--siggraph-2019-composition-teaching-shot); [5. NVIDIA Omniverse Explorer / Conductor](#5-nvidia-omniverse--explorer--conductor-stage-layers); [6. NVIDIA DLI](#6-nvidia-dli--asset-internal-layer-stack); [7. openusd.work](#7-openusdwork--minimal-three-layer-shot); [8. historic USD GoodStart layer order](#8-proposed-usd-goodstart-layer-order--digital-twin--omniverse-template); [9. NVIDIA Learn OpenUSD](#9-nvidia-learn-openusd--skyscraper-exercise-shading-over-geometry); [10. NVIDIA da Vinci workshop](#10-nvidia-da-vinci-workshop--delta-layers-film-production-sample); [11. Remedy](#11-remedy--book-of-usd--per-asset-layer-stack-games); [12. USD Survival Guide](#12-luca-scheller--usd-survival-guide-vfx--houdini); [13. ASWF reference-first contributions](#13-aswf--reference-first-asset-contributions); and [14. Omniverse session and live layers](#14-omniverse--session--live-layers-strongest-of-all).
+- **Synthesis and selection:** [cross-source synthesis](#cross-source-synthesis--needs-vs-typical-pattern), [Master Comparison Table](#master-comparison-table), [Decision Guide](#choosing-an-approach--decision-guide), [learning and ecosystem resources](#openusd-learning-and-ecosystem-resources), and [canonical reference links](#canonical-reference-links).
+- **Applied digital-twin, simulation, and deployment evidence:** [15. SimReady / Physical AI addendum](#15-nvidia-simready--physical-ai-addendum---rules-that-affect-the-proposed-usd-goodstart-layer-order); [16. Isaac Sim Asset Structure 3.0 and digital-twin case studies](#16-nvidia-isaac-sim-60---asset-structure-30); [17. SimReady Foundation](#17-nvidia-simready-foundation-capability-contracts-validation-and-standardization); [18. NVIDIA DSX](#18-nvidia-dsx-blueprint--evidence-based-conclusions-and-goodstart-corrections); [19. NVIDIA VFI](#19-nvidia-vfi--factory-scale-authoring-composition-and-deployment-structure); and [20. profiles and cross-cutting concerns](#profiles-and-composition-contracts).
+- **The four-way comparison and implementation-level diagrams:** [21. Kitchen Set, DSX, Asset Structure 3.0, and Composition Contracts](#21-quick-comparison-kitchen-set-dsx-asset-structure-30-and-composition-contracts-020).
 
 OpenUSD does **not** prescribe one universal layer order or asset structure. This research identifies four complementary composition paradigms: **departmental shot refinement**, **scene/digital-twin ownership lanes**, **published reusable assets**, and **configurable simulation products**. They answer different questions and often belong at different scales of the same project.
 
@@ -3399,6 +3429,97 @@ This comparison asks what each approach is designed to solve. It does not rank t
 | **NVIDIA Isaac Sim Asset Structure 3.0 — configurable robot asset** | One stable robot interface composes purpose-specific base, instances, geometry, material and Robot Schema content; physics backends and optional capabilities are selected through variants/payloads. The package can preserve one robot identity while exposing multiple simulation configurations. | Specializes in articulated robotics and simulation configuration: shared geometry and robot structure, separable backend physics, and selectable controllers, ROS, sensors or end effectors without duplicating the product. | Best fit for publishing and consuming a configurable robot as a reusable asset. It describes the robot package boundary, not the complete scene/workcell ownership model, external telemetry authority, or facility-level data lifecycle. A workcell still needs a scene/assembly composition policy. |
 | **OpenUSD GoodStart Composition Contract project/sample set 0.2.0 — nested scene and assembly authoring** | A thin `SceneROOT` assembles role-owned scene layers. The baseline orders `DataLyr → TransLyr → VariLyr → GeoLyr` (strongest first), with GeoLyr weakest; Opinion is the default persistent authoring target. Asset/assembly packages retain their own interfaces and implementations. Current samples add 1,024 repeated reference occurrences and a PointInstancer demonstration with six prototype configurations over two source shapes and three shared materials. | Specializes in stating **why** a composition exists, who owns each opinion, where scene choices may override asset choices, and how humans or agents evaluate results against requirements. It aims to scale those rules recursively from assets through assemblies to scenes, with separate data, simulation and runtime roles. | Best fit for project-wide scene/assembly ownership, explicit authoring rules, and repeatable evaluation/cleanup planning across digital-twin scenarios. It is an independent proposal with local examples, not an industry standard or a validated automation system. Instancing is authored, but performance is unbenchmarked; MotionGraphics live behavior and overall conformance remain under development. |
 
+### Technical composition flowcharts
+
+The comparison uses these implementation-level diagrams as its sole visual schema comparison; the earlier high-level overview has been removed to avoid duplicating the same approaches at a less detailed level. Each technical diagram is its own full-width, left-to-right flow, stacked directly below the comparison table. The Kitchen Set lane reports local inspection counts; the final two diagrams follow the Composition Contract repository's [SceneROOT_Instanced_Rings reuse diagram](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/blob/main/examples/01_LayeredScene/diagrams/SceneROOT_Instanced_Rings_reuse.mmd) and USD example. Its `InstanceGrid` is a static grid of instanceable references rather than a PointInstancer.
+
+#### A · Kitchen Set — observed scene/package reuse
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    KROOT["Kitchen Set scene entrypoint"] -->|"references at composed prim sites"| KSITES["425 reference sites<br/>76 unique asset packages"]
+    KSITES -->|"resolve to"| KIFACE["Reusable asset interfaces"]
+    KIFACE -->|"payload arcs defer"| KPAY["Heavy package contents"]
+    KIFACE -->|"publish choices above payload"| KVAR["Variant sets / lofted choices"]
+    KSITES -->|"instanced entrypoint marks sites instanceable"| KINST["425 instanceable sites"]
+    KINST -->|"compose into"| KPROTO["114 prototypes"]
+```
+
+#### B · NVIDIA DSX — equipment package and delivery path
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    DSXSCENE["Scene GeoLyr / ASS_LYR"] -->|"references public entrypoint"| DSXIF["model_name.usd<br/>asset interface"]
+    DSXIF -->|"subLayers[0] · strongest sublayer"| DSXPROP["layers/<br/>model_name_Properties.usda"]
+    DSXIF -->|"subLayers[1]"| DSXCON["layers/<br/>model_name_ConnectionPoints.usd"]
+    DSXIF -->|"payload · default available"| DSXEXT["payloads/external.usd<br/>external shell"]
+    DSXIF -->|"payload · opt-in / inactive in sample"| DSXINT["payloads/internal.usd<br/>internal detail"]
+    DSXPRESET["data/model_name.json<br/>Scene Optimizer preset<br/>not a USD composition arc"] -.->|"drives"| DSXBUILD["CAD conversion +<br/>geometry optimization"]
+    DSXBUILD -->|"builds payload"| DSXEXT
+    DSXBUILD -->|"builds payload"| DSXINT
+    DSXPROP --> DSXVALID["Package / geometry validation"]
+    DSXCON --> DSXVALID
+    DSXEXT --> DSXVALID
+    DSXINT --> DSXVALID
+```
+
+#### C · Isaac Sim Asset Structure 3.0 — robot package internals
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    ROBOTSCENE["Scene ASS_LYR"] -->|"reference one stable target"| ROBOTIF["robot_name.usda<br/>public asset interface"]
+    ROBOTIF -->|"reference"| ROBOTBASE["base.usda<br/>structural assembly"]
+    ROBOTBASE -->|"composes"| ROBOTINST["instances.usda<br/>visual + collision assembly"]
+    ROBOTINST -->|"prim references"| ROBOTGEO["geometries.usd<br/>mesh geometry"]
+    ROBOTINST -->|"references"| ROBOTMAT["materials.usda<br/>material definitions"]
+    ROBOTBASE -->|"sublayers"| ROBOTSCHEMA["robot.usda<br/>Robot Schema contribution"]
+    ROBOTPHYS["physics.usda<br/>shared / neutral physics"] -->|"backend layers build on it"| ROBOTBACK["physx.usda · mujoco.usda<br/>other backend layers"]
+    ROBOTIF -.->|"physics variant selects"| ROBOTBACK
+    ROBOTIF -.->|"variant / payload"| ROBOTOPT["Controller · ROS · sensors<br/>optional behavior stack"]
+    ROBOTIF -.->|"variant / payload"| ROBOTEND["Gripper / end-effector stack"]
+```
+
+#### D · OpenUSD GoodStart Composition Contract — scene and occurrence structure
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    CCROOT["SceneROOT_Instanced_Rings.usda<br/>defaultPrim = World"] -->|"subLayers, strongest → weakest"| CCOP["OpinLYR_default.usda<br/>default persistent authoring target"]
+    CCOP --> CCDATA["DataLyr.usda"]
+    CCDATA --> CCTRANS["TransLyr_Instanced_Rings.usda"]
+    CCTRANS --> CCVAR["VariLyr_Instanced_Rings.usda"]
+    CCVAR --> CCGEO["GeoLyr_Instanced.usda<br/>weakest work layer"]
+    CCGEO -->|"authors /World/InstanceGrid occurrence prims"| CCGRID["512 Cube + 512 Cone sites<br/>/World/InstanceGrid/Shape_rXX_cYY/Adjustment/Asset"]
+    CCGRID -->|"instanceable reference sites"| CCCUBE["AssetROOT_CubeLofted.usda"]
+    CCGRID -->|"instanceable reference sites"| CCCONE["AssetROOT_ConeLofted.usda"]
+    CCVAR -.->|"selects per source site"| CCCHOICE["Size × Finish<br/>9 configurations per shape"]
+    CCTRANS -.->|"places occurrence parents"| CCGRID
+```
+
+#### D2 · Asset payloads, finish bindings, and assembly reuse
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    CCCUBE["AssetROOT_CubeLofted.usda"] -->|"payload"| CUBECONT["ContentsLyr.usda<br/>Vari + Mat + Trans + Geo implementation"]
+    CCCONE["AssetROOT_ConeLofted.usda"] -->|"payload"| CONECONT["ContentsLyr.usda<br/>Vari + Mat + Trans + Geo implementation"]
+    CCCUBE -->|"exposes above payload"| CUBEVAR["Asset VariLyr<br/>Size / Finish choices"]
+    CCCONE -->|"exposes above payload"| CONEVAR["Asset VariLyr<br/>Size / Finish choices"]
+    CUBECONT -->|"composes MatLyr"| CUBEMAT["Cube MatLyr<br/>Looks / Red, Blue, Yellow reference sites"]
+    CONECONT -->|"composes MatLyr"| CONEMAT["Cone MatLyr<br/>Looks / Red, Blue, Yellow reference sites"]
+    CUBEVAR -->|"Finish variant binds Geometry to selected Looks"| CUBEMAT
+    CONEVAR -->|"Finish variant binds Geometry to selected Looks"| CONEMAT
+    CUBEMAT -->|"references shared materials"| CCPAL["Palette_v001.usda<br/>Red / Blue / Yellow materials"]
+    CONEMAT -->|"references shared materials"| CCPAL
+    CCPAIRSITE["/World/Pair01/Adjustment/Asset"] -->|"reference"| CCPAIR["AssetROOT_DisplayPairLofted.usda"]
+    CCPAIR -->|"payload"| CCPAIRCONT["ContentsLyr.usda<br/>assembly placement + child references"]
+    CCPAIRCONT -->|"CubePart reference"| CCCUBE
+    CCPAIRCONT -->|"ConePart reference"| CCCONE
+```
+
 ### Important version and evidence boundary
 
 The compared OpenUSD GoodStart Composition Contract project README is labelled **0.2.0**. At the time of this comparison, `CompositionContracts.md` itself still identifies its normative working text as **0.1.1**. Therefore, “0.2.0” here identifies the current project/example state and its additions, not a separately revised or accepted 0.2.0 contract specification. Reconcile those labels before presenting 0.2.0 as a released contract revision.
@@ -3418,14 +3539,21 @@ The concise distinction is: **Kitchen Set demonstrates production reuse; Asset S
 
 **Evidence sources:** [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html), [DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), [DSX system architecture](https://docs.omniverse.nvidia.com/dsx/latest/system-architecture.html), and the [OpenUSD GoodStart Composition Contract project](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main). Kitchen Set counts are attributed to the local inspection described above; they are not externally benchmarked results.
 
-**Editorial review scope:** Added a 0.2.0 project/example comparison, clarified its mismatch with the contract text's 0.1.1 label, and marked the local layer-order proposal as historic context leading to the current Composition Contract repository. Existing public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
+**Editorial review scope:** Added a 0.2.0 project/example comparison, clarified its mismatch with the contract text's 0.1.1 label, and marked the local layer-order proposal as historic context leading to the current Composition Contract repository. Section 21 retains the table and separate full-width technical flowcharts; the earlier high-level overview was removed. The current four-approach synthesis and a linked map of the existing research record are now front-loaded in the Executive Summary. The technical view maps local Kitchen Set counts, documented DSX and Isaac composition patterns, and the Composition Contract repository's `SceneROOT_Instanced_Rings` sample. Mermaid edge labels are quoted to preserve bracketed sublayer indices as text. Existing public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
 
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 1.11.1 | 2026-10-11 | Renamed the current project in the comparison to OpenUSD GoodStart Composition Contract, updated its repository link after the rename, and distinguished it from the historic USD GoodStart layer-order proposal. Preserved existing section routes and the pre-existing 1.11.0 comparison. |
+| 1.16.0 | 2026-10-11 | Front-loaded the current four-approach synthesis and the conclusion that the historic GoodStart layer-order proposal leads toward the OpenUSD GoodStart Composition Contract; added a linked map to the research evidence while preserving the detailed analysis and Section 21 comparison. |
+| 1.15.1 | 2026-10-11 | Removed the earlier high-level Section 21 overview chart and retained the full-width, vertically stacked technical flowcharts as the sole visual comparison beneath the table. |
+| 1.15.0 | 2026-10-11 | Kept the overview chart and split the technical comparison into full-width left-to-right diagrams stacked vertically, with the Composition Contract scene-layer path and nested asset/assembly path shown separately for readability. |
+| 1.14.1 | 2026-10-11 | Quoted Mermaid edge labels throughout the technical composition chart so bracketed sublayer indices parse as label text and the diagram renders. |
+| 1.14.0 | 2026-10-11 | Kept the four-approach overview and added a technical dependency flowchart beneath it: reference sites, interfaces, sublayers, payloads, variant selection, instancing/prototypes, shared materials, and assembly reuse for the inspected/project-specific examples. |
+| 1.13.1 | 2026-10-11 | Changed each approach in the Section 21 comparison flowchart to a horizontal left-to-right layout and matched the Mermaid initialization settings used by the Composition Contract diagrams. |
+| 1.13.0 | 2026-10-11 | Added a side-by-side Mermaid schema flowchart directly below the Section 21 comparison table, showing the Kitchen Set, NVIDIA DSX, Isaac Sim Asset Structure 3.0, and OpenUSD GoodStart Composition Contract composition paths. |
 | 1.12.0 | 2026-10-11 | Reframed the USD GoodStart layer order as a historic, partly outdated proposal and identified it as a step toward the OpenUSD GoodStart Composition Contract. Linked the Composition Contract repository as the current place for bundled knowledge and focused discussion, and updated the paper's explanatory passages accordingly. |
+| 1.11.1 | 2026-10-11 | Renamed the current project in the comparison to OpenUSD GoodStart Composition Contract, updated its repository link after the rename, and distinguished it from the historic USD GoodStart layer-order proposal. Preserved existing section routes and the pre-existing 1.11.0 comparison. |
 | 1.10.0 | 2026-10-04 | Added Section 20 connecting profiles and cross-cutting concerns to the existing composition, identity, asset-interface, validation, and deployment research. Distinguished domain lanes, UsdProfiles declarations, SimReady profiles, and project architecture policies; added source/maturity boundaries and a proposed multi-consumer robot example. Preserved existing section routes. |
 | 1.9.2 | 2026-08-17 | Added explicit stable anchors for the OpenUSD learning and ecosystem resource index, preserving the existing `#openusd-learning--ecosystem-resources` URL while introducing the canonical `#openusd-learning-ecosystem-resources` route; renamed the heading to avoid an ampersand-dependent autogenerated GitHub slug. |
 | 1.9.1 | 2026-08-08 | Added native Mermaid color classes to the Section 19 VFI authoring-to-deployment diamond for clearer visual separation of source intake, maintained interfaces, modular authoring, deployment packaging, measurement, and runtime publication while preserving the editable diagram source. |
