@@ -7,10 +7,12 @@ status: active
 trust_level: 2
 visibility: internal
 created: '2026-03-08T11:02:38Z'
-last_modified: '2026-03-08T11:02:38Z'
+last_modified: '2026-10-14T23:42:00Z'
 ---
 
 # USD GoodStart
+
+> **Composition contract direction:** The strength of the [OpenUSD GoodStart Composition Contract](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main) is making composition ownership explicit across assets, assemblies, and scenes, so teams can reason consistently about how each layer contributes and how the result is evaluated. This independent, evolving proposal grew from the historical GoodStart layer-order work documented in this repository; it is not an OpenUSD standard.
 
 > **Enjoy the GoodStart — and reach out if you want help shipping faster.**  
 

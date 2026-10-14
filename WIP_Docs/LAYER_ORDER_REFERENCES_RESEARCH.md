@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.16.0"
+document_version: "1.16.1"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-10-11T12:27:00+02:00"
+last_modified: "2026-10-15T01:26:00+02:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -53,9 +53,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.16.0 | **Date**: 11.10.2026 | **Time**: 12:27 | **GlobalID**: 20261011_1227_Layer_Order_References_v1.16.0
+**Version**: 1.16.1 | **Date**: 15.10.2026 | **Time**: 01:26 | **GlobalID**: 20261015_0126_Layer_Order_References_v1.16.1
 
-**Last Updated:** 11.10.2026 12:27<br>
+**Last Updated:** 15.10.2026 01:26<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -3418,20 +3418,21 @@ The resulting design sequence is **consumer → profile requirements → ownersh
 
 ## 21. Quick Comparison: Kitchen Set, DSX, Asset Structure 3.0, and Composition Contracts 0.2.0
 
-This comparison asks what each approach is designed to solve. It does not rank them against one universal “best structure”: the Kitchen Set is a production scene/package example, DSX is an AI-factory digital-twin blueprint and asset pipeline, Asset Structure 3.0 is a configurable robot-package pattern, and Composition Contracts is a proposed scene/assembly ownership and evaluation framework.
+This comparison asks what each approach is designed to solve. It does not rank them against one universal “best structure”: the Kitchen Set is a production scene/package example, DSX is an AI-factory digital-twin blueprint and asset pipeline, Asset Structure 3.0 is a configurable robot-package pattern, and Composition Contracts is a proposed scene/assembly ownership and evaluation framework. The USD Working Group's `intent-vfx` is included as a supplementary VFX workflow example—not as a fifth universal composition paradigm or a normative specification.
 
 ### Comparison table
 
 | Approach and scale | Composition / authoring center | Main benefit and speciality | Best fit and boundary |
 |---|---|---|---|
 | **Kitchen Set — film/animation scene and reusable asset packages** | Scene references reusable packages; payloads defer heavy contents; asset interfaces expose variant choices, including lofted choices above payloads. A local read-only audit found **425 reference sites across 76 unique packages**. Its instanced entrypoint marked 425 sites instanceable and composed 114 prototypes. | Strong production example of reference/payload reuse, publishable asset interfaces, variant discovery without loading heavy implementation, and native instancing at repeated sites. It demonstrates a mature visual-scene reuse pattern. | Best evidence here for a film/animation set and reusable visual assets. In the inspected files, no Physics schemas/time samples or Material/Shader prim types were found; appearance used `displayColor`. This is a bounded scan, not a claim about every Kitchen Set release or a judgment of the production pipeline. Layer/file counts are not speed or memory benchmarks. |
+| **[USD WG `intent-vfx`](https://github.com/usd-wg/assets/tree/main/intent-vfx) — supplementary VFX workflow guide** | Script-generated assets and scenes; layered departmental contributions; per-shape geometry/shading granularity; scene layouts mixing PointInstancers and native instanceable prims; class-based overrides and per-instance primvars. | A concrete learning/workflow example of scriptable non-destructive edits across explicit and implicit instancing, with scalability and representation/LOD needs called out. The README describes a construction guide and example scripts, not a benchmarked production pipeline. | Useful when examining VFX asset/scene contributions, override authoring, and instancing techniques. It explicitly leaves versioning pipeline-specific, notes that folder structures are workflow-dependent, and presents itself as one possible starting point—not a prescribed layer order, accepted standard, or substitute for a composition contract. |
 | **NVIDIA DSX — AI-factory digital twin and SimReady delivery pipeline** | CAD/BIM source is converted and optimized; geometry and simulation metadata are developed on parallel tracks, then combined into a validated OpenUSD asset. Published equipment packages have a public interface, property and connection-point layers, internal/external payloads, and a Scene Optimizer preset. The wider blueprint connects assets to facility simulation, surrogate services, data storage, runtime applications and agents. | Specializes in industrial equipment semantics and facility integration: power, thermal/cooling, electrical and connection-point data, geometry optimization, selective loading, and an end-to-end AI-factory digital-twin workflow. | Best fit for converting and integrating facility equipment into a system-level digital twin. DSX is a blueprint/workflow, not a universal scene sublayer order; it does not prescribe the Composition Contracts stack. Its pipeline and runtime are broader than an individual asset folder. |
 | **NVIDIA Isaac Sim Asset Structure 3.0 — configurable robot asset** | One stable robot interface composes purpose-specific base, instances, geometry, material and Robot Schema content; physics backends and optional capabilities are selected through variants/payloads. The package can preserve one robot identity while exposing multiple simulation configurations. | Specializes in articulated robotics and simulation configuration: shared geometry and robot structure, separable backend physics, and selectable controllers, ROS, sensors or end effectors without duplicating the product. | Best fit for publishing and consuming a configurable robot as a reusable asset. It describes the robot package boundary, not the complete scene/workcell ownership model, external telemetry authority, or facility-level data lifecycle. A workcell still needs a scene/assembly composition policy. |
 | **OpenUSD GoodStart Composition Contract project/sample set 0.2.0 — nested scene and assembly authoring** | A thin `SceneROOT` assembles role-owned scene layers. The baseline orders `DataLyr → TransLyr → VariLyr → GeoLyr` (strongest first), with GeoLyr weakest; Opinion is the default persistent authoring target. Asset/assembly packages retain their own interfaces and implementations. Current samples add 1,024 repeated reference occurrences and a PointInstancer demonstration with six prototype configurations over two source shapes and three shared materials. | Specializes in stating **why** a composition exists, who owns each opinion, where scene choices may override asset choices, and how humans or agents evaluate results against requirements. It aims to scale those rules recursively from assets through assemblies to scenes, with separate data, simulation and runtime roles. | Best fit for project-wide scene/assembly ownership, explicit authoring rules, and repeatable evaluation/cleanup planning across digital-twin scenarios. It is an independent proposal with local examples, not an industry standard or a validated automation system. Instancing is authored, but performance is unbenchmarked; MotionGraphics live behavior and overall conformance remain under development. |
 
 ### Technical composition flowcharts
 
-The comparison uses these implementation-level diagrams as its sole visual schema comparison; the earlier high-level overview has been removed to avoid duplicating the same approaches at a less detailed level. Each technical diagram is its own full-width, left-to-right flow, stacked directly below the comparison table. The Kitchen Set lane reports local inspection counts; the final two diagrams follow the Composition Contract repository's [SceneROOT_Instanced_Rings reuse diagram](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/blob/main/examples/01_LayeredScene/diagrams/SceneROOT_Instanced_Rings_reuse.mmd) and USD example. Its `InstanceGrid` is a static grid of instanceable references rather than a PointInstancer.
+The comparison uses these implementation-level diagrams as its sole visual schema comparison; the earlier high-level overview has been removed to avoid duplicating the same approaches at a less detailed level. Each technical diagram is its own full-width, left-to-right flow, stacked directly below the comparison table. The USD WG `intent-vfx` view is a README-level workflow reconstruction, not an independent inspection of its USD files. The Kitchen Set lane reports local inspection counts; the final two diagrams follow the Composition Contract repository's [SceneROOT_Instanced_Rings reuse diagram](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/blob/main/examples/01_LayeredScene/diagrams/SceneROOT_Instanced_Rings_reuse.mmd) and USD example. Its `InstanceGrid` is a static grid of instanceable references rather than a PointInstancer.
 
 #### A · Kitchen Set — observed scene/package reuse
 
@@ -3520,9 +3521,31 @@ flowchart LR
     CCPAIRCONT -->|"ConePart reference"| CCCONE
 ```
 
+#### E · USD WG `intent-vfx` — scripted overrides across instance types
+
+The following is a structural summary of the repository README's described scripts and override workflow. It does not assert that every generated file or composition arc has been independently inspected here.
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 200, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    VFXASSET["Asset scripts<br/>teapot / simpleAsset"] -->|"generate"| VFXSRC["Generated asset source"]
+    VFXSCENE["Scene layout scripts"] -->|"compose concentric-ring layout"| VFXLAYOUT["Scene with individual elements<br/>and PointInstancers"]
+    VFXSRC -->|"used by"| VFXLAYOUT
+    VFXLAYOUT -->|"override script authors a new layer"| VFXOVR["Class-based override layer"]
+    VFXOVR -->|"inherit on"| VFXIND["Instanceable individual elements"]
+    VFXOVR -->|"add explicit prototypes / edit protoIndices"| VFXPI["PointInstancer prototypes"]
+    VFXCLASS["Color override classes<br/>red / green / blue"] -->|"geometry or material opinions"| VFXOVR
+    VFXPRIMVAR["Shared shader reads custom_color"] -->|"per-instance primvar variation"| VFXPI
+    VFXPI -->|"renderer support required for primvar variation"| VFXRENDER["Rendered result"]
+    VFXIND -->|"may create implicit prototypes"| VFXPROTO["OpenUSD implicit prototypes"]
+    VFXPI -->|"may share implicit prototype"| VFXPROTO
+```
+
 ### Important version and evidence boundary
 
 The compared OpenUSD GoodStart Composition Contract project README is labelled **0.2.0**. At the time of this comparison, `CompositionContracts.md` itself still identifies its normative working text as **0.1.1**. Therefore, “0.2.0” here identifies the current project/example state and its additions, not a separately revised or accepted 0.2.0 contract specification. Reconcile those labels before presenting 0.2.0 as a released contract revision.
+
+The USD WG [`intent-vfx` README](https://github.com/usd-wg/assets/blob/main/intent-vfx/README.md) describes the directory as an initial guide among many possible OpenUSD asset/scene structures for VFX requirements. This comparison records those documented intentions and script workflows; it does not claim that the paper audited the repository's USD outputs, verified renderer behavior, or established production adoption.
 
 Kitchen Set figures above come from a local, read-only inspection of the supplied scene/package files. The inspected entrypoints composed **230 USD layers with `LoadAll` and 78 with `LoadNone`**, including the anonymous session layer in those stage counts. These are composition/load-scope observations, not performance results. No rendering, memory, timing, robotics or simulation benchmark was run for this comparison. DSX and Asset Structure 3.0 descriptions summarize NVIDIA's published documentation and the source analyses in Sections 16–18. Composition Contracts counts summarize the current local example documentation and authoring record; they do not prove runtime acceptance.
 
@@ -3532,19 +3555,20 @@ These approaches are most useful as layers of a larger design:
 
 1. **Use an asset-package pattern for each product.** A robot may follow Asset Structure 3.0 principles; facility equipment may follow the DSX SimReady delivery pattern. The scene should reference their stable published interfaces and preserve each package's own schema, variant and payload context.
 2. **Use a scene/assembly contract for composition across packages.** Composition Contracts focuses on occurrence placement, scene scenarios, responsibility for cross-asset bindings, identity/context, simulation inputs and runtime state. It should not copy internal robot or equipment implementation into the scene stack.
-3. **Borrow production techniques where they fit.** The Kitchen Set is useful evidence for reusable packages, payload-aware variant interfaces and instance sharing. Adopt those mechanisms where they meet the target requirements; they do not, by themselves, define industrial identity, connection semantics or runtime authority.
+3. **Borrow production techniques where they fit.** The Kitchen Set is useful evidence for reusable packages, payload-aware variant interfaces and instance sharing. The USD WG `intent-vfx` examples add scriptable contribution layers, mixed PointInstancer/native-instancing layouts and class-based overrides; its README also flags pipeline-specific versioning and folder policies. Adopt these mechanisms where they meet target requirements; they do not, by themselves, define industrial identity, connection semantics or runtime authority.
 4. **Evaluate the composed system against its purpose.** A valid asset package does not prove a valid workcell or factory. A visually efficient instance layout does not prove simulation fidelity. The applicable contract/profile must state required behavior, evidence, load policy, update authority and acceptance measures at each boundary.
 
-The concise distinction is: **Kitchen Set demonstrates production reuse; Asset Structure 3.0 packages configurable robots; DSX connects validated industrial equipment to an AI-factory twin; the OpenUSD GoodStart Composition Contract proposes ownership and evaluation rules for composing such packages into nested scenes.** They can be combined, but none is a substitute for the others.
+The concise distinction is: **Kitchen Set demonstrates production reuse; USD WG `intent-vfx` documents VFX-focused contribution and instancing workflows; Asset Structure 3.0 packages configurable robots; DSX connects validated industrial equipment to an AI-factory twin; the OpenUSD GoodStart Composition Contract proposes ownership and evaluation rules for composing such packages into nested scenes.** These examples can inform a combined design, but none is a substitute for the others.
 
-**Evidence sources:** [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html), [DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), [DSX system architecture](https://docs.omniverse.nvidia.com/dsx/latest/system-architecture.html), and the [OpenUSD GoodStart Composition Contract project](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main). Kitchen Set counts are attributed to the local inspection described above; they are not externally benchmarked results.
+**Evidence sources:** [USD WG `intent-vfx` README](https://github.com/usd-wg/assets/blob/main/intent-vfx/README.md), [Isaac Sim Asset Structure 3.0](https://docs.isaacsim.omniverse.nvidia.com/6.0.1/robot_setup/asset_structure.html), [DSX SimReady asset journey](https://docs.omniverse.nvidia.com/dsx/latest/simready-assets.html), [DSX system architecture](https://docs.omniverse.nvidia.com/dsx/latest/system-architecture.html), and the [OpenUSD GoodStart Composition Contract project](https://github.com/jph2/OpenUSD_GoodStart_CompositionContract/tree/main). Kitchen Set counts are attributed to the local inspection described above; they are not externally benchmarked results.
 
-**Editorial review scope:** Added a 0.2.0 project/example comparison, clarified its mismatch with the contract text's 0.1.1 label, and marked the local layer-order proposal as historic context leading to the current Composition Contract repository. Section 21 retains the table and separate full-width technical flowcharts; the earlier high-level overview was removed. The current four-approach synthesis and a linked map of the existing research record are now front-loaded in the Executive Summary. The technical view maps local Kitchen Set counts, documented DSX and Isaac composition patterns, and the Composition Contract repository's `SceneROOT_Instanced_Rings` sample. Mermaid edge labels are quoted to preserve bracketed sublayer indices as text. Existing public anchors are retained. No scene files, benchmarks, Kit runtime or external validator were run for this documentary update.
+**Editorial review scope:** Added a 0.2.0 project/example comparison, clarified its mismatch with the contract text's 0.1.1 label, and marked the local layer-order proposal as historic context leading to the current Composition Contract repository. Section 21 retains the table and separate full-width technical flowcharts; the earlier high-level overview was removed. The current four-approach synthesis and a linked map of the existing research record are front-loaded in the Executive Summary. Added the USD WG `intent-vfx` as supplementary VFX workflow evidence, with a README-grounded table entry, technical workflow diagram, and explicit inspection/standardization limits. Existing public anchors are retained. No additional USD files were inspected, generated or rendered; no benchmarks, Kit runtime or external validator were run for this documentary update.
 
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.16.1 | 2026-10-15 | Added the USD WG `intent-vfx` README as supplementary VFX workflow evidence in Section 21, including its scriptable contribution, mixed-instancing, and override patterns; kept it distinct from the four primary approaches and from a normative specification. |
 | 1.16.0 | 2026-10-11 | Front-loaded the current four-approach synthesis and the conclusion that the historic GoodStart layer-order proposal leads toward the OpenUSD GoodStart Composition Contract; added a linked map to the research evidence while preserving the detailed analysis and Section 21 comparison. |
 | 1.15.1 | 2026-10-11 | Removed the earlier high-level Section 21 overview chart and retained the full-width, vertically stacked technical flowcharts as the sole visual comparison beneath the table. |
 | 1.15.0 | 2026-10-11 | Kept the overview chart and split the technical comparison into full-width left-to-right diagrams stacked vertically, with the Composition Contract scene-layer path and nested asset/assembly path shown separately for readability. |
