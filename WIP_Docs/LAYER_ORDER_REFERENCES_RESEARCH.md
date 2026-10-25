@@ -3,13 +3,13 @@ arys_schema_version: "1.3"
 id: "d3c443b0-4ef4-4bf4-8c4a-40031bc1e356"
 kanban_id: null
 title: "USD Layer Order — Published References and Pipeline Comparisons"
-document_version: "1.18.0"
+document_version: "1.19.0"
 type: PRACTICAL
 status: draft
 trust_level: 2
 visibility: internal
 created: "2026-06-10T12:00:00Z"
-last_modified: "2026-10-25T08:53:00+01:00"
+last_modified: "2026-10-25T12:55:00+01:00"
 origin_domain: "Domain020"
 author: "Jan Haluszka"
 provenance:
@@ -41,6 +41,9 @@ agent_index:
     simready_purpose: "#purpose-specific-readiness-and-future-profile-granularity"
     combined_evaluation: "#combined-evaluation-with-asset-structure-and-the-composition-contract"
     simready_outcome: "#simready-in-the-outcome-readiness-for-a-declared-purpose"
+    evaluation_process: "#process-from-purpose-to-publication"
+    pipe_example: "#pipe-example-composition-scope-and-simulation-purpose"
+    pipe_contracts: "#two-contracts-for-the-same-pipe"
     dsx_conclusions: "#18-nvidia-dsx-blueprint--evidence-based-conclusions-and-goodstart-corrections"
     dsx_isaac_comparison: "#breakout--dsx-equipment-assets-versus-isaac-sim-asset-structure-30"
     digital_twin_robotics_breakout: "#breakout--why-this-architecture-matters-for-digital-twins-robotics-and-omniverse"
@@ -57,9 +60,9 @@ tags: [openusd, layers, composition, sublayers, livrps, composition_arcs, layer_
 
 # USD Layer Order — Published References and Pipeline Comparisons
 
-**Version**: 1.18.0 | **Date**: 25.10.2026 | **Time**: 08:53 | **GlobalID**: 20261025_0853_Layer_Order_References_v1.18.0
+**Version**: 1.19.0 | **Date**: 25.10.2026 | **Time**: 12:55 | **GlobalID**: 20261025_1255_Layer_Order_References_v1.19.0
 
-**Last Updated:** 25.10.2026 08:53<br>
+**Last Updated:** 25.10.2026 12:55<br>
 **Framework:** USD GoodStart / Studio Framework<br>
 **Status:** draft<br>
 **Origin Domain:** Domain020<br>
@@ -3516,6 +3519,49 @@ This comparison asks what each approach is designed to solve. It does not rank t
 
 The readiness needed for **light transport** differs from **fluid flow inside a pipe**, **airflow around a car**, **river/free-surface flow**, and **heat transport**. We expect contracts to gain granularity as the community defines each purpose's data, assumptions, solver interfaces, and acceptance criteria more precisely. These are illustrative future/project-defined distinctions, not asserted official profile names or a claim that the underlying simulation disciplines are undefined. [Section 17's purpose table](#purpose-specific-readiness-and-future-profile-granularity) makes the differing inputs and evidence explicit. Readiness established for one purpose must not silently become a claim for another.
 
+### Pipe example: composition scope and simulation purpose
+
+The same reusable pipe can participate in visualization, internal fluid flow, and heat transport. This teaching matrix connects two design axes: **composition scope across the columns** and **simulation purpose down the rows**. The composition contract assigns owners and interfaces at each scope; the selected readiness profile defines applicable capabilities and checks. The chosen asset structure implements those requirements.
+
+The rows are illustrative purpose contracts under discussion. They have no stronger/weaker ordering. LIV(E)RPS continues to govern actual opinion resolution inside the chosen composition, as described in [Composition Foundations](#composition-foundations).
+
+| Simulation purpose / profile | Pipe asset | Pipe assembly | Simulation scene |
+|---|---|---|---|
+| Light transport | Surface geometry and optical materials | Placement and visible connections | Lighting, cameras, and rendering checks |
+| Internal fluid flow | Internal fluid domain and port definitions | Connected flow paths between pipes and equipment | Boundary conditions, solver configuration, and flow tests |
+| Heat transport | Thermal properties | Thermal contacts and coupling interfaces | Heat sources, environmental conditions, and temperature/heat-flux tests |
+
+Each cell asks: **What must exist here, who owns it, and what evidence verifies it?** Applicable SimReady checks and project/domain tests supply that evidence. Changing the purpose can require different data, interfaces, or selected contributions at any composition scope. Shared data can remain reusable across purposes, while purpose-specific contributions retain their declared owner and configuration.
+
+For the **internal fluid flow × pipe assembly** cell, this example assigns connection topology to the assembly owner, while each pipe exposes its reusable port interface. The readiness requirements call for the connected flow representation needed by the selected solver. Connection checks and runtime tests then evaluate the assembled configuration under the scene's declared boundary conditions. Record the tested revision, profile, and solver context with the results. These are proposed evaluation obligations, not an executed pipe simulation or a claim of official profile coverage for every row.
+
+#### Two contracts for the same pipe
+
+Both contracts guide one configured deliverable. The composition contract governs ownership, interfaces, and permitted changes. The readiness profile supplies the capabilities and evaluation requirements for the selected purpose. Those requirements can influence structure selection as well as the later tests.
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 40, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    PIPEPURPOSE["Selected simulation purpose<br/>visualization / flow / heat"] --> PIPECONTRACT["Composition contract<br/>owners and interfaces<br/>permitted changes"]
+    PIPEPURPOSE --> PIPEPROFILE["Readiness profile<br/>required capabilities<br/>and checks"]
+    PIPECONTRACT --> PIPESTRUCTURE["Selected pipe structure<br/>configured asset,<br/>assembly or scene"]
+    PIPEPROFILE --> PIPESTRUCTURE
+    PIPESTRUCTURE --> PIPEEVIDENCE["Evaluation evidence<br/>project checks + SimReady<br/>+ runtime / domain tests"]
+
+    classDef context fill:#eceff1,stroke:#546e7a,stroke-width:2px,color:#000
+    classDef composition fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef readiness fill:#ffcc80,stroke:#e65100,stroke-width:2px,color:#000
+    classDef structure fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef evidence fill:#d1c4e9,stroke:#5e35b1,stroke-width:2px,color:#000
+    class PIPEPURPOSE context
+    class PIPECONTRACT composition
+    class PIPEPROFILE readiness
+    class PIPESTRUCTURE structure
+    class PIPEEVIDENCE evidence
+```
+
+*Figure 21.1 — Two contracts guide the structure and evaluation of the same pipe for a selected purpose. Each matrix cell locates an ownership and readiness question; evidence determines whether the configured result meets the applicable requirements.*
+
 ### Evaluation obligations across the compared approaches
 
 This table proposes what to evaluate after choosing each structure. It records evaluation needs, not conformance results for the example assets in this paper. Select applicable SimReady requirements and domain/application tests for the intended use at each boundary.
@@ -3530,7 +3576,33 @@ This table proposes what to evaluate after choosing each structure. It records e
 
 Across these approaches, **SimReady profiles define the applicable readiness requirements; validation libraries and runtime/domain tests produce evidence; the project Composition Contract connects that evidence to the intended composed result.** Evaluate the exact asset revision, variants, load state, and deployment artifact. Publish unresolved coverage alongside passed checks.
 
-**Purpose and requirements → choose structure → build or change → validate → test in the target application → revise or publish with evidence.**
+### Process from purpose to publication
+
+The simulation purpose sets the requirements. Selected SimReady profiles and the project Composition Contract guide structure selection and provide the criteria for evaluation. Publication follows acceptance for the declared scope; failed checks return the work for revision.
+
+```mermaid
+%%{init: {"htmlLabels": false, "themeVariables": {"fontFamily": "Arial, sans-serif"}, "flowchart": {"htmlLabels": false, "padding": 20, "nodeSpacing": 40, "rankSpacing": 35, "diagramPadding": 20}}}%%
+flowchart LR
+    EPURPOSE["Simulation<br/>purpose"] --> EREQUIRE["Requirements<br/>SimReady profile<br/>project contract"]
+    EREQUIRE --> ESTRUCTURE["Select asset /<br/>scene structure"]
+    ESTRUCTURE --> EBUILD["Build or change<br/>the composition"]
+    EBUILD --> EVALIDATE["Validate<br/>SimReady +<br/>project checks"]
+    EVALIDATE -->|"selected checks pass"| ERUNTIME["Runtime and<br/>domain tests"]
+    ERUNTIME -->|"acceptance criteria met"| EPUBLISH["Publish<br/>package + profile<br/>+ evidence + revision"]
+    EVALIDATE -.->|"revise"| EBUILD
+    ERUNTIME -.->|"revise"| EBUILD
+
+    classDef requirements fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef authoring fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef evaluation fill:#d1c4e9,stroke:#5e35b1,stroke-width:2px,color:#000
+    classDef delivery fill:#ffcc80,stroke:#e65100,stroke-width:2px,color:#000
+    class EPURPOSE,EREQUIRE requirements
+    class ESTRUCTURE,EBUILD authoring
+    class EVALIDATE,ERUNTIME evaluation
+    class EPUBLISH delivery
+```
+
+*Figure 21.2 — Proposed evaluation process for the selected purpose and configuration. A changed purpose, profile, or project requirement returns the process to requirements and structure selection.*
 
 ### Technical composition flowcharts
 
@@ -3668,12 +3740,14 @@ The concise distinction is: **Kitchen Set demonstrates production reuse; [USD WG
 
 **Evaluation sources:** [SimReady Foundation repository](https://github.com/NVIDIA/simready-foundation), [Profiles guide](https://nvidia.github.io/simready-foundation/latest/guides/profiles/profiles.html), [Validation workflow](https://nvidia.github.io/simready-foundation/latest/guides/validate_workflow.html), [Runtime-test guidance](https://nvidia.github.io/simready-foundation/latest/guides/benchmark/tests/authoring.html), and [SimReady Central Library](https://docs.omniverse.nvidia.com/simready/latest/simready-central.html), reviewed 25.10.2026. The combined method and future purpose distinctions are research synthesis.
 
-**Editorial review scope:** Integrated SimReady into the Executive Summary, Section 17's combined evaluation method, deployment evaluation, and the Section 21 outcome. Retained the earlier VFX Intent research and comparison links. The exact Section 21 heading, file path, and shared anchor remain unchanged; explicit aliases preserve the earlier architecture/assurance and deferred-integration heading routes. Purpose-specific profile evolution is identified as a research expectation. No assets, validators, simulation runtimes, or benchmarks were executed for this documentary update.
+**Editorial review scope:** Integrated SimReady into the Executive Summary, Section 17's combined evaluation method, deployment evaluation, and the Section 21 outcome. Added a horizontal evaluation-process chart, a pipe scope/purpose matrix, and a two-contract diagram as teaching synthesis. Retained the earlier VFX Intent research and comparison links. The exact Section 21 heading, file path, and shared anchor remain unchanged; explicit aliases preserve the earlier architecture/assurance and deferred-integration heading routes. Purpose-specific profile evolution is identified as a research expectation. No assets, validators, simulation runtimes, or benchmarks were executed for this documentary update.
 
 ## Revision History
 
 | Version | Date | Notes |
 |---------|------|-------|
+| 1.19.0 | 2026-10-25 | Added the pipe example's composition-scope versus simulation-purpose matrix and a horizontal two-contract Mermaid diagram. Connected ownership, interfaces, purpose-specific readiness requirements, and evaluation evidence while preserving the exact shared Section 21 heading/anchor and the process chart. |
+| 1.18.1 | 2026-10-25 | Added a horizontal Mermaid process chart in Section 21 connecting purpose, requirements, structure selection, composition authoring, SimReady/project validation, runtime tests, and publication, with revision loops. Preserved the shared Section 21 heading and existing technical diagrams. |
 | 1.18.0 | 2026-10-25 | Integrated SimReady Foundation evaluation and Central library publication into the comparison outcome, added purpose-specific readiness and proposed future granularity for light, internal/external/free-surface fluid, and heat transport, and replaced deferred integration with a combined evaluation method. Preserved the shared Section 21 heading/anchor and earlier public heading routes. No runtime validation performed. |
 | 1.17.0 | 2026-10-18 | Added a dedicated USD WG VFX Intent section based on its README, linked the workflow and repository, connected each Section 21 approach to its detailed in-paper treatment and source links, and added reciprocal summary navigation while preserving public Section 21 anchors. No scripts were executed or generated USD files inspected. |
 | 1.16.1 | 2026-10-15 | Added the USD WG `intent-vfx` README as supplementary VFX workflow evidence in Section 21, including its scriptable contribution, mixed-instancing, and override patterns; kept it distinct from the four primary approaches and from a normative specification. |
