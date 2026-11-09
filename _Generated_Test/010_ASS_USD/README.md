@@ -1,0 +1,13 @@
+# 010_ASS_USD
+
+**Purpose:** USD assets (converted from CAD or created in DCC + Textrurs from that were created in 2D Apps) | 
+
+## Folder Structure
+- `USD_Startpoint/` - Geometry assets -> Exports froM CAD / DCC as stable Startpoints, the name Stays constant
+- `USD_Wrappers/` - Public asset interfaces and non-destructive wrapper packages
+- `USD_Wrappers/_asset_package_template/` - Template for asset-local layers, payloads, and mapping data
+- `MatLib/` - Material libraries
+- `tex/` - Global textures shared across multiple assets Place shared texture files here. Asset-specific textures can live with their assets in `USD_Startpoint/`
+- `Envs/` -  Environments 
+
+See the main README.md for detailed usage instructions.

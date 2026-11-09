@@ -1,0 +1,107 @@
+---
+arys_schema_version: '1.2'
+id: 852e2c3c-0138-4199-8d7d-2d38caafea56
+title: Standalone Setup Script Usage
+type: TECHNICAL
+status: active
+trust_level: 2
+visibility: internal
+created: '2026-02-17T09:42:14Z'
+last_modified: '2026-02-17T09:42:14Z'
+---
+
+# Standalone Setup Script Usage
+
+**Version:** 0.9.5.3 | **Date:** 26.08.2026 | **Time:** 00:00 (see `VERSION` or `setup_usd_project.py --version`)
+**Tag block:**
+#troubleshooting #standalone #stage #conversion #directrl #openusd #workflow_automation #best_practices #usd_core #variants #layers #composition #framework_integration #ai_coding_agents #deterministic_workflows #usd_goodstart
+
+## Quick Start
+
+Download `USD_GoodStart_Setup_Standalone_v0.9.5.3.zip`, unpack it, and run the launcher for your operating system:
+
+### Method 1: Double-Click (Windows)
+1. Unpack the ZIP file
+2. Double-click `setup_usd_project.bat`
+3. Follow the interactive prompts
+
+### Method 2: Command Line (Windows)
+```cmd
+# From any directory
+scripts\setup_usd_project.bat "D:\MyProject"
+
+# Or from scripts directory
+cd scripts
+setup_usd_project.bat "D:\MyProject"
+```
+
+### Method 3: PowerShell
+```powershell
+# From any directory
+.\scripts\setup_usd_project.ps1 "D:\MyProject"
+
+# Or from scripts directory
+cd scripts
+.\setup_usd_project.ps1 "D:\MyProject"
+```
+
+### Method 4: Linux/macOS shell
+```bash
+# From the unpacked standalone package
+sh setup_usd_project.sh "/path/to/MyProject"
+
+# Or make it executable once
+chmod +x setup_usd_project.sh
+./setup_usd_project.sh "/path/to/MyProject"
+```
+
+The Windows and POSIX launchers call the same `setup_usd_project.py` generator,
+so they create the same folder and file structure for the same answers.
+
+### Method 5: Direct Python (if Python is in PATH)
+```bash
+python scripts\setup_usd_project.py "D:\MyProject"
+```
+
+## Requirements
+
+- **Python 3.8+** installed and in system PATH
+- No additional Python packages required (uses only standard library)
+
+## What It Does
+
+The setup script interactively generates a complete USD_GoodStart project structure:
+
+1. **Asks questions** about default prim name, unit system, and configuration
+2. **Creates folder structure** (000_SOURCE, 010_ASS_USD/USD_Startpoint, 010_ASS_USD/USD_Wrappers, 010_ASS_USD/MatLib, 010_ASS_USD/tex, 010_ASS_USD/Envs, 020_BASE_LYR, 035_RUNTIME_LYR, 030_SIM_LYR, 040_DATA_LYRs, _contracts, _pipeline_reports, _comfyui_workflows)
+3. **Generates USD files** programmatically:
+   - Root file with proper layer ordering
+   - All layer files (opinion, variant, material, asset import, simulation, data/metadata, action, animation)
+   - Default assets (cube and shader ball geometry) in USD_Startpoint folder
+   - Material library structure in MatLib folder
+4. **Creates README files** in each folder
+5. **Sets up layer locking** (data layer locked by default, others unlocked for editing)
+
+## Output
+
+After running, you'll have:
+- Complete project structure ready for Omniverse Composer
+- Working scene with default assets (cube and ball at origin)
+- Properly organized layers (base layers, simulation, data layers)
+- All files following USD_GoodStart best practices
+- Unit system selection (millimeters, centimeters, or meters)
+
+## Troubleshooting
+
+**"Python is not installed or not in PATH"**
+- Install Python 3.8+ from [python.org](https://www.python.org/)
+- During installation, check "Add Python to PATH"
+- Or manually add Python to your system PATH
+
+**Script doesn't run**
+- Make sure you're using the correct wrapper for your shell (`.bat` for CMD, `.ps1` for PowerShell)
+- Check that Python is accessible: `python --version`
+
+**Permission errors**
+- Run PowerShell as Administrator if needed
+- Check that target directory is writable

@@ -1,0 +1,74 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (0, 0, 50000)
+                double radius = 500
+            }
+            dictionary Perspective = {
+                double3 position = (-648.616916484713, 719.68223908783, 2061.16668364767)
+                double3 target = (86.8325487010212, -72.8301464390777, 37.2330684879071)
+            }
+            dictionary Right = {
+                double3 position = (-50000, 0, 0)
+                double radius = 500
+            }
+            dictionary Top = {
+                double3 position = (0, 50000, 0)
+                double radius = 500
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./world_cm_ROOT.usda"
+            dictionary locked = {
+                bool "./020_BASE_LYR/ACTGR_LYR.usda" = 1
+                bool "./020_BASE_LYR/ANIM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ASS_LYR.usda" = 1
+                bool "./020_BASE_LYR/CAM_LYR.usda" = 1
+                bool "./020_BASE_LYR/ENV_LYR.usda" = 1
+                bool "./020_BASE_LYR/MTL_LYR.usda" = 1
+                bool "./020_BASE_LYR/OPIN_LYR.usda" = 1
+                bool "./020_BASE_LYR/PHY_LYR.usda" = 1
+                bool "./020_BASE_LYR/VAR_LYR.usda" = 1
+                bool "./030_SIM_LYR/SIM_LYR.usda" = 1
+                bool "./035_RUNTIME_LYR/RUNTIME_LYR.usda" = 1
+                bool "./040_DATA_LYRs/DATA_LYRs.usda" = 1
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+            double "rtx:directLighting:sampledLighting:maxRayUnexposedIntensity" = 6399.9990234375
+            double "rtx:indirectDiffuse:maxRayUnexposedIntensity" = 6399.9990234375
+            double "rtx:pathtracing:fireflyFilter:maxPerEmissiveUnexposedIntensity" = 3199.99951171875
+            double "rtx:pathtracing:fireflyFilter:maxUnexposedIntensityPerSample" = 3199.99951171875
+            double "rtx:pathtracing:fireflyFilter:maxUnexposedIntensityPerSampleDiffuse" = 3199.99951171875
+            double "rtx:post:lensFlares:flareScale" = 0.075
+            double "rtx:raytracing:inscattering:maxRTSampleUnexposedIntensity" = 204799.96875
+            float3 "rtx:sceneDb:ambientLightColor" = (0, 0, 0)
+            double "rtx:translucency:maxRayUnexposedIntensity" = 19199.998046875
+        }
+    }
+    defaultPrim = "world"
+    endTimeCode = 100
+    metersPerUnit = 0.01
+    startTimeCode = 0
+    subLayers = [
+        @./020_BASE_LYR/OPIN_LYR.usda@,
+        @./020_BASE_LYR/CAM_LYR.usda@,
+        @./020_BASE_LYR/ENV_LYR.usda@,
+        @./035_RUNTIME_LYR/RUNTIME_LYR.usda@,
+        @./030_SIM_LYR/SIM_LYR.usda@,
+        @./040_DATA_LYRs/DATA_LYRs.usda@,
+        @./020_BASE_LYR/ACTGR_LYR.usda@,
+        @./020_BASE_LYR/ANIM_LYR.usda@,
+        @./020_BASE_LYR/VAR_LYR.usda@,
+        @./020_BASE_LYR/MTL_LYR.usda@,
+        @./020_BASE_LYR/PHY_LYR.usda@,
+        @./020_BASE_LYR/ASS_LYR.usda@
+    ]
+    timeCodesPerSecond = 60
+    upAxis = "Y"
+)
